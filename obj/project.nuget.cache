@@ -1,0 +1,14 @@
+{
+  "version": 2,
+  "dgSpecHash": "hNH1mQSZ2VDTlV7qLVKuNtRV6YLAHBABwouqWzDKq8GS+fvgAl2GpnpB6X5U1Pg3qEaV5bdGE0FQIPMXIf9XDg==",
+  "success": true,
+  "projectFilePath": "/Users/sebastien/_Git/Dotnet/Margincoin/MarginCoin.csproj",
+  "expectedPackageFiles": [
+    "/Users/sebastien/.nuget/packages/microsoft.aspnetcore.spaservices.extensions/5.0.9/microsoft.aspnetcore.spaservices.extensions.5.0.9.nupkg.sha512",
+    "/Users/sebastien/.nuget/packages/microsoft.extensions.fileproviders.abstractions/5.0.0/microsoft.extensions.fileproviders.abstractions.5.0.0.nupkg.sha512",
+    "/Users/sebastien/.nuget/packages/microsoft.extensions.fileproviders.physical/5.0.0/microsoft.extensions.fileproviders.physical.5.0.0.nupkg.sha512",
+    "/Users/sebastien/.nuget/packages/microsoft.extensions.filesystemglobbing/5.0.0/microsoft.extensions.filesystemglobbing.5.0.0.nupkg.sha512",
+    "/Users/sebastien/.nuget/packages/microsoft.extensions.primitives/5.0.0/microsoft.extensions.primitives.5.0.0.nupkg.sha512"
+  ],
+  "logs": []
+}
