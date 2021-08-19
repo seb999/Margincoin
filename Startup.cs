@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.EntityFrameworkCore;
+using MarginCoin.Model;
 
 namespace MarginCoin
 {
@@ -26,6 +28,9 @@ namespace MarginCoin
             {
                 configuration.RootPath = "ClientApp/dist";
             });
+
+            services.AddDbContext<ApplicationDbContext>(options =>
+                options.UseSqlite(Configuration.GetConnectionString("SqLite")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
