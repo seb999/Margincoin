@@ -1,19 +1,19 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
-import { CounterComponent } from './counter.component';
+import { WalletComponent } from './wallet.component';
 
 describe('CounterComponent', () => {
-  let fixture: ComponentFixture<CounterComponent>;
+  let fixture: ComponentFixture<WalletComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ CounterComponent ]
+      declarations: [ WalletComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(CounterComponent);
+    fixture = TestBed.createComponent(WalletComponent);
     fixture.detectChanges();
   });
 
