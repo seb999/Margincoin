@@ -6,26 +6,27 @@ import { RouterModule } from '@angular/router';
 
 import { AppComponent } from './app.component';
 import { NavMenuComponent } from './nav-menu/nav-menu.component';
-import { TradingboardComponent } from './tradingboard/tradingboard.component';
+import { MarketComponent } from './market/market.component';
 import { WalletComponent } from './wallet/wallet.component';
-import { FetchDataComponent } from './fetch-data/fetch-data.component';
+import { TradingboardComponent } from './tradingboard/tradingboard.component';
+import { HighchartsChartModule } from 'highcharts-angular';
 
 @NgModule({
   declarations: [
     AppComponent,
     NavMenuComponent,
-    TradingboardComponent,
+    MarketComponent,
     WalletComponent,
-    FetchDataComponent
+    TradingboardComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
     HttpClientModule,
     FormsModule,
+    HighchartsChartModule,
     RouterModule.forRoot([
-    { path: '', component: TradingboardComponent, pathMatch: 'full' },
-    { path: 'wallet', component: WalletComponent },
-    { path: 'fetch-data', component: FetchDataComponent },
+    { path: '', component: MarketComponent, pathMatch: 'full' },
+    { path: 'tradingboard/:symbol', component: TradingboardComponent },
 ], { relativeLinkResolution: 'legacy' })
   ],
   providers: [],

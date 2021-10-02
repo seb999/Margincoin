@@ -1,41 +1,42 @@
-import { Injectable, EventEmitter } from '@angular/core';
-import { AppGlobal } from "./../app.settings";
+import { Injectable } from '@angular/core';
+import { Observable, Observer, Subject } from 'rxjs';
 
 @Injectable({
-    providedIn: 'root'
+  providedIn: 'root'
 })
-export class WebsocketService {
-    public eventMessage: EventEmitter<string> = new EventEmitter();
-    constructor(private appGlobal: AppGlobal) {
+export class WebSocketService {
+  private ws: WebSocket;
+  private subject: Subject<MessageEvent>;
+
+  public connect(wsEndpoint): Subject<MessageEvent> {
+    if (!this.subject || this.subject.closed) {
+      this.subject = this.create(wsEndpoint);
+      console.log("Successfully connected");
     }
+    return this.subject;
+  }
 
-    public onMessage() {
-        return this.eventMessage;
-    }
+  private create(url): Subject<MessageEvent> {
 
-    openListener(forceStop) {
-        this.webSocket(this.eventMessage, forceStop);
-    }
+    this.ws = new WebSocket(url);
+    const observable = Observable.create((observer: Observer<MessageEvent>) => {
+      this.ws.onmessage = observer.next.bind(observer);
+      this.ws.onerror = observer.error.bind(observer);
+      this.ws.onclose = observer.complete.bind(observer);
+      return this.ws.close.bind(this.ws);
+    });
 
-    //We have to pass to the websocket the eventMessage
-    webSocket(eventMessage: EventEmitter<string>, forceStop) {
-
-        var socket = new WebSocket('wss://ws.finnhub.io?token=' + this.appGlobal.finnhubKey);
-
-        if (forceStop) {
-            socket.close();
+    let observer = {
+      next: (data: Object) => {
+        if (this.ws.readyState === WebSocket.OPEN) {
+          this.ws.send(JSON.stringify(data));
         }
-        else {
-            socket.addEventListener('open', function (event) {
-                socket.send(JSON.stringify({ 'type': 'subscribe', 'symbol': 'OANDA:WTICO_USD' }))
-            });
+      }
+    };
+    return Subject.create(observer, observable);
+  }
 
-            socket.addEventListener('message', function (event) {
-                console.log(event.data);
-                if (JSON.parse(event.data).type != 'ping') {
-                    return eventMessage.emit(JSON.parse(event.data));
-                }
-            });
-        }
-    }
+  public close() {
+    this.subject.unsubscribe();
+  }
 }

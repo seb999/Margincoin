@@ -1,0 +1,77 @@
+
+<table class="table">
+    <thead class="thead thead-light">
+        <tr>
+            <th scope="col" id="symbol" onClick={this.handleSort} class="tableTh">Name</th>
+            <th scope="col" id="last" onClick={this.handleSort} class="tableTh ">Price</th>
+            <th scope="col" id="volume" onClick={this.handleSort} class="tableTh d-none d-md-table-cell">24h %</th>
+            <th scope="col" id="volume" onClick={this.handleSort} class="tableTh d-none d-md-table-cell">Volume</th>
+            <th scope="col" id="lower" onClick={this.handleSort} class="tableTh d-none d-md-table-cell">Lower</th>
+            <th scope="col" id="higher" onClick={this.handleSort} class="tableTh d-none d-md-table-cell">Higher</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let coin of symbolList$">
+         <td>
+                   <img src='{{ "assets/images/CoinIcon/" + coin.s.substring(0,coin.s.length-4) + ".png" }}' width="20px"
+                    height="20px" />
+                {{coin.s.substring(0,coin.s.length-4)}}<span style="font-size: x-small;">/USDT</span>
+            </td>
+
+            <!-- Price -->
+            <td *ngIf="coin.c>=1">{{(coin.c*1).toFixed(2)}}</td>
+            <td *ngIf="coin.c<1">{{(coin.c*1).toFixed(6)}}</td>
+
+            <!-- 24hr change -->
+            <td [style.color]= coin.color>{{((coin.p/coin.c)*100).toFixed(2)}}</td>
+
+            <!-- Volume 24hr -->
+            <td>{{(coin.q*1).toFixed(2)}}</td>
+
+            <!-- Lower 24 -->
+            <td *ngIf="coin.l>=1">{{(coin.l*1).toFixed(2)}}</td>
+            <td *ngIf="coin.l<1">{{(coin.l*1).toFixed(6)}}</td>
+
+            <!-- Higher 24 -->
+            <td *ngIf="coin.h>=1">{{(coin.h*1).toFixed(2)}}</td>
+            <td *ngIf="coin.h<1">{{(coin.h*1).toFixed(6)}}</td>
+
+            <td>
+                <!-- <button class="btn ml-0 pl-0" (click)="redirect(coin.s)"><span style="color:blue"><i
+                            class="far fa-file-alt"></i>trade</span></button> -->
+
+                            <a [routerLink]="['/tradingboard', coin.s]" class="btn ml-0 pl-0"><span style="color:blue"><i
+                                class="far fa-file-alt"></i>trade</span></a>
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+
+<!-- {
+    "e": "24hrTicker",  // Event type
+    "E": 123456789,     // Event time
+    "s": "BNBBTC",      // Symbol
+    "p": "0.0015",      // Price change
+    "P": "250.00",      // Price change percent
+    "w": "0.0018",      // Weighted average price
+    "x": "0.0009",      // First trade(F)-1 price (first trade before the 24hr rolling window)
+    "c": "0.0025",      // Last price
+    "Q": "10",          // Last quantity
+    "b": "0.0024",      // Best bid price
+    "B": "10",          // Best bid quantity
+    "a": "0.0026",      // Best ask price
+    "A": "100",         // Best ask quantity
+    "o": "0.0010",      // Open price
+    "h": "0.0025",      // High price
+    "l": "0.0010",      // Low price
+    "v": "10000",       // Total traded base asset volume
+    "q": "18",          // Total traded quote asset volume
+    "O": 0,             // Statistics open time
+    "C": 86400000,      // Statistics close time
+    "F": 0,             // First trade ID
+    "L": 18150,         // Last trade Id
+    "n": 18151          // Total number of trades
+  }
+   -->

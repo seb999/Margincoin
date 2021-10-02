@@ -1278,11 +1278,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\_Git\\Dotnet\\Margincoin\\MarginCoin.csproj",
+      "projectUniqueName": "C:\\_Git\\Dotnet\\MarginCoin\\MarginCoin.csproj",
       "projectName": "MarginCoin",
-      "projectPath": "C:\\_Git\\Dotnet\\Margincoin\\MarginCoin.csproj",
+      "projectPath": "C:\\_Git\\Dotnet\\MarginCoin\\MarginCoin.csproj",
       "packagesPath": "C:\\Users\\sdubos\\.nuget\\packages\\",
-      "outputPath": "C:\\_Git\\Dotnet\\Margincoin\\obj\\",
+      "outputPath": "C:\\_Git\\Dotnet\\MarginCoin\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
@@ -1357,7 +1357,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.400\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.401\\RuntimeIdentifierGraph.json"
       }
     }
   }

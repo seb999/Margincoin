@@ -1,48 +1,43 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
-using System.Threading.Tasks;
-using System.Web;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
+using MarginCoin.ClassTransfer;
+using MarginCoin.Misc;
 
 namespace MarginCoin.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
-    public class TrandingBoardController : ControllerBase
+    [Route("api/[controller]")]
+    public class TradingBoardController : ControllerBase
     {
-        private static string API_KEY = "de2af521-9c3b-4ba9-9f55-0ff85ec9ad8f";
-
+        /// <summary>
+        /// Return list of coin with last price for default page
+        /// </summary>
+        /// <returns></returns>
         [HttpGet("[action]")]
-        public string GetCoinList(){
-            var URL = new UriBuilder("https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest");
+        public List<SymbolTransfer> GetSymbolList()
+        {
+            Uri apiUrl = new Uri("https://api.binance.com/api/v3/ticker/24hr");
+            //Get data from Binance API
+            List<SymbolTransfer> coinList = HttpHelper.GetApiData<List<SymbolTransfer>>(apiUrl);
+            // Filter result
+            coinList = coinList.Where(p => p.symbol.EndsWith("USD")).Select(p => p).ToList();
+            //Remove obsolete coins
+            coinList = coinList.Where(p => p.volume != 0 && p.openPrice != 0).Select(p => p).ToList();
+            // Shorten Symbol
+            Helper.ShortenSymbol(ref coinList);
 
-            var queryString = HttpUtility.ParseQueryString(string.Empty);
-            queryString["start"] = "1";
-            queryString["limit"] = "5000";
-            queryString["convert"] = "USD";
-
-            URL.Query = queryString.ToString();
-
-            var client = new WebClient();
-            client.Headers.Add("X-CMC_PRO_API_KEY", API_KEY);
-            client.Headers.Add("Accepts", "application/json");
-
-            var toto = client.DownloadString(URL.ToString());
-            return "";
+            return coinList;
         }
 
-        // public List<SymbolTransfer> GetSymbolList(BaseMarket baseMarket)
-        // {
-        //     Uri apiUrl = new Uri("https://api.binance.com/api/v1/ticker/24hr");
-
-        //     //Get data from Binance API
-        //     List<SymbolTransfer> coinList = HttpHelper.GetApiData<List<SymbolTransfer>>(apiUrl);
-
-
-        //     return coinList;
-        // }
+        [HttpGet("[action]/{symbol}")]
+        public double GetSymbol24hr(string symbol, string timestamp)
+        {
+            string apiUrl = string.Format("https://api.binance.com/api/v3/ticker/24hr?symbol={0}", symbol);
+            SymbolTransfer symbolTransfer = HttpHelper.GetApiData<SymbolTransfer>(new Uri(apiUrl));
+            
+            return symbolTransfer.priceChangePercent;
+        }
     }
 }
