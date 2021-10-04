@@ -4,13 +4,57 @@ using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using MarginCoin.ClassTransfer;
 using MarginCoin.Misc;
+using MarginCoin.Model;
 
 namespace MarginCoin.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class TradingBoardController : ControllerBase
+    public class OrderController : ControllerBase
     {
+        private readonly ApplicationDbContext dbContext;
+
+        public OrderController([FromServices] ApplicationDbContext appDbContext)
+        {
+            dbContext = appDbContext;
+        }
+        
+        [HttpGet("[action]/{symbol}")]
+        public List<Order> GetOpenOrder(string symbol){
+            return dbContext.Order.Where(p=>p.OrderSymbol == symbol).ToList();
+        }
+
+        [HttpGet("[action]")]
+        public List<Order> GetAllCompletedOrder(){
+            return dbContext.Order.ToList();
+        }
+
+        [HttpPost("[action]")]
+        public void OpenOrder()
+        {
+
+        }
+
+        [HttpGet("[action]/{transactionId}")]
+        public void CloseOrder()
+        {
+
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         /// <summary>
         /// Return list of coin with last price for default page
         /// </summary>

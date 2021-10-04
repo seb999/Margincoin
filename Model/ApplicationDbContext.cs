@@ -8,6 +8,6 @@ namespace MarginCoin.Model
         {
         }
 
-       // public virtual DbSet<Intraday> Intraday { get; set; }
+        public virtual DbSet<Order> Order { get; set; }
     }
 }
