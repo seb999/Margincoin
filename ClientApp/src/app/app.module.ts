@@ -9,7 +9,9 @@ import { NavMenuComponent } from './nav-menu/nav-menu.component';
 import { MarketComponent } from './market/market.component';
 import { WalletComponent } from './wallet/wallet.component';
 import { TradingboardComponent } from './tradingboard/tradingboard.component';
+import { TradingboardHelper } from './tradingboard/tradingBoard.helper';
 import { HighchartsChartModule } from 'highcharts-angular';
+import { AppSetting } from './app.settings';
 
 @NgModule({
   declarations: [
@@ -17,7 +19,8 @@ import { HighchartsChartModule } from 'highcharts-angular';
     NavMenuComponent,
     MarketComponent,
     WalletComponent,
-    TradingboardComponent
+    TradingboardComponent,
+    
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -29,7 +32,7 @@ import { HighchartsChartModule } from 'highcharts-angular';
     { path: 'tradingboard/:symbol', component: TradingboardComponent },
 ], { relativeLinkResolution: 'legacy' })
   ],
-  providers: [],
+  providers: [TradingboardHelper, AppSetting],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
