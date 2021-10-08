@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace MarginCoin.Model
@@ -7,12 +5,15 @@ namespace MarginCoin.Model
     public class Order
     {
         [Key]
-        public int OrderId { get; set; }
-        public string OrderSymbol { get; set; }
-        public decimal OrderAmount { get; set; }
-        public decimal OrderOpenPrice { get; set; }
-        public decimal OrderQuantity { get; set; }
-        public decimal OrderStopLose { get; set; }
-        public int OrderMargin { get; set; }
+        public int Id { get; set; }
+        public string Symbol { get; set; }
+        public decimal Quantity { get; set; }
+        public decimal OpenPrice { get; set; }
+        public decimal ClosePrice { get; set; }
+        public int Margin { get; set; }
+        public decimal StopLose { get; set; }
+         public int IsClosed { get; set; }
+         public string OpenDate { get; set; }
+         public string CloseDate { get; set; }
     }
 }

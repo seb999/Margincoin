@@ -21,67 +21,48 @@ namespace MarginCoin.Controllers
         
         [HttpGet("[action]/{symbol}")]
         public List<Order> GetOpenOrder(string symbol){
-            return dbContext.Order.Where(p=>p.OrderSymbol == symbol).ToList();
+            return dbContext.Order.Where(p=>p.Symbol == symbol && p.IsClosed != 1).ToList();
         }
 
         [HttpGet("[action]")]
         public List<Order> GetAllCompletedOrder(){
-            return dbContext.Order.ToList();
+            return dbContext.Order.Where(p=>p.IsClosed == 1).ToList();
         }
 
         [HttpPost("[action]")]
-        public void OpenOrder()
+        public bool OpenOrder([FromBody] Order order)
         {
-
+            try
+            {
+                order.OpenDate = DateTime.Now.ToString();
+                order.IsClosed = 0;
+                dbContext.Order.Add(order);
+                dbContext.SaveChanges(); 
+            }
+            catch (System.Exception ex)
+            {
+                return false;
+            }
+           
+            return true;
         }
 
-        [HttpGet("[action]/{transactionId}")]
-        public void CloseOrder()
+        [HttpGet("[action]/{id}/{closePrice}")]
+        public bool CloseOrder(int id, decimal closePrice)
         {
-
-        }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        /// <summary>
-        /// Return list of coin with last price for default page
-        /// </summary>
-        /// <returns></returns>
-        [HttpGet("[action]")]
-        public List<SymbolTransfer> GetSymbolList()
-        {
-            Uri apiUrl = new Uri("https://api.binance.com/api/v3/ticker/24hr");
-            //Get data from Binance API
-            List<SymbolTransfer> coinList = HttpHelper.GetApiData<List<SymbolTransfer>>(apiUrl);
-            // Filter result
-            coinList = coinList.Where(p => p.symbol.EndsWith("USD")).Select(p => p).ToList();
-            //Remove obsolete coins
-            coinList = coinList.Where(p => p.volume != 0 && p.openPrice != 0).Select(p => p).ToList();
-            // Shorten Symbol
-            Helper.ShortenSymbol(ref coinList);
-
-            return coinList;
-        }
-
-        [HttpGet("[action]/{symbol}")]
-        public double GetSymbol24hr(string symbol, string timestamp)
-        {
-            string apiUrl = string.Format("https://api.binance.com/api/v3/ticker/24hr?symbol={0}", symbol);
-            SymbolTransfer symbolTransfer = HttpHelper.GetApiData<SymbolTransfer>(new Uri(apiUrl));
-            
-            return symbolTransfer.priceChangePercent;
+             try
+            {
+                Order myOrder = dbContext.Order.Where(p=>p.Id == id).Select(p=>p).FirstOrDefault();
+                myOrder.ClosePrice = closePrice;
+                myOrder.IsClosed = 1;
+                myOrder.CloseDate = DateTime.Now.ToString();
+                dbContext.SaveChanges(); 
+            }
+            catch (System.Exception ex)
+            {
+                return false;
+            }
+            return true;
         }
     }
 }

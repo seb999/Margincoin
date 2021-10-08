@@ -30,6 +30,7 @@ import { AppSetting } from './app.settings';
     RouterModule.forRoot([
     { path: '', component: MarketComponent, pathMatch: 'full' },
     { path: 'tradingboard/:symbol', component: TradingboardComponent },
+    { path: 'wallet', component: WalletComponent },
 ], { relativeLinkResolution: 'legacy' })
   ],
   providers: [TradingboardHelper, AppSetting],

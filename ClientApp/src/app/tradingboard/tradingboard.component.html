@@ -12,7 +12,7 @@
 
     <div class="row">
       <span class="col">Price</span>
-      <span class="col">{{this.coinData.c}}</span>
+      <span class="col">{{coinData.c}}</span>
     </div>
 
     <div class="row">
@@ -26,7 +26,7 @@
     </div>
 
     <div class="row">
-      <select class="form-control" [(ngModel)]="interval" (change)="changeHighstockResolution(interval)">
+      <select class="form-control"  (change)="changeHighstockResolution(interval)">
         <option *ngFor="let interval of intervalList" [value]="interval.value">{{ interval.value }}
         </option>
       </select>
@@ -39,8 +39,8 @@
         <div class="card">
           <div class="card-body">
             <h6 class="card-title">Orders <button class="btn btn-primary btn-sm" (click)="openPopup(popupNewEditOrder, 'newOrder')">Buy</button></h6>
-            <table class="table">
-              <thead class="thead thead-light">
+            <table class="table table-sm">
+              <thead class="thead-light">
                 <tr>
                   <th scope="col" id="last" class="tableTh ">Amount</th>
                   <th scope="col" id="volume" class="tableTh">Quantity</th> 
@@ -54,17 +54,17 @@
               </thead>
               <tbody>
                 <tr *ngFor="let order of openOrderList">
-                 <td>{{order.orderOpenPrice * order.orderQuantity}}</td>
-                 <td>{{order.orderQuantity}}</td>
-                 <td>{{order.orderOpenPrice}}</td>
-                 <td>{{order.orderMargin}}</td>
-                 <td *ngIf="(((coinData.c-order.orderOpenPrice) / (order.orderOpenPrice))*100) >=0" style="color: limegreen;">{{ (((coinData.c-order.orderOpenPrice) / (order.orderOpenPrice))*100).toFixed(2) }}</td>
-                 <td *ngIf="(((coinData.c-order.orderOpenPrice) / (order.orderOpenPrice))*100) <0" style="color: red;">{{ (((coinData.c-order.orderOpenPrice) / (order.orderOpenPrice))*100).toFixed(2) }}</td>  
-                 <td *ngIf="(coinData.c-order.orderOpenPrice)*order.orderQuantity*order.orderMargin>=0" style="color: limegreen;">{{((coinData.c-order.orderOpenPrice)*order.orderQuantity*order.orderMargin).toFixed(2)}}</td>
-                 <td *ngIf="(coinData.c-order.orderOpenPrice)*order.orderQuantity*order.orderMargin<0" style="color: red;">{{((coinData.c-order.orderOpenPrice)*order.orderQuantity*order.orderMargin).toFixed(2)}}</td>
-                 <td> <button class="btn btn-primary btn-sm" (click)="changeStopLoseOffset('reduce')">
-                   -</button>&nbsp;<button class="btn btn-primary btn-sm" (click)="changeStopLoseOffset('increase')">+</button></td>
-                 <td><a href="#" class="btn btn-primary btn-sm">Sell</a></td>
+                 <td>{{order.openPrice * order.quantity * order.margin}}</td>
+                 <td>{{order.quantity}}</td>
+                 <td>{{order.openPrice}}</td>
+                 <td>{{order.margin}}</td>
+                 <td *ngIf="(((coinData.c-order.openPrice) / (order.openPrice))*100) >=0" style="color: limegreen;">{{ (((coinData.c-order.openPrice) / (order.openPrice))*100).toFixed(2) }}</td>
+                 <td *ngIf="(((coinData.c-order.openPrice) / (order.openPrice))*100) <0" style="color: red;">{{ (((coinData.c-order.openPrice) / (order.openPrice))*100).toFixed(2) }}</td>  
+                 <td *ngIf="(coinData.c-order.openPrice)*order.quantity*order.margin>=0" style="color: limegreen;">{{((coinData.c-order.openPrice)*order.quantity*order.margin).toFixed(2)}}</td>
+                 <td *ngIf="(coinData.c-order.openPrice)*order.quantity*order.margin<0" style="color: red;">{{((coinData.c-order.openPrice)*order.quantity*order.margin).toFixed(2)}}</td>
+                 <td> <button class="btn btn-primary btn-sm" (click)="changeStopLoseOffset('reduce')">-</button>&nbsp;
+                      <button class="btn btn-primary btn-sm" (click)="changeStopLoseOffset('increase')">+</button></td>
+                 <td><button class="btn btn-primary btn-sm" (click)="closeOrder(order.id,coinData.c);">Sell</button></td>
                  </tr>
                 </tbody>
             </table>
@@ -88,7 +88,7 @@
   </div>
 </div>
 
-  <!-- popup Create Order -->
+  <!-- popup Order -->
   <ng-template #popupNewEditOrder let-modal>
     <div class="modal-header">
       <h5 class="modal-title" id="modal-basic-title">{{popupTitle}} <span [style.color]=coinData.color>{{((coinData.p/coinData.c)*100).toFixed(2)}} %</span></h5>
@@ -98,30 +98,45 @@
     </div>
     <div class="modal-body">
       <form>
-        <div class="form-group row">
-          <label for="price" class="col-sm-3 col-form-label">Price</label>
+        <div class="form-group row no-gutters">
+          <label for="openPrice" class="col-sm-3 col-form-label">Price</label>
           <div class="col-sm-9">
-            <input id="price" class="form-control form-control-sm" placeholder="{{coinData.c}}" name="courseName" readonly>
+            <input id="openPrice" type="number" class="form-control form-control-sm" [value]="orderModel.openPrice" name="openPrice"  [(ngModel)]="orderModel.openPrice" (change)="processFormInputChange('price')">
           </div>
         </div>
-        <div class="form-group row">
+        <div class="form-group row no-gutters">
           <label for="amount" class="col-sm-3 col-form-label">Amount</label>
           <div class="col-sm-9">
-            <input id="amount" class="form-control form-control-sm" name="amount" required [(ngModel)]="orderModel.amount">
+            <input id="amount" class="form-control form-control-sm" name="amount" required [(ngModel)]="orderModel.amount" (change)="processFormInputChange('amount')">
           </div>
         </div>
-        <div class="form-group row">
+        <div class="form-group row no-gutters">
           <label for="quantity" class="col-sm-3 col-form-label">Quantity</label>
           <div class="col-sm-9">
-            <input id="quantity" class="form-control form-control-sm" name="quantity" required [(ngModel)]="orderModel.quantity">
+            <input id="quantity" class="form-control form-control-sm" name="quantity" required [(ngModel)]="orderModel.quantity" (change)="processFormInputChange('quantity')">
+          </div>
+        </div>
+        <div class="form-group row no-gutters">
+          <label for="margin" class="col-sm-3 col-form-label">Levrage</label>
+          <div class="col-sm-9">
+            <input id="margin" class="form-control form-control-sm" name="margin" required [(ngModel)]="orderModel.margin">
+          </div>
+        </div>
+        <div class="form-group row no-gutters">
+          <label for="stop" class="col-sm-3 col-form-label">Stop(%)</label>
+          <div class="col-sm-4">
+            <input id="stop" class="form-control form-control-sm" name="stop" required [(ngModel)]="orderModel.stopLose">
+          </div>
+          <div class="col-sm-5">
+            <input id="quantity" class="form-control form-control-sm" name="stop" [value]="orderModel.amount*orderModel.stopLose*orderModel.margin/100" disabled >
           </div>
         </div>
       </form>
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-secondary btn-sm" (click)="modal.dismiss()" ngbAutofocus>Cancel</button>
-      <button *ngIf="model.courseId==0" type="button" class="btn btn-dark btn-sm" (click)="modal.close('executeOrder')">Place order</button>
-      <button *ngIf="model.courseId!=0" type="button" class="btn btn-dark btn-sm" (click)="modal.close('updateCourse')">Update</button>
+      <button *ngIf="orderModel.id==0" type="submit" class="btn btn-primary btn-sm" (click)="modal.close('openOrder')">Place order</button>
+      <button *ngIf="orderModel.id!=0" type="button" class="btn btn-primary btn-sm" (click)="modal.close('updateCourse')">Update</button>
     </div>
   </ng-template>
 

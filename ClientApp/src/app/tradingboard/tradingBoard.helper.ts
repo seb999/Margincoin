@@ -1,4 +1,5 @@
 import { Injectable } from "@angular/core";
+import { Order } from "../class/order";
 import { HttpService, HttpSettings } from "../service/http.service";
 
 @Injectable({
@@ -23,5 +24,37 @@ export class TradingboardHelper {
       url: location.origin + "/api/Order/GetOpenOrder/" + symbol,
     };
     return await this.httpService.xhr(httpSetting);
+  }
+
+  async openOrder(model : any) {
+    const httpSetting: HttpSettings = {
+      method: "POST",
+      url: location.origin + "/api/Order/OpenOrder/",
+      data: {
+        'symbol': model.symbol,
+        'amount': model.amount,
+        'quantity' : model.quantity,
+        'openPrice': model.openPrice,
+        'stopLose': model.stopLose,
+        'margin' : model.margin,
+      }
+    };
+    // this.showLabelSave = true;
+    // setTimeout(() => {
+    //   this.showLabelSave = false;
+    // }, 4000)
+    await this.httpService.xhr(httpSetting);
+  }
+
+  async closeOrder(orderId : number, price : number) {
+    const httpSetting: HttpSettings = {
+      method: "GET",
+      url: location.origin + "/api/Order/CloseOrder/" + orderId + '/' + price,
+    };
+    // this.showLabelSave = true;
+    // setTimeout(() => {
+    //   this.showLabelSave = false;
+    // }, 4000)
+    await this.httpService.xhr(httpSetting);
   }
 }

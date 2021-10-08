@@ -7,6 +7,7 @@ import { environment } from 'src/environments/environment';
 import { Observable, Subject } from 'rxjs';
 import { HttpSettings, HttpService } from '../service/http.service';
 import { TradingboardHelper } from '../tradingboard/tradingBoard.helper';
+import { Order } from '../class/order';
 
 export const WS_SYMBOL_ENDPOINT = environment.wsEndPointSymbol;
 
@@ -40,8 +41,8 @@ export class TradingboardComponent {
   public stopLose: number;
   public stopLoseOffset: number;
   private ohlc = [] as any;
-  public popupTitle : string;
-  public orderModel : any;
+  public popupTitle: string;
+  public orderModel: Order;
 
   public intervalList = [] as any;
   public interval: string;
@@ -61,11 +62,11 @@ export class TradingboardComponent {
     private service$: WebSocketService,
     public modalService: NgbModal,
     private tradingboardHelper: TradingboardHelper,
-    private appSetting: AppSetting
+    private appSetting: AppSetting,
   ) {
     this.unsubscribe$ = new Subject<void>();
     this.coinData = {};
-    this.stopLoseOffset = 0.0008;
+    this.stopLoseOffset = 0.008;
     this.intervalList = this.appSetting.intervalList;
     this.interval = "4h";
   }
@@ -98,58 +99,68 @@ export class TradingboardComponent {
         this.coinData.s.includes("USDT");
 
         //auto sell
-        this.bigBrother(this.coinData.c);
+         this.bigBrother(this.coinData.c);
 
         this.displayHighchart(this.coinData);
       });
   }
 
-  async bigBrother(lastPrice: number) {
-    if (lastPrice <= this.stopLose) (console.log("sold"));
-    if (lastPrice <= this.openOrderList[0].orderStopLose) (console.log("sold AND TAKE YOUR LOOSE"))
-
+  async bigBrother(price: number) {
+    if (price <= this.stopLose) (console.log("sold"));
+    
+    this.openOrderList.map(order=>{
+      if (price <= order.orderStopLose) (console.log("sold AND TAKE YOUR LOOSE"))
+    })
+   
     //re calculate stop loose
-    this.stopLose = this.coinData.c - (lastPrice * this.stopLoseOffset)
+    this.stopLose = price - ((price/100) * this.stopLoseOffset);
   }
 
   changeStopLoseOffset(type: string) {
-    if (type == 'increase') { this.stopLoseOffset = this.stopLoseOffset + 0.0001 };
-    if (type == 'reduce') { this.stopLoseOffset = this.stopLoseOffset - 0.0001 }
+    if (type == 'increase') { this.stopLoseOffset = this.stopLoseOffset + 0.001 };
+    if (type == 'reduce') { this.stopLoseOffset = this.stopLoseOffset - 0.001 }
+  }
+
+  processFormInputChange(formImputChanged) {
+    switch (formImputChanged) {
+      case 'amount':
+        this.orderModel.quantity = this.orderModel.amount / this.orderModel.openPrice;
+        break;
+      case 'quantity':
+        this.orderModel.amount = this.orderModel.quantity * this.orderModel.openPrice;
+      default:
+        this.orderModel.quantity = this.orderModel.amount / this.orderModel.openPrice;
+        this.orderModel.amount = this.orderModel.quantity * this.orderModel.openPrice;
+        break;
+    }
   }
 
   openPopup(template, action) {
+   
     switch (action) {
       case "newOrder":
-        this.popupTitle = "Buy " +  this.symbol;
-        ///this.orderModel = new {, "", ""};
-        this.modalService.open(template, { ariaLabelledBy: 'modal-basic-title', size: 'sm'}).result.then((result) => {
-          if (result == 'executeOrder') {
-            // this.saveCourse();
+        this.popupTitle = "Buy " + this.symbol;
+        this.orderModel = new Order(0, this.symbol, 0, 0, this.coinData.c, 1, 1);
+        this.modalService.open(template, { ariaLabelledBy: 'modal-basic-title', size: 'sm' }).result.then((result) => {
+          if (result == 'openOrder') {
+            this.openOrder()
           }
         }, (reason) => { });
         break;
 
-      // case "updateOrder":
-      //   this.popupTitle = "clone course package";
-      //   this.modalService.open(template, { ariaLabelledBy: 'modal-basic-title' }).result.then((result) => {
-      //     if (result == 'updateCourse') {
-      //       this.updateCourse();
-      //     }
-      //   }, (reason) => {});
-      //   break;
-
-      //     case "deleteCourse":
-      //       this.popupTitle = "Are you sure you want to delete this course package ?";
-      //       this.modalService.open(template, { ariaLabelledBy: 'modal-basic-title', size: 'ms' }).result.then((result) => {
-      //         if (result == 'deleteContent') {
-      //          this.deleteCourse();
-      //         }
-      //       }, (reason) => { });
-      //       break;
-
       default:
         break;
     }
+  }
+
+  async openOrder(){
+    await this.tradingboardHelper.openOrder(this.orderModel);
+    this.openOrderList = await this.tradingboardHelper.getOpenOrder(this.symbol);
+  }
+
+  async closeOrder(orderId : number, closePrice : number){
+    await this.tradingboardHelper.closeOrder(orderId, closePrice);
+    this.openOrderList = await this.tradingboardHelper.getOpenOrder(this.symbol);
   }
 
   async displayHighchart(coinData: any) {
@@ -165,11 +176,11 @@ export class TradingboardComponent {
 
     this.chartOptions2 = {
       series: [
-        { data: this.liveChartData, type: 'line', yAxis: 0, name:'last' },
-        { data: this.liveChartVolum, type: 'line', yAxis: 1, name:'volume' }
+        { data: this.liveChartData, type: 'line', yAxis: 0, name: 'last' },
+        { data: this.liveChartVolum, type: 'line', yAxis: 1, name: 'volume' }
       ],
       title: {
-        text: ''
+        text: this.stopLose.toString()
       },
       xAxis: { type: 'datetime', dateTimeLabelFormats: { minute: '%M', }, title: { text: '' } },
       yAxis:
@@ -181,8 +192,9 @@ export class TradingboardComponent {
               label: { text: this.stopLoseOffset.toFixed(4).toString(), align: 'right' }
             },
             {
-              color: '#FF0000', width: 2, value: this.openOrderList[0]?.orderStopLose,
-              label: { text: this.openOrderList[0]?.orderStopLose, align: 'right' }
+              //for many order, we need one line by order
+              color: '#FF0000', width: 2, value: this.openOrderList[0]?.stopLose,
+              label: { text: this.openOrderList[0]?.stopLose, align: 'right' }
             }
           ],
         },
@@ -229,8 +241,8 @@ export class TradingboardComponent {
     if (indicator == 'NO_INDICATOR') {
       this.chartOptions.series =
         [
-          { data: chartData, type: 'candlestick', yAxis: 0, name:'quote' },
-          { data: volume, type: 'line', yAxis: 1, name:'volume' }
+          { data: chartData, type: 'candlestick', yAxis: 0, name: 'quote' },
+          { data: volume, type: 'line', yAxis: 1, name: 'volume' }
         ];
     }
 
