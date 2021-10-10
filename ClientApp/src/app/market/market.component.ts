@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { WebSocketService } from '../service/websocket.Service';
+import { WebSocket1Service } from '../service/websocket1.service';
 import { map, takeUntil } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { Observable, Subject } from 'rxjs';
@@ -15,7 +15,7 @@ export class MarketComponent {
   public marketDataListener$: Observable<any>;
   private unsubscribe$: Subject<void>;
 
-  constructor(public service$: WebSocketService) 
+  constructor(public service$: WebSocket1Service) 
   {
     this.unsubscribe$ = new Subject<void>();
   }

@@ -4,7 +4,7 @@ import { Observable, Observer, Subject } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
-export class WebSocketService {
+export class WebSocket1Service {
   private ws: WebSocket;
   private subject: Subject<MessageEvent>;
 

@@ -7,8 +7,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
 using MarginCoin.Model;
-using System.Text.Json.Serialization;
 using System.Text.Json;
+using System;
+using MarginCoin.Misc;
 
 namespace MarginCoin
 {
@@ -24,7 +25,9 @@ namespace MarginCoin
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers().AddJsonOptions(options => 
+            services.AddSignalR();
+
+            services.AddControllers().AddJsonOptions(options =>
             {
                 options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
                 options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
@@ -56,6 +59,10 @@ namespace MarginCoin
                 app.UseHsts();
             }
 
+             app.UseWebSockets();
+            var webSocketOptions = new WebSocketOptions(){KeepAliveInterval = TimeSpan.FromSeconds(120)};
+            app.UseWebSockets(webSocketOptions);
+
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             if (!env.IsDevelopment())
@@ -67,6 +74,8 @@ namespace MarginCoin
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapHub<SignalRHub>("/Signalr");
+                
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller}/{action=Index}/{id?}");
@@ -84,6 +93,8 @@ namespace MarginCoin
                     spa.UseAngularCliServer(npmScript: "start");
                 }
             });
+
+           
         }
     }
 }

@@ -11,6 +11,7 @@ export class TradingboardHelper {
   }
 
   async getIntradayData(symbol, interval): Promise<any> {
+   console.log(interval);
     const httpSetting: HttpSettings = {
       method: 'GET',
       url: 'https://api3.binance.com/api/v3/klines?symbol=' + symbol + '&interval=' + interval

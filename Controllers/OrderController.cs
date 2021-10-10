@@ -2,8 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
-using MarginCoin.ClassTransfer;
-using MarginCoin.Misc;
 using MarginCoin.Model;
 
 namespace MarginCoin.Controllers

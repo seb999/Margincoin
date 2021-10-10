@@ -26,8 +26,8 @@
     </div>
 
     <div class="row">
-      <select class="form-control"  (change)="changeHighstockResolution(interval)">
-        <option *ngFor="let interval of intervalList" [value]="interval.value">{{ interval.value }}
+      <select class="form-control" [(ngModel)]="interval" (change)="changeHighstockResolution(interval)">
+        <option *ngFor="let item of intervalList" [value]="item.value">{{ item.value }}
         </option>
       </select>
     </div>
@@ -38,7 +38,9 @@
       <div class="col-sm-12">
         <div class="card">
           <div class="card-body">
-            <h6 class="card-title">Orders <button class="btn btn-primary btn-sm" (click)="openPopup(popupNewEditOrder, 'newOrder')">Buy</button></h6>
+            <h6 class="card-title">Orders <button class="btn btn-primary btn-sm" (click)="openPopup(popupNewEditOrder, 'newOrder')">Buy</button>
+              <button class="btn btn-primary btn-sm" (click)="autoTrade();">Auto trade</button>
+            </h6>
             <table class="table table-sm">
               <thead class="thead-light">
                 <tr>

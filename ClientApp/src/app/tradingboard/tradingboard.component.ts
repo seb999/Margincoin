@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute } from "@angular/router";
-import { WebSocketService } from '../service/websocket.service';
+import { WebSocket1Service } from '../service/websocket1.service';
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import { map, takeUntil } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
@@ -59,7 +59,7 @@ export class TradingboardComponent {
   constructor(
     private httpService: HttpService,
     private route: ActivatedRoute,
-    private service$: WebSocketService,
+    private service$: WebSocket1Service,
     public modalService: NgbModal,
     private tradingboardHelper: TradingboardHelper,
     private appSetting: AppSetting,
@@ -99,21 +99,35 @@ export class TradingboardComponent {
         this.coinData.s.includes("USDT");
 
         //auto sell
-         this.bigBrother(this.coinData.c);
+         this.bigBrother();
+
+          //re calculate stop loose
+    this.stopLose = this.coinData.c - ((this.coinData.c/100) * this.stopLoseOffset);
 
         this.displayHighchart(this.coinData);
       });
   }
 
-  async bigBrother(price: number) {
-    if (price <= this.stopLose) (console.log("sold"));
+  async bigBrother() {
+    if( this.openOrderList.length>0) 
+      this.bigBrotherSell();
+    else
+      this.bigBrotherBuy();
+  }
+
+  bigBrotherSell(){
+    let currentPrice = this.coinData.c;
+    if (currentPrice <= this.stopLose) (console.log("sold"));
     
     this.openOrderList.map(order=>{
-      if (price <= order.orderStopLose) (console.log("sold AND TAKE YOUR LOOSE"))
+      if (currentPrice <= order.orderStopLose) (console.log("sold AND TAKE YOUR LOOSE"))
     })
    
-    //re calculate stop loose
-    this.stopLose = price - ((price/100) * this.stopLoseOffset);
+   
+  }
+
+  bigBrotherBuy(){
+
   }
 
   changeStopLoseOffset(type: string) {
@@ -150,6 +164,16 @@ export class TradingboardComponent {
 
       default:
         break;
+    }
+  }
+
+  async autoTrade(){
+     {
+      const httpSetting: HttpSettings = {
+        method: 'GET',
+        url: location.origin + "/api/AutoTrade/Activate/true",
+      };
+      return await this.httpService.xhr(httpSetting);
     }
   }
 
@@ -266,6 +290,7 @@ export class TradingboardComponent {
 
   changeHighstockResolution(key) {
     let params = key.split(',');
+    console.log(key);
     this.displayHighstock('NO_INDICATOR', key);
   }
 
