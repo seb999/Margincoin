@@ -38,8 +38,11 @@
       <div class="col-sm-12">
         <div class="card">
           <div class="card-body">
-            <h6 class="card-title">Orders <button class="btn btn-primary btn-sm" (click)="openPopup(popupNewEditOrder, 'newOrder')">Buy</button>
-              <button class="btn btn-primary btn-sm" (click)="autoTrade();">Auto trade</button>
+            <h6 class="card-title">Orders 
+              <button class="btn btn-primary btn-sm mr-1" (click)="openPopup(popupNewEditOrder, 'newOrder')">Buy</button>
+              <button class="btn btn-primary btn-sm btn-sm mr-1" (click)="openPopup(popupNewEditOrder, 'orderTemplate')">Trade template</button>
+              <button class="btn btn-success btn-sm btn-sm mr-1" (click)="startTrade()">Start</button>
+              <button class="btn btn-danger btn-sm" (click)="stopTrade()">Stop</button>
             </h6>
             <table class="table table-sm">
               <thead class="thead-light">
@@ -100,8 +103,8 @@
     </div>
     <div class="modal-body">
       <form>
-        <div class="form-group row no-gutters">
-          <label for="openPrice" class="col-sm-3 col-form-label">Price</label>
+        <div class="form-group row no-gutters" *ngIf="!isAutoTrade">
+          <label for="openPrice" class="col-sm-3 col-form-label" >Price</label>
           <div class="col-sm-9">
             <input id="openPrice" type="number" class="form-control form-control-sm" [value]="orderModel.openPrice" name="openPrice"  [(ngModel)]="orderModel.openPrice" (change)="processFormInputChange('price')">
           </div>
@@ -137,10 +140,10 @@
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-secondary btn-sm" (click)="modal.dismiss()" ngbAutofocus>Cancel</button>
-      <button *ngIf="orderModel.id==0" type="submit" class="btn btn-primary btn-sm" (click)="modal.close('openOrder')">Place order</button>
-      <button *ngIf="orderModel.id!=0" type="button" class="btn btn-primary btn-sm" (click)="modal.close('updateCourse')">Update</button>
+      <button *ngIf="orderModel.id==0" type="submit" class="btn btn-primary btn-sm" (click)="modal.close('continue')">Place order</button>
     </div>
   </ng-template>
+
 
   <!-- popup confirm delete -->
   <ng-template #popupConfirmDelete let-modal>

@@ -52,10 +52,23 @@ export class TradingboardHelper {
       method: "GET",
       url: location.origin + "/api/Order/CloseOrder/" + orderId + '/' + price,
     };
-    // this.showLabelSave = true;
-    // setTimeout(() => {
-    //   this.showLabelSave = false;
-    // }, 4000)
     await this.httpService.xhr(httpSetting);
+  }
+
+  async SaveOrderTemplate(data) {
+    const httpSetting: HttpSettings = {
+      method: 'POST',
+      data: data,
+      url: 'https://localhost:5001/api/AutoTrade/SaveOrderTemplate/',
+    };
+    return await this.httpService.xhr(httpSetting);
+  }
+
+  async testBeta() {
+    const httpSetting: HttpSettings = {
+      method: 'GET',
+      url: location.origin + "/api/AutoTrade/Activate",
+    };
+    return await this.httpService.xhr(httpSetting);
   }
 }

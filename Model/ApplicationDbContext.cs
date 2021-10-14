@@ -9,5 +9,6 @@ namespace MarginCoin.Model
         }
 
         public virtual DbSet<Order> Order { get; set; }
+        public virtual DbSet<OrderTemplate> OrderTemplate { get; set; }
     }
 }

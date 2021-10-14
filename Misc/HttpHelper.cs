@@ -24,7 +24,7 @@ namespace MarginCoin.Misc
                 var response = client.GetAsync("").Result;
                 if (response.IsSuccessStatusCode)
                 {
-
+                    var toto = response.Content.ReadAsStringAsync().Result;
                     return JsonSerializer.Deserialize<T>(response.Content.ReadAsStringAsync().Result, jsonSerializerOptions);
                 }
                 else

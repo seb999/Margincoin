@@ -24,4 +24,8 @@ export class SignalRService {
             console.log("YEAAAAAAAAAAA");
         });
     }
+
+    public closeConnection = () =>{
+        this.hubConnection.stop();
+    }
 }

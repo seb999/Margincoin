@@ -21,7 +21,6 @@ export class MarketComponent {
   }
 
   ngOnDestroy() {
-    console.log("destroy");
     this.service$.close();
     this.unsubscribe$.next();
     this.unsubscribe$.complete();

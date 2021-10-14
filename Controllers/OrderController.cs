@@ -10,21 +10,21 @@ namespace MarginCoin.Controllers
     [Route("api/[controller]")]
     public class OrderController : ControllerBase
     {
-        private readonly ApplicationDbContext dbContext;
+        private readonly ApplicationDbContext _appDbContext;
 
         public OrderController([FromServices] ApplicationDbContext appDbContext)
         {
-            dbContext = appDbContext;
+            _appDbContext = appDbContext;
         }
         
         [HttpGet("[action]/{symbol}")]
         public List<Order> GetOpenOrder(string symbol){
-            return dbContext.Order.Where(p=>p.Symbol == symbol && p.IsClosed != 1).ToList();
+            return _appDbContext.Order.Where(p=>p.Symbol == symbol && p.IsClosed != 1).ToList();
         }
 
         [HttpGet("[action]")]
         public List<Order> GetAllCompletedOrder(){
-            return dbContext.Order.Where(p=>p.IsClosed == 1).ToList();
+            return _appDbContext.Order.Where(p=>p.IsClosed == 1).ToList();
         }
 
         [HttpPost("[action]")]
@@ -34,8 +34,8 @@ namespace MarginCoin.Controllers
             {
                 order.OpenDate = DateTime.Now.ToString();
                 order.IsClosed = 0;
-                dbContext.Order.Add(order);
-                dbContext.SaveChanges(); 
+                _appDbContext.Order.Add(order);
+                _appDbContext.SaveChanges(); 
             }
             catch (System.Exception ex)
             {
@@ -50,11 +50,11 @@ namespace MarginCoin.Controllers
         {
              try
             {
-                Order myOrder = dbContext.Order.Where(p=>p.Id == id).Select(p=>p).FirstOrDefault();
+                Order myOrder = _appDbContext.Order.Where(p=>p.Id == id).Select(p=>p).FirstOrDefault();
                 myOrder.ClosePrice = closePrice;
                 myOrder.IsClosed = 1;
                 myOrder.CloseDate = DateTime.Now.ToString();
-                dbContext.SaveChanges(); 
+                _appDbContext.SaveChanges(); 
             }
             catch (System.Exception ex)
             {

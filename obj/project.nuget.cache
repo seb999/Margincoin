@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "B1J6+CbybMfd3iyW1KUKT48eirX+JUU0nY6zhLbWRyDVYgnnf8W5IxIPwXEWS8O8suoNN3OXQfiGoUrurq08KA==",
+  "dgSpecHash": "vvG4z2ddDgSq6wPOicqNBeL73U4HUzTI8K/UIUcIfXMKl8iIvZ7om6R0s3eC5L372Mw3Yns/G9sX5IMt81bJfQ==",
   "success": true,
   "projectFilePath": "C:\\_Git\\Dotnet\\MarginCoin\\MarginCoin.csproj",
   "expectedPackageFiles": [
@@ -40,7 +40,22 @@
     "C:\\Users\\sdubos\\.nuget\\packages\\system.collections.immutable\\5.0.0\\system.collections.immutable.5.0.0.nupkg.sha512",
     "C:\\Users\\sdubos\\.nuget\\packages\\system.componentmodel.annotations\\5.0.0\\system.componentmodel.annotations.5.0.0.nupkg.sha512",
     "C:\\Users\\sdubos\\.nuget\\packages\\system.diagnostics.diagnosticsource\\5.0.1\\system.diagnostics.diagnosticsource.5.0.1.nupkg.sha512",
-    "C:\\Users\\sdubos\\.nuget\\packages\\system.memory\\4.5.3\\system.memory.4.5.3.nupkg.sha512"
+    "C:\\Users\\sdubos\\.nuget\\packages\\system.memory\\4.5.3\\system.memory.4.5.3.nupkg.sha512",
+    "C:\\Users\\sdubos\\.nuget\\packages\\system.reactive\\4.3.2\\system.reactive.4.3.2.nupkg.sha512",
+    "C:\\Users\\sdubos\\.nuget\\packages\\system.threading.channels\\4.7.0\\system.threading.channels.4.7.0.nupkg.sha512",
+    "C:\\Users\\sdubos\\.nuget\\packages\\websocket.client\\4.3.38\\websocket.client.4.3.38.nupkg.sha512",
+    "C:\\Users\\sdubos\\.nuget\\packages\\websocketsharp\\1.0.3-rc11\\websocketsharp.1.0.3-rc11.nupkg.sha512"
   ],
-  "logs": []
+  "logs": [
+    {
+      "code": "NU1701",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Package 'WebSocketSharp 1.0.3-rc11' was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8' instead of the project target framework 'net5.0'. This package may not be fully compatible with your project.",
+      "libraryId": "WebSocketSharp",
+      "targetGraphs": [
+        "net5.0"
+      ]
+    }
+  ]
 }

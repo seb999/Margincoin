@@ -66,6 +66,14 @@
             "Microsoft.EntityFrameworkCore.Sqlite": {
               "target": "Package",
               "version": "[5.0.9, )"
+            },
+            "WebSocketSharp": {
+              "target": "Package",
+              "version": "[1.0.3-rc11, )"
+            },
+            "Websocket.Client": {
+              "target": "Package",
+              "version": "[4.3.38, )"
             }
           },
           "imports": [

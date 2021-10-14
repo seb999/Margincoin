@@ -43,6 +43,7 @@ export class TradingboardComponent {
   private ohlc = [] as any;
   public popupTitle: string;
   public orderModel: Order;
+  public isAutoTrade: boolean;
 
   public intervalList = [] as any;
   public interval: string;
@@ -74,6 +75,8 @@ export class TradingboardComponent {
   async ngOnInit() {
     this.symbol = this.route.snapshot.paramMap.get("symbol");
 
+    this.tradingboardHelper.testBeta();
+
     //Display historic chart
     this.displayHighstock('NO_INDICATOR', '4h');
 
@@ -99,34 +102,33 @@ export class TradingboardComponent {
         this.coinData.s.includes("USDT");
 
         //auto sell
-         this.bigBrother();
+        this.bigBrother();
 
-          //re calculate stop loose
-    this.stopLose = this.coinData.c - ((this.coinData.c/100) * this.stopLoseOffset);
-
+        //re calculate stop loose
+        this.stopLose = this.coinData.c - ((this.coinData.c / 100) * this.stopLoseOffset);
         this.displayHighchart(this.coinData);
       });
   }
 
   async bigBrother() {
-    if( this.openOrderList.length>0) 
+    if (this.openOrderList.length > 0)
       this.bigBrotherSell();
     else
       this.bigBrotherBuy();
   }
 
-  bigBrotherSell(){
+  bigBrotherSell() {
     let currentPrice = this.coinData.c;
     if (currentPrice <= this.stopLose) (console.log("sold"));
-    
-    this.openOrderList.map(order=>{
+
+    this.openOrderList.map(order => {
       if (currentPrice <= order.orderStopLose) (console.log("sold AND TAKE YOUR LOOSE"))
     })
-   
-   
+
+
   }
 
-  bigBrotherBuy(){
+  bigBrotherBuy() {
 
   }
 
@@ -150,39 +152,74 @@ export class TradingboardComponent {
   }
 
   openPopup(template, action) {
-   
     switch (action) {
       case "newOrder":
+        this.isAutoTrade = false;
         this.popupTitle = "Buy " + this.symbol;
         this.orderModel = new Order(0, this.symbol, 0, 0, this.coinData.c, 1, 1);
         this.modalService.open(template, { ariaLabelledBy: 'modal-basic-title', size: 'sm' }).result.then((result) => {
-          if (result == 'openOrder') {
+          if (result == 'continue') {
             this.openOrder()
           }
         }, (reason) => { });
         break;
 
+      case "orderTemplate":
+        this.isAutoTrade = true;
+        this.popupTitle = "Template " + this.symbol;
+        if (localStorage.getItem("autoTradeTemplate") != null)
+          this.orderModel = JSON.parse(localStorage.getItem('autoTradeTemplate'));
+        else
+          this.orderModel = new Order(0, this.symbol, 0, 0, this.coinData.c, 1, 1);
+        this.modalService.open(template, { ariaLabelledBy: 'modal-basic-title', size: 'sm' }).result.then((result) => {
+          if (result == 'continue') {
+            this.saveOrderTemplate();
+          }
+        }, (reason) => { });
+        break;
       default:
         break;
     }
   }
 
-  async autoTrade(){
-     {
+  async saveOrderTemplate() {
+    //Save in local storage
+    localStorage.setItem('autoTradeTemplate', JSON.stringify(this.orderModel));
+    //And save in db as well
+    const httpSetting: HttpSettings = {
+      method: 'POST',
+      data: this.orderModel,
+      url: 'https://localhost:5001/api/AutoTrade/SaveOrderTemplate/',
+    };
+    return await this.httpService.xhr(httpSetting);
+  }
+
+  async startTrade() {
+    {
       const httpSetting: HttpSettings = {
         method: 'GET',
-        url: location.origin + "/api/AutoTrade/Activate/true",
+        url: location.origin + "/api/AutoTrade/StartTrade/",
       };
       return await this.httpService.xhr(httpSetting);
     }
   }
 
-  async openOrder(){
+  async stopTrade() {
+    {
+      const httpSetting: HttpSettings = {
+        method: 'GET',
+        url: location.origin + "/api/AutoTrade/StopTrade/",
+      };
+      return await this.httpService.xhr(httpSetting);
+    }
+  }
+
+  async openOrder() {
     await this.tradingboardHelper.openOrder(this.orderModel);
     this.openOrderList = await this.tradingboardHelper.getOpenOrder(this.symbol);
   }
 
-  async closeOrder(orderId : number, closePrice : number){
+  async closeOrder(orderId: number, closePrice: number) {
     await this.tradingboardHelper.closeOrder(orderId, closePrice);
     this.openOrderList = await this.tradingboardHelper.getOpenOrder(this.symbol);
   }
@@ -204,7 +241,7 @@ export class TradingboardComponent {
         { data: this.liveChartVolum, type: 'line', yAxis: 1, name: 'volume' }
       ],
       title: {
-        text: this.stopLose.toString()
+        text: ''
       },
       xAxis: { type: 'datetime', dateTimeLabelFormats: { minute: '%M', }, title: { text: '' } },
       yAxis:
