@@ -7,8 +7,8 @@ namespace MarginCoin.Model
         [Key]
         public int Id { get; set; }
         public string Symbol { get; set; }
-        public decimal Quantity { get; set; }
-        public decimal Amount { get; set; }
+        public double Quantity { get; set; }
+        public double Amount { get; set; }
         public int Levrage { get; set; }
         public int IsInactive { get; set; }
         public string DateAdded { get; set; }

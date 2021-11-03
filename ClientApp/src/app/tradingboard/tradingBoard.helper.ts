@@ -63,12 +63,4 @@ export class TradingboardHelper {
     };
     return await this.httpService.xhr(httpSetting);
   }
-
-  async testBeta() {
-    const httpSetting: HttpSettings = {
-      method: 'GET',
-      url: location.origin + "/api/AutoTrade/Activate",
-    };
-    return await this.httpService.xhr(httpSetting);
-  }
 }

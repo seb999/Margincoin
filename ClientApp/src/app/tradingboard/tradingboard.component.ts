@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ɵCodegenComponentFactoryResolver } from '@angular/core';
 import { ActivatedRoute } from "@angular/router";
 import { WebSocket1Service } from '../service/websocket1.service';
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
@@ -8,8 +8,10 @@ import { Observable, Subject } from 'rxjs';
 import { HttpSettings, HttpService } from '../service/http.service';
 import { TradingboardHelper } from '../tradingboard/tradingBoard.helper';
 import { Order } from '../class/order';
+import { SignalRService } from '../service/signalR.service';
 
 export const WS_SYMBOL_ENDPOINT = environment.wsEndPointSymbol;
+export const SOUND = environment.soundUp;
 
 import * as Highcharts from 'highcharts';
 import HC_HIGHSTOCK from 'highcharts/modules/stock';
@@ -44,6 +46,8 @@ export class TradingboardComponent {
   public popupTitle: string;
   public orderModel: Order;
   public isAutoTrade: boolean;
+  public messageInfo: string = "";
+  public showMessageInfo: boolean = false;
 
   public intervalList = [] as any;
   public interval: string;
@@ -64,6 +68,7 @@ export class TradingboardComponent {
     public modalService: NgbModal,
     private tradingboardHelper: TradingboardHelper,
     private appSetting: AppSetting,
+    private signalRService: SignalRService, 
   ) {
     this.unsubscribe$ = new Subject<void>();
     this.coinData = {};
@@ -75,13 +80,26 @@ export class TradingboardComponent {
   async ngOnInit() {
     this.symbol = this.route.snapshot.paramMap.get("symbol");
 
-    this.tradingboardHelper.testBeta();
-
     //Display historic chart
     this.displayHighstock('NO_INDICATOR', '4h');
 
     //Display list of open orders
-    this.openOrderList = await this.tradingboardHelper.getOpenOrder(this.symbol);
+    //this.openOrderList = await this.tradingboardHelper.getOpenOrder(this.symbol);
+    this.loadOrderList();
+
+    //Open listener on my API SignalR
+    this.signalRService.startConnection();
+    this.signalRService.addTransferChartDataListener();   
+    this.signalRService.onMessage().subscribe(message =>  {
+      this.messageInfo = message;
+      this.showMessageInfo = true;
+      if(message=='refreshUI') {
+        let snd = new Audio(SOUND);
+        snd.play();
+        this.loadOrderList();
+      }
+      setTimeout(()=>{ this.showMessageInfo=false }, 700);
+    });
 
     //Open listener
     this.symbolDataListener$ = this.service$.connect(WS_SYMBOL_ENDPOINT + this.symbol.toLowerCase() + "@ticker").pipe(
@@ -130,6 +148,10 @@ export class TradingboardComponent {
 
   bigBrotherBuy() {
 
+  }
+
+  async loadOrderList(){
+    this.openOrderList = await this.tradingboardHelper.getOpenOrder(this.symbol);
   }
 
   changeStopLoseOffset(type: string) {
@@ -198,7 +220,7 @@ export class TradingboardComponent {
     {
       const httpSetting: HttpSettings = {
         method: 'GET',
-        url: location.origin + "/api/AutoTrade/StartTrade/",
+        url: location.origin + "/api/AutoTrade/StartTrade/"+ this.symbol,
       };
       return await this.httpService.xhr(httpSetting);
     }
@@ -332,8 +354,12 @@ export class TradingboardComponent {
   }
 
   ngOnDestroy() {
+    //Unsubscribe to Binance stream
     this.service$.close();
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
+
+    //Unsubscribe to my API stream (SignalR)
+    this.signalRService.closeConnection();
   }
 }

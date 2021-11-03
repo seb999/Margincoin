@@ -1,4 +1,4 @@
-<h5>Trading board</h5>
+<h5>Trading board {{messageInfo}}</h5>
 <div class=row>
   <div class="col-3">
 
@@ -39,10 +39,19 @@
         <div class="card">
           <div class="card-body">
             <h6 class="card-title">Orders 
-              <button class="btn btn-primary btn-sm mr-1" (click)="openPopup(popupNewEditOrder, 'newOrder')">Buy</button>
-              <button class="btn btn-primary btn-sm btn-sm mr-1" (click)="openPopup(popupNewEditOrder, 'orderTemplate')">Trade template</button>
-              <button class="btn btn-success btn-sm btn-sm mr-1" (click)="startTrade()">Start</button>
-              <button class="btn btn-danger btn-sm" (click)="stopTrade()">Stop</button>
+              <div class="row">
+                <div class="col-9">
+                  <button class="btn btn-primary btn-sm mr-1" (click)="openPopup(popupNewEditOrder, 'newOrder')">Buy</button>
+                  <button class="btn btn-primary btn-sm btn-sm mr-1" (click)="openPopup(popupNewEditOrder, 'orderTemplate')">Trade template</button>
+                  <button class="btn btn-success btn-sm btn-sm mr-1" (click)="startTrade()">Start</button>
+                  <button class="btn btn-danger btn-sm" (click)="stopTrade()">Stop</button>
+                </div>
+                <div *ngIf="showMessageInfo" class="col-3 alert alert-danger"
+                   style="height: 30px;padding-top: 5px;margin-bottom: 0px;" role="alert">
+                    {{messageInfo}} 
+                </div>
+              </div>
+                  
             </h6>
             <table class="table table-sm">
               <thead class="thead-light">

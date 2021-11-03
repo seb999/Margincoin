@@ -46,7 +46,7 @@ namespace MarginCoin.Controllers
         }
 
         [HttpGet("[action]/{id}/{closePrice}")]
-        public bool CloseOrder(int id, decimal closePrice)
+        public bool CloseOrder(int id, double closePrice)
         {
              try
             {

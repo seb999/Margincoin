@@ -1,3 +1,4 @@
+using MarginCoin.Class;
 using MarginCoin.Misc;
 using MarginCoin.Model;
 using Microsoft.AspNetCore.Mvc;
@@ -5,6 +6,7 @@ using Microsoft.AspNetCore.SignalR;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 using WebSocketSharp;
 
@@ -16,31 +18,33 @@ namespace MarginCoin.Controllers
     {
         private IHubContext<SignalRHub> _hub;
         private readonly ApplicationDbContext _appDbContext;
-
         private static Boolean isAutoTradeActivated = false;
+        private static Boolean isActiveOrder = false;
+        private List<Quotation> quotationList = new List<Quotation>();
+        private string streamInterval;
 
         public AutoTradeController(IHubContext<SignalRHub> hub, [FromServices] ApplicationDbContext appDbContext)
         {
             _hub = hub;
             _appDbContext = appDbContext;
+            streamInterval = "15m";
         }
 
         [HttpGet("[action]")]
         public void StopTrade()
         {
-             isAutoTradeActivated = false;
+            isAutoTradeActivated = false;
         }
 
-        [HttpGet("[action]")]
-        public async Task<string> StartTrade()
+        [HttpGet("[action]/{Symbol}")]
+        public async Task<string> StartTrade(string symbol)
         {
-            //1-read from db template
-
             //2-get historic data
+            GetCandleData(symbol);
 
-            //3-Start streaming and attach last data to list, calculate indicator and BigBrother
+            //3-Start streaming and attach last data to list, calculate indicator and pass orders
             isAutoTradeActivated = true;
-            var ws = new WebSocket("wss://stream.binance.com:9443/ws/btcusdt@kline_4h");
+            var ws = new WebSocket("wss://stream.binance.com:9443/ws/" + symbol.ToLower() + "@kline_" + streamInterval);
             ws.OnMessage += ws_OnMessage;
             ws.Connect();
             while (isAutoTradeActivated && !HttpContext.RequestAborted.IsCancellationRequested)
@@ -48,20 +52,124 @@ namespace MarginCoin.Controllers
                 await Task.Delay(2000);
             }
             ws.Close();
+            await _hub.Clients.All.SendAsync("tradingStopped");
             return "";
         }
 
         private void ws_OnMessage(Object sender, MessageEventArgs e)
         {
-            //_hub.Clients.All.SendAsync("newOrder");
-            GetLastQuote("BTCUSDT");
+            UpdateCandleData(Helper.deserializeHelper<StreamData>(e.Data));
+
+            AlgoTrading();
         }
 
-        private Quotation GetLastQuote(string symbol)
+        private void AlgoTrading()
         {
-            List<Quotation> quotationList = new List<Quotation>();
-            string apiUrl = string.Format("https://api3.binance.com/api/v3/klines?symbol={0}&interval=4h&limit=1000", symbol);
-            // https://api3.binance.com/api/v3/klines?symbol=BTCUSDT&interval=4h
+            int i = 0;
+            _hub.Clients.All.SendAsync("trading");
+
+            //2-Check active order
+            Order activeOrder = GetActiveOrder();
+
+            //Do some calculation
+            Quotation last = quotationList.Last();
+
+            if (activeOrder == null)
+            {
+                if (last.MacdHist > 0)
+                {
+                    i++;
+                }
+                if (last.Rsi > 40)
+                {
+                    i++;
+                }
+                if (last.c > last.Ema)
+                {
+                    i++;
+                }
+                // if(last.x == true)
+                // {
+                //     i++;
+                // }
+                if (last.c > last.PivotPoint.R1 || last.c > last.PivotPoint.R2 || last.c > last.PivotPoint.R3)
+                {
+                    i++;
+                }
+                if (i == 4)
+                {
+                    OpenOrder();
+                }
+                else
+                {
+                    i = 0;
+                }
+            }
+            else
+            {
+                if (last.c >= activeOrder.TakeProfit)
+                {
+                    CloseOrder(activeOrder.Id);
+                }
+            }
+        }
+
+        private void OpenOrder()
+        {
+            //1-read from db template
+            OrderTemplate orderTemplate = GetOrderTemplate();
+
+            Order newBuyOrder = new Order();
+            newBuyOrder.OpenDate = DateTime.Now.ToString();
+            newBuyOrder.OpenPrice = quotationList.Last().c;
+            newBuyOrder.TakeProfit = quotationList.Last().c*1.004;
+            newBuyOrder.Quantity = orderTemplate.Quantity;
+            newBuyOrder.IsClosed = 0;
+            newBuyOrder.Margin = 1;
+            newBuyOrder.StopLose = 0 ; //to be defined
+            newBuyOrder.Fee = Math.Round((quotationList.Last().c * orderTemplate.Quantity) /100) * 0.1;
+            newBuyOrder.Symbol = quotationList.Last().s;
+            _appDbContext.Order.Add(newBuyOrder);
+            _appDbContext.SaveChanges();
+
+            _hub.Clients.All.SendAsync("refreshUI");
+        }
+
+        public void CloseOrder(double orderId)
+        {
+            Order myOrder = _appDbContext.Order.Where(p => p.Id == orderId).Select(p => p).FirstOrDefault();
+            myOrder.ClosePrice = quotationList.Last().c;
+            myOrder.Fee = myOrder.Fee + Math.Round((quotationList.Last().c * myOrder.Quantity) /100) * 0.1;
+            myOrder.IsClosed = 1;
+            myOrder.Profit = Math.Round((quotationList.Last().c - myOrder.OpenPrice) * myOrder.Quantity * myOrder.Margin);
+            myOrder.CloseDate = DateTime.Now.ToString();
+            _appDbContext.SaveChanges();
+
+             _hub.Clients.All.SendAsync("refreshUI");
+        }
+
+        private OrderTemplate GetOrderTemplate()
+        {
+            return _appDbContext.OrderTemplate.Where(p => p.Symbol == quotationList.Last().s).FirstOrDefault();
+        }
+
+        private Order GetActiveOrder()
+        {
+            return _appDbContext.Order.Where(p => p.Symbol == quotationList.Last().s && p.IsClosed == 0).FirstOrDefault();
+            // if (_appDbContext.Order.Where(p => p.Symbol == quotationList.Last().s && p.IsClosed == 0).ToList().Count > 0)
+            // {
+            //     isActiveOrder = true;
+            // }
+            // else
+            // {
+            //     isActiveOrder = false;
+            // }
+            // return isActiveOrder;
+        }
+
+        private void GetCandleData(string symbol)
+        {
+            string apiUrl = string.Format("https://api3.binance.com/api/v3/klines?symbol={0}&interval=" + streamInterval + "&limit=200", symbol);
 
             //Get data from Binance API
             List<List<double>> coinQuotation = HttpHelper.GetApiData<List<List<double>>>(new Uri(apiUrl));
@@ -70,39 +178,29 @@ namespace MarginCoin.Controllers
             {
                 Quotation newQuotation = new Quotation()
                 {
-                    E = item[0],
+                    T = item[0],
                     o = item[1],
                     h = item[2],
                     l = item[3],
                     c = item[4],
                     v = item[5],
+                    t = item[6],
                 };
                 quotationList.Add(newQuotation);
             }
+
             //Add Indicators to the list
             TradeIndicator.CalculateIndicator(ref quotationList);
-
-            //Add Default Prediction
-            var result = quotationList.Last();
-
-            return result;
-
-
-            //parameters needed from UI
-            //Lower / higher / Synbol / quantity
-            //do the big brother stuff here:
-            //-subscribe to Binance API
-            //-Calculate indicators when you have enought data MACD, RSI, EMA
-            //-create the Algo 
-
-            //Example how to send an event to UI
-            _hub.Clients.All.SendAsync("newOrder");
         }
 
-        [HttpGet("[action]/{symbol}")]
-        public OrderTemplate GetOrderTemplate(string symbo)
+        private void UpdateCandleData(StreamData lastQuote)
         {
-            return _appDbContext.OrderTemplate.Where(p => p.IsInactive != 1).Select(p => p).FirstOrDefault();
+            //We add the last received candle
+            quotationList.Add(lastQuote.k);
+            quotationList.RemoveAt(0);
+
+            //Add Indicators to the list
+            TradeIndicator.CalculateIndicator(ref quotationList);
         }
 
         [HttpPost("[action]")]
@@ -124,12 +222,3 @@ namespace MarginCoin.Controllers
         }
     }
 }
-
-//1-Get candles
-//https://api3.binance.com/api/v3/klines?symbol=BTCUSDT&interval=4h
-
-//2-Add last point
-// wss://stream.binance.com:9443/ws/btcusdt@kline_4h
-
-//3-remove first point of the list if you are smart
-

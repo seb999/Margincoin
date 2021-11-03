@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace MarginCoin.ClassTransfer
+namespace MarginCoin.Class
 {
     public class SymbolTransfer
     {
