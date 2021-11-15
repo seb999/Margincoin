@@ -34,6 +34,8 @@ namespace MarginCoin.Controllers
             {
                 order.OpenDate = DateTime.Now.ToString();
                 order.IsClosed = 0;
+                order.TakeProfit = order.OpenPrice* 1.005;
+                order.Fee = Math.Round((order.OpenPrice * order.Quantity) / 100) * 0.1;
                 _appDbContext.Order.Add(order);
                 _appDbContext.SaveChanges(); 
             }
@@ -52,7 +54,9 @@ namespace MarginCoin.Controllers
             {
                 Order myOrder = _appDbContext.Order.Where(p=>p.Id == id).Select(p=>p).FirstOrDefault();
                 myOrder.ClosePrice = closePrice;
+                myOrder.Fee = myOrder.Fee + Math.Round((closePrice * myOrder.Quantity) /100) * 0.1;
                 myOrder.IsClosed = 1;
+                myOrder.Profit = Math.Round((closePrice - myOrder.OpenPrice) * myOrder.Quantity * myOrder.Margin);
                 myOrder.CloseDate = DateTime.Now.ToString();
                 _appDbContext.SaveChanges(); 
             }

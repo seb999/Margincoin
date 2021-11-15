@@ -1,4 +1,4 @@
-<h5>Trading board {{messageInfo}}</h5>
+<h5>Trading board</h5>
 <div class=row>
   <div class="col-3">
 
@@ -26,6 +26,11 @@
     </div>
 
     <div class="row">
+      <span class="col">RSI :</span>
+      <span class="col">{{(serverMsg?.rsi).toFixed(2)}}</span>
+    </div>
+
+    <div class="row">
       <select class="form-control" [(ngModel)]="interval" (change)="changeHighstockResolution(interval)">
         <option *ngFor="let item of intervalList" [value]="item.value">{{ item.value }}
         </option>
@@ -41,14 +46,14 @@
             <h6 class="card-title">Orders 
               <div class="row">
                 <div class="col-9">
-                  <button class="btn btn-primary btn-sm mr-1" (click)="openPopup(popupNewEditOrder, 'newOrder')">Buy</button>
-                  <button class="btn btn-primary btn-sm btn-sm mr-1" (click)="openPopup(popupNewEditOrder, 'orderTemplate')">Trade template</button>
+                  <button class="btn btn-primary btn-sm mr-1" (click)="openPopUpOrder(popupNewEditOrder)">Buy</button>
+                  <button class="btn btn-primary btn-sm btn-sm mr-1" (click)="openPopupOrderTemplate(popupOrderTemplate)">Trade template</button>
                   <button class="btn btn-success btn-sm btn-sm mr-1" (click)="startTrade()">Start</button>
                   <button class="btn btn-danger btn-sm" (click)="stopTrade()">Stop</button>
                 </div>
                 <div *ngIf="showMessageInfo" class="col-3 alert alert-danger"
                    style="height: 30px;padding-top: 5px;margin-bottom: 0px;" role="alert">
-                    {{messageInfo}} 
+                    {{serverMsg?.msgName}} 
                 </div>
               </div>
                   
@@ -76,8 +81,8 @@
                  <td *ngIf="(((coinData.c-order.openPrice) / (order.openPrice))*100) <0" style="color: red;">{{ (((coinData.c-order.openPrice) / (order.openPrice))*100).toFixed(2) }}</td>  
                  <td *ngIf="(coinData.c-order.openPrice)*order.quantity*order.margin>=0" style="color: limegreen;">{{((coinData.c-order.openPrice)*order.quantity*order.margin).toFixed(2)}}</td>
                  <td *ngIf="(coinData.c-order.openPrice)*order.quantity*order.margin<0" style="color: red;">{{((coinData.c-order.openPrice)*order.quantity*order.margin).toFixed(2)}}</td>
-                 <td> <button class="btn btn-primary btn-sm" (click)="changeStopLoseOffset('reduce')">-</button>&nbsp;
-                      <button class="btn btn-primary btn-sm" (click)="changeStopLoseOffset('increase')">+</button></td>
+                 <td> <button class="btn btn-primary btn-sm" (click)="changeTakeProfitOffset('reduce')">-</button>&nbsp;
+                      <button class="btn btn-primary btn-sm" (click)="changeTakeProfitOffset('increase')">+</button></td>
                  <td><button class="btn btn-primary btn-sm" (click)="closeOrder(order.id,coinData.c);">Sell</button></td>
                  </tr>
                 </tbody>
@@ -90,12 +95,12 @@
 </div>
 
 <div class="row">
-  <div class="col-4">
+  <div class="col-5" *ngIf="chartOptions2">
       <highcharts-chart constructorType='stockChart' [Highcharts]="highcharts2" [options]="chartOptions2"
         style="width: 100%; height: 550px; display: block;">
       </highcharts-chart>
   </div>
-  <div class="col-8">
+  <div class="col-7" *ngIf="chartOptions">
     <highcharts-chart constructorType='stockChart' [Highcharts]="highcharts" [options]="chartOptions"
         style="width: 100%; height: 550px; display: block;">
   </highcharts-chart>
@@ -112,7 +117,7 @@
     </div>
     <div class="modal-body">
       <form>
-        <div class="form-group row no-gutters" *ngIf="!isAutoTrade">
+        <div class="form-group row no-gutters">
           <label for="openPrice" class="col-sm-3 col-form-label" >Price</label>
           <div class="col-sm-9">
             <input id="openPrice" type="number" class="form-control form-control-sm" [value]="orderModel.openPrice" name="openPrice"  [(ngModel)]="orderModel.openPrice" (change)="processFormInputChange('price')">
@@ -124,8 +129,8 @@
             <input id="amount" class="form-control form-control-sm" name="amount" required [(ngModel)]="orderModel.amount" (change)="processFormInputChange('amount')">
           </div>
         </div>
-        <div class="form-group row no-gutters">
-          <label for="quantity" class="col-sm-3 col-form-label">Quantity</label>
+        <div class="form-group row no-gutters" >
+          <label for="quantity" class="col-sm-3 col-form-label" >Quantity</label>
           <div class="col-sm-9">
             <input id="quantity" class="form-control form-control-sm" name="quantity" required [(ngModel)]="orderModel.quantity" (change)="processFormInputChange('quantity')">
           </div>
@@ -142,7 +147,7 @@
             <input id="stop" class="form-control form-control-sm" name="stop" required [(ngModel)]="orderModel.stopLose">
           </div>
           <div class="col-sm-5">
-            <input id="quantity" class="form-control form-control-sm" name="stop" [value]="orderModel.amount*orderModel.stopLose*orderModel.margin/100" disabled >
+            <input id="pourcent" class="form-control form-control-sm" name="pourcent" [value]="orderModel.amount*orderModel.stopLose*orderModel.margin/100" disabled >
           </div>
         </div>
       </form>
@@ -150,6 +155,45 @@
     <div class="modal-footer">
       <button type="button" class="btn btn-secondary btn-sm" (click)="modal.dismiss()" ngbAutofocus>Cancel</button>
       <button *ngIf="orderModel.id==0" type="submit" class="btn btn-primary btn-sm" (click)="modal.close('continue')">Place order</button>
+    </div>
+  </ng-template>
+
+  <!-- popup Order Template -->
+  <ng-template #popupOrderTemplate let-modal>
+    <div class="modal-header">
+      <h5 class="modal-title" id="modal-basic-title">Order Template</h5>
+      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <form>
+        <div class="form-group row no-gutters">
+          <label for="amount" class="col-sm-3 col-form-label">Amount</label>
+          <div class="col-sm-9">
+            <input id="amount" class="form-control form-control-sm" name="amount" required [(ngModel)]="orderTemplate.amount">
+          </div>
+        </div>
+        <div class="form-group row no-gutters">
+          <label for="margin" class="col-sm-3 col-form-label">Levrage</label>
+          <div class="col-sm-9">
+            <input id="margin" class="form-control form-control-sm" name="margin" required [(ngModel)]="orderTemplate.margin">
+          </div>
+        </div>
+        <div class="form-group row no-gutters">
+          <label for="stop" class="col-sm-3 col-form-label">Stop(%)</label>
+          <div class="col-sm-4">
+            <input id="stopLose" class="form-control form-control-sm" name="stopLose" required [(ngModel)]="orderTemplate.stopLose">
+          </div>
+          <div class="col-sm-5">
+            <input id="pourcentage" class="form-control form-control-sm" name="pourcentage" [value]="orderTemplate.amount*orderTemplate.stopLose*orderTemplate.margin/100" disabled >
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary btn-sm" (click)="modal.dismiss()" ngbAutofocus>Cancel</button>
+      <button type="submit" class="btn btn-primary btn-sm" (click)="modal.close('continue')">Save Template</button>
     </div>
   </ng-template>
 
@@ -168,30 +212,3 @@
             (click)="modal.close('deleteContent')">Delete</button>
     </div>
   </ng-template>
-
-
-<!-- {
-    "e": "24hrTicker",  // Event type
-    "E": 123456789,     // Event time
-    "s": "BNBBTC",      // Symbol
-    "p": "0.0015",      // Price change
-    "P": "250.00",      // Price change percent
-    "w": "0.0018",      // Weighted average price
-    "x": "0.0009",      // First trade(F)-1 price (first trade before the 24hr rolling window)
-    "c": "0.0025",      // Last price
-    "Q": "10",          // Last quantity
-    "b": "0.0024",      // Best bid price
-    "B": "10",          // Best bid quantity
-    "a": "0.0026",      // Best ask price
-    "A": "100",         // Best ask quantity
-    "o": "0.0010",      // Open price
-    "h": "0.0025",      // High price
-    "l": "0.0010",      // Low price
-    "v": "10000",       // Total traded base asset volume
-    "q": "18",          // Total traded quote asset volume
-    "O": 0,             // Statistics open time
-    "C": 86400000,      // Statistics close time
-    "F": 0,             // First trade ID
-    "L": 18150,         // Last trade Id
-    "n": 18151          // Total number of trades
-  } -->

@@ -10,16 +10,16 @@ export class TradingboardHelper {
   constructor(private httpService: HttpService) {
   }
 
-  async getIntradayData(symbol, interval): Promise<any> {
+  async getIntradayData(symbol, limit, interval): Promise<any> {
    console.log(interval);
     const httpSetting: HttpSettings = {
       method: 'GET',
-      url: 'https://api3.binance.com/api/v3/klines?symbol=' + symbol + '&interval=' + interval
+      url: 'https://api3.binance.com/api/v3/klines?symbol=' + symbol + '&interval=' + interval + '&limit=' + limit
     };
     return await this.httpService.xhr(httpSetting);
   }
 
-  async getOpenOrder(symbol) {
+  async getOpenOrder(symbol): Promise<Order[]> {
     const httpSetting: HttpSettings = {
       method: 'GET',
       url: location.origin + "/api/Order/GetOpenOrder/" + symbol,

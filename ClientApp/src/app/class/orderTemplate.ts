@@ -1,14 +1,10 @@
-export class Order {
+export class OrderTemplate {
   constructor(
     public id : number,
     public symbol: string,
     public amount?: number,
-    public quantity?: number,
-    public openPrice?: number,
-    public stopLose?: number,
-    public profit?: number,
-    public fee?: number,
     public margin? : number,
+    public stopLose?: number,
     public openDate? : string,
     public closeDate? : string,
     )

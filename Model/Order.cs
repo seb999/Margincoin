@@ -18,5 +18,7 @@ namespace MarginCoin.Model
         public int IsClosed { get; set; }
         public string OpenDate { get; set; }
         public string CloseDate { get; set; }
+        public double RSIIn { get; set; }
+        public double RSIOut{ get; set; }
     }
 }

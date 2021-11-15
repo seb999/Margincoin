@@ -1,6 +1,7 @@
 import { EventEmitter, Injectable } from '@angular/core';
 import * as signalR from "@microsoft/signalr";
 import { Subject } from '@microsoft/signalr';
+import { ServerMsg } from '../class/serverMsg';
 
 @Injectable({
     providedIn: 'root'
@@ -8,7 +9,7 @@ import { Subject } from '@microsoft/signalr';
 export class SignalRService {
     public data: any;
     private hubConnection: signalR.HubConnection;
-    public eventMessage: EventEmitter<string> = new EventEmitter();
+    public eventMessage: EventEmitter<ServerMsg> = new EventEmitter();
 
     public startConnection = () => {
         this.hubConnection = new signalR.HubConnectionBuilder()
@@ -21,13 +22,21 @@ export class SignalRService {
     }
     
     public addTransferChartDataListener = () => {
-        console.log("opening listener");
-        this.hubConnection.on('trading', () => {
-            return this.eventMessage.emit('trading');
+        this.hubConnection.on('trading', (rsi,r1,s1) => {       
+            let serverMsg : ServerMsg = {
+                msgName : 'trading',
+                rsi : rsi,
+                r1 : r1,
+                s1 : s1
+            }
+            return this.eventMessage.emit(serverMsg);
         });
 
         this.hubConnection.on('refreshUI', () => {
-            return this.eventMessage.emit('refreshUI');
+            let serverMsg :ServerMsg = {
+                msgName : 'refreshUI'
+            };
+            return this.eventMessage.emit(serverMsg);
         });
     }
 

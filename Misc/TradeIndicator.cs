@@ -26,7 +26,7 @@ namespace MarginCoin.Misc
             {
                 for (int i = 0; i <= outNBElements - 1; i++)
                 {
-                    quotationList[i + beginIndex].Rsi = (float)Math.Round(rsiValues[i], 2);
+                    quotationList[i + beginIndex].Rsi = rsiValues[i];
                 }
             }
 
@@ -36,9 +36,13 @@ namespace MarginCoin.Misc
             {
                 for (int i = 0; i < outNBElements; i++)
                 {
-                    quotationList[i + beginIndex].Macd = outMACD[i] > 1 ? (float)Math.Round(outMACD[i], 3) : (float)Math.Round(outMACD[i], 6);
-                    quotationList[i + beginIndex].MacdHist = Math.Abs(outMACDHist[i]) > 1 ? (float)Math.Round(outMACDHist[i], 3) : (float)Math.Round(outMACDHist[i], 6);
-                    quotationList[i + beginIndex].MacdSign = outMACDSignal[i] > 1 ? (float)Math.Round(outMACDSignal[i], 3) : (float)Math.Round(outMACDSignal[i], 6);
+                    // quotationList[i + beginIndex].Macd = outMACD[i] > 1 ? (float)Math.Round(outMACD[i], 3) : (float)Math.Round(outMACD[i], 6);
+                    // quotationList[i + beginIndex].MacdHist = Math.Abs(outMACDHist[i]) > 1 ? (float)Math.Round(outMACDHist[i], 3) : (float)Math.Round(outMACDHist[i], 6);
+                    // quotationList[i + beginIndex].MacdSign = outMACDSignal[i] > 1 ? (float)Math.Round(outMACDSignal[i], 3) : (float)Math.Round(outMACDSignal[i], 6);
+
+                    quotationList[i + beginIndex].Macd = outMACD[i];
+                    quotationList[i + beginIndex].MacdHist = outMACDHist[i];
+                    quotationList[i + beginIndex].MacdSign = outMACDSignal[i];
                 }
             }
 
@@ -48,10 +52,11 @@ namespace MarginCoin.Misc
             {
                 for (int i = 0; i < outNBElements; i++)
                 {
-                    quotationList[i + beginIndex].Ema = (float)Math.Round(emaValues[i], 2);
+                    quotationList[i + beginIndex].Ema = emaValues[i];
                 }
             }
 
+            //Pivot
             foreach (var (quote, index) in quotationList.Select((v, i)=>(v, i))) {
                   if(index == 0)continue;
                   var PP = ((quotationList[index-1].h + quotationList[index-1].l + quotationList[index-1].c) / 3);
