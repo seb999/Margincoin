@@ -1,6 +1,7 @@
-import { Component, ɵCodegenComponentFactoryResolver } from '@angular/core';
+import { Component, ViewEncapsulation, ɵCodegenComponentFactoryResolver } from '@angular/core';
 import { ActivatedRoute } from "@angular/router";
 import { WebSocket1Service } from '../service/websocket1.service';
+import { WebSocket2Service } from '../service/websocket2.service';
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import { map, takeUntil } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
@@ -34,10 +35,13 @@ HC_THEME(Highcharts);
 @Component({
   selector: 'app-tradingboard',
   templateUrl: './tradingboard.component.html',
+  encapsulation: ViewEncapsulation.None,
+  providers: [WebSocket1Service, WebSocket2Service]
 })
 export class TradingboardComponent {
   public symbolList$: Observable<any>;
-  public symbolDataListener$: Observable<any>;
+  public tickerDataListener$: Observable<any>;
+  public depthDataListener$: Observable<any>;
   private unsubscribe$: Subject<void>;
   public symbol: string;
   public coinData: any;
@@ -52,6 +56,8 @@ export class TradingboardComponent {
   public showMessageInfo: boolean = false;
   public intervalList = [] as any;
   public interval: string;
+  public askRatio : number = 0;
+  public bidRatio : number = 0;
 
   public liveChartData = [] as any;
   public liveChartVolum = [] as any;
@@ -66,6 +72,7 @@ export class TradingboardComponent {
     private httpService: HttpService,
     private route: ActivatedRoute,
     private service$: WebSocket1Service,
+    private service2$: WebSocket2Service,
     public modalService: NgbModal,
     private tradingboardHelper: TradingboardHelper,
     private appSetting: AppSetting,
@@ -103,8 +110,8 @@ export class TradingboardComponent {
       setTimeout(() => { this.showMessageInfo = false }, 700);
     });
 
-    //Open listener
-    this.symbolDataListener$ = this.service$.connect(WS_SYMBOL_ENDPOINT + this.symbol.toLowerCase() + "@ticker").pipe(
+    //Stream ticker
+    this.tickerDataListener$ = this.service$.connect(WS_SYMBOL_ENDPOINT + this.symbol.toLowerCase() + "@ticker").pipe(
       map(
         (response: MessageEvent): any => {
           let data = JSON.parse(response.data);
@@ -113,7 +120,40 @@ export class TradingboardComponent {
       )
     );
 
-    this.symbolDataListener$
+     //Stream depth
+    this.depthDataListener$ = this.service2$.connect(WS_SYMBOL_ENDPOINT + this.symbol.toLowerCase() + "@depth").pipe(
+      map(
+        (response: MessageEvent): any => {
+          let data = JSON.parse(response.data);
+          return data;
+        }
+      )
+    );
+
+     this.depthDataListener$
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(data => {
+        let ask : number = 0;
+        let bid : number = 0;
+       
+        
+        //bid (price*quantity)
+        data.b.map(p=>{
+          bid = bid + p[0]*p[1];
+        })
+
+        //ask (price*quantity)
+        data.a.map(p=>{
+          ask = ask + p[0]*p[1];
+        })
+
+        this.bidRatio = (bid/(ask+bid))*100;
+        this.askRatio = (ask/(ask+bid))*100;
+        console.log(this.bidRatio);
+        console.log(this.askRatio);
+      });
+
+    this.tickerDataListener$
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(data => {
         this.coinData = data;
@@ -125,6 +165,7 @@ export class TradingboardComponent {
         this.takeProfit = this.coinData.c - ((this.coinData.c / 100) * this.takeProfitOffset);
         this.displayHighchart(this.coinData);
       });
+      
   }
 
   async loadOrderList() {

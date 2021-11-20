@@ -47,19 +47,27 @@ namespace MarginCoin.Controllers
 
             //3-Start streaming and attach last data to list, calculate indicator and pass orders
             isAutoTradeActivated = true;
-            var ws = new WebSocket("wss://stream.binance.com:9443/ws/" + symbol.ToLower() + "@kline_" + streamInterval);
-            ws.OnMessage += ws_OnMessage;
-            ws.Connect();
+            var ws1 = new WebSocket("wss://stream.binance.com:9443/ws/" + symbol.ToLower() + "@kline_" + streamInterval);
+            //var ws2 = new WebSocket("wss://stream.binance.com:9443/ws/" + symbol.ToLower() + "@kline_" + streamInterval);
+            ws1.OnMessage += ws_OnNewQuotationStream;
+            ws1.Connect();
             while (isAutoTradeActivated && !HttpContext.RequestAborted.IsCancellationRequested)
             {
                 await Task.Delay(2000);
             }
-            ws.Close();
+            ws1.Close();
             await _hub.Clients.All.SendAsync("tradingStopped");
             return "";
         }
 
-        private void ws_OnMessage(Object sender, MessageEventArgs e)
+        private void ws_OnNewQuotationStream(Object sender, MessageEventArgs e)
+        {
+            UpdateCandleData(Helper.deserializeHelper<StreamData>(e.Data));
+
+            AlgoTrading();
+        }
+
+        private void ws_OnNewDiffDepthStream(Object sender, MessageEventArgs e)
         {
             UpdateCandleData(Helper.deserializeHelper<StreamData>(e.Data));
 
@@ -75,8 +83,9 @@ namespace MarginCoin.Controllers
             //Read active order
             Order activeOrder = GetActiveOrder();
 
-            //Read last quotation
+            //Read last/previous quotation
             Quotation last = quotationList.Last();
+            Quotation previous = quotationList[quotationList.Count-2];
         
             //Open new order if there is no
             if (activeOrder == null)
@@ -100,7 +109,11 @@ namespace MarginCoin.Controllers
                     {
                         i++;
                     }
-                    if (i == 3)
+                    if (last.c > previous.c*1.005)
+                    {
+                        i++;
+                    }
+                    if (i == 4)
                     {
                         OpenOrder();
                     }
@@ -223,6 +236,32 @@ namespace MarginCoin.Controllers
         private void GetCandleData(string symbol)
         {
             string apiUrl = string.Format("https://api3.binance.com/api/v3/klines?symbol={0}&interval=" + streamInterval + "&limit=500", symbol);
+
+            //Get data from Binance API
+            List<List<double>> coinQuotation = HttpHelper.GetApiData<List<List<double>>>(new Uri(apiUrl));
+
+            foreach (var item in coinQuotation)
+            {
+                Quotation newQuotation = new Quotation()
+                {
+                    T = item[0],
+                    o = item[1],
+                    h = item[2],
+                    l = item[3],
+                    c = item[4],
+                    v = item[5],
+                    t = item[6],
+                };
+                quotationList.Add(newQuotation);
+            }
+
+            //Add Indicators to the list
+            TradeIndicator.CalculateIndicator(ref quotationList);
+        }
+
+        private void GetTradeData(string symbol)
+        {
+            string apiUrl = string.Format("https://api3.binance.com/api/v3/trades?symbol={0}&interval=" + streamInterval + "&limit=500", symbol);
 
             //Get data from Binance API
             List<List<double>> coinQuotation = HttpHelper.GetApiData<List<List<double>>>(new Uri(apiUrl));

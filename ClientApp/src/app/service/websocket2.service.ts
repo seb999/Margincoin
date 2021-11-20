@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable, Observer, Subject } from 'rxjs';
 
 @Injectable()
-export class WebSocket1Service {
+export class WebSocket2Service {
   private ws: WebSocket;
   private subject: Subject<MessageEvent>;
 

@@ -9,6 +9,7 @@ export const WS_MARKET_ENDPOINT = environment.wsEndPointMarket;
 @Component({
   selector: 'app-market',
   templateUrl: './market.component.html',
+  providers: [WebSocket1Service]
 })
 export class MarketComponent {
   public symbolList$: Observable<any>;

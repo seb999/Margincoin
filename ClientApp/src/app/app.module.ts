@@ -33,7 +33,7 @@ import { AppSetting } from './app.settings';
     { path: 'wallet', component: WalletComponent },
 ], { relativeLinkResolution: 'legacy' })
   ],
-  providers: [TradingboardHelper, AppSetting],
+  providers: [TradingboardHelper, AppSetting ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
