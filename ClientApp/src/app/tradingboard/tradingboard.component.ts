@@ -24,6 +24,7 @@ import HC_THEME from 'highcharts/themes/grid-light';
 import { AppSetting } from '../app.settings';
 import { OrderTemplate } from '../class/orderTemplate';
 import { ServerMsg } from '../class/serverMsg';
+import { Depth } from '../class/depth';
 
 HC_HIGHSTOCK(Highcharts);
 HC_INDIC(Highcharts);
@@ -59,6 +60,7 @@ export class TradingboardComponent {
   public askRatio : number = 0;
   public bidRatio : number = 0;
 
+  private depthList : Depth[] = new Array();
   public liveChartData = [] as any;
   public liveChartVolum = [] as any;
   highcharts = Highcharts;
@@ -146,11 +148,29 @@ export class TradingboardComponent {
         data.a.map(p=>{
           ask = ask + p[0]*p[1];
         })
+      
+        
+        if(this.depthList.length >10)
+        {
+          this.depthList.push(new Depth(ask, bid));
+          this.depthList.splice(0,1);
+        }
+        else{
+          this.depthList.push(new Depth(ask, bid))
+        }
+        console.log(this.depthList)
+        ask = 0;
+        bid = 0;
+        this.depthList.map(p=>{
+          ask = ask + p.ask;
+          bid = bid + p.bid
+        })
 
         this.bidRatio = (bid/(ask+bid))*100;
         this.askRatio = (ask/(ask+bid))*100;
-        console.log(this.bidRatio);
-        console.log(this.askRatio);
+
+       
+        
       });
 
     this.tickerDataListener$
