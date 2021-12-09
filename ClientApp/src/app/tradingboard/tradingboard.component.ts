@@ -49,7 +49,7 @@ export class TradingboardComponent {
   public stop: number;
   public takeProfit: number;
   public takeProfitOffset: number;
-  private ohlc = [] as any;
+  
   public popupTitle: string;
   public orderModel: Order;
   public orderTemplate: OrderTemplate;
@@ -57,12 +57,15 @@ export class TradingboardComponent {
   public showMessageInfo: boolean = false;
   public intervalList = [] as any;
   public interval: string;
-  public askRatio : number = 0;
-  public bidRatio : number = 0;
+  public askRatio: number = 0;
+  public bidRatio: number = 0;
 
-  private depthList : Depth[] = new Array();
+  private depthList: Depth[] = new Array();
+  private ohlc = [] as any;
   public liveChartData = [] as any;
   public liveChartVolum = [] as any;
+  public liveDataAI = [] as any;
+
   highcharts = Highcharts;
   highcharts2 = Highcharts;
   highcharts3 = Highcharts;
@@ -94,7 +97,6 @@ export class TradingboardComponent {
     this.displayHighstock('NO_INDICATOR', '15m');
 
     //Display list of open orders
-    //this.openOrderList = await this.tradingboardHelper.getOpenOrder(this.symbol);
     this.loadOrderList();
 
     //Open listener on my API SignalR
@@ -102,7 +104,6 @@ export class TradingboardComponent {
     this.signalRService.addTransferChartDataListener();
     this.signalRService.onMessage().subscribe(message => {
       this.serverMsg = message;
-      console.log(this.serverMsg?.r1);
       this.showMessageInfo = true;
       if (this.serverMsg.msgName == 'refreshUI') {
         let snd = new Audio(SOUND);
@@ -122,7 +123,7 @@ export class TradingboardComponent {
       )
     );
 
-     //Stream depth
+    //Stream depth
     this.depthDataListener$ = this.service2$.connect(WS_SYMBOL_ENDPOINT + this.symbol.toLowerCase() + "@depth").pipe(
       map(
         (response: MessageEvent): any => {
@@ -132,45 +133,37 @@ export class TradingboardComponent {
       )
     );
 
-     this.depthDataListener$
+    this.depthDataListener$
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(data => {
-        let ask : number = 0;
-        let bid : number = 0;
-       
-        
+        let ask: number = 0;
+        let bid: number = 0;
+
         //bid (price*quantity)
-        data.b.map(p=>{
-          bid = bid + p[0]*p[1];
+        data.b.map(p => {
+          bid = bid + p[0] * p[1];
         })
 
         //ask (price*quantity)
-        data.a.map(p=>{
-          ask = ask + p[0]*p[1];
+        data.a.map(p => {
+          ask = ask + p[0] * p[1];
         })
-      
-        
-        if(this.depthList.length >10)
-        {
+
+        if (this.depthList.length > 10) {
           this.depthList.push(new Depth(ask, bid));
-          this.depthList.splice(0,1);
+          this.depthList.splice(0, 1);
         }
-        else{
+        else {
           this.depthList.push(new Depth(ask, bid))
         }
-        console.log(this.depthList)
         ask = 0;
         bid = 0;
-        this.depthList.map(p=>{
+        this.depthList.map(p => {
           ask = ask + p.ask;
           bid = bid + p.bid
         })
-
-        this.bidRatio = (bid/(ask+bid))*100;
-        this.askRatio = (ask/(ask+bid))*100;
-
-       
-        
+        this.bidRatio = (bid / (ask + bid)) * 100;
+        this.askRatio = (ask / (ask + bid)) * 100;
       });
 
     this.tickerDataListener$
@@ -184,8 +177,14 @@ export class TradingboardComponent {
         //re calculate stop loose
         this.takeProfit = this.coinData.c - ((this.coinData.c / 100) * this.takeProfitOffset);
         this.displayHighchart(this.coinData);
+
+        //Calculate Prediction
+        this.getPrediction(this.coinData).then((p) => {
+         //this.predictionList = p;
+         console.log(p);
+        });
       });
-      
+
   }
 
   async loadOrderList() {
@@ -223,7 +222,7 @@ export class TradingboardComponent {
 
   async openPopupOrderTemplate(template) {
     this.orderTemplate = await this.getOrderTemplate();
-    if (this.orderTemplate==null) {
+    if (this.orderTemplate == null) {
       this.orderTemplate = new OrderTemplate(0, this.symbol, 0, 1, 1);
     }
     this.modalService.open(template, { ariaLabelledBy: 'modal-basic-title', size: 'sm' }).result.then((result) => {
@@ -309,7 +308,7 @@ export class TradingboardComponent {
               label: { text: this.takeProfitOffset.toFixed(4).toString(), align: 'right' }
             },
             {
-              color: '#FF0000', width: 2, value: this.openOrderList[0]?.openPrice * (1 - (this.openOrderList[0]?.stopLose/100)),
+              color: '#FF0000', width: 2, value: this.openOrderList[0]?.openPrice * (1 - (this.openOrderList[0]?.stopLose / 100)),
               label: { text: this.openOrderList[0]?.stopLose.toString(), align: 'right' }
             },
             {
@@ -334,7 +333,7 @@ export class TradingboardComponent {
   async displayHighstock(indicator, interval: string) {
     let chartData = [] as any;
     let volume = [] as any;
-    this.ohlc = await this.tradingboardHelper.getIntradayData(this.symbol,1000, interval);
+    this.ohlc = await this.tradingboardHelper.getIntradayData(this.symbol, 1000, interval);
 
     this.ohlc.map((data, index) => {
       chartData.push([
@@ -396,6 +395,20 @@ export class TradingboardComponent {
     let params = key.split(',');
     console.log(key);
     this.displayHighstock('NO_INDICATOR', key);
+  }
+
+  async getPrediction(coinData): Promise<any> {
+    this.liveDataAI.push({
+      c: coinData.c,
+      v: coinData.v,
+    })
+
+    const httpSetting: HttpSettings = {
+      method: 'POST',
+      data: this.liveDataAI,
+      url: location.origin + "/api/AI/GetPrediction/",
+    };
+    return await this.httpService.xhr(httpSetting);
   }
 
   ngOnDestroy() {
