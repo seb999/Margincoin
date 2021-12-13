@@ -9,7 +9,6 @@ using MarginCoin.Misc;
 using System.Text.Json;
 using Newtonsoft.Json;
 using System.Linq;
-using Microsoft.ML.Trainers.FastTree;
 
 namespace MarginCoin.Controllers
 {
@@ -32,8 +31,6 @@ namespace MarginCoin.Controllers
             //1 - Add RSI and MACD
            TradeIndicator.CalculateIndicator(ref quoteList);
 
-
-
             //2 - List models available
             var rootFolder = Environment.CurrentDirectory + "/AI/";
             var modelPathList = Directory.GetFiles(rootFolder, "*", SearchOption.AllDirectories);
@@ -42,11 +39,9 @@ namespace MarginCoin.Controllers
                 return predictionList;
 
             ModelInput newModelInput = new ModelInput(){
-                c = (float)quoteList.Last().c,
-                v = (float)quoteList.Last().v,
+                v = (float)quoteList.Last().v/480,  //we divide 24h volume by 480 to get 3min volumn
                 Rsi = (float)quoteList.Last().Rsi,
                 MacdHist = (float)quoteList.Last().MacdHist,
-                Ema = (float)quoteList.Last().Ema,
             };
 
             // //3 - Iterate throw model and fire prediction
@@ -58,10 +53,10 @@ namespace MarginCoin.Controllers
                 var toIndex = Path.GetFileName(modelPath).Length - fromIndex - 4;
                 prediction.ModelName = Path.GetFileName(modelPath).Substring(fromIndex, toIndex);
 
-                prediction.Future = CalculatePrediction(newModelInput, modelPath).Future;
+                prediction.FuturePrice = CalculatePrediction(newModelInput, modelPath).FuturePrice;
                 prediction.Rsi = newModelInput.Rsi;
                 prediction.MacdHist = newModelInput.MacdHist;
-                prediction.Ema = newModelInput.Ema;
+                prediction.v = newModelInput.v;
                 predictionList.Add(prediction);
             }
 
@@ -97,7 +92,6 @@ namespace MarginCoin.Controllers
             ModelOutput prediction = predictionFunction.Predict(new ModelInput
             {
                 Rsi = (float)intraday.Rsi,
-                Ema = (float)intraday.Ema,
                 MacdHist = (float)intraday.MacdHist,
                 v = (float)intraday.v,
             });

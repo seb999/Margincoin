@@ -1,28 +1,30 @@
 {
   "format": 1,
   "restore": {
-    "/Users/sebastien/_Git/Dotnet/Margincoin/MarginCoin.csproj": {}
+    "C:\\_Git\\Dotnet\\MarginCoin\\MarginCoin.csproj": {}
   },
   "projects": {
-    "/Users/sebastien/_Git/Dotnet/Margincoin/MarginCoin.csproj": {
+    "C:\\_Git\\Dotnet\\MarginCoin\\MarginCoin.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/sebastien/_Git/Dotnet/Margincoin/MarginCoin.csproj",
+        "projectUniqueName": "C:\\_Git\\Dotnet\\MarginCoin\\MarginCoin.csproj",
         "projectName": "MarginCoin",
-        "projectPath": "/Users/sebastien/_Git/Dotnet/Margincoin/MarginCoin.csproj",
-        "packagesPath": "/Users/sebastien/.nuget/packages/",
-        "outputPath": "/Users/sebastien/_Git/Dotnet/Margincoin/obj/",
+        "projectPath": "C:\\_Git\\Dotnet\\MarginCoin\\MarginCoin.csproj",
+        "packagesPath": "C:\\Users\\sdubos\\.nuget\\packages\\",
+        "outputPath": "C:\\_Git\\Dotnet\\MarginCoin\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
-          "/usr/local/share/dotnet/sdk/NuGetFallbackFolder"
+          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
         ],
         "configFilePaths": [
-          "/Users/sebastien/.nuget/NuGet/NuGet.Config"
+          "C:\\Users\\sdubos\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
           "net5.0"
         ],
         "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -67,11 +69,7 @@
             },
             "Microsoft.ML": {
               "target": "Package",
-              "version": "[1.4.0, )"
-            },
-            "Microsoft.ML.FastTree": {
-              "target": "Package",
-              "version": "[1.4.0, )"
+              "version": "[1.7.0, )"
             },
             "WebSocketSharp": {
               "target": "Package",
@@ -100,7 +98,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/5.0.403/RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.402\\RuntimeIdentifierGraph.json"
         }
       }
     }

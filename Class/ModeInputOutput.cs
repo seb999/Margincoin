@@ -6,29 +6,23 @@ namespace MarginCoin.Class
     {
         public class ModelInput
         {
-            [LoadColumn(0)]
-            public float c { get; set; }
-
-            [LoadColumn(1)]
+            [LoadColumn(5)]
             public float v { get; set; }
 
-            [LoadColumn(2)]
+            [LoadColumn(12)]
             public float Rsi { get; set; }
 
-            [LoadColumn(3)]
+            [LoadColumn(15)]
             public float MacdHist { get; set; }
             
-            [LoadColumn(4)]
-            public float Ema { get; set; }
-            
-            [LoadColumn(5)]
-            public float Future { get; set; }
+            [LoadColumn(17)]
+            public float FuturePrice { get; set; }
         }
 
         public class ModelOutput
         {
             [ColumnName("Score")]
-            public float Future { get; set; }
+            public float FuturePrice { get; set; }
         }
     }
 }
