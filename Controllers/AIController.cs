@@ -22,9 +22,7 @@ namespace MarginCoin.Controllers
         {
              List<PredictionTransfer> predictionList = new List<PredictionTransfer>();
              List<Quotation> quoteList = JsonConvert.DeserializeObject<List<Quotation>>(data.ToString());
-            //0 - Deserialize the JSON Object
-            //List<ModelInput> intradayList = JsonConvert.DeserializeObject<List<ModelInput>>(data.ToString());
-           
+       
 
             if(quoteList.Count==0) return predictionList;
 
@@ -33,7 +31,7 @@ namespace MarginCoin.Controllers
 
             //2 - List models available
             var rootFolder = Environment.CurrentDirectory + "/AI/";
-            var modelPathList = Directory.GetFiles(rootFolder, "*", SearchOption.AllDirectories);
+            var modelPathList = Directory.GetFiles(rootFolder, quoteList.Last().s + "*", SearchOption.AllDirectories);
 
             if (modelPathList.Length == 0)
                 return predictionList;

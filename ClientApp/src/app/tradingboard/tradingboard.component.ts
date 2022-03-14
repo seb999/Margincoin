@@ -399,6 +399,7 @@ export class TradingboardComponent {
 
   async getPrediction(coinData): Promise<any> {
     this.liveDataAI.push({
+      s: coinData.s,
       c: coinData.c,
       v: coinData.v,
     })
