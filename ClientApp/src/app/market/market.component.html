@@ -1,4 +1,5 @@
 
+ <button class="btn btn-primary btn-sm mr-1" (click)="monitorMarket()">Monitor market</button>
 <table class="table table-sm">
     <thead class="thead thead-light">
         <tr>
@@ -14,8 +15,8 @@
     <tbody>
         <tr *ngFor="let coin of symbolList$">
          <td>
-                   <img src='{{ "assets/images/CoinIcon/" + coin.s.substring(0,coin.s.length-4) + ".png" }}' width="20px"
-                    height="20px" />
+                   <!-- <img src='{{ "assets/images/CoinIcon/" + coin.s.substring(0,coin.s.length-4) + ".png" }}' width="20px"
+                    height="20px" /> -->
                 {{coin.s.substring(0,coin.s.length-4)}}<span style="font-size: x-small;">/USDT</span>
             </td>
 

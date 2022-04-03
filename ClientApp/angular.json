@@ -106,7 +106,9 @@
           },
           "configurations": {
             "dev": {
-              "optimization": true,
+              "vendorChunk": true,
+              "buildOptimizer": false,
+              "optimization": false,
               "outputHashing": "all",
               "sourceMap": false,
               "namedChunks": false,

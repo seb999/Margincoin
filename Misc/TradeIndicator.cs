@@ -9,7 +9,7 @@ namespace MarginCoin.Misc
     public static class TradeIndicator
     {
 
-        public static void CalculateIndicator(ref List<Quotation> quotationList)
+        public static void CalculateIndicator(ref List<Candle> quotationList)
         {
             var data = quotationList.Select(p => p.c).ToArray();
             int beginIndex;

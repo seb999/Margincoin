@@ -7,6 +7,6 @@ namespace MarginCoin.Class
         public string e { get; set; }// Event type
         public double E { get; set; }// Event time
         public string s { get; set; }// Symbol
-        public Quotation k { get; set; }
+        public Candle k { get; set; }
     }
 }

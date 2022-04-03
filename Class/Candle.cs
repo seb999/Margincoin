@@ -1,7 +1,7 @@
 
 namespace MarginCoin.Class
 {
-    public class Quotation
+    public class Candle
     {
         public double T { get; set; }  // Open time
         public string s { get; set; } // Symbol name

@@ -21,7 +21,7 @@ namespace MarginCoin.Controllers
         public List<PredictionTransfer> GetPrediction([FromBody]System.Text.Json.JsonElement data)
         {
              List<PredictionTransfer> predictionList = new List<PredictionTransfer>();
-             List<Quotation> quoteList = JsonConvert.DeserializeObject<List<Quotation>>(data.ToString());
+             List<Candle> quoteList = JsonConvert.DeserializeObject<List<Candle>>(data.ToString());
        
 
             if(quoteList.Count==0) return predictionList;

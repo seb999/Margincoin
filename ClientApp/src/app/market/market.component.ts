@@ -3,6 +3,7 @@ import { WebSocket1Service } from '../service/websocket1.service';
 import { map, takeUntil } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { Observable, Subject } from 'rxjs';
+import { HttpService, HttpSettings } from '../service/http.service';
 export const WS_MARKET_ENDPOINT = environment.wsEndPointMarket;
 
 
@@ -16,12 +17,13 @@ export class MarketComponent {
   public marketDataListener$: Observable<any>;
   private unsubscribe$: Subject<void>;
 
-  constructor(public service$: WebSocket1Service) 
+  constructor(public service$: WebSocket1Service,
+    private httpService: HttpService,) 
   {
     this.unsubscribe$ = new Subject<void>();
   }
 
-  ngOnDestroy() {
+  ngOnDestroy() { 
     this.service$.close();
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
@@ -48,9 +50,17 @@ export class MarketComponent {
           this.symbolList$ = data.filter(function (symbol) {
             if (symbol.p < 0) symbol.color = "red";
             if (symbol.p >= 0) symbol.color = "limegreen";
-            return symbol.s.includes("USDT");
+            return symbol.s.includes("USDT"); 
           });
         };
       })
   };
+
+  async monitorMarket(): Promise<any> {
+    const httpSetting: HttpSettings = {
+      method: 'GET',
+      url: 'https://localhost:5001/api/AutoTrade2/MonitorMarket',
+    };
+    return await this.httpService.xhr(httpSetting);
+  }
 }

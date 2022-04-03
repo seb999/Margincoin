@@ -9,6 +9,8 @@ namespace MarginCoin.Model
         public string Symbol { get; set; }
         public double Quantity { get; set; }
         public double OpenPrice { get; set; }
+        public double HighPrice { get; set; }
+        public double LowPrice { get; set; }
         public double ClosePrice { get; set; }
         public int Margin { get; set; }
         public double StopLose { get; set; }

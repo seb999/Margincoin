@@ -107,7 +107,6 @@ C:\_Git\Dotnet\MarginCoin\bin\Debug\net5.0\MarginCoin.deps.json
 C:\_Git\Dotnet\MarginCoin\bin\Debug\net5.0\MarginCoin.runtimeconfig.json
 C:\_Git\Dotnet\MarginCoin\bin\Debug\net5.0\MarginCoin.runtimeconfig.dev.json
 C:\_Git\Dotnet\MarginCoin\bin\Debug\net5.0\MarginCoin.dll
-C:\_Git\Dotnet\MarginCoin\bin\Debug\net5.0\ref\MarginCoin.dll
 C:\_Git\Dotnet\MarginCoin\bin\Debug\net5.0\MarginCoin.pdb
 C:\_Git\Dotnet\MarginCoin\bin\Debug\net5.0\MarginCoin.Views.dll
 C:\_Git\Dotnet\MarginCoin\bin\Debug\net5.0\MarginCoin.Views.pdb
@@ -168,7 +167,6 @@ C:\_Git\Dotnet\MarginCoin\bin\Debug\net5.0\runtimes\win-x86\native\e_sqlite3.dll
 C:\_Git\Dotnet\MarginCoin\bin\Debug\net5.0\System.Reactive.dll
 C:\_Git\Dotnet\MarginCoin\bin\Debug\net5.0\System.Reactive.xml
 C:\_Git\Dotnet\MarginCoin\obj\Debug\net5.0\staticwebassets\MarginCoin.StaticWebAssets.Manifest.cache
-C:\_Git\Dotnet\MarginCoin\obj\Debug\net5.0\staticwebassets\MarginCoin.StaticWebAssets.xml
 C:\_Git\Dotnet\MarginCoin\obj\Debug\net5.0\scopedcss\bundle\MarginCoin.styles.css
 C:\_Git\Dotnet\MarginCoin\obj\Debug\net5.0\MarginCoin.TagHelpers.input.cache
 C:\_Git\Dotnet\MarginCoin\obj\Debug\net5.0\MarginCoin.TagHelpers.output.cache
@@ -180,3 +178,4 @@ C:\_Git\Dotnet\MarginCoin\obj\Debug\net5.0\MarginCoin.RazorTargetAssemblyInfo.cs
 C:\_Git\Dotnet\MarginCoin\obj\Debug\net5.0\MarginCoin.Views.pdb
 C:\_Git\Dotnet\MarginCoin\obj\Debug\net5.0\MarginCoin.csproj.CopyComplete
 C:\_Git\Dotnet\MarginCoin\obj\Debug\net5.0\MarginCoin.genruntimeconfig.cache
+C:\_Git\Dotnet\Margincoin\obj\Debug\net5.0\refint\MarginCoin.dll

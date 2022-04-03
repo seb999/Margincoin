@@ -19,7 +19,7 @@ namespace MarginCoin.Controllers
         private IHubContext<SignalRHub> _hub;
         private readonly ApplicationDbContext _appDbContext;
         private static Boolean isAutoTradeActivated = false;
-        private List<Quotation> quotationList = new List<Quotation>();
+        private List<Candle> quotationList = new List<Candle>();
         private string streamInterval;
         private double takeProfitDynamic;
         private bool secureProfit;
@@ -84,8 +84,8 @@ namespace MarginCoin.Controllers
             Order activeOrder = GetActiveOrder();
 
             //Read last/previous quotation
-            Quotation last = quotationList.Last();
-            Quotation previous = quotationList[quotationList.Count-2];
+            Candle last = quotationList.Last();
+            Candle previous = quotationList[quotationList.Count-2];
         
             //Open new order if there is no
             if (activeOrder == null)
@@ -242,7 +242,7 @@ namespace MarginCoin.Controllers
 
             foreach (var item in coinQuotation)
             {
-                Quotation newQuotation = new Quotation()
+                Candle newQuotation = new Candle()
                 {
                     T = item[0],
                     o = item[1],
@@ -268,7 +268,7 @@ namespace MarginCoin.Controllers
 
             foreach (var item in coinQuotation)
             {
-                Quotation newQuotation = new Quotation()
+                Candle newQuotation = new Candle()
                 {
                     T = item[0],
                     o = item[1],
