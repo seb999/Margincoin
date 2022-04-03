@@ -32,7 +32,7 @@ namespace MarginCoin.Controllers
         [HttpGet("[action]")]
         public async Task<string> MonitorMarket()
         {
-            Console.Beep();
+            Console.Beep(); Console.Beep();
             var ws1 = new WebSocket("wss://stream.binance.com:9443/ws/!ticker@arr");
 
             var pingTimer = new System.Timers.Timer(5000);
@@ -71,7 +71,6 @@ namespace MarginCoin.Controllers
             return "";
         }
 
-
         private void ProcessMarketStream(List<MarketStream> marketStreamList)
         {
             MarketStream marketFirstCoin = marketStreamList[0];
@@ -84,13 +83,13 @@ namespace MarginCoin.Controllers
             DisplayStatus(activeOrder, marketStreamList);
 
             // ALGO :
-            // IF (new spot) and (new spot 2% higher than previous spot) and (new spot candle 15 min green) BUY!
+            // IF (new spot) and (new spot 2% higher than previous spot) and (new spot candle 15min green) BUY!
             if (dbSpot.s != marketFirstCoin.s && marketFirstCoin.P > marketSecondCoin.P * 1.02)
             {
                 Console.Beep();
                 List<Candle> candleList = GetCandles(marketFirstCoin.s);
 
-                //if it is a GREEN candle then we can buy
+                //if it is a GREEN candle then we can buy  -ADD PREVIOUS CANDLE ALSO
                 if (candleList.Last().c > candleList.Last().o)
                 {
                     //Read /api/v3/klines (param : 15 min) et verifie que c >o
@@ -99,8 +98,9 @@ namespace MarginCoin.Controllers
                         CloseTrade(marketStreamList);
                     }
 
-                    OpenTrade(marketFirstCoin);
+                    OpenTrade(marketFirstCoin); 
                     SaveSpot(marketFirstCoin);
+                    OpenWebSocketOnSpot(marketFirstCoin);  //Just save candel in a list
 
                     _hub.Clients.All.SendAsync("refreshUI", 0, 0, 0);
                 }
@@ -111,13 +111,42 @@ namespace MarginCoin.Controllers
                 {
                     CheckStopLose(marketStreamList);
                 }
+                else
+                {
+                   //rebuy : use webSocketList to decide
+                }
             }
         }
 
-
-
         #region trade methods
 
+        private void OpenWebSocketOnSpot(MarketStream marketStream)
+        {
+            //if previous candle of current one close higer than ATH, buy again
+             //BuyAgain();
+                    var ws2 = new WebSocket($"wss://stream.binance.com:9443/ws/{marketStream.s.ToLower()}@kline_5m");
+
+                    ws2.OnMessage += (sender, e) =>
+                    {
+                        Console.WriteLine("bonjour");
+                       
+                    };
+
+                    ws2.OnOpen += (sender, args) =>
+                    {
+                        //pingTimer.Enabled = true;
+                    };
+
+                    ws2.OnClose += (sender, args) =>
+                   {
+                       //pingTimer.Enabled = false;
+                   };
+
+                    if (ws2.ReadyState == WebSocketState.Connecting)
+                    {
+                        ws2.Connect();
+                    }
+        }
         private void CheckStopLose(List<MarketStream> marketStreamList)
         {
             Order activeOrder = _appDbContext.Order.Where(p => p.Id == GetActiveOrder().Id).Select(p => p).FirstOrDefault();
@@ -239,6 +268,15 @@ namespace MarginCoin.Controllers
             _appDbContext.SaveChanges();
         }
 
+        private void SaveCandles()
+        {
+
+        }
+        private void GetCandles()
+        {
+
+        }
+
         #endregion
 
         #region Helper
@@ -279,7 +317,7 @@ namespace MarginCoin.Controllers
 
         private List<Candle> GetCandles(string symbol)
         {
-            string apiUrl = string.Format("https://api3.binance.com/api/v3/klines?symbol={0}&interval=15m" + "15m" + "&limit=50", symbol.ToLower());
+            string apiUrl = $"https://api3.binance.com/api/v3/klines?symbol={symbol}&interval=15m&limit=50";
             //Get data from Binance API
             List<List<double>> coinQuotation = HttpHelper.GetApiData<List<List<double>>>(new Uri(apiUrl));
 

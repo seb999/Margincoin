@@ -24,7 +24,8 @@ namespace MarginCoin.Controllers
 
         [HttpGet("[action]")]
         public List<Order> GetAllCompletedOrder(){
-            return _appDbContext.Order.Where(p=>p.IsClosed == 1).ToList();
+            //return _appDbContext.Order.Where(p=>p.IsClosed == 1).ToList();
+               return _appDbContext.Order.ToList();
         }
 
         [HttpPost("[action]")]

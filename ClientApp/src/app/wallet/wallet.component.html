@@ -1,21 +1,30 @@
 <h5>wallet</h5>
-<table class="table table-sm">
+<button class="btn btn-primary btn-sm mr-1" (click)="monitorMarket()">Monitor market</button>
+<div *ngIf="showMessageInfo" class="col-3 alert alert-danger"
+style="height: 30px;padding-top: 5px;margin-bottom: 0px;" role="alert">
+ {{serverMsg?.msgName}} 
+</div>
+<table class="table table-sm mt-2">
     <thead class="thead-light">
       <tr>
+        <th scope="col" id="last" class="tableTh ">Symbol</th>
         <th scope="col" id="last" class="tableTh ">Amount</th>
-        <th scope="col" id="volume" class="tableTh">Quantity</th> 
-        <th scope="col" id="volume" class="tableTh">Price</th> 
-        <th scope="col" id="volume" class="tableTh">Margin</th> 
+        <th scope="col" id="volume" class="tableTh">Open</th> 
+        <th scope="col" id="volume" class="tableTh">High</th> 
+        <th scope="col" id="volume" class="tableTh">Low</th> 
+        <th scope="col" id="volume" class="tableTh">Close</th> 
         <th scope="col" id="volume" class="tableTh">%</th> 
-        <th scope="col" id="volume" class="tableTh">profit</th> 
+        <th scope="col" id="volume" class="tableTh">Profit</th> 
     </tr>
     </thead>
     <tbody>
       <tr *ngFor="let order of orderList">
-       <td>{{order.openPrice * order.quantity * order.margin}}</td>
-       <td>{{order.quantity}}</td>
+        <td>{{order.symbol}}</td>
+       <td>{{(order.openPrice * order.quantity).toFixed(0)}}</td>
        <td>{{order.openPrice}}</td>
-       <td>{{order.margin}}</td>
+       <td>{{order.highPrice}}</td>
+       <td>{{order.lowPrice}}</td>
+       <td>{{order.closePrice}}</td>
        <td *ngIf="(order.closePrice - order.openPrice) >=0" style="color: limegreen;">{{ (((order.closePrice - order.openPrice) / (order.openPrice))*100).toFixed(2) }}</td>
        <td *ngIf="(order.closePrice - order.openPrice) < 0" style="color: red;">{{ (((order.closePrice - order.openPrice) / (order.openPrice))*100).toFixed(2) }}</td>
       
@@ -23,6 +32,8 @@
        <td *ngIf="((order.closePrice - order.openPrice)*order.quantity*order.margin-order.fee) < 0" style="color: red;">{{((order.closePrice - order.openPrice)*order.quantity*order.margin-order.fee).toFixed(2)}}</td>
        </tr>
        <tr>
+        <td></td>
+        <td></td>
         <td></td>
         <td></td>
         <td></td>
