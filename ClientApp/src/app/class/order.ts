@@ -5,12 +5,17 @@ export class Order {
     public amount?: number,
     public quantity?: number,
     public openPrice?: number,
+    public highPrice?: number,
+    public lowPrice?: number,
+    public closePrice?: number,
     public stopLose?: number,
+    public takeProfit?: number,
     public profit?: number,
     public fee?: number,
     public margin? : number,
     public openDate? : string,
     public closeDate? : string,
+    public IsClosed?: number,
     )
     {}
 }

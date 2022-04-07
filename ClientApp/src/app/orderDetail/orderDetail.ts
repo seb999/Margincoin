@@ -1,9 +1,9 @@
-import { WalletTradeDetailHelper } from './walletTradeDetail.helper';
-import { Component, ViewEncapsulation, ɵCodegenComponentFactoryResolver } from '@angular/core';
+import { OrderDetailHelper } from './orderDetail.helper';
+import { Component, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute } from "@angular/router";
 import { WebSocket1Service } from '../service/websocket1.service';
 import { WebSocket2Service } from '../service/websocket2.service';
-import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { map, takeUntil } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { Observable, Subject } from 'rxjs';
@@ -34,23 +34,20 @@ HC_MACD(Highcharts);
 HC_THEME(Highcharts);
 
 @Component({
-  selector: 'app-walletTradeDetail',
-  templateUrl: './walletTradeDetail.component.html',
+  selector: 'app-orderDetail',
+  templateUrl: './orderDetail.component.html',
   encapsulation: ViewEncapsulation.None,
   providers: [WebSocket1Service, WebSocket2Service]
 })
-export class TradingboardComponent {
-  public symbolList$: Observable<any>;
+export class OrderDetailComponent {
   public tickerDataListener$: Observable<any>;
   public depthDataListener$: Observable<any>;
   private unsubscribe$: Subject<void>;
-  public symbol: string;
+  public orderId: string;
   public coinData: any;
-  public stop: number;
   public takeProfit: number;
   public takeProfitOffset: number;
-  
-  public popupTitle: string;
+
   public orderModel: Order;
   public orderTemplate: OrderTemplate;
   public serverMsg: ServerMsg;
@@ -62,16 +59,11 @@ export class TradingboardComponent {
 
   private depthList: Depth[] = new Array();
   private ohlc = [] as any;
-  public liveChartData = [] as any;
-  public liveChartVolum = [] as any;
-  public liveDataAI = [] as any;
 
   highcharts = Highcharts;
-  highcharts2 = Highcharts;
-  highcharts3 = Highcharts;
   chartOptions: Highcharts.Options;
   chartOptions2: Highcharts.Options;
-  openOrderList: Order[];
+  openOrder: Order;
 
   constructor(
     private httpService: HttpService,
@@ -79,7 +71,7 @@ export class TradingboardComponent {
     private service$: WebSocket1Service,
     private service2$: WebSocket2Service,
     public modalService: NgbModal,
-    private tradingboardHelper: WalletTradeDetailHelper,
+    private orderDetailHelper: OrderDetailHelper,
     private appSetting: AppSetting,
     private signalRService: SignalRService,
   ) {
@@ -87,17 +79,18 @@ export class TradingboardComponent {
     this.coinData = {};
     this.takeProfitOffset = 0.008;
     this.intervalList = this.appSetting.intervalList;
-    this.interval = "15m";
+    this.interval = "5m";
   }
 
   async ngOnInit() {
-    this.symbol = this.route.snapshot.paramMap.get("symbol");
+    this.orderId = this.route.snapshot.paramMap.get("id");
+
+    this.openOrder = await this.orderDetailHelper.getOrder(this.orderId);
+
+    this.ohlc = await this.orderDetailHelper.getIntradayData(this.openOrder.symbol, 100, this.interval);
 
     //Display historic chart
-    this.displayHighstock('NO_INDICATOR', '15m');
-
-    //Display list of open orders
-    this.loadOrderList();
+    this.displayHighstock('NO_INDICATOR');
 
     //Open listener on my API SignalR
     this.signalRService.startConnection();
@@ -108,13 +101,13 @@ export class TradingboardComponent {
       if (this.serverMsg.msgName == 'refreshUI') {
         let snd = new Audio(SOUND);
         snd.play();
-        this.loadOrderList();
+        this.loadOrder();
       }
       setTimeout(() => { this.showMessageInfo = false }, 700);
     });
 
     //Stream ticker
-    this.tickerDataListener$ = this.service$.connect(WS_SYMBOL_ENDPOINT + this.symbol.toLowerCase() + "@ticker").pipe(
+    this.tickerDataListener$ = this.service$.connect(WS_SYMBOL_ENDPOINT + this.openOrder.symbol.toLowerCase() + "@kline_5m").pipe(
       map(
         (response: MessageEvent): any => {
           let data = JSON.parse(response.data);
@@ -124,7 +117,7 @@ export class TradingboardComponent {
     );
 
     //Stream depth
-    this.depthDataListener$ = this.service2$.connect(WS_SYMBOL_ENDPOINT + this.symbol.toLowerCase() + "@depth").pipe(
+    this.depthDataListener$ = this.service2$.connect(WS_SYMBOL_ENDPOINT + this.openOrder.symbol.toLowerCase() + "@depth").pipe(
       map(
         (response: MessageEvent): any => {
           let data = JSON.parse(response.data);
@@ -173,19 +166,24 @@ export class TradingboardComponent {
         if (this.coinData.p < 0) this.coinData.color = "red";
         if (this.coinData.p >= 0) this.coinData.color = "limegreen";
         this.coinData.s.includes("USDT");
+  
+        if (!this.coinData.k.x) {
+          this.ohlc.pop();
+        }
+        this.ohlc.push([
+          this.coinData.E, this.coinData.k.o, this.coinData.k.h, this.coinData.k.l, this.coinData.k.c
+        ])
 
-        //re calculate stop loose
-        this.takeProfit = this.coinData.c - ((this.coinData.c / 100) * this.takeProfitOffset);
-        this.displayHighchart(this.coinData);
+        this.displayHighstock('NO_INDICATOR');
       });
 
   }
 
-  async loadOrderList() {
-    this.openOrderList = await this.tradingboardHelper.getOpenOrder(this.symbol);
+  async loadOrder() {
+    this.openOrder = await this.orderDetailHelper.getOrder(this.orderId);
   }
 
-  changetakeProfitOffset(type: string) {
+  changeTakeProfitOffset(type: string) {
     if (type == 'increase') { this.takeProfitOffset = this.takeProfitOffset + 0.001 };
     if (type == 'reduce') { this.takeProfitOffset = this.takeProfitOffset - 0.001 }
   }
@@ -207,7 +205,7 @@ export class TradingboardComponent {
   async openPopupOrderTemplate(template) {
     this.orderTemplate = await this.getOrderTemplate();
     if (this.orderTemplate == null) {
-      this.orderTemplate = new OrderTemplate(0, this.symbol, 0, 1, 1);
+      this.orderTemplate = new OrderTemplate(0, this.openOrder.symbol, 0, 1, 1);
     }
     this.modalService.open(template, { ariaLabelledBy: 'modal-basic-title', size: 'sm' }).result.then((result) => {
       if (result == 'continue') {
@@ -234,65 +232,15 @@ export class TradingboardComponent {
   }
 
   async closeOrder(orderId: number, closePrice: number) {
-    await this.tradingboardHelper.closeOrder(orderId, closePrice);
-    this.openOrderList = await this.tradingboardHelper.getOpenOrder(this.symbol);
+    await this.orderDetailHelper.closeOrder(orderId, closePrice);
+    this.openOrder = await this.orderDetailHelper.getOrder(this.orderId);
   }
 
-  async displayHighchart(coinData: any) {
-    this.liveChartData.push([
-      parseFloat(coinData.E),
-      parseFloat(coinData.c),
-    ]);
 
-    this.liveChartVolum.push([
-      parseFloat(coinData.E),
-      parseFloat(coinData.v),
-    ]);
 
-    this.chartOptions2 = {
-      series: [
-        { data: this.liveChartData, type: 'line', yAxis: 0, name: 'last' },
-        { data: this.liveChartVolum, type: 'line', yAxis: 1, name: 'volume' }
-      ],
-      title: {
-        text: ''
-      },
-      xAxis: { type: 'datetime', dateTimeLabelFormats: { minute: '%M', }, title: { text: '' } },
-      yAxis:
-        [{
-          labels: { align: 'left' }, height: '80%',
-          plotLines: [
-            {
-              color: '#32CD32', width: 1, value: this.takeProfit,
-              label: { text: this.takeProfitOffset.toFixed(4).toString(), align: 'right' }
-            },
-            {
-              color: '#FF0000', width: 2, value: this.openOrderList[0]?.openPrice * (1 - (this.openOrderList[0]?.stopLose / 100)),
-              label: { text: this.openOrderList[0]?.stopLose.toString(), align: 'right' }
-            },
-            {
-              color: '#4169E1', width: 2, value: this.openOrderList[0]?.openPrice,
-              label: { text: this.openOrderList[0]?.openPrice.toString(), align: 'right' }
-            },
-            {
-              color: '#cc4e20f3', width: 2, value: this.serverMsg?.r1,
-              label: { text: 'R1', align: 'right' }
-            },
-            {
-              color: '#cc4e20f3', width: 2, value: this.serverMsg?.s1,
-              label: { text: 'S1', align: 'right' }
-            },
-          ],
-        },
-        { labels: { align: 'left' }, top: '80%', height: '20%', offset: 0 },
-        ],
-    }
-  }
-
-  async displayHighstock(indicator, interval: string) {
+  async displayHighstock(indicator) {
     let chartData = [] as any;
     let volume = [] as any;
-    this.ohlc = await this.tradingboardHelper.getIntradayData(this.symbol, 1000, interval);
 
     this.ohlc.map((data, index) => {
       chartData.push([
@@ -319,9 +267,27 @@ export class TradingboardComponent {
       },
       yAxis:
         [
-          { labels: { align: 'left' }, height: '80%' },
+          { labels: { align: 'left' }, height: '80%', plotLines: [
+            {
+              color: '#32CD32', width: 1, value: this.openOrder?.openPrice,
+              label: { text: "open", align: 'right' }
+            },
+            {
+              color: '#FF0000', width: 1, value: this.openOrder?.stopLose,
+              label: { text: "stop lose", align: 'right' }
+            },
+            {
+              color: '#FF0000', width: 1, value:  (this.openOrder?.highPrice * (1 - (this.openOrder?.takeProfit / 100))),
+              label: { text: "take profit", align: 'right' }
+            },
+            {
+              color: '#4169E1', width: 1, value: this.openOrder?.closePrice,
+              label: { text: "close", align: 'right' }
+            },
+          ],
+        },
           { labels: { align: 'left' }, top: '80%', height: '20%', offset: 0 },
-        ],
+        ], 
     }
 
     if (indicator == 'NO_INDICATOR') {
@@ -333,13 +299,11 @@ export class TradingboardComponent {
     }
   }
 
-  changeHighstockResolution(key) {
+  async changeHighstockResolution(key) {
     let params = key.split(',');
-    console.log(key);
-    this.displayHighstock('NO_INDICATOR', key);
+    this.ohlc = await this.orderDetailHelper.getIntradayData(this.openOrder.symbol, 100, params[0]);
+    this.displayHighstock('NO_INDICATOR');
   }
-
-
 
   ngOnDestroy() {
     //Unsubscribe to Binance stream

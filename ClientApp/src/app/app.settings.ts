@@ -6,6 +6,7 @@ import { Component } from '@angular/core';
 export class AppSetting {
    finnhubKey = "bq68sg7rh5rc303ngeqg";
    intervalList = [
+      { key: '5m', value: '5m' },
       { key: '15m', value: '15m' }, 
       { key: '1h', value: '1h' }, 
       { key: '4h', value: '4h' },

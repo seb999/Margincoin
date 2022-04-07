@@ -22,6 +22,11 @@ namespace MarginCoin.Controllers
             return _appDbContext.Order.Where(p=>p.Symbol == symbol && p.IsClosed != 1).ToList();
         }
 
+        [HttpGet("[action]/{id}")]
+        public Order GetOrder(string id){
+            return _appDbContext.Order.Where(p=>p.Id == int.Parse(id)).Select(p=>p).FirstOrDefault();
+        }
+
         [HttpGet("[action]")]
         public List<Order> GetAllCompletedOrder(){
             //return _appDbContext.Order.Where(p=>p.IsClosed == 1).ToList();

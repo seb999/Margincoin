@@ -5,7 +5,7 @@ import { HttpService, HttpSettings } from "../service/http.service";
 @Injectable({
   providedIn: 'root'
 })
-export class WalletTradeDetailHelper {
+export class OrderDetailHelper {
 
   constructor(private httpService: HttpService) {
   }
@@ -18,10 +18,10 @@ export class WalletTradeDetailHelper {
     return await this.httpService.xhr(httpSetting);
   }
 
-  async getOpenOrder(symbol): Promise<Order[]> {
+  async getOrder(id): Promise<Order> {
     const httpSetting: HttpSettings = {
       method: 'GET',
-      url: location.origin + "/api/Order/GetOpenOrder/" + symbol,
+      url: location.origin + "/api/Order/GetOrder/" + id,
     };
     return await this.httpService.xhr(httpSetting);
   }

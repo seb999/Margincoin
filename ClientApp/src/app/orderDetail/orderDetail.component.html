@@ -2,8 +2,8 @@
 <div class=row>
   <div class="col-3">
 
-    <img *ngIf="coinData.s" src='{{ "assets/images/CoinIcon/" + coinData.s.substring(0,coinData.s.length-4) + ".png" }}'
-  width="40px" height="40px" />
+    <!-- <img *ngIf="coinData.s" src='{{ "assets/images/CoinIcon/" + coinData.s.substring(0,coinData.s.length-4) + ".png" }}'
+  width="40px" height="40px" /> -->
 
     <div class="row">
       <span class="col">Symbol :</span>
@@ -12,23 +12,13 @@
 
     <div class="row">
       <span class="col">Price</span>
-      <span class="col">{{coinData.c}}</span>
+      <span class="col">{{coinData?.k?.c}}</span>
     </div>
 
-    <div class="row">
+    <!-- <div class="row">
       <span class="col">24hr Change :</span>
       <span [style.color]=coinData.color>{{((coinData.p/coinData.c)*100).toFixed(2)}} %</span>
-    </div>
-
-    <div class="row">
-      <span class="col">Volume :</span>
-      <span class="col">{{(coinData.q*1).toFixed(2)}}</span>
-    </div>
-
-    <div class="row">
-      <span class="col">RSI :</span>
-      <span class="col">{{(serverMsg?.rsi).toFixed(2)}}</span>
-    </div>
+    </div> -->
 
     <div class="row">
       <select class="form-control" [(ngModel)]="interval" (change)="changeHighstockResolution(interval)">
@@ -59,9 +49,7 @@
               <thead class="thead-light">
                 <tr>
                   <th scope="col" id="last" class="tableTh ">Amount</th>
-                  <th scope="col" id="volume" class="tableTh">Quantity</th> 
                   <th scope="col" id="volume" class="tableTh">Price</th> 
-                  <th scope="col" id="volume" class="tableTh">Margin</th> 
                   <th scope="col" id="volume" class="tableTh">%</th> 
                   <th scope="col" id="volume" class="tableTh">profit</th> 
                   <th scope="col" id="volume" class="tableTh">Stop lose</th> 
@@ -69,18 +57,17 @@
               </tr>
               </thead>
               <tbody>
-                <tr *ngFor="let order of openOrderList">
-                 <td>{{order.openPrice * order.quantity * order.margin}}</td>
-                 <td>{{order.quantity}}</td>
-                 <td>{{order.openPrice}}</td>
-                 <td>{{order.margin}}</td>
-                 <td *ngIf="(((coinData.c-order.openPrice) / (order.openPrice))*100) >=0" style="color: limegreen;">{{ (((coinData.c-order.openPrice) / (order.openPrice))*100).toFixed(2) }}</td>
-                 <td *ngIf="(((coinData.c-order.openPrice) / (order.openPrice))*100) <0" style="color: red;">{{ (((coinData.c-order.openPrice) / (order.openPrice))*100).toFixed(2) }}</td>  
-                 <td *ngIf="(coinData.c-order.openPrice)*order.quantity*order.margin>=0" style="color: limegreen;">{{((coinData.c-order.openPrice)*order.quantity*order.margin).toFixed(2)}}</td>
-                 <td *ngIf="(coinData.c-order.openPrice)*order.quantity*order.margin<0" style="color: red;">{{((coinData.c-order.openPrice)*order.quantity*order.margin).toFixed(2)}}</td>
-                 <td> <button class="btn btn-primary btn-sm" (click)="changeTakeProfitOffset('reduce')">-</button>&nbsp;
-                      <button class="btn btn-primary btn-sm" (click)="changeTakeProfitOffset('increase')">+</button></td>
-                 <td><button class="btn btn-primary btn-sm" (click)="closeOrder(order.id,coinData.c);">Sell</button></td>
+                <tr>
+                 <td>{{openOrder?.openPrice * openOrder?.quantity}}</td>
+                 <td>{{openOrder?.openPrice}}</td>
+                 <td *ngIf="(((coinData?.k?.c-openOrder?.openPrice) / (openOrder?.openPrice))*100) >=0"  style="color: limegreen;">{{ (((coinData?.k?.c-openOrder?.openPrice) / (openOrder?.openPrice))*100).toFixed(2) }}</td>
+                 <td *ngIf="(((coinData?.k?.c-openOrder?.openPrice) / (openOrder?.openPrice))*100) <0" style="color: red;">{{ (((coinData?.k?.c-openOrder?.openPrice) / (openOrder?.openPrice))*100).toFixed(2) }}</td>  
+                 <td *ngIf="(coinData?.k?.c-openOrder?.openPrice) * openOrder?.quantity>=0" style="color: limegreen;">{{((coinData?.k?.c-openOrder?.openPrice) * openOrder?.quantity).toFixed(2)}}</td>
+                 <td *ngIf="(coinData?.k?.c-openOrder?.openPrice) * openOrder?.quantity<0" style="color: red;">{{((coinData?.k?.c-openOrder?.openPrice) * openOrder?.quantity).toFixed(2)}}</td> 
+                 <td> 
+                      <button class="btn btn-primary btn-sm" (click)="changeTakeProfitOffset('reduce')">-</button>&nbsp;
+                      <button class="btn btn-primary btn-sm" (click)="changeTakeProfitOffset('increase')">+</button></td> 
+                 <td><button class="btn btn-primary btn-sm" (click)="closeOrder(openOrder.id,coinData.c);">Sell</button></td>
                  </tr>
                 </tbody>
             </table>
@@ -92,14 +79,12 @@
 </div>
 
 <div class="row">
-  <div class="col-5" *ngIf="chartOptions2">
+  <div class="col-5">
     <div class="progress" style="height: 5px;margin-top: 5px;">
       <div class="progress-bar bg-success" role="progressbar" [style.width]="bidRatio + '%'" aria-valuenow="bidRation" aria-valuemin="0" aria-valuemax="100"></div>
       <div class="progress-bar bg-danger" role="progressbar" [style.width]="askRatio + '%'"  aria-valuenow="askRation" aria-valuemin="0" aria-valuemax="100"></div>
     </div>
-      <highcharts-chart constructorType='stockChart' [Highcharts]="highcharts2" [options]="chartOptions2"
-        style="width: 100%; height: 550px; display: block;">
-      </highcharts-chart>
+     
   </div>
   <div class="col-7" *ngIf="chartOptions">
     <highcharts-chart constructorType='stockChart' [Highcharts]="highcharts" [options]="chartOptions"

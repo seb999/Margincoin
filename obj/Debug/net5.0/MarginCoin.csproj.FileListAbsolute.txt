@@ -270,3 +270,4 @@ C:\_Github\Dotnet\Margincoin\obj\Debug\net5.0\MarginCoin.dll
 C:\_Github\Dotnet\Margincoin\obj\Debug\net5.0\ref\MarginCoin.dll
 C:\_Github\Dotnet\Margincoin\obj\Debug\net5.0\MarginCoin.pdb
 C:\_Github\Dotnet\Margincoin\obj\Debug\net5.0\MarginCoin.genruntimeconfig.cache
+C:\_Git\Dotnet\MarginCoin\bin\Debug\net5.0\MarginCoin.StaticWebAssets.xml

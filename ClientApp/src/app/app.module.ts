@@ -8,9 +8,11 @@ import { AppComponent } from './app.component';
 import { NavMenuComponent } from './nav-menu/nav-menu.component';
 import { MarketComponent } from './market/market.component';
 import { WalletComponent } from './wallet/wallet.component';
+import { OrderDetailComponent } from './orderDetail/orderDetail';
 
 import { TradingboardComponent } from './tradingboard/tradingboard.component';
 import { TradingboardHelper } from './tradingboard/tradingBoard.helper';
+import { OrderDetailHelper } from './orderDetail/orderDetail.helper';
 import { HighchartsChartModule } from 'highcharts-angular';
 import { AppSetting } from './app.settings';
 
@@ -21,7 +23,7 @@ import { AppSetting } from './app.settings';
     MarketComponent,
     WalletComponent,
     TradingboardComponent,
-    
+    OrderDetailComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -32,9 +34,10 @@ import { AppSetting } from './app.settings';
     { path: '', component: MarketComponent, pathMatch: 'full' },
     { path: 'tradingboard/:symbol', component: TradingboardComponent },
     { path: 'wallet', component: WalletComponent },
+    { path: 'orderDetail/:id', component: OrderDetailComponent },
 ], { relativeLinkResolution: 'legacy' })
   ],
-  providers: [TradingboardHelper, AppSetting ],
+  providers: [TradingboardHelper, OrderDetailHelper,  AppSetting ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
