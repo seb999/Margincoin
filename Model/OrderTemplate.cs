@@ -11,6 +11,7 @@ namespace MarginCoin.Model
         public double Amount { get; set; }
         public int Margin { get; set; }
         public double StopLose { get; set; }
+        public double TakeProfit { get; set; }
         public int IsInactive { get; set; }
         public string DateAdded { get; set; }
         public string DateMod { get; set; }

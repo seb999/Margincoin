@@ -8,6 +8,7 @@ import { AppComponent } from './app.component';
 import { NavMenuComponent } from './nav-menu/nav-menu.component';
 import { MarketComponent } from './market/market.component';
 import { WalletComponent } from './wallet/wallet.component';
+
 import { TradingboardComponent } from './tradingboard/tradingboard.component';
 import { TradingboardHelper } from './tradingboard/tradingBoard.helper';
 import { HighchartsChartModule } from 'highcharts-angular';

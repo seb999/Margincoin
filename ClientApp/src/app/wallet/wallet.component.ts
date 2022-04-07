@@ -28,7 +28,7 @@ export class WalletComponent {
     this.orderList = await this.getOpenOrder();
 
     if (this.orderList.length > 0) {
-      this.totalProfit = this.orderList.map(a => (a.profit - a.fee)).reduce(function (a, b) {
+      this.totalProfit = this.orderList.map(a => (a.profit)).reduce(function (a, b) {
         return a + b;
       });
     }
@@ -36,12 +36,12 @@ export class WalletComponent {
     //Open listener on my API SignalR
     this.signalRService.startConnection();
     this.signalRService.addTransferChartDataListener();
-    this.signalRService.onMessage().subscribe(message => {
+    this.signalRService.onMessage().subscribe(async message => {
       this.serverMsg = message;
       this.showMessageInfo = true;
       if (this.serverMsg.msgName == 'refreshUI') {
         console.log("New order so you refresh the UI Please!!!!");
-        this.getOpenOrder();
+        this.orderList = await this.getOpenOrder();
       }
       setTimeout(() => { this.showMessageInfo = false }, 700);
     });
