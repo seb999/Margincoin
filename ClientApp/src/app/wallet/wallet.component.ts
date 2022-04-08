@@ -29,7 +29,7 @@ export class WalletComponent {
 
     if (this.orderList.length > 0) {
       this.totalProfit = this.orderList.map(a => (a.profit)).reduce(function (a, b) {
-        return a + b;
+        if(a!=0) return a + b;
       });
     }
 

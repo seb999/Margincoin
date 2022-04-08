@@ -15,186 +15,192 @@
       <span class="col">{{coinData?.k?.c}}</span>
     </div>
 
-    <!-- <div class="row">
-      <span class="col">24hr Change :</span>
-      <span [style.color]=coinData.color>{{((coinData.p/coinData.c)*100).toFixed(2)}} %</span>
-    </div> -->
-
     <div class="row">
-      <select class="form-control" [(ngModel)]="interval" (change)="changeHighstockResolution(interval)">
-        <option *ngFor="let item of intervalList" [value]="item.value">{{ item.value }}
-        </option>
-      </select>
+      <div class="col-12">
+        <div class="progress" style="height: 5px;margin-top: 5px;">
+          <div class="progress-bar bg-success" role="progressbar" [style.width]="bidRatio + '%'"
+            aria-valuenow="bidRation" aria-valuemin="0" aria-valuemax="100"></div>
+          <div class="progress-bar bg-danger" role="progressbar" [style.width]="askRatio + '%'"
+            aria-valuenow="askRation" aria-valuemin="0" aria-valuemax="100"></div>
+        </div>
+      </div>
     </div>
+
   </div>
 
   <div class="col-9">
     <div class="row">
       <div class="col-sm-12">
-        <div class="card">
-          <div class="card-body">
-            <h6 class="card-title">Orders 
-              <div class="row">
-                <div class="col-9">
-                  <button class="btn btn-primary btn-sm btn-sm mr-1" (click)="openPopupOrderTemplate(popupOrderTemplate)">Trade template</button>
-                </div>
-                <div *ngIf="showMessageInfo" class="col-3 alert alert-danger"
-                   style="height: 30px;padding-top: 5px;margin-bottom: 0px;" role="alert">
-                    {{serverMsg?.msgName}} 
-                </div>
+        <div class="card bg-light mb-3">
+          <div class="card-header">
+            <div class="row">
+              <div class="col-10">
+                <button class="btn btn-primary btn-sm btn-sm mr-1"
+                  (click)="openPopupOrderTemplate(popupOrderTemplate)">Trade template</button>&nbsp;&nbsp;&nbsp;&nbsp;
+                <button class="btn btn-primary btn-sm" (click)="changeTakeProfitOffset('reduce')">-</button>&nbsp;
+                <button class="btn btn-primary btn-sm"
+                  (click)="changeTakeProfitOffset('increase')">+</button>&nbsp;&nbsp;&nbsp;&nbsp;
+                <button class="btn btn-danger btn-sm" (click)="closeOrder(openOrder.id,coinData.c);">Sell</button>
               </div>
-                  
-            </h6>
-            <table class="table table-sm">
-              <thead class="thead-light">
-                <tr>
-                  <th scope="col" id="last" class="tableTh ">Amount</th>
-                  <th scope="col" id="volume" class="tableTh">Price</th> 
-                  <th scope="col" id="volume" class="tableTh">%</th> 
-                  <th scope="col" id="volume" class="tableTh">profit</th> 
-                  <th scope="col" id="volume" class="tableTh">Stop lose</th> 
-                  <th scope="col" id="volume" class="tableTh"></th> 
-              </tr>
-              </thead>
-              <tbody>
-                <tr>
-                 <td>{{openOrder?.openPrice * openOrder?.quantity}}</td>
-                 <td>{{openOrder?.openPrice}}</td>
-                 <td *ngIf="(((coinData?.k?.c-openOrder?.openPrice) / (openOrder?.openPrice))*100) >=0"  style="color: limegreen;">{{ (((coinData?.k?.c-openOrder?.openPrice) / (openOrder?.openPrice))*100).toFixed(2) }}</td>
-                 <td *ngIf="(((coinData?.k?.c-openOrder?.openPrice) / (openOrder?.openPrice))*100) <0" style="color: red;">{{ (((coinData?.k?.c-openOrder?.openPrice) / (openOrder?.openPrice))*100).toFixed(2) }}</td>  
-                 <td *ngIf="(coinData?.k?.c-openOrder?.openPrice) * openOrder?.quantity>=0" style="color: limegreen;">{{((coinData?.k?.c-openOrder?.openPrice) * openOrder?.quantity).toFixed(2)}}</td>
-                 <td *ngIf="(coinData?.k?.c-openOrder?.openPrice) * openOrder?.quantity<0" style="color: red;">{{((coinData?.k?.c-openOrder?.openPrice) * openOrder?.quantity).toFixed(2)}}</td> 
-                 <td> 
-                      <button class="btn btn-primary btn-sm" (click)="changeTakeProfitOffset('reduce')">-</button>&nbsp;
-                      <button class="btn btn-primary btn-sm" (click)="changeTakeProfitOffset('increase')">+</button></td> 
-                 <td><button class="btn btn-primary btn-sm" (click)="closeOrder(openOrder.id,coinData.c);">Sell</button></td>
-                 </tr>
-                </tbody>
-            </table>
+              <div class="col-2">
+                <select class="form-control" [(ngModel)]="interval" (change)="changeHighstockResolution(interval)">
+                  <option *ngFor="let item of intervalList" [value]="item.value">{{ item.value }}
+                  </option>
+                </select>
+              </div>
+              <div *ngIf="showMessageInfo" class="col-3 alert alert-danger"
+                style="height: 30px;padding-top: 5px;margin-bottom: 0px;" role="alert">
+                {{serverMsg?.msgName}}
+              </div>
+            </div>
+
+          </div>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-2">Amount : {{openOrder?.openPrice * openOrder?.quantity}}</div>
+              <div class="col-2">Price : {{openOrder?.openPrice}}</div>
+              <div class="col-2" *ngIf="(((coinData?.k?.c-openOrder?.openPrice) / (openOrder?.openPrice))*100) >=0"
+                style="color: limegreen;">{{ (((coinData?.k?.c-openOrder?.openPrice) /
+                (openOrder?.openPrice))*100).toFixed(2) }}%</div>
+              <div class="col-2" *ngIf="(((coinData?.k?.c-openOrder?.openPrice) / (openOrder?.openPrice))*100) <0"
+                style="color: red;">{{ (((coinData?.k?.c-openOrder?.openPrice) /
+                (openOrder?.openPrice))*100).toFixed(2) }}%</div>
+              <div class="col-2" *ngIf="(coinData?.k?.c-openOrder?.openPrice) * openOrder?.quantity>=0"
+                style="color: limegreen;">
+                Profit :{{((coinData?.k?.c-openOrder?.openPrice) * openOrder?.quantity).toFixed(2)}}</div>
+              <div class="col-2" *ngIf="(coinData?.k?.c-openOrder?.openPrice) * openOrder?.quantity<0"
+                style="color: red;">Profit
+                :{{((coinData?.k?.c-openOrder?.openPrice) * openOrder?.quantity).toFixed(2)}}</div>
+            </div>
+
+            <div class="row"  *ngIf="chartOptions">
+              <highcharts-chart constructorType='stockChart' [Highcharts]="highcharts" [options]="chartOptions"
+              style="width: 100%; height: 550px; display: block;">
+            </highcharts-chart>
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
-</div>
 
-<div class="row">
-  <div class="col-5">
-    <div class="progress" style="height: 5px;margin-top: 5px;">
-      <div class="progress-bar bg-success" role="progressbar" [style.width]="bidRatio + '%'" aria-valuenow="bidRation" aria-valuemin="0" aria-valuemax="100"></div>
-      <div class="progress-bar bg-danger" role="progressbar" [style.width]="askRatio + '%'"  aria-valuenow="askRation" aria-valuemin="0" aria-valuemax="100"></div>
-    </div>
+    <div class="row">
      
-  </div>
-  <div class="col-7" *ngIf="chartOptions">
-    <highcharts-chart constructorType='stockChart' [Highcharts]="highcharts" [options]="chartOptions"
-        style="width: 100%; height: 550px; display: block;">
-  </highcharts-chart>
-  </div>
-</div>
+  
+    </div>
 
-  <!-- popup Order -->
-  <ng-template #popupNewEditOrder let-modal>
-    <div class="modal-header">
-      <h5 class="modal-title" id="modal-basic-title">{{popupTitle}} <span [style.color]=coinData.color>{{((coinData.p/coinData.c)*100).toFixed(2)}} %</span></h5>
-      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
-        <span aria-hidden="true">&times;</span>
-      </button>
-    </div>
-    <div class="modal-body">
-      <form>
-        <div class="form-group row no-gutters">
-          <label for="openPrice" class="col-sm-3 col-form-label" >Price</label>
-          <div class="col-sm-9">
-            <input id="openPrice" type="number" class="form-control form-control-sm" [value]="orderModel.openPrice" name="openPrice"  [(ngModel)]="orderModel.openPrice" (change)="processFormInputChange('price')">
+    <!-- popup Order -->
+    <ng-template #popupNewEditOrder let-modal>
+      <div class="modal-header">
+        <h5 class="modal-title" id="modal-basic-title">{{popupTitle}} <span
+            [style.color]=coinData.color>{{((coinData.p/coinData.c)*100).toFixed(2)}} %</span></h5>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="form-group row no-gutters">
+            <label for="openPrice" class="col-sm-3 col-form-label">Price</label>
+            <div class="col-sm-9">
+              <input id="openPrice" type="number" class="form-control form-control-sm" [value]="orderModel.openPrice"
+                name="openPrice" [(ngModel)]="orderModel.openPrice" (change)="processFormInputChange('price')">
+            </div>
           </div>
-        </div>
-        <div class="form-group row no-gutters">
-          <label for="amount" class="col-sm-3 col-form-label">Amount</label>
-          <div class="col-sm-9">
-            <input id="amount" class="form-control form-control-sm" name="amount" required [(ngModel)]="orderModel.amount" (change)="processFormInputChange('amount')">
+          <div class="form-group row no-gutters">
+            <label for="amount" class="col-sm-3 col-form-label">Amount</label>
+            <div class="col-sm-9">
+              <input id="amount" class="form-control form-control-sm" name="amount" required
+                [(ngModel)]="orderModel.amount" (change)="processFormInputChange('amount')">
+            </div>
           </div>
-        </div>
-        <div class="form-group row no-gutters" >
-          <label for="quantity" class="col-sm-3 col-form-label" >Quantity</label>
-          <div class="col-sm-9">
-            <input id="quantity" class="form-control form-control-sm" name="quantity" required [(ngModel)]="orderModel.quantity" (change)="processFormInputChange('quantity')">
+          <div class="form-group row no-gutters">
+            <label for="quantity" class="col-sm-3 col-form-label">Quantity</label>
+            <div class="col-sm-9">
+              <input id="quantity" class="form-control form-control-sm" name="quantity" required
+                [(ngModel)]="orderModel.quantity" (change)="processFormInputChange('quantity')">
+            </div>
           </div>
-        </div>
-        <div class="form-group row no-gutters">
-          <label for="margin" class="col-sm-3 col-form-label">Levrage</label>
-          <div class="col-sm-9">
-            <input id="margin" class="form-control form-control-sm" name="margin" required [(ngModel)]="orderModel.margin">
+          <div class="form-group row no-gutters">
+            <label for="margin" class="col-sm-3 col-form-label">Levrage</label>
+            <div class="col-sm-9">
+              <input id="margin" class="form-control form-control-sm" name="margin" required
+                [(ngModel)]="orderModel.margin">
+            </div>
           </div>
-        </div>
-        <div class="form-group row no-gutters">
-          <label for="stop" class="col-sm-3 col-form-label">Stop(%)</label>
-          <div class="col-sm-4">
-            <input id="stop" class="form-control form-control-sm" name="stop" required [(ngModel)]="orderModel.stopLose">
+          <div class="form-group row no-gutters">
+            <label for="stop" class="col-sm-3 col-form-label">Stop(%)</label>
+            <div class="col-sm-4">
+              <input id="stop" class="form-control form-control-sm" name="stop" required
+                [(ngModel)]="orderModel.stopLose">
+            </div>
+            <div class="col-sm-5">
+              <input id="pourcent" class="form-control form-control-sm" name="pourcent"
+                [value]="orderModel.amount*orderModel.stopLose*orderModel.margin/100" disabled>
+            </div>
           </div>
-          <div class="col-sm-5">
-            <input id="pourcent" class="form-control form-control-sm" name="pourcent" [value]="orderModel.amount*orderModel.stopLose*orderModel.margin/100" disabled >
-          </div>
-        </div>
-      </form>
-    </div>
-    <div class="modal-footer">
-      <button type="button" class="btn btn-secondary btn-sm" (click)="modal.dismiss()" ngbAutofocus>Cancel</button>
-      <button *ngIf="orderModel.id==0" type="submit" class="btn btn-primary btn-sm" (click)="modal.close('continue')">Place order</button>
-    </div>
-  </ng-template>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary btn-sm" (click)="modal.dismiss()" ngbAutofocus>Cancel</button>
+        <button *ngIf="orderModel.id==0" type="submit" class="btn btn-primary btn-sm"
+          (click)="modal.close('continue')">Place order</button>
+      </div>
+    </ng-template>
 
-  <!-- popup Order Template -->
-  <ng-template #popupOrderTemplate let-modal>
-    <div class="modal-header">
-      <h5 class="modal-title" id="modal-basic-title">Order Template</h5>
-      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
-        <span aria-hidden="true">&times;</span>
-      </button>
-    </div>
-    <div class="modal-body">
-      <form>
-        <div class="form-group row no-gutters">
-          <label for="amount" class="col-sm-3 col-form-label">Amount</label>
-          <div class="col-sm-9">
-            <input id="amount" class="form-control form-control-sm" name="amount" required [(ngModel)]="orderTemplate.amount">
+    <!-- popup Order Template -->
+    <ng-template #popupOrderTemplate let-modal>
+      <div class="modal-header">
+        <h5 class="modal-title" id="modal-basic-title">Order Template</h5>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="form-group row no-gutters">
+            <label for="amount" class="col-sm-3 col-form-label">Amount</label>
+            <div class="col-sm-9">
+              <input id="amount" class="form-control form-control-sm" name="amount" required
+                [(ngModel)]="orderTemplate.amount">
+            </div>
           </div>
-        </div>
-        <div class="form-group row no-gutters">
-          <label for="margin" class="col-sm-3 col-form-label">Levrage</label>
-          <div class="col-sm-9">
-            <input id="margin" class="form-control form-control-sm" name="margin" required [(ngModel)]="orderTemplate.margin">
+          <div class="form-group row no-gutters">
+            <label for="margin" class="col-sm-3 col-form-label">Levrage</label>
+            <div class="col-sm-9">
+              <input id="margin" class="form-control form-control-sm" name="margin" required
+                [(ngModel)]="orderTemplate.margin">
+            </div>
           </div>
-        </div>
-        <div class="form-group row no-gutters">
-          <label for="stop" class="col-sm-3 col-form-label">Stop(%)</label>
-          <div class="col-sm-4">
-            <input id="stopLose" class="form-control form-control-sm" name="stopLose" required [(ngModel)]="orderTemplate.stopLose">
+          <div class="form-group row no-gutters">
+            <label for="stop" class="col-sm-3 col-form-label">Stop(%)</label>
+            <div class="col-sm-4">
+              <input id="stopLose" class="form-control form-control-sm" name="stopLose" required
+                [(ngModel)]="orderTemplate.stopLose">
+            </div>
+            <div class="col-sm-5">
+              <input id="pourcentage" class="form-control form-control-sm" name="pourcentage"
+                [value]="orderTemplate.amount*orderTemplate.stopLose*orderTemplate.margin/100" disabled>
+            </div>
           </div>
-          <div class="col-sm-5">
-            <input id="pourcentage" class="form-control form-control-sm" name="pourcentage" [value]="orderTemplate.amount*orderTemplate.stopLose*orderTemplate.margin/100" disabled >
-          </div>
-        </div>
-      </form>
-    </div>
-    <div class="modal-footer">
-      <button type="button" class="btn btn-secondary btn-sm" (click)="modal.dismiss()" ngbAutofocus>Cancel</button>
-      <button type="submit" class="btn btn-primary btn-sm" (click)="modal.close('continue')">Save Template</button>
-    </div>
-  </ng-template>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary btn-sm" (click)="modal.dismiss()" ngbAutofocus>Cancel</button>
+        <button type="submit" class="btn btn-primary btn-sm" (click)="modal.close('continue')">Save Template</button>
+      </div>
+    </ng-template>
 
 
-  <!-- popup confirm delete -->
-  <ng-template #popupConfirmDelete let-modal>
-    <div class="modal-header">
+    <!-- popup confirm delete -->
+    <ng-template #popupConfirmDelete let-modal>
+      <div class="modal-header">
         <h4 class="modal-title" id="modal-basic-title">{{popupTitle}}</h4>
         <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
-            <span aria-hidden="true">&times;</span>
+          <span aria-hidden="true">&times;</span>
         </button>
-    </div>
-    <div class="modal-footer">
+      </div>
+      <div class="modal-footer">
         <button type="button" class="btn btn-secondary btn-sm" (click)="modal.dismiss()" ngbAutofocus>Cancel</button>
-        <button type="button" class="btn btn-danger btn-sm"
-            (click)="modal.close('deleteContent')">Delete</button>
-    </div>
-  </ng-template>
+        <button type="button" class="btn btn-danger btn-sm" (click)="modal.close('deleteContent')">Delete</button>
+      </div>
+    </ng-template>

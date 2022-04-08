@@ -35,14 +35,16 @@
        <td>{{order.highPrice}}</td>
        <td>{{order.lowPrice}}</td>
        <td>{{order.closePrice}}</td>
-       <td *ngIf="(order.closePrice - order.openPrice) >=0" style="color: limegreen;">{{ (((order.closePrice - order.openPrice) / (order.openPrice))*100).toFixed(2) }}</td>
-       <td *ngIf="(order.closePrice - order.openPrice) < 0" style="color: red;">{{ (((order.closePrice - order.openPrice) / (order.openPrice))*100).toFixed(2) }}</td>
-       <td *ngIf="((order.closePrice - order.openPrice)*order.quantity*order.margin-order.fee) >=0" style="color: limegreen;">{{((order.closePrice - order.openPrice)*order.quantity*order.margin-order.fee).toFixed(2)}}</td>
-       <td *ngIf="((order.closePrice - order.openPrice)*order.quantity*order.margin-order.fee) < 0" style="color: red;">{{((order.closePrice - order.openPrice)*order.quantity*order.margin-order.fee).toFixed(2)}}</td>
+       <td *ngIf="order.closePrice==0">--</td>
+       <td *ngIf="order.closePrice==0">--</td>
+       <td *ngIf="(order.closePrice - order.openPrice) >=0 && order.closePrice!=0" style="color: limegreen;">{{ (((order.closePrice - order.openPrice) / (order.openPrice))*100).toFixed(2) }}</td>
+       <td *ngIf="(order.closePrice - order.openPrice) < 0 && order.closePrice!=0" style="color: red;">{{ (((order.closePrice - order.openPrice) / (order.openPrice))*100).toFixed(2) }}</td>
+       <td *ngIf="((order.closePrice - order.openPrice)*order.quantity-order.fee) >=0 && order.closePrice!=0" style="color: limegreen;">{{((order.closePrice - order.openPrice)*order.quantity-order.fee).toFixed(2)}}</td>
+       <td *ngIf="((order.closePrice - order.openPrice)*order.quantity-order.fee) < 0 && order.closePrice!=0" style="color: red;">{{((order.closePrice - order.openPrice)*order.quantity-order.fee).toFixed(2)}}</td>
        <td>{{order.openDate}}</td>
        <td>{{order.closeDate}}</td> 
        <td>{{order.type}}</td> 
-       <a [routerLink]="['/orderDetail', order.id]" class="btn ml-0 pl-0"><span style="color:blue"><i
+       <a [routerLink]="['/orderDetail', order.id]" target="_blank" class="btn ml-0 pl-0"><span style="color:blue"><i
         class="far fa-file-alt"></i>Show</span></a>
       </tr>
        <tr>

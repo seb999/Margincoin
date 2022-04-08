@@ -269,19 +269,19 @@ export class OrderDetailComponent {
         [
           { labels: { align: 'left' }, height: '80%', plotLines: [
             {
-              color: '#32CD32', width: 1, value: this.openOrder?.openPrice,
-              label: { text: "open", align: 'right' }
+              color: '#46ff33', width: 1, value: this.openOrder?.openPrice,
+              label: { text: "Open            ", align: 'right' }
             },
             {
-              color: '#FF0000', width: 1, value: this.openOrder?.stopLose,
-              label: { text: "stop lose", align: 'right' }
+              color: '#ff3339', width: 1, value: this.openOrder?.stopLose,
+              label: { text: "stopLose", align: 'right' }
             },
             {
-              color: '#FF0000', width: 1, value:  (this.openOrder?.highPrice * (1 - (this.openOrder?.takeProfit / 100))),
+              color: '#ff9333', width: 1, value:  (this.openOrder?.highPrice * (1 - (this.openOrder?.takeProfit / 100))),
               label: { text: "take profit", align: 'right' }
             },
             {
-              color: '#4169E1', width: 1, value: this.openOrder?.closePrice,
+              color: '#333eff', width: 1, value: this.openOrder?.closePrice,
               label: { text: "close", align: 'right' }
             },
           ],

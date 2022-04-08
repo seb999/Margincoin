@@ -27,6 +27,7 @@ namespace MarginCoin.Controllers
         ////////////////////////////////////////////////////////////////////////////////////////////////////////
         string interval = "5m";
         int numberPreviousCandle = 3;
+        double secureNoLose = 1.015;
 
         //Default value for coin web socket
         WebSocket ws2 = new WebSocket($"wss://stream.binance.com:9443/ws/btcusdt@kline_5m");
@@ -152,7 +153,9 @@ namespace MarginCoin.Controllers
             for (int j = candleList.Count - 1; j >= candleList.Count - numberCandle; j--)
             {
                 if (marketFirstCoin.s != candleList[j].s) return false;
-                if (marketFirstCoin.c < candleList[j].h) return false;
+                
+                if (marketFirstCoin.c < candleList[j].c && candleList[j].c> candleList[j].o) return false;  //green candle
+                if (marketFirstCoin.c < candleList[j].o && candleList[j].o > candleList[j].c) return false; //red candle
             }
             return true;
         }
@@ -184,7 +187,7 @@ namespace MarginCoin.Controllers
 
         private void UpdateStopLose(double lastPrice, Order activeOrder)
         {
-            if (lastPrice >= activeOrder.OpenPrice * 1.02)
+            if (lastPrice >= activeOrder.OpenPrice * secureNoLose)
             {
                 activeOrder.StopLose = activeOrder.OpenPrice;
                 _appDbContext.Order.Update(activeOrder);
