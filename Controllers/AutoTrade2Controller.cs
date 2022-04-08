@@ -26,7 +26,7 @@ namespace MarginCoin.Controllers
         /////////////////////////////------------SETTINGS----------/////////////////////////////////////////////
         ////////////////////////////////////////////////////////////////////////////////////////////////////////
         string interval = "5m";
-        string numberOfCandle = "5";
+        int numberPreviousCandle = 3;
 
         //Default value for coin web socket
         WebSocket ws2 = new WebSocket($"wss://stream.binance.com:9443/ws/btcusdt@kline_5m");
@@ -141,7 +141,7 @@ namespace MarginCoin.Controllers
             };
 
             //wait that previous candle where previous trade get terminated is closed!
-            if (CheckCandle(3, marketFirstCoin) && !buyOnHold)
+            if (CheckCandle(numberPreviousCandle, marketFirstCoin) && !buyOnHold)
             {
                 OpenTrade(marketFirstCoin);
             }
@@ -382,7 +382,7 @@ namespace MarginCoin.Controllers
         private List<Candle> GetCandles(string symbol)
         {
             candleList.Clear();
-            string apiUrl = $"https://api3.binance.com/api/v3/klines?symbol={symbol}&interval={interval}&limit={numberOfCandle}";
+            string apiUrl = $"https://api3.binance.com/api/v3/klines?symbol={symbol}&interval={interval}&limit=5";
             //Get data from Binance API
             List<List<double>> coinQuotation = HttpHelper.GetApiData<List<List<double>>>(new Uri(apiUrl));
 
