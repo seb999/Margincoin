@@ -3,6 +3,7 @@ namespace MarginCoin.Class
 {
     public class Candle
     {
+        public string id { get; set; }
         public double T { get; set; }  // Open time
         public string s { get; set; } // Symbol name
         public double o { get; set; } // open price

@@ -190,7 +190,6 @@ namespace MarginCoin.Controllers
             myOrder.TakeProfit = quotationList.Last().c * 1.008;
             myOrder.Quantity = quantity;
             myOrder.IsClosed = 0;
-            myOrder.Margin = 1;
             myOrder.StopLose = orderTemplate.StopLose;
             myOrder.Fee = Math.Round((quotationList.Last().c * quantity) / 100) * 0.1;
             myOrder.Symbol = quotationList.Last().s;
@@ -210,7 +209,7 @@ namespace MarginCoin.Controllers
             myOrder.ClosePrice = quotationList.Last().c;
             myOrder.Fee = myOrder.Fee + Math.Round((quotationList.Last().c * myOrder.Quantity) / 100 * 0.1);
             myOrder.IsClosed = 1;
-            myOrder.Profit = Math.Round((quotationList.Last().c - myOrder.OpenPrice) * myOrder.Quantity * myOrder.Margin);
+            myOrder.Profit = Math.Round((quotationList.Last().c - myOrder.OpenPrice) * myOrder.Quantity);
             myOrder.CloseDate = DateTime.Now.ToString();
             myOrder.RSIOut = quotationList.Last().Rsi;
 
@@ -305,7 +304,6 @@ namespace MarginCoin.Controllers
                 if (myOrderTemplate != null)
                 {
                     myOrderTemplate.Amount = orderTemplate.Amount;
-                    myOrderTemplate.Margin = orderTemplate.Margin;
                     myOrderTemplate.Quantity = orderTemplate.Quantity;
                     myOrderTemplate.StopLose = orderTemplate.StopLose;
                     orderTemplate.IsInactive = 0;

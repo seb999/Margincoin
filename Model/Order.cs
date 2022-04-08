@@ -12,7 +12,6 @@ namespace MarginCoin.Model
         public double HighPrice { get; set; }
         public double LowPrice { get; set; }
         public double ClosePrice { get; set; }
-        public int Margin { get; set; }
         public double StopLose { get; set; }
         public double TakeProfit { get; set; }
         public double Profit { get; set; }

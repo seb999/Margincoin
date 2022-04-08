@@ -62,7 +62,7 @@ namespace MarginCoin.Controllers
                 myOrder.ClosePrice = closePrice;
                 myOrder.Fee = myOrder.Fee + Math.Round((closePrice * myOrder.Quantity) /100) * 0.1;
                 myOrder.IsClosed = 1;
-                myOrder.Profit = Math.Round((closePrice - myOrder.OpenPrice) * myOrder.Quantity * myOrder.Margin);
+                myOrder.Profit = Math.Round((closePrice - myOrder.OpenPrice) * myOrder.Quantity);
                 myOrder.CloseDate = DateTime.Now.ToString();
                 _appDbContext.SaveChanges(); 
             }
