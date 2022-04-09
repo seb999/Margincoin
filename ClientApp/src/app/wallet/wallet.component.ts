@@ -27,11 +27,7 @@ export class WalletComponent {
     //Display list of open orders
     this.orderList = await this.getOpenOrder();
 
-    if (this.orderList.length > 0) {
-      this.totalProfit = this.orderList.map(a => (a.profit)).reduce(function (a, b) {
-        if(a!=0) return a + b;
-      });
-    }
+    this.calculateTotal();
 
     //Open listener on my API SignalR
     this.signalRService.startConnection();
@@ -42,9 +38,18 @@ export class WalletComponent {
       if (this.serverMsg.msgName == 'refreshUI') {
         console.log("New order so you refresh the UI Please!!!!");
         this.orderList = await this.getOpenOrder();
+        this.calculateTotal();
       }
       setTimeout(() => { this.showMessageInfo = false }, 700);
     });
+  }
+
+  calculateTotal(){
+    if (this.orderList.length > 0) {
+      this.totalProfit = this.orderList.map(a => (a.profit)).reduce(function (a, b) {
+        if(a!=0) return a + b;
+      });
+    }
   }
 
   async getOpenOrder(): Promise<Order[]> {

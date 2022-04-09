@@ -34,13 +34,17 @@
         <div class="card bg-light mb-3">
           <div class="card-header">
             <div class="row">
-              <div class="col-10">
-                <button class="btn btn-primary btn-sm btn-sm mr-1"
-                  (click)="openPopupOrderTemplate(popupOrderTemplate)">Trade template</button>&nbsp;&nbsp;&nbsp;&nbsp;
+              <div class="col-8">
+                <button class="btn btn-primary btn-sm btn-sm mr-1" (click)="openPopupOrderTemplate(popupOrderTemplate)">Trade template</button>&nbsp;&nbsp;&nbsp;&nbsp;
                 <button class="btn btn-primary btn-sm" (click)="changeTakeProfitOffset('reduce')">-</button>&nbsp;
-                <button class="btn btn-primary btn-sm"
-                  (click)="changeTakeProfitOffset('increase')">+</button>&nbsp;&nbsp;&nbsp;&nbsp;
+                <button class="btn btn-primary btn-sm" (click)="changeTakeProfitOffset('increase')">+</button>&nbsp;&nbsp;&nbsp;&nbsp;
                 <button class="btn btn-danger btn-sm" (click)="closeOrder(openOrder.id,coinData.c);">Sell</button>
+              </div>
+              <div class="col-2">
+                <div *ngIf="showMessageInfo" class="alert alert-warning"
+                style="height: 30px;padding-top: 5px;margin-bottom: 0px;" role="alert">
+                {{serverMsg?.msgName}}
+              </div>
               </div>
               <div class="col-2">
                 <select class="form-control" [(ngModel)]="interval" (change)="changeHighstockResolution(interval)">
@@ -48,12 +52,8 @@
                   </option>
                 </select>
               </div>
-              <div *ngIf="showMessageInfo" class="col-3 alert alert-danger"
-                style="height: 30px;padding-top: 5px;margin-bottom: 0px;" role="alert">
-                {{serverMsg?.msgName}}
-              </div>
+              
             </div>
-
           </div>
           <div class="card-body">
             <div class="row">

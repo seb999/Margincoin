@@ -20,7 +20,7 @@ namespace MarginCoin.Controllers
         private readonly ApplicationDbContext _appDbContext;
         private List<Candle> candleList = new List<Candle>();
 
-        bool buyOnHold = false;
+        bool buyOnHold = true;
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////------------SETTINGS----------/////////////////////////////////////////////
@@ -96,15 +96,16 @@ namespace MarginCoin.Controllers
             //------------------ ALGORYTHME----------------
             // IF (new spot) and (new spot 2% higher than previous spot) and (new spot candle green) and (previous candle green) BUY!
             //---------------------------------------------
-            if (dbSpot.s != marketFirstCoin.s && marketFirstCoin.P > marketSecondCoin.P * 1.02)
+            // if (dbSpot.s != marketFirstCoin.s && marketFirstCoin.P > marketSecondCoin.P * 1.02)
+               if (dbSpot.s != marketFirstCoin.s && marketFirstCoin.P > marketSecondCoin.P * 1.01)
             {
                 candleList = GetCandles(marketFirstCoin.s);
 
-                //First check : 2 previous candle should be green 
+                //First check : the previous candle should be green and this one too
                 if (candleList.Last().c > candleList.Last().o && candleList[candleList.Count - 2].c > candleList[candleList.Count - 2].o)
                 {
-                    //Second check : current price should be higther than last 3 higher cndles
-                    if (CheckCandle(3, marketFirstCoin))
+                    //Second check : current price should be higther than last 3 higher cndles and the candle is closed : go for it
+                    if (CheckCandle(3, marketFirstCoin) && candleList.Last().x == true)
                     {
                         if (GetActiveOrder() != null)
                         {
