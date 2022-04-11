@@ -20,7 +20,7 @@ namespace MarginCoin.Model
         public string Type { get; set; }
         public string OpenDate { get; set; }
         public string CloseDate { get; set; }
-        public double RSIIn { get; set; }
-        public double RSIOut{ get; set; }
+        public double RSI { get; set; }
+        public double MACD{ get; set; }
     }
 }

@@ -99,8 +99,6 @@ export class OrderDetailComponent {
       this.serverMsg = message;
       this.showMessageInfo = true;
       if (this.serverMsg.msgName == 'refreshUI') {
-        let snd = new Audio(SOUND);
-        snd.play();
         this.loadOrder();
       }
       setTimeout(() => { this.showMessageInfo = false }, 700);
@@ -166,7 +164,7 @@ export class OrderDetailComponent {
         if (this.coinData.p < 0) this.coinData.color = "red";
         if (this.coinData.p >= 0) this.coinData.color = "limegreen";
         this.coinData.s.includes("USDT");
-  
+
         if (!this.coinData.k.x) {
           this.ohlc.pop();
         }
@@ -239,6 +237,8 @@ export class OrderDetailComponent {
 
 
   async displayHighstock(indicator) {
+    this.openOrder = await this.orderDetailHelper.getOrder(this.orderId);
+
     let chartData = [] as any;
     let volume = [] as any;
 
@@ -267,27 +267,28 @@ export class OrderDetailComponent {
       },
       yAxis:
         [
-          { labels: { align: 'left' }, height: '80%', plotLines: [
-            {
-              color: '#46ff33', width: 1, value: this.openOrder?.openPrice,
-              label: { text: "Open            ", align: 'right' }
-            },
-            {
-              color: '#ff3339', width: 1, value: this.openOrder?.stopLose,
-              label: { text: "stopLose", align: 'right' }
-            },
-            {
-              color: '#ff9333', width: 1, value:  (this.openOrder?.highPrice * (1 - (this.openOrder?.takeProfit / 100))),
-              label: { text: "take profit", align: 'right' }
-            },
-            {
-              color: '#333eff', width: 1, value: this.openOrder?.closePrice,
-              label: { text: "close", align: 'right' }
-            },
-          ],
-        },
+          {
+            labels: { align: 'left' }, height: '80%', plotLines: [
+              {
+                color: '#46ff33', width: 1, value: this.openOrder?.openPrice,
+                label: { text: "Open            ", align: 'right' }
+              },
+              {
+                color: '#ff3339', width: 1, value: this.openOrder?.stopLose,
+                label: { text: "stopLose", align: 'right' }
+              },
+              {
+                color: '#ff9333', width: 1, value: (this.openOrder?.highPrice * (1 - (this.openOrder?.takeProfit / 100))),
+                label: { text: "take profit", align: 'right' }
+              },
+              {
+                color: '#333eff', width: 1, value: this.openOrder?.closePrice,
+                label: { text: "close", align: 'right' }
+              },
+            ],
+          },
           { labels: { align: 'left' }, top: '80%', height: '20%', offset: 0 },
-        ], 
+        ],
     }
 
     if (indicator == 'NO_INDICATOR') {

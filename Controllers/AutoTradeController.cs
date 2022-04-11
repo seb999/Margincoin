@@ -193,7 +193,7 @@ namespace MarginCoin.Controllers
             myOrder.StopLose = orderTemplate.StopLose;
             myOrder.Fee = Math.Round((quotationList.Last().c * quantity) / 100) * 0.1;
             myOrder.Symbol = quotationList.Last().s;
-            myOrder.RSIIn = quotationList.Last().Rsi;
+            myOrder.RSI = quotationList.Last().Rsi;
 
             _appDbContext.Order.Add(myOrder);
             _appDbContext.SaveChanges();
@@ -211,7 +211,7 @@ namespace MarginCoin.Controllers
             myOrder.IsClosed = 1;
             myOrder.Profit = Math.Round((quotationList.Last().c - myOrder.OpenPrice) * myOrder.Quantity);
             myOrder.CloseDate = DateTime.Now.ToString();
-            myOrder.RSIOut = quotationList.Last().Rsi;
+            //myOrder.RSIOut = quotationList.Last().Rsi;
 
             _appDbContext.SaveChanges();
             _hub.Clients.All.SendAsync("refreshUI", 0, 0, 0);
