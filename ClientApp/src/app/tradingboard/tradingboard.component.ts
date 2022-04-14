@@ -235,7 +235,7 @@ export class TradingboardComponent {
   async getOrderTemplate(): Promise<OrderTemplate> {
     const httpSetting: HttpSettings = {
       method: 'GET',
-      url: 'https://localhost:5001/api/AutoTrade/GetOrderTemplate/',
+      url: 'https://localhost:5002/api/AutoTrade/GetOrderTemplate/',
     };
     return await this.httpService.xhr(httpSetting);
   }
@@ -244,7 +244,7 @@ export class TradingboardComponent {
     const httpSetting: HttpSettings = {
       method: 'POST',
       data: this.orderTemplate,
-      url: 'https://localhost:5001/api/AutoTrade/SaveOrderTemplate/',
+      url: 'https://localhost:5002/api/AutoTrade/SaveOrderTemplate/',
     };
     return await this.httpService.xhr(httpSetting);
   }

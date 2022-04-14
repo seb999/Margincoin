@@ -15,6 +15,7 @@ import { TradingboardHelper } from './tradingboard/tradingBoard.helper';
 import { OrderDetailHelper } from './orderDetail/orderDetail.helper';
 import { HighchartsChartModule } from 'highcharts-angular';
 import { AppSetting } from './app.settings';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 @NgModule({
   declarations: [
@@ -26,6 +27,7 @@ import { AppSetting } from './app.settings';
     OrderDetailComponent
   ],
   imports: [
+    MatSlideToggleModule ,
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
     HttpClientModule,
     FormsModule,

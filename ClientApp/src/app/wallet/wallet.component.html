@@ -3,11 +3,21 @@
   <div class="col-2">
     <button class="btn btn-primary btn-sm mr-1" (click)="monitorMarket()">Monitor market</button>
   </div>
-  <div class="col-2">
-    <div *ngIf="showMessageInfo" class="alert alert-warning" style="height: 30px;padding-top: 5px;margin-bottom: 0px;" role="alert"> {{serverMsg?.msgName}} </div>
+  <div class="col-8">
+    <div *ngIf="showMessageInfo" class="alert alert-warning" style="height: 30px;padding-top: 3px;margin-bottom: 0px;width: 150px;" role="alert"> {{serverMsg?.msgName}} </div>
   </div>
-</div>
+  <div class="col-2">
+    <mat-slide-toggle
+    [(ngModel)]="checked"
+    class="example-margin"
+    [color]="color"
+    (change)="changed()"> <b *ngIf="checked">Binance : On</b> <b *ngIf="!checked">Binance : Off</b>
+</mat-slide-toggle>
+    
+  </div>
 
+
+</div>
 
 <table class="table table-sm mt-2">
     <thead class="thead-light">

@@ -15,6 +15,8 @@ export class WalletComponent {
   public totalProfit: number;
   public serverMsg: ServerMsg;
   public showMessageInfo: boolean = false;
+  color = 'accent';
+  checked = false;
 
   constructor(
     private httpService: HttpService,
@@ -44,6 +46,10 @@ export class WalletComponent {
     });
   }
 
+  changed(){
+    console.log(this.checked)
+  }
+
   calculateTotal(){
     if (this.orderList.length > 0) {
       this.totalProfit = this.orderList.map(a => (a.profit)).reduce(function (a, b) {
@@ -63,7 +69,7 @@ export class WalletComponent {
   async monitorMarket(): Promise<any> {
     const httpSetting: HttpSettings = {
       method: 'GET',
-      url: 'https://localhost:5001/api/AutoTrade2/MonitorMarket',
+      url: 'https://localhost:5002/api/AutoTrade2/MonitorMarket',
     };
     return await this.httpService.xhr(httpSetting);
   }

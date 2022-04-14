@@ -59,7 +59,7 @@ export class TradingboardHelper {
     const httpSetting: HttpSettings = {
       method: 'POST',
       data: data,
-      url: 'https://localhost:5001/api/AutoTrade/SaveOrderTemplate/',
+      url: 'https://localhost:5002/api/AutoTrade/SaveOrderTemplate/',
     };
     return await this.httpService.xhr(httpSetting);
   }

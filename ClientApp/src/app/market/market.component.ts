@@ -59,7 +59,7 @@ export class MarketComponent {
   async monitorMarket(): Promise<any> {
     const httpSetting: HttpSettings = {
       method: 'GET',
-      url: 'https://localhost:5001/api/AutoTrade2/MonitorMarket',
+      url: 'https://localhost:5002/api/AutoTrade2/MonitorMarket',
     };
     return await this.httpService.xhr(httpSetting);
   }
