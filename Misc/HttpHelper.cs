@@ -53,6 +53,7 @@ namespace MarginCoin.Misc
                 client.DefaultRequestHeaders.Add("X-MBX-APIKEY", apiKey);
                 
                 var response = client.PostAsync(apiUri, data).Result;
+               
                 if (response.IsSuccessStatusCode)
                 {
                     var toto = response.Content.ReadAsStringAsync().Result;
@@ -61,7 +62,7 @@ namespace MarginCoin.Misc
                 }
                 else
                 {
-                     Console.WriteLine(response.IsSuccessStatusCode);
+                    Console.WriteLine(response.IsSuccessStatusCode);
                     return default(T);
                 }
             }

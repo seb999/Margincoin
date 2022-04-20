@@ -1,9 +1,10 @@
 <h5>wallet</h5>
 <div class="row">
-  <div class="col-2">
+  <div class="col-3">
     <button class="btn btn-primary btn-sm mr-1" (click)="monitorMarket()">Monitor market</button>
+    <button class="btn btn-danger btn-sm mr-1" (click)="testBuy()">Buy 10 ADA</button>
   </div>
-  <div class="col-8">
+  <div class="col-7">
     <div *ngIf="showMessageInfo" class="alert alert-warning" style="height: 30px;padding-top: 3px;margin-bottom: 0px;width: 150px;" role="alert"> {{serverMsg?.msgName}} </div>
   </div>
   <div class="col-2">
@@ -34,6 +35,7 @@
         <th scope="col" id="volume" class="tableTh">Close</th> 
         <th scope="col" id="volume" class="tableTh">Type</th> 
         <th scope="col" id="volume" class="tableTh"></th> 
+        <th scope="col" id="volume" class="tableTh"></th> 
 
     </tr>
     </thead>
@@ -54,8 +56,13 @@
        <td>{{order.openDate}}</td>
        <td>{{order.closeDate}}</td> 
        <td>{{order.type}}</td> 
-       <a [routerLink]="['/orderDetail', order.id]" target="_blank" class="btn ml-0 pl-0"><span style="color:blue"><i
-        class="far fa-file-alt"></i>Show</span></a>
+       <td>
+        <button class="btn btn-danger btn-sm" (click)="closeOrder(openOrder.id,coinData.c);">Sell</button>
+       </td>
+       <td>
+        <a [routerLink]="['/orderDetail', order.id]" target="_blank" class="btn btn btn-primary btn-sm"><span><i
+                class="far fa-file-alt"></i>Show</span></a>
+       </td>
       </tr>
        <tr>
         <td></td>
@@ -67,6 +74,8 @@
         <td><b>Total</b></td>
         <td *ngIf="totalProfit >=0" style="color: limegreen;">{{totalProfit}}</td>
         <td *ngIf="totalProfit < 0" style="color: red;">{{totalProfit}}</td>
+        <td></td>
+        <td></td>
         <td></td>
         <td></td>
         <td></td>

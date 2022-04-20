@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Security.Cryptography;
 using System.Text;
@@ -6,24 +7,23 @@ using MarginCoin.Class;
 
 namespace MarginCoin.Misc
 {
-    public class BinanceHelper
-    {   
-        private async void Buy(decimal amount)
+    public static class BinanceHelper
+    {
+        public static async void Buy(string symbol, double amount)
         {
-            string amount2 = amount.ToString().Replace(",", ".");
+            string stringAmount = amount.ToString().Replace(",", ".");
             try
             {
-                string secretKey = Environment.GetEnvironmentVariable("BINANCE_SECRET_KEY");
-                string apiKey = "lJ1rj5uEaCGEzd6RdXE5P6Em7oEc1Kp0bMXbcy7MoKFNEaajhEr873xzAkX5C2Px";
+                string secretKey = Environment.GetEnvironmentVariable("BSK");
+                string apiKey = "gIDNZ9OsVIUbvFEuLgOhZ3XoQRnwrJ8krkp3TAR2dxQxwYErmKC6GOsMy50LYGWy";
 
-                string parameters = $"timestamp={ServerTime(apiKey)}&recvWindow=60000&type=MAIN_FUNDING&asset=ADA&amount={amount2}";
+                string parameters = $"timestamp={ServerTime(apiKey)}&symbol={symbol}&quoteOrderQty={stringAmount}&side=BUY&type=MARKET&recvWindow=60000";
                 string signature = GetSignature(parameters, secretKey);
-                string apiUrl = $"https://api3.binance.com/sapi/v1/asset/transfer?{parameters}&signature={signature}";
+                string apiUrl = $"https://api3.binance.com/api/v3/order/test?{parameters}&signature={signature}";
 
-                Console.WriteLine(apiUrl);
-                HttpHelper.PostApiData<CryptoTransaction>(new Uri(apiUrl), apiKey, new StringContent("", Encoding.UTF8, "application/json"));
+                BinanceOrder transaction = HttpHelper.PostApiData<BinanceOrder>(new Uri(apiUrl), apiKey, new StringContent("", Encoding.UTF8, "application/json"));
                 Console.WriteLine("http request completed");
-               // await _hub.Clients.All.SendAsync("transferExecuted", "done");
+                // await _hub.Clients.All.SendAsync("transferExecuted", "done");
             }
             catch (System.Exception e)
             {

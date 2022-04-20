@@ -73,4 +73,12 @@ export class WalletComponent {
     };
     return await this.httpService.xhr(httpSetting);
   }
+
+  async testBuy(): Promise<any> {
+    const httpSetting: HttpSettings = {
+      method: 'GET',
+      url: 'https://localhost:5002/api/AutoTrade2/TestBinanceBuy',
+    };
+    return await this.httpService.xhr(httpSetting);
+  }
 }

@@ -19,32 +19,47 @@ namespace MarginCoin.Controllers
         private IHubContext<SignalRHub> _hub;
         private readonly ApplicationDbContext _appDbContext;
         private List<Candle> candleList = new List<Candle>();
-
+        private List<MarketStream> buffer = new List<MarketStream>();
         bool buyOnHold = true;
+        int nbrUp = 0;
+        int nbrDown = 0;
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////------------SETTINGS----------/////////////////////////////////////////////
         ////////////////////////////////////////////////////////////////////////////////////////////////////////
         string interval = "15m";
-        int numberPreviousCandle = 4;
+        int numberPreviousCandle = 5;
 
         //move stop lose to buy price when current price raise over:1.2%
         double secureNoLose = 1.012;
 
         //used to adjust stopLose to last price - offset
-        double offset = 0.05;
+        double offset = 0.8;
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////------------END SETTINGS----------/////////////////////////////////////////
         ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         //Default value for coin web socket
+        WebSocket ws1 = new WebSocket("wss://stream.binance.com:9443/ws/!ticker@arr");
         WebSocket ws2 = new WebSocket($"wss://stream.binance.com:9443/ws/btcusdt@kline_5m");
 
         public AutoTrade2Controller(IHubContext<SignalRHub> hub, [FromServices] ApplicationDbContext appDbContext)
         {
             _hub = hub;
             _appDbContext = appDbContext;
+        }
+
+        [HttpGet("[action]")]
+        public void StopMonitorMarket()
+        {
+            //ws1.Stop();  //doesn;t work I believe it is not using same thread
+        }
+
+        [HttpGet("[action]")]
+        public void TestBinanceBuy()
+        {
+            BinanceHelper.Buy("ADAUSDT", 10.5);
         }
 
         [HttpGet("[action]")]
@@ -63,7 +78,42 @@ namespace MarginCoin.Controllers
             {
                 List<MarketStream> marketStreamList = Helper.deserializeHelper<List<MarketStream>>(e.Data);
                 marketStreamList = marketStreamList.Where(p => p.s.Contains("USDT") && !p.s.Contains("DOWNUSDT")).Select(p => p).OrderByDescending(p => p.P).ToList();
-                ProcessMarketStream(marketStreamList);
+                foreach (var marketStream in marketStreamList)
+                {
+                    var bufferItem = buffer.Where(p => p.s == marketStream.s).FirstOrDefault();
+                    if (bufferItem != null)
+                    {
+                        bufferItem.A = marketStream.A;
+                        bufferItem.a = marketStream.a;
+                        bufferItem.B = marketStream.B;
+                        bufferItem.c = marketStream.c;
+                        bufferItem.C = marketStream.C;
+                        bufferItem.e = marketStream.e;
+                        bufferItem.E = marketStream.E;
+                        bufferItem.F = marketStream.F;
+                        bufferItem.h = marketStream.h;
+                        bufferItem.L = marketStream.L;
+                        bufferItem.l = marketStream.l;
+                        bufferItem.n = marketStream.n;
+                        bufferItem.O = marketStream.O;
+                        bufferItem.o = marketStream.o;
+                        bufferItem.P = marketStream.P;
+                        bufferItem.p = marketStream.p;
+                        bufferItem.Q = marketStream.Q;
+                        bufferItem.q = marketStream.q;
+                        bufferItem.s = marketStream.s;
+                        bufferItem.v = marketStream.v;
+                        bufferItem.w = marketStream.w;
+                        bufferItem.x = marketStream.x;
+                    }
+                    else
+                        buffer.Add(marketStream);
+                }
+
+                nbrUp = buffer.Where(pred => pred.P >= 0).Count();
+                nbrDown = buffer.Where(pred => pred.P < 0).Count();
+
+                ProcessMarketStream(buffer);
                 _hub.Clients.All.SendAsync("trading");
             };
 
@@ -94,6 +144,12 @@ namespace MarginCoin.Controllers
         // ////////////////////////////////////////////////////////////////////////
         private void ProcessMarketStream(List<MarketStream> marketStreamList)
         {
+            // if ((DateTime.Now.Hour == 1 || DateTime.Now.Hour == 9 || DateTime.Now.Hour == 17) && DateTime.Now.Minute == 56 && DateTime.Now.Second == 0)
+            // {
+            //     ws1.Close();
+            //     MonitorMarket();
+
+            // }
             MarketStream marketFirstCoin = marketStreamList[0];
             MarketStream marketSecondCoin = marketStreamList[1];
             Order activeOrder = GetActiveOrder();
@@ -111,15 +167,15 @@ namespace MarginCoin.Controllers
                 {
                     if (candleList.Count == 0)
                     {
-                        candleList = GetCandles(marketFirstCoin.s);
                         ws2.Close();
+                        candleList = GetCandles(marketFirstCoin.s);
                         OpenWebSocketOnSpot(marketFirstCoin.s);
                     }
 
-                    if (candleList.Last().s != marketFirstCoin.s)
+                    if (candleList.Last().s != marketFirstCoin.s || ws2.IsAlive == false)
                     {
-                        candleList = GetCandles(marketFirstCoin.s);
                         ws2.Close();
+                        candleList = GetCandles(marketFirstCoin.s);
                         OpenWebSocketOnSpot(marketFirstCoin.s);
                     }
 
@@ -173,13 +229,13 @@ namespace MarginCoin.Controllers
 
             if (lastPrice <= activeOrder.StopLose)
             {
-                if(activeOrder.Lock > 0 )
+                if (activeOrder.Lock > 0)
                 {
                     Console.WriteLine($"Close trade : stop lose Lock{activeOrder.Lock}");
                     buyOnHold = true;
                     CloseTrade(marketStreamList, $"Stop Lose Lock{activeOrder.Lock}");
                 }
-                else 
+                else
                 {
                     Console.WriteLine("Close trade : stop lose ");
                     buyOnHold = true;
@@ -230,8 +286,12 @@ namespace MarginCoin.Controllers
 
             //1-read from db template
             OrderTemplate orderTemplate = GetOrderTemplate();
-
             double quantity = orderTemplate.Amount / myMarketStream.c;
+
+            //2-send binance order
+
+
+            //3-save order localy
             Order myOrder = new Order();
             myOrder.OpenDate = DateTime.Now.ToString();
             myOrder.OpenPrice = myMarketStream.c;
@@ -251,6 +311,7 @@ namespace MarginCoin.Controllers
             myOrder.R1 = candleList.Last().PivotPoint.R1;
             myOrder.S1 = candleList.Last().PivotPoint.S1;
             myOrder.Lock = 0;
+            myOrder.MarketTrend = $"{nbrUp}|{nbrDown}";
 
             _appDbContext.Order.Add(myOrder);
             _appDbContext.SaveChanges();
@@ -258,7 +319,7 @@ namespace MarginCoin.Controllers
         }
 
         private void UpdateStopLose(double lastPrice, Order activeOrder)
-        {   
+        {
             if (lastPrice >= activeOrder.OpenPrice * secureNoLose && activeOrder.Lock == 0)
             {
                 activeOrder.StopLose = activeOrder.OpenPrice;
@@ -266,55 +327,45 @@ namespace MarginCoin.Controllers
                 _appDbContext.SaveChanges();
             }
 
-            if((lastPrice - activeOrder.OpenPrice)*activeOrder.Quantity > 100 && activeOrder.Lock == 0)
+            if ((lastPrice - activeOrder.OpenPrice) * activeOrder.Quantity > 170 && activeOrder.Lock == 0)
             {
-                activeOrder.StopLose = lastPrice * (1-offset/100);
+                activeOrder.StopLose = lastPrice * (1 - offset / 100);
                 activeOrder.Lock = 1;
                 _appDbContext.Order.Update(activeOrder);
                 _appDbContext.SaveChanges();
             }
 
-            if((lastPrice - activeOrder.OpenPrice)*activeOrder.Quantity > 150 && activeOrder.Lock == 1)
+            if ((lastPrice - activeOrder.OpenPrice) * activeOrder.Quantity > 220 && activeOrder.Lock == 1)
             {
-                activeOrder.StopLose = lastPrice * (1-offset/100);;
+                activeOrder.StopLose = lastPrice * (1 - offset / 100); ;
                 activeOrder.Lock = 2;
                 _appDbContext.Order.Update(activeOrder);
                 _appDbContext.SaveChanges();
             }
 
-            if((lastPrice - activeOrder.OpenPrice)*activeOrder.Quantity > 200 && activeOrder.Lock == 2)
+            if ((lastPrice - activeOrder.OpenPrice) * activeOrder.Quantity > 270 && activeOrder.Lock == 2)
             {
-                activeOrder.StopLose = lastPrice * (1-offset/100);;
+                activeOrder.StopLose = lastPrice * (1 - offset / 100); ;
                 activeOrder.Lock = 3;
                 _appDbContext.Order.Update(activeOrder);
                 _appDbContext.SaveChanges();
             }
 
-            if((lastPrice - activeOrder.OpenPrice)*activeOrder.Quantity > 250 && activeOrder.Lock == 3)
+            if ((lastPrice - activeOrder.OpenPrice) * activeOrder.Quantity > 320 && activeOrder.Lock == 3)
             {
-                activeOrder.StopLose = lastPrice * (1-offset/100);;
+                activeOrder.StopLose = lastPrice * (1 - offset / 100); ;
                 activeOrder.Lock = 4;
                 _appDbContext.Order.Update(activeOrder);
                 _appDbContext.SaveChanges();
             }
 
-            if((lastPrice - activeOrder.OpenPrice)*activeOrder.Quantity > 300 && activeOrder.Lock == 4)
+            if ((lastPrice - activeOrder.OpenPrice) * activeOrder.Quantity > 370 && activeOrder.Lock == 4)
             {
-                activeOrder.StopLose = lastPrice * (1-offset/100);;
+                activeOrder.StopLose = lastPrice * (1 - offset / 100); ;
                 activeOrder.Lock = 5;
                 _appDbContext.Order.Update(activeOrder);
                 _appDbContext.SaveChanges();
             }
-
-            if((lastPrice - activeOrder.OpenPrice)*activeOrder.Quantity > 350 && activeOrder.Lock == 5)
-            {
-                activeOrder.StopLose = lastPrice * (1-offset/100);;
-                activeOrder.Lock = 6;
-                _appDbContext.Order.Update(activeOrder);
-                _appDbContext.SaveChanges();
-            }
-
-            //if (activeOrder.StopLose == activeOrder.OpenPrice) return;
         }
 
         private void UpdateTakeProfit(double currentPrice, Order activeOrder)
