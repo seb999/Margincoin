@@ -13,7 +13,7 @@ export class SignalRService {
 
     public startConnection = () => {
         this.hubConnection = new signalR.HubConnectionBuilder()
-            .withUrl('https://localhost:5002/Signalr')
+            .withUrl(location.origin +'/Signalr')
             .build();
         this.hubConnection
             .start()
@@ -22,9 +22,10 @@ export class SignalRService {
     }
     
     public addTransferChartDataListener = () => {
-        this.hubConnection.on('trading', (rsi,r1,s1) => {       
+        this.hubConnection.on('trading', (symbolWeight, rsi,r1,s1) => {       
             let serverMsg : ServerMsg = {
                 msgName : 'trading',
+                symbolWeight : symbolWeight,
                 rsi : rsi,
                 r1 : r1,
                 s1 : s1
@@ -32,9 +33,9 @@ export class SignalRService {
             return this.eventMessage.emit(serverMsg);
         });
 
-        this.hubConnection.on('refreshUI', () => {
+        this.hubConnection.on('newOrder', () => {
             let serverMsg :ServerMsg = {
-                msgName : 'refreshUI'
+                msgName : 'newOrder'
             };
             return this.eventMessage.emit(serverMsg);
         });

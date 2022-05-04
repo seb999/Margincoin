@@ -5,82 +5,102 @@
     <button class="btn btn-danger btn-sm mr-1" (click)="testBuy()">Buy 10 ADA</button>
   </div>
   <div class="col-7">
-    <div *ngIf="showMessageInfo" class="alert alert-warning" style="height: 30px;padding-top: 3px;margin-bottom: 0px;width: 150px;" role="alert"> {{serverMsg?.msgName}} </div>
+    <div *ngIf="showMessageInfo" class="alert alert-warning"
+      style="height: 30px;padding-top: 3px;margin-bottom: 0px;width: 150px;" role="alert"> Trading </div>
   </div>
   <div class="col-2">
-    <mat-slide-toggle
-    [(ngModel)]="checked"
-    class="example-margin"
-    [color]="color"
-    (change)="changed()"> <b *ngIf="checked">Binance : On</b> <b *ngIf="!checked">Binance : Off</b>
-</mat-slide-toggle>
-    
+    <mat-slide-toggle [(ngModel)]="checked" class="example-margin" [color]="color" (change)="changed()"> <b
+        *ngIf="checked">Binance : On</b> <b *ngIf="!checked">Binance : Off</b>
+    </mat-slide-toggle>
+
   </div>
-
-
 </div>
 
-<table class="table table-sm mt-2">
-    <thead class="thead-light">
-      <tr>
-        <th scope="col" id="last" class="tableTh ">Symbol</th>
-        <th scope="col" id="last" class="tableTh ">Amount</th>
-        <th scope="col" id="volume" class="tableTh">Open</th> 
-        <th scope="col" id="volume" class="tableTh">High</th> 
-        <th scope="col" id="volume" class="tableTh">Low</th> 
-        <th scope="col" id="volume" class="tableTh">Close</th> 
-        <th scope="col" id="volume" class="tableTh">%</th> 
-        <th scope="col" id="volume" class="tableTh">Profit</th> 
-        <th scope="col" id="volume" class="tableTh">Open</th> 
-        <th scope="col" id="volume" class="tableTh">Close</th> 
-        <th scope="col" id="volume" class="tableTh">Type</th> 
-        <th scope="col" id="volume" class="tableTh"></th> 
-        <th scope="col" id="volume" class="tableTh"></th> 
+<div class="row">
+  <div class="col-8">
+    <table class="table table-sm mt-2">
+      <thead class="thead-light">
+        <tr>
+          <th scope="col" id="last" class="tableTh ">Symbol</th>
+          <th scope="col" id="last" class="tableTh ">Amount</th>
+          <th scope="col" id="volume" class="tableTh">Open</th>
+          <th scope="col" id="volume" class="tableTh">High</th>
+          <th scope="col" id="volume" class="tableTh">Low</th>
+          <th scope="col" id="volume" class="tableTh">Close</th>
+          <th scope="col" id="volume" class="tableTh">%</th>
+          <th scope="col" id="volume" class="tableTh">Profit</th>
+          <th scope="col" id="volume" class="tableTh">Open</th>
+          <th scope="col" id="volume" class="tableTh">Close</th>
+          <th scope="col" id="volume" class="tableTh">Type</th>
+          <th scope="col" id="volume" class="tableTh"></th>
+          <th scope="col" id="volume" class="tableTh"></th>
 
-    </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let order of orderList">
-        <td>{{order.symbol}}</td>
-       <td>{{(order.openPrice * order.quantity).toFixed(0)}}</td>
-       <td>{{order.openPrice}}</td>
-       <td>{{order.highPrice}}</td>
-       <td>{{order.lowPrice}}</td>
-       <td>{{order.closePrice}}</td>
-       <td *ngIf="order.closePrice==0">--</td>
-       <td *ngIf="order.closePrice==0">--</td>
-       <td *ngIf="(order.closePrice - order.openPrice) >=0 && order.closePrice!=0" style="color: limegreen;">{{ (((order.closePrice - order.openPrice) / (order.openPrice))*100).toFixed(2) }}</td>
-       <td *ngIf="(order.closePrice - order.openPrice) < 0 && order.closePrice!=0" style="color: red;">{{ (((order.closePrice - order.openPrice) / (order.openPrice))*100).toFixed(2) }}</td>
-       <td *ngIf="((order.closePrice - order.openPrice)*order.quantity-order.fee) >=0 && order.closePrice!=0" style="color: limegreen;">{{((order.closePrice - order.openPrice)*order.quantity-order.fee).toFixed(2)}}</td>
-       <td *ngIf="((order.closePrice - order.openPrice)*order.quantity-order.fee) < 0 && order.closePrice!=0" style="color: red;">{{((order.closePrice - order.openPrice)*order.quantity-order.fee).toFixed(2)}}</td>
-       <td>{{order.openDate}}</td>
-       <td>{{order.closeDate}}</td> 
-       <td>{{order.type}}</td> 
-       <td>
-        <button class="btn btn-danger btn-sm" (click)="closeOrder(openOrder.id,coinData.c);">Sell</button>
-       </td>
-       <td>
-        <a [routerLink]="['/orderDetail', order.id]" target="_blank" class="btn btn btn-primary btn-sm"><span><i
-                class="far fa-file-alt"></i>Show</span></a>
-       </td>
-      </tr>
-       <tr>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td><b>Total</b></td>
-        <td *ngIf="totalProfit >=0" style="color: limegreen;">{{totalProfit}}</td>
-        <td *ngIf="totalProfit < 0" style="color: red;">{{totalProfit}}</td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-       </tr>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let order of orderList">
+          <td>{{order.symbol}}</td>
+          <td>{{(order.openPrice * order.quantity).toFixed(0)}}</td>
+          <td>{{order.openPrice}}</td>
+          <td>{{order.highPrice}}</td>
+          <td>{{order.lowPrice}}</td>
+          <td>{{order.closePrice}}</td>
+          <td *ngIf="order.closePrice==0">--</td>
+          <td *ngIf="order.closePrice==0">--</td>
+          <td *ngIf="(order.closePrice - order.openPrice) >=0 && order.closePrice!=0" style="color: limegreen;">{{
+            (((order.closePrice - order.openPrice) / (order.openPrice))*100).toFixed(2) }}</td>
+          <td *ngIf="(order.closePrice - order.openPrice) < 0 && order.closePrice!=0" style="color: red;">{{
+            (((order.closePrice - order.openPrice) / (order.openPrice))*100).toFixed(2) }}</td>
+          <td *ngIf="((order.closePrice - order.openPrice)*order.quantity-order.fee) >=0 && order.closePrice!=0"
+            style="color: limegreen;">{{((order.closePrice - order.openPrice)*order.quantity-order.fee).toFixed(2)}}
+          </td>
+          <td *ngIf="((order.closePrice - order.openPrice)*order.quantity-order.fee) < 0 && order.closePrice!=0"
+            style="color: red;">{{((order.closePrice - order.openPrice)*order.quantity-order.fee).toFixed(2)}}</td>
+          <td>{{order.openDate}}</td>
+          <td>{{order.closeDate}}</td>
+          <td>{{order.type}}</td>
+          <td>
+            <button class="btn btn-danger btn-sm" (click)="closeOrder(openOrder.id,coinData.c);">Sell</button>
+          </td>
+          <td>
+            <a [routerLink]="['/orderDetail', order.id]" target="_blank" class="btn btn btn-primary btn-sm"><span><i
+                  class="far fa-file-alt"></i>Show</span></a>
+          </td>
+        </tr>
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td><b>Total</b></td>
+          <td *ngIf="totalProfit >=0" style="color: limegreen;">{{totalProfit}}</td>
+          <td *ngIf="totalProfit < 0" style="color: red;">{{totalProfit}}</td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
       </tbody>
-  </table>
-
-  
+    </table>
+  </div>
+  <div class="col-4">
+    <table class="table table-sm mt-2">
+      <thead class="thead-light">
+        <tr>
+          <th scope="col" id="last" class="tableTh ">Symbol</th>
+          <th scope="col" id="last" class="tableTh ">Amount</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let symbolList of SymbolWeightList">
+          <td>{{symbolList.s}}</td>
+          <td>{{(symbolList.w)}}</td>
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

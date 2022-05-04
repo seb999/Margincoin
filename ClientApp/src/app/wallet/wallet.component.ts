@@ -12,6 +12,7 @@ import { ServerMsg } from '../class/serverMsg';
 })
 export class WalletComponent {
   public orderList: Order[];
+  public SymbolWeightList: any[];
   public totalProfit: number;
   public serverMsg: ServerMsg;
   public showMessageInfo: boolean = false;
@@ -28,7 +29,6 @@ export class WalletComponent {
   async ngOnInit() {
     //Display list of open orders
     this.orderList = await this.getOpenOrder();
-
     this.calculateTotal();
 
     //Open listener on my API SignalR
@@ -36,13 +36,17 @@ export class WalletComponent {
     this.signalRService.addTransferChartDataListener();
     this.signalRService.onMessage().subscribe(async message => {
       this.serverMsg = message;
-      this.showMessageInfo = true;
-      if (this.serverMsg.msgName == 'refreshUI') {
-        console.log("New order so you refresh the UI Please!!!!");
+     
+      if (this.serverMsg.msgName == 'trading') {
+        this.showMessageInfo = true;
+        this.SymbolWeightList = this.serverMsg.symbolWeight;
+        setTimeout(() => { this.showMessageInfo = false }, 700);
+      }
+
+      if (this.serverMsg.msgName == 'newOrder') {
         this.orderList = await this.getOpenOrder();
         this.calculateTotal();
       }
-      setTimeout(() => { this.showMessageInfo = false }, 700);
     });
   }
 
@@ -58,6 +62,14 @@ export class WalletComponent {
     }
   }
 
+  async getSymbolWeight(): Promise<Order[]> {
+    const httpSetting: HttpSettings = {
+      method: 'GET',
+      url: location.origin + "/api/AutoTrade2/GetSymbolWeight",
+    };
+    return await this.httpService.xhr(httpSetting);
+  }
+
   async getOpenOrder(): Promise<Order[]> {
     const httpSetting: HttpSettings = {
       method: 'GET',
@@ -69,7 +81,7 @@ export class WalletComponent {
   async monitorMarket(): Promise<any> {
     const httpSetting: HttpSettings = {
       method: 'GET',
-      url: 'https://localhost:5002/api/AutoTrade2/MonitorMarket',
+      url: location.origin + '/api/AutoTrade2/MonitorMarket',
     };
     return await this.httpService.xhr(httpSetting);
   }

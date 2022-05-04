@@ -93,6 +93,11 @@ namespace MarginCoin
                     //spa.UseAngularCliServer(npmScript: "start");
                     spa.UseProxyToSpaDevelopmentServer("http://localhost:4201");
                 }
+
+                 if (env.IsProduction())
+                {
+                     spa.UseProxyToSpaDevelopmentServer("http://localhost:4201");
+                }
             });
 
            

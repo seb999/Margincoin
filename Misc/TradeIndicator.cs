@@ -9,7 +9,7 @@ namespace MarginCoin.Misc
     public static class TradeIndicator
     {
 
-        public static void CalculateIndicator(ref List<Candle> quotationList)
+        public static void CalculateIndicator<T>(ref List<T> quotationList) where T : Candle
         {
             var data = quotationList.Select(p => p.c).ToArray();
             int beginIndex;
@@ -21,7 +21,7 @@ namespace MarginCoin.Misc
             double[] emaValues = new double[data.Length];
 
             //Calculate RSI
-            var statusRsi = Core.Rsi(0, data.Length - 1, data, 50, out beginIndex, out outNBElements, rsiValues);
+            var statusRsi = Core.Rsi(0, data.Length - 1, data, 14, out beginIndex, out outNBElements, rsiValues);
             if (statusRsi == Core.RetCode.Success && outNBElements > 0)
             {
                 for (int i = 0; i <= outNBElements - 1; i++)
@@ -31,15 +31,11 @@ namespace MarginCoin.Misc
             }
 
             //Calculate MACD
-            var statusMacd = Core.MacdFix(0, data.Length - 1, data, 2, out beginIndex, out outNBElements, outMACD, outMACDSignal, outMACDHist);
+            var statusMacd = Core.Macd(0, data.Length - 1, data, 12, 26, 9, out beginIndex, out outNBElements, outMACD, outMACDSignal, outMACDHist);
             if (statusMacd == Core.RetCode.Success && outNBElements > 0)
             {
                 for (int i = 0; i < outNBElements; i++)
                 {
-                    // quotationList[i + beginIndex].Macd = outMACD[i] > 1 ? (float)Math.Round(outMACD[i], 3) : (float)Math.Round(outMACD[i], 6);
-                    // quotationList[i + beginIndex].MacdHist = Math.Abs(outMACDHist[i]) > 1 ? (float)Math.Round(outMACDHist[i], 3) : (float)Math.Round(outMACDHist[i], 6);
-                    // quotationList[i + beginIndex].MacdSign = outMACDSignal[i] > 1 ? (float)Math.Round(outMACDSignal[i], 3) : (float)Math.Round(outMACDSignal[i], 6);
-
                     quotationList[i + beginIndex].Macd = outMACD[i];
                     quotationList[i + beginIndex].MacdHist = outMACDHist[i];
                     quotationList[i + beginIndex].MacdSign = outMACDSignal[i];

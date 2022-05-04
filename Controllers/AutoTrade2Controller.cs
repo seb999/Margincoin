@@ -20,29 +20,31 @@ namespace MarginCoin.Controllers
         private readonly ApplicationDbContext _appDbContext;
         private List<Candle> candleList = new List<Candle>();
         private List<MarketStream> buffer = new List<MarketStream>();
-        bool buyOnHold = true;
+
         int nbrUp = 0;
         int nbrDown = 0;
+
+        bool buyOnHold = true;
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////------------SETTINGS----------/////////////////////////////////////////////
         ////////////////////////////////////////////////////////////////////////////////////////////////////////
         string interval = "15m";
-        int numberPreviousCandle = 5;
+        int numberPreviousCandle = 3;
 
         //move stop lose to buy price when current price raise over:1.2%
         double secureNoLose = 1.012;
 
         //used to adjust stopLose to last price - offset
-        double offset = 0.8;
+        double offset = 0.8; //in %
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////------------END SETTINGS----------/////////////////////////////////////////
         ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         //Default value for coin web socket
-        WebSocket ws1 = new WebSocket("wss://stream.binance.com:9443/ws/!ticker@arr");
         WebSocket ws2 = new WebSocket($"wss://stream.binance.com:9443/ws/btcusdt@kline_5m");
+        WebSocket ws1 = new WebSocket("wss://stream.binance.com:9443/ws/!ticker@arr");
 
         public AutoTrade2Controller(IHubContext<SignalRHub> hub, [FromServices] ApplicationDbContext appDbContext)
         {
@@ -51,21 +53,9 @@ namespace MarginCoin.Controllers
         }
 
         [HttpGet("[action]")]
-        public void StopMonitorMarket()
-        {
-            //ws1.Stop();  //doesn;t work I believe it is not using same thread
-        }
-
-        [HttpGet("[action]")]
-        public void TestBinanceBuy()
-        {
-            BinanceHelper.Buy("ADAUSDT", 10.5);
-        }
-
-        [HttpGet("[action]")]
         public string MonitorMarket()
         {
-            var ws1 = new WebSocket("wss://stream.binance.com:9443/ws/!ticker@arr");
+            ws1 = new WebSocket("wss://stream.binance.com:9443/ws/!ticker@arr");
 
             var pingTimer = new System.Timers.Timer(5000);
             pingTimer.Elapsed += (sender, args) =>
@@ -78,38 +68,9 @@ namespace MarginCoin.Controllers
             {
                 List<MarketStream> marketStreamList = Helper.deserializeHelper<List<MarketStream>>(e.Data);
                 marketStreamList = marketStreamList.Where(p => p.s.Contains("USDT") && !p.s.Contains("DOWNUSDT")).Select(p => p).OrderByDescending(p => p.P).ToList();
-                foreach (var marketStream in marketStreamList)
-                {
-                    var bufferItem = buffer.Where(p => p.s == marketStream.s).FirstOrDefault();
-                    if (bufferItem != null)
-                    {
-                        bufferItem.A = marketStream.A;
-                        bufferItem.a = marketStream.a;
-                        bufferItem.B = marketStream.B;
-                        bufferItem.c = marketStream.c;
-                        bufferItem.C = marketStream.C;
-                        bufferItem.e = marketStream.e;
-                        bufferItem.E = marketStream.E;
-                        bufferItem.F = marketStream.F;
-                        bufferItem.h = marketStream.h;
-                        bufferItem.L = marketStream.L;
-                        bufferItem.l = marketStream.l;
-                        bufferItem.n = marketStream.n;
-                        bufferItem.O = marketStream.O;
-                        bufferItem.o = marketStream.o;
-                        bufferItem.P = marketStream.P;
-                        bufferItem.p = marketStream.p;
-                        bufferItem.Q = marketStream.Q;
-                        bufferItem.q = marketStream.q;
-                        bufferItem.s = marketStream.s;
-                        bufferItem.v = marketStream.v;
-                        bufferItem.w = marketStream.w;
-                        bufferItem.x = marketStream.x;
-                    }
-                    else
-                        buffer.Add(marketStream);
-                }
 
+                AutotradeHelper.BufferMarketStream(marketStreamList, ref buffer);
+                
                 nbrUp = buffer.Where(pred => pred.P >= 0).Count();
                 nbrDown = buffer.Where(pred => pred.P < 0).Count();
 
@@ -144,18 +105,12 @@ namespace MarginCoin.Controllers
         // ////////////////////////////////////////////////////////////////////////
         private void ProcessMarketStream(List<MarketStream> marketStreamList)
         {
-            // if ((DateTime.Now.Hour == 1 || DateTime.Now.Hour == 9 || DateTime.Now.Hour == 17) && DateTime.Now.Minute == 56 && DateTime.Now.Second == 0)
-            // {
-            //     ws1.Close();
-            //     MonitorMarket();
-
-            // }
             MarketStream marketFirstCoin = marketStreamList[0];
             MarketStream marketSecondCoin = marketStreamList[1];
             Order activeOrder = GetActiveOrder();
-            DisplayStatus(activeOrder, marketStreamList);
+            AutotradeHelper.DisplayStatus(activeOrder, marketStreamList);
 
-            if (!DataQualityCheck(marketStreamList)) return;
+            if (!AutotradeHelper.DataQualityCheck(marketStreamList)) return;
 
             if (GetActiveOrder() != null)
             {
@@ -183,7 +138,6 @@ namespace MarginCoin.Controllers
                     {
                         Console.WriteLine($"New top coin {marketFirstCoin.s} : open trade RSI :{candleList.Last().Rsi}");
                         OpenTrade(marketFirstCoin);
-                        SaveSpot(marketFirstCoin);
                     }
                 }
             }
@@ -191,33 +145,51 @@ namespace MarginCoin.Controllers
 
         private bool CheckCandle(int numberCandle, MarketStream marketFirstCoin)
         {   //Question : why using the marketFirstCoin parameter as we have the last value in the last candle in the list
-            //If current candle and previous candle green we continue
-            if (CandleColor(candleList.Last()) == "green" && CandleColor(candleList[candleList.Count - 2]) == "green")
+
+            if (candleList.Count < 2) return false;
+
+            for (int j = candleList.Count - 2; j >= candleList.Count - numberCandle; j--)
             {
-                for (int j = candleList.Count - 2; j >= candleList.Count - numberCandle; j--)
+                if (marketFirstCoin.s != candleList[j].s)
                 {
-                    if (marketFirstCoin.s != candleList[j].s)
-                    {
-                        Console.WriteLine("Inconsistancy in candle list");
-                        return false;
-                    }
-
-                    //green candle and c should be higher than previous c + (h-c)/10
-                    if (marketFirstCoin.c < (candleList[j].c + (candleList[j].h - candleList[j].c) / 10) && CandleColor(candleList[j]) == "green")
-                    {
-                        return false;
-                    }
-
-                    //red candle
-                    if (marketFirstCoin.c < (candleList[j].o + (candleList[j].h - candleList[j].o) / 10) && CandleColor(candleList[j]) == "red")
-                    {
-                        return false;
-                    }
+                    Console.WriteLine("Inconsistancy in candle list");
+                    return false;
                 }
 
+                //green candle and c should be higher than previous c + (h-c)/10
+                if (marketFirstCoin.c < (candleList[j].c + (candleList[j].h - candleList[j].c) / 10) && AutotradeHelper.CandleColor(candleList[j]) == "green")
+                {
+                    return false;
+                }
+
+                //red candle
+                if (marketFirstCoin.c < (candleList[j].o + (candleList[j].h - candleList[j].o) / 10) && AutotradeHelper.CandleColor(candleList[j]) == "red")
+                {
+                    return false;
+                }
+            }
+
+            for (int i = candleList.Count - numberCandle; i < candleList.Count; i++)
+            {
+                Console.WriteLine(AutotradeHelper.CandleColor(candleList[i]));
+                if ((AutotradeHelper.CandleColor(candleList[i]) == "green") && candleList[i].c > candleList[i - 1].c)
+                {
+                    continue;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+
+            if (candleList.Last().Rsi < 73 || (GetLastOrder().Symbol == marketFirstCoin.s && candleList.Last().Rsi < 93))
+            {
                 return true;
             }
-            else return false;
+            else
+            {
+                return false;
+            }
         }
 
         private void CheckStopLose(List<MarketStream> marketStreamList)
@@ -261,7 +233,7 @@ namespace MarginCoin.Controllers
 
         private void CloseTrade(List<MarketStream> marketStreamList, string closeType)
         {
-            //Console.Beep();
+
             Order myOrder = _appDbContext.Order.Where(p => p.Id == GetActiveOrder().Id).Select(p => p).FirstOrDefault();
             double closePrice = marketStreamList.Where(p => p.s == myOrder.Symbol).Select(p => p.c).FirstOrDefault();
             if (closePrice == 0) return;
@@ -273,6 +245,7 @@ namespace MarginCoin.Controllers
             myOrder.Profit = Math.Round((closePrice - myOrder.OpenPrice) * myOrder.Quantity) - myOrder.Fee;
             myOrder.CloseDate = DateTime.Now.ToString();
             _appDbContext.SaveChanges();
+            Console.Beep();
 
             _hub.Clients.All.SendAsync("refreshUI");
         }
@@ -286,12 +259,8 @@ namespace MarginCoin.Controllers
 
             //1-read from db template
             OrderTemplate orderTemplate = GetOrderTemplate();
+
             double quantity = orderTemplate.Amount / myMarketStream.c;
-
-            //2-send binance order
-
-
-            //3-save order localy
             Order myOrder = new Order();
             myOrder.OpenDate = DateTime.Now.ToString();
             myOrder.OpenPrice = myMarketStream.c;
@@ -308,8 +277,6 @@ namespace MarginCoin.Controllers
             myOrder.MACD = candleList.Last().Macd;
             myOrder.MACDSign = candleList.Last().MacdSign;
             myOrder.EMA = candleList.Last().Ema;
-            myOrder.R1 = candleList.Last().PivotPoint.R1;
-            myOrder.S1 = candleList.Last().PivotPoint.S1;
             myOrder.Lock = 0;
             myOrder.MarketTrend = $"{nbrUp}|{nbrDown}";
 
@@ -327,45 +294,47 @@ namespace MarginCoin.Controllers
                 _appDbContext.SaveChanges();
             }
 
-            if ((lastPrice - activeOrder.OpenPrice) * activeOrder.Quantity > 170 && activeOrder.Lock == 0)
-            {
-                activeOrder.StopLose = lastPrice * (1 - offset / 100);
-                activeOrder.Lock = 1;
-                _appDbContext.Order.Update(activeOrder);
-                _appDbContext.SaveChanges();
-            }
+            // if ((lastPrice - activeOrder.OpenPrice) * activeOrder.Quantity > 200 && activeOrder.Lock == 0)
+            // {
+            //     activeOrder.StopLose = lastPrice * (1 - offset / 100);
+            //     activeOrder.Lock = 1;
+            //     _appDbContext.Order.Update(activeOrder);
+            //     _appDbContext.SaveChanges();
+            // }
 
-            if ((lastPrice - activeOrder.OpenPrice) * activeOrder.Quantity > 220 && activeOrder.Lock == 1)
-            {
-                activeOrder.StopLose = lastPrice * (1 - offset / 100); ;
-                activeOrder.Lock = 2;
-                _appDbContext.Order.Update(activeOrder);
-                _appDbContext.SaveChanges();
-            }
+            // if ((lastPrice - activeOrder.OpenPrice) * activeOrder.Quantity > 220 && activeOrder.Lock == 1)
+            // {
+            //     activeOrder.StopLose = lastPrice * (1 - offset / 100); ;
+            //     activeOrder.Lock = 2;
+            //     _appDbContext.Order.Update(activeOrder);
+            //     _appDbContext.SaveChanges();
+            // }
 
-            if ((lastPrice - activeOrder.OpenPrice) * activeOrder.Quantity > 270 && activeOrder.Lock == 2)
-            {
-                activeOrder.StopLose = lastPrice * (1 - offset / 100); ;
-                activeOrder.Lock = 3;
-                _appDbContext.Order.Update(activeOrder);
-                _appDbContext.SaveChanges();
-            }
+            // if ((lastPrice - activeOrder.OpenPrice) * activeOrder.Quantity > 270 && activeOrder.Lock == 2)
+            // {
+            //     activeOrder.StopLose = lastPrice * (1 - offset / 100); ;
+            //     activeOrder.Lock = 3;
+            //     _appDbContext.Order.Update(activeOrder);
+            //     _appDbContext.SaveChanges();
+            // }
 
-            if ((lastPrice - activeOrder.OpenPrice) * activeOrder.Quantity > 320 && activeOrder.Lock == 3)
-            {
-                activeOrder.StopLose = lastPrice * (1 - offset / 100); ;
-                activeOrder.Lock = 4;
-                _appDbContext.Order.Update(activeOrder);
-                _appDbContext.SaveChanges();
-            }
+            // if ((lastPrice - activeOrder.OpenPrice) * activeOrder.Quantity > 320 && activeOrder.Lock == 3)
+            // {
+            //     activeOrder.StopLose = lastPrice * (1 - offset / 100); ;
+            //     activeOrder.Lock = 4;
+            //     _appDbContext.Order.Update(activeOrder);
+            //     _appDbContext.SaveChanges();
+            // }
 
-            if ((lastPrice - activeOrder.OpenPrice) * activeOrder.Quantity > 370 && activeOrder.Lock == 4)
-            {
-                activeOrder.StopLose = lastPrice * (1 - offset / 100); ;
-                activeOrder.Lock = 5;
-                _appDbContext.Order.Update(activeOrder);
-                _appDbContext.SaveChanges();
-            }
+            // if ((lastPrice - activeOrder.OpenPrice) * activeOrder.Quantity > 370 && activeOrder.Lock == 4)
+            // {
+            //     activeOrder.StopLose = lastPrice * (1 - offset / 100); ;
+            //     activeOrder.Lock = 5;
+            //     _appDbContext.Order.Update(activeOrder);
+            //     _appDbContext.SaveChanges();
+            // }
+
+            //if (activeOrder.StopLose == activeOrder.OpenPrice) return;
         }
 
         private void UpdateTakeProfit(double currentPrice, Order activeOrder)
@@ -400,30 +369,6 @@ namespace MarginCoin.Controllers
                 _appDbContext.Order.Update(activeOrder);
                 _appDbContext.SaveChanges();
             }
-        }
-
-        private void SaveSpot(MarketStream marketStreamCoin)
-        {
-            Spot mySpot = _appDbContext.Spot.FirstOrDefault();
-            if (mySpot == null)
-            {
-                Spot newSpot = new Spot()
-                {
-                    s = marketStreamCoin.s,
-                    P = marketStreamCoin.P,
-                    OpenDate = DateTime.Now.ToString()
-                };
-                _appDbContext.Spot.Add(newSpot);
-            }
-            else
-            {
-                mySpot.s = marketStreamCoin.s;
-                mySpot.P = marketStreamCoin.P;
-                mySpot.OpenDate = DateTime.Now.ToString();
-                _appDbContext.Spot.Update(mySpot);
-
-            }
-            _appDbContext.SaveChanges();
         }
 
         #endregion
@@ -465,26 +410,6 @@ namespace MarginCoin.Controllers
                 };
                 candleList.Add(newCandle);
                 TradeIndicator.CalculateIndicator(ref candleList);
-
-
-                // var stream = Helper.deserializeHelper<StreamData>(e.Data);
-                // if (stream.k.x)
-                // {
-                //     Console.WriteLine("New candle save");
-                //     Candle newCandle = new Candle()
-                //     {
-                //         s = stream.k.s,
-                //         o = stream.k.o,
-                //         h = stream.k.h,
-                //         l = stream.k.l,
-                //         c = stream.k.c,
-                //         id = Guid.NewGuid().ToString(),
-                //     };
-                //     candleList.Add(newCandle);
-                //     TradeIndicator.CalculateIndicator(ref candleList);
-
-                //     buyOnHold = false;
-                // }
             };
 
             ws2.OnOpen += (sender, args) =>
@@ -500,34 +425,10 @@ namespace MarginCoin.Controllers
             ws2.Connect();
         }
 
-        private void DisplayStatus(Order activeOrder, List<MarketStream> marketStreamList)
-        {
-            if (activeOrder != null)
-            {
-                double currentPrice = marketStreamList.Where(p => p.s == activeOrder.Symbol).Select(p => p.c).FirstOrDefault();
-                Console.WriteLine("Trading - Profit : " + Math.Round(((currentPrice - activeOrder.OpenPrice) * activeOrder.Quantity) - activeOrder.Fee));
-            }
-            else
-            {
-                Console.WriteLine("Trading - No active order");
-            }
-        }
-
-        private bool DataQualityCheck(List<MarketStream> marketStreamList)
-        {
-            if (marketStreamList.Last().c != 0)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-
         private List<Candle> GetCandles(string symbol)
         {
             candleList.Clear();
+            buyOnHold = false;
             string apiUrl = $"https://api3.binance.com/api/v3/klines?symbol={symbol}&interval={interval}&limit=100";
             //Get data from Binance API
             List<List<double>> coinQuotation = HttpHelper.GetApiData<List<List<double>>>(new Uri(apiUrl));
@@ -561,6 +462,11 @@ namespace MarginCoin.Controllers
             return _appDbContext.Order.Where(p => p.IsClosed == 0).FirstOrDefault();
         }
 
+        private Order GetLastOrder()
+        {
+            return _appDbContext.Order.OrderByDescending(p=>p.Id).Select(p=>p).FirstOrDefault();
+        }
+
         private void SaveHighLow(MarketStream marketStreamCoin, Order activeOrder)
         {
             if (marketStreamCoin.s != activeOrder.Symbol) return;
@@ -577,13 +483,6 @@ namespace MarginCoin.Controllers
 
             _appDbContext.Order.Update(activeOrder);
             _appDbContext.SaveChanges();
-        }
-
-        private string CandleColor(Candle candle)
-        {
-            if (candle.c > candle.o) return "green";
-            if (candle.c < candle.o) return "red";
-            return "";
         }
 
         #endregion
