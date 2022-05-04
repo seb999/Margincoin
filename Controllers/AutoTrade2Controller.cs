@@ -247,7 +247,7 @@ namespace MarginCoin.Controllers
             _appDbContext.SaveChanges();
             Console.Beep();
 
-            _hub.Clients.All.SendAsync("refreshUI");
+            _hub.Clients.All.SendAsync("newOrder");
         }
 
         private void OpenTrade(MarketStream myMarketStream)
@@ -282,7 +282,7 @@ namespace MarginCoin.Controllers
 
             _appDbContext.Order.Add(myOrder);
             _appDbContext.SaveChanges();
-            _hub.Clients.All.SendAsync("refreshUI");
+            _hub.Clients.All.SendAsync("newOrder");
         }
 
         private void UpdateStopLose(double lastPrice, Order activeOrder)
@@ -346,14 +346,14 @@ namespace MarginCoin.Controllers
 
             if (2 < pourcent && pourcent <= 3)
             {
-                activeOrder.TakeProfit = orderTemplate.TakeProfit - 0.2;
+                activeOrder.TakeProfit = orderTemplate.TakeProfit - 0.4;
                 _appDbContext.Order.Update(activeOrder);
                 _appDbContext.SaveChanges();
             }
 
             if (3 < pourcent && pourcent <= 4)
             {
-                activeOrder.TakeProfit = orderTemplate.TakeProfit - 0.4;
+                activeOrder.TakeProfit = orderTemplate.TakeProfit - 0.5;
                 _appDbContext.Order.Update(activeOrder);
                 _appDbContext.SaveChanges();
             }
@@ -464,7 +464,15 @@ namespace MarginCoin.Controllers
 
         private Order GetLastOrder()
         {
-            return _appDbContext.Order.OrderByDescending(p=>p.Id).Select(p=>p).FirstOrDefault();
+            Order lastOrder = _appDbContext.Order.OrderByDescending(p=>p.Id).Select(p=>p).FirstOrDefault();
+            if(lastOrder != null)
+            {
+                return lastOrder;
+            }
+            else
+            {
+                return new Order();
+            }
         }
 
         private void SaveHighLow(MarketStream marketStreamCoin, Order activeOrder)
