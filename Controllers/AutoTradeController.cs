@@ -8,7 +8,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
-using WebSocketSharp;
 
 namespace MarginCoin.Controllers
 {
@@ -47,32 +46,32 @@ namespace MarginCoin.Controllers
 
             //3-Start streaming and attach last data to list, calculate indicator and pass orders
             isAutoTradeActivated = true;
-            var ws1 = new WebSocket("wss://stream.binance.com:9443/ws/" + symbol.ToLower() + "@kline_" + streamInterval);
+            //var ws1 = new WebSocket("wss://stream.binance.com:9443/ws/" + symbol.ToLower() + "@kline_" + streamInterval);
             //var ws2 = new WebSocket("wss://stream.binance.com:9443/ws/" + symbol.ToLower() + "@kline_" + streamInterval);
-            ws1.OnMessage += ws_OnNewQuotationStream;
-            ws1.Connect();
+            //ws1.OnMessage += ws_OnNewQuotationStream;
+            //ws1.Connect();
             while (isAutoTradeActivated && !HttpContext.RequestAborted.IsCancellationRequested)
             {
                 await Task.Delay(2000);
             }
-            ws1.Close();
+            //ws1.Close();
             await _hub.Clients.All.SendAsync("tradingStopped");
             return "";
         }
 
-        private void ws_OnNewQuotationStream(Object sender, MessageEventArgs e)
-        {
-            UpdateCandleData(Helper.deserializeHelper<StreamData>(e.Data));
+        // private void ws_OnNewQuotationStream(Object sender, MessageEventArgs e)
+        // {
+        //     UpdateCandleData(Helper.deserializeHelper<StreamData>(e.Data));
 
-            AlgoTrading();
-        }
+        //     AlgoTrading();
+        // }
 
-        private void ws_OnNewDiffDepthStream(Object sender, MessageEventArgs e)
-        {
-            UpdateCandleData(Helper.deserializeHelper<StreamData>(e.Data));
+        // private void ws_OnNewDiffDepthStream(Object sender, MessageEventArgs e)
+        // {
+        //     UpdateCandleData(Helper.deserializeHelper<StreamData>(e.Data));
 
-            AlgoTrading();
-        }
+        //     AlgoTrading();
+        // }
 
         private void AlgoTrading()
         {

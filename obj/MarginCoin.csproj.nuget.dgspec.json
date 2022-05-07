@@ -43,6 +43,10 @@
         "net5.0": {
           "targetAlias": "net5.0",
           "dependencies": {
+            "Binance.Spot": {
+              "target": "Package",
+              "version": "[1.4.0, )"
+            },
             "Cryptowatcher.TA-LIb-Core": {
               "target": "Package",
               "version": "[1.0.0, )"
@@ -70,10 +74,6 @@
             "Microsoft.ML": {
               "target": "Package",
               "version": "[1.7.0, )"
-            },
-            "WebSocketSharp": {
-              "target": "Package",
-              "version": "[1.0.3-rc11, )"
             },
             "Websocket.Client": {
               "target": "Package",

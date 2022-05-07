@@ -13,6 +13,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Binance.Spot" Version="1.4.0" />
     <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="5.0.9" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="5.0.9" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.9" />
@@ -20,7 +21,6 @@
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="5.0.9" />
      <PackageReference Include="Cryptowatcher.TA-LIb-Core" Version="1.0.0" />
      <PackageReference Include="Websocket.Client" Version="4.3.38" />
-     <PackageReference Include="WebSocketSharp" Version="1.0.3-rc11" />
      <PackageReference Include="Microsoft.ML" Version="1.7.0" />
   </ItemGroup>
 

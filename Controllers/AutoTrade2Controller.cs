@@ -6,9 +6,10 @@ using Microsoft.AspNetCore.SignalR;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.Json;
 using System.Threading.Tasks;
-using WebSocketSharp;
+using Binance.Spot;
+using System.Net.WebSockets;
+using System.Threading;
 
 namespace MarginCoin.Controllers
 {
@@ -43,8 +44,8 @@ namespace MarginCoin.Controllers
         ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         //Default value for coin web socket
-        WebSocket ws2 = new WebSocket($"wss://stream.binance.com:9443/ws/btcusdt@kline_5m");
-        WebSocket ws1 = new WebSocket("wss://stream.binance.com:9443/ws/!ticker@arr");
+        MarketDataWebSocket ws = new MarketDataWebSocket("!ticker@arr");
+        MarketDataWebSocket ws3 = new MarketDataWebSocket("wss://stream.binance.com:9443/ws/!ticker@arr");
 
         public AutoTrade2Controller(IHubContext<SignalRHub> hub, [FromServices] ApplicationDbContext appDbContext)
         {
@@ -53,50 +54,44 @@ namespace MarginCoin.Controllers
         }
 
         [HttpGet("[action]")]
-        public string MonitorMarket()
+        public async Task<string> MonitorMarketAsync()
         {
-            ws1 = new WebSocket("wss://stream.binance.com:9443/ws/!ticker@arr");
+            var onlyOneMessage = new TaskCompletionSource<string>();
+            string dataResult = "";
 
-            var pingTimer = new System.Timers.Timer(5000);
-            pingTimer.Elapsed += (sender, args) =>
+            ws.OnMessageReceived(
+                (data) =>
             {
-                ws1.Ping();
-            };
-            pingTimer.Enabled = false;
+                dataResult += data;
+                if (dataResult.Contains("}]"))
+                {
+                    if(dataResult.Length > dataResult.IndexOf("]"))
+                    {
+                        dataResult = dataResult.Remove(dataResult.IndexOf("]") + 1);
+                    }
+                    
+                    List<MarketStream> marketStreamList = Helper.deserializeHelper<List<MarketStream>>(dataResult);
 
-            ws1.OnMessage += (sender, e) =>
-            {
-                List<MarketStream> marketStreamList = Helper.deserializeHelper<List<MarketStream>>(e.Data);
-                marketStreamList = marketStreamList.Where(p => p.s.Contains("USDT") && !p.s.Contains("DOWNUSDT")).Select(p => p).OrderByDescending(p => p.P).ToList();
+                    marketStreamList = marketStreamList.Where(p => p.s.Contains("USDT") && !p.s.Contains("DOWNUSDT")).Select(p => p).OrderByDescending(p => p.P).ToList();
 
-                AutotradeHelper.BufferMarketStream(marketStreamList, ref buffer);
-                
-                nbrUp = buffer.Where(pred => pred.P >= 0).Count();
-                nbrDown = buffer.Where(pred => pred.P < 0).Count();
+                    AutotradeHelper.BufferMarketStream(marketStreamList, ref buffer);
 
-                ProcessMarketStream(buffer);
-                _hub.Clients.All.SendAsync("trading");
-            };
+                    nbrUp = buffer.Where(pred => pred.P >= 0).Count();
+                    nbrDown = buffer.Where(pred => pred.P < 0).Count();
 
-            ws1.OnOpen += (sender, args) =>
-            {
-                pingTimer.Enabled = true;
-            };
+                     ProcessMarketStream(buffer);
+                    _hub.Clients.All.SendAsync("trading");
 
-            ws1.OnClose += (sender, args) =>
-           {
-               pingTimer.Enabled = false;
-               ws1.Connect();
-               Console.WriteLine("Re-open websocket connection");
-           };
+                    dataResult = "";
+                }
+                return Task.CompletedTask;
 
-            ws1.Connect();
+            }, CancellationToken.None);
 
-            while (!HttpContext.RequestAborted.IsCancellationRequested)
-            {
-                Task.Delay(2000);
-            }
-            ws1.Close();
+            await ws.ConnectAsync(CancellationToken.None);
+            string message = await onlyOneMessage.Task;
+            await ws.DisconnectAsync(CancellationToken.None);
+
             return "";
         }
 
@@ -122,14 +117,13 @@ namespace MarginCoin.Controllers
                 {
                     if (candleList.Count == 0)
                     {
-                        ws2.Close();
                         candleList = GetCandles(marketFirstCoin.s);
                         OpenWebSocketOnSpot(marketFirstCoin.s);
                     }
 
-                    if (candleList.Last().s != marketFirstCoin.s || ws2.IsAlive == false)
+                    if (candleList.Last().s != marketFirstCoin.s)
                     {
-                        ws2.Close();
+                        ws3.DisconnectAsync(CancellationToken.None);
                         candleList = GetCandles(marketFirstCoin.s);
                         OpenWebSocketOnSpot(marketFirstCoin.s);
                     }
@@ -375,19 +369,20 @@ namespace MarginCoin.Controllers
 
         #region Helper
 
-        private void OpenWebSocketOnSpot(string symbol)
+        private async void OpenWebSocketOnSpot(string symbol)
         {
-            ws2 = new WebSocket($"wss://stream.binance.com:9443/ws/{symbol.ToLower()}@kline_{interval}");
-            var pingTimer = new System.Timers.Timer(5000);
-            pingTimer.Elapsed += (sender, args) =>
+            if(symbol != candleList.Last().s) {
+                await ws3.DisconnectAsync(CancellationToken.None);
+            }
+            
+            ws3 = new MarketDataWebSocket($"{symbol.ToLower()}@kline_{interval}");
+            var onlyOneMessage = new TaskCompletionSource<string>();
+ 
+            ws3.OnMessageReceived(
+                (data) =>
             {
-                ws2.Ping();
-            };
-            pingTimer.Enabled = false;
-
-            ws2.OnMessage += (sender, e) =>
-            {
-                var stream = Helper.deserializeHelper<StreamData>(e.Data);
+                data = data.Remove(data.IndexOf("}}")+2);
+                var stream = Helper.deserializeHelper<StreamData>(data);
 
                 if (!stream.k.x)
                 {
@@ -406,23 +401,16 @@ namespace MarginCoin.Controllers
                     h = stream.k.h,
                     l = stream.k.l,
                     c = stream.k.c,
-                    id = Guid.NewGuid().ToString(),
                 };
                 candleList.Add(newCandle);
                 TradeIndicator.CalculateIndicator(ref candleList);
-            };
+                return Task.CompletedTask;
 
-            ws2.OnOpen += (sender, args) =>
-            {
-                pingTimer.Enabled = true;
-            };
+            }, CancellationToken.None);
 
-            ws2.OnClose += (sender, args) =>
-           {
-               pingTimer.Enabled = false;
-           };
-
-            ws2.Connect();
+            await ws3.ConnectAsync(CancellationToken.None);
+            string message = await onlyOneMessage.Task;
+            await ws3.DisconnectAsync(CancellationToken.None);
         }
 
         private List<Candle> GetCandles(string symbol)
@@ -464,8 +452,8 @@ namespace MarginCoin.Controllers
 
         private Order GetLastOrder()
         {
-            Order lastOrder = _appDbContext.Order.OrderByDescending(p=>p.Id).Select(p=>p).FirstOrDefault();
-            if(lastOrder != null)
+            Order lastOrder = _appDbContext.Order.OrderByDescending(p => p.Id).Select(p => p).FirstOrDefault();
+            if (lastOrder != null)
             {
                 return lastOrder;
             }

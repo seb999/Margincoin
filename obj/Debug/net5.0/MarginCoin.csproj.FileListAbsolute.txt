@@ -143,7 +143,6 @@ C:\_Git\Dotnet\MarginCoin\bin\Debug\net5.0\SQLitePCLRaw.provider.dynamic_cdecl.d
 C:\_Git\Dotnet\MarginCoin\bin\Debug\net5.0\System.CodeDom.dll
 C:\_Git\Dotnet\MarginCoin\bin\Debug\net5.0\System.Diagnostics.DiagnosticSource.dll
 C:\_Git\Dotnet\MarginCoin\bin\Debug\net5.0\Websocket.Client.dll
-C:\_Git\Dotnet\MarginCoin\bin\Debug\net5.0\websocket-sharp.dll
 C:\_Git\Dotnet\MarginCoin\bin\Debug\net5.0\runtimes\linux-arm\native\libLdaNative.so
 C:\_Git\Dotnet\MarginCoin\bin\Debug\net5.0\runtimes\linux-arm64\native\libLdaNative.so
 C:\_Git\Dotnet\MarginCoin\bin\Debug\net5.0\runtimes\linux-x64\native\libLdaNative.so
@@ -272,3 +271,5 @@ C:\_Github\Dotnet\Margincoin\obj\Debug\net5.0\MarginCoin.pdb
 C:\_Github\Dotnet\Margincoin\obj\Debug\net5.0\MarginCoin.genruntimeconfig.cache
 C:\_Git\Dotnet\MarginCoin\bin\Debug\net5.0\MarginCoin.StaticWebAssets.xml
 C:\_Git\Dotnet\MarginCoin\bin\Debug\net5.0\package-lock.json
+C:\_Git\Dotnet\MarginCoin\bin\Debug\net5.0\Common.dll
+C:\_Git\Dotnet\MarginCoin\bin\Debug\net5.0\Spot.dll
