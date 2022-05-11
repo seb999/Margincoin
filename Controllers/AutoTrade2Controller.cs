@@ -65,7 +65,7 @@ namespace MarginCoin.Controllers
                 dataResult += data;
                 if (dataResult.Contains("}]"))
                 {
-                    if(dataResult.Length > dataResult.IndexOf("]"))
+                    if(dataResult.Length > (dataResult.IndexOf("]")+1))
                     {
                         dataResult = dataResult.Remove(dataResult.IndexOf("]") + 1);
                     }
@@ -408,9 +408,20 @@ namespace MarginCoin.Controllers
 
             }, CancellationToken.None);
 
-            await ws3.ConnectAsync(CancellationToken.None);
-            string message = await onlyOneMessage.Task;
-            await ws3.DisconnectAsync(CancellationToken.None);
+            try
+            {
+                await ws3.ConnectAsync(CancellationToken.None);
+                string message = await onlyOneMessage.Task;
+                await ws3.DisconnectAsync(CancellationToken.None);
+            }
+            catch 
+            {
+                Console.WriteLine("impossible to open websocket on " + symbol);
+            }
+            finally
+            {
+                ws3 = new MarketDataWebSocket($"{symbol.ToLower()}@kline_{interval}");
+            }  
         }
 
         private List<Candle> GetCandles(string symbol)

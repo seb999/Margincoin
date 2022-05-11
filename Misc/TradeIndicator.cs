@@ -24,9 +24,14 @@ namespace MarginCoin.Misc
             var statusRsi = Core.Rsi(0, data.Length - 1, data, 14, out beginIndex, out outNBElements, rsiValues);
             if (statusRsi == Core.RetCode.Success && outNBElements > 0)
             {
-                for (int i = 0; i <= outNBElements - 1; i++)
+                // for (int i = 0; i < outNBElements; i++)
+                // {
+                //     quotationList[i + beginIndex].Rsi = rsiValues[i];
+                // }
+
+                for (int i = 0; i < quotationList.Count-14; i++)
                 {
-                    quotationList[i + beginIndex].Rsi = rsiValues[i];
+                    quotationList[i + 14].Rsi = rsiValues[i];
                 }
             }
 
@@ -34,11 +39,11 @@ namespace MarginCoin.Misc
             var statusMacd = Core.Macd(0, data.Length - 1, data, 12, 26, 9, out beginIndex, out outNBElements, outMACD, outMACDSignal, outMACDHist);
             if (statusMacd == Core.RetCode.Success && outNBElements > 0)
             {
-                for (int i = 0; i < outNBElements; i++)
+                for (int i = 0; i < quotationList.Count - 33; i++)
                 {
-                    quotationList[i + beginIndex].Macd = outMACD[i];
-                    quotationList[i + beginIndex].MacdHist = outMACDHist[i];
-                    quotationList[i + beginIndex].MacdSign = outMACDSignal[i];
+                    quotationList[i + 33].Macd = outMACD[i];
+                    quotationList[i + 33].MacdHist = outMACDHist[i];
+                    quotationList[i + 33].MacdSign = outMACDSignal[i];
                 }
             }
 
@@ -46,9 +51,9 @@ namespace MarginCoin.Misc
             var statusEma = Core.Ema(0, data.Length - 1, data, 50, out beginIndex, out outNBElements, emaValues);
             if (statusEma == Core.RetCode.Success && outNBElements > 0)
             {
-                for (int i = 0; i < outNBElements; i++)
+                for (int i = 0; i < quotationList.Count -49; i++)
                 {
-                    quotationList[i + beginIndex].Ema = emaValues[i];
+                    quotationList[i + 49].Ema = emaValues[i];
                 }
             }
 
