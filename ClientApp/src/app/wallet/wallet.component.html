@@ -1,10 +1,18 @@
 <h5>wallet</h5>
+
 <div class="row">
   <div class="col-3">
-    <button class="btn btn-primary btn-sm mr-1" (click)="monitorMarket()">Monitor market</button>
-    <button class="btn btn-danger btn-sm mr-1" (click)="testBuy()">Buy 10 ADA</button>
+    
+    <button class="btn btn-primary btn-sm mr-1" (click)="monitorMarket()"><i class="fa-solid fa-check"></i> Monitor market</button>
+    <button class="btn btn-danger btn-sm mr-1" (click)="testBuy()"><i class="fa-solid fa-check"></i> Buy 10 ADA</button>
   </div>
-  <div class="col-7">
+  <div class="input-group col-2 input-group-sm">
+    <input class="form-control sm" placeholder="yyyy-mm-dd"
+           name="dp" [(ngModel)]="model" ngbDatepicker #d="ngbDatepicker" (dateSelect)="filterOrderList()">
+    <button class="btn btn-outline-secondary calendar btn-sm mr-1" (click)="d.toggle();filterOrderList();" type="button"><i class="fa-solid fa-calendar-days"></i></button>
+    <button class="btn btn-secondary btn-sm mr-1" (click)="model = today();filterOrderList()">Today</button>
+  </div>
+  <div class="col-5">
     <div *ngIf="showMessageInfo" class="alert alert-warning"
       style="height: 30px;padding-top: 3px;margin-bottom: 0px;width: 150px;" role="alert"> Trading </div>
   </div>
@@ -17,7 +25,7 @@
 </div>
 
 <div class="row">
-  <div class="col-8">
+  <div class="col-10">
     <table class="table table-sm mt-2">
       <thead class="thead-light">
         <tr>
@@ -32,13 +40,14 @@
           <th scope="col" id="volume" class="tableTh">Open</th>
           <th scope="col" id="volume" class="tableTh">Close</th>
           <th scope="col" id="volume" class="tableTh">Type</th>
+          <th scope="col" id="volume" class="tableTh">Rsi</th>
           <th scope="col" id="volume" class="tableTh"></th>
           <th scope="col" id="volume" class="tableTh"></th>
 
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let order of orderList">
+        <tr *ngFor="let order of orderFilter">
           <td>{{order.symbol}}</td>
           <td>{{(order.openPrice * order.quantity).toFixed(0)}}</td>
           <td>{{order.openPrice}}</td>
@@ -59,12 +68,13 @@
           <td>{{order.openDate}}</td>
           <td>{{order.closeDate}}</td>
           <td>{{order.type}}</td>
+          <td>{{order.rsi.toFixed(2)}}</td>
           <td>
-            <button class="btn btn-danger btn-sm" (click)="closeOrder(openOrder.id,coinData.c);">Sell</button>
+            <button class="btn btn-danger btn-sm" (click)="closeOrder(openOrder.id,coinData.c);"><i class="fa-solid fa-check"></i> Sell</button>
           </td>
           <td>
             <a [routerLink]="['/orderDetail', order.id]" target="_blank" class="btn btn btn-primary btn-sm"><span><i
-                  class="far fa-file-alt"></i>Show</span></a>
+                  class="far fa-file-alt"></i> Show</span></a>
           </td>
         </tr>
         <tr>
@@ -82,11 +92,12 @@
           <td></td>
           <td></td>
           <td></td>
+          <td></td>
         </tr>
       </tbody>
     </table>
   </div>
-  <div class="col-4">
+  <div class="col-2">
     <table class="table table-sm mt-2">
       <thead class="thead-light">
         <tr>

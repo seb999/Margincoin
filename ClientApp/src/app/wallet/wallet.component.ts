@@ -4,6 +4,7 @@ import { Order } from '../class/order';
 import { HttpSettings, HttpService } from '../service/http.service';
 import { SignalRService } from '../service/signalR.service';
 import { ServerMsg } from '../class/serverMsg';
+import {NgbDateStruct} from '@ng-bootstrap/ng-bootstrap';
 
 
 @Component({
@@ -11,7 +12,10 @@ import { ServerMsg } from '../class/serverMsg';
   templateUrl: './wallet.component.html',
 })
 export class WalletComponent {
+  model: NgbDateStruct;
+
   public orderList: Order[];
+  public orderFilter: Order[];
   public SymbolWeightList: any[];
   public totalProfit: number;
   public serverMsg: ServerMsg;
@@ -23,12 +27,12 @@ export class WalletComponent {
     private httpService: HttpService,
     private signalRService: SignalRService,
   ) {
-
   }
 
   async ngOnInit() {
     //Display list of open orders
     this.orderList = await this.getOpenOrder();
+    this.orderFilter = this.orderList;
     this.calculateTotal();
 
     //Open listener on my API SignalR
@@ -48,6 +52,20 @@ export class WalletComponent {
         this.calculateTotal();
       }
     });
+  }
+
+  today() {
+    var d = new Date();
+    return {day : d.getDate(), month: d.getMonth()+1, year : d.getFullYear()};
+  }
+
+  filterOrderList() {
+    console.log("filter");
+    if(this.model==undefined) return;
+    this.orderFilter = this.orderList.filter((p: any) => {
+     var myDate = p.openDate.split("/");  
+     return new Date(myDate[1] + "/" + myDate[0] + "/" + myDate[2]).getTime() > new Date(this.model.month + "/" + this.model.day + "/" + this.model.year).getTime(); 
+  });
   }
 
   changed(){
