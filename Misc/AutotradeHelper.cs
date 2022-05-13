@@ -85,11 +85,11 @@ namespace MarginCoin.Misc
             if (activeOrder != null)
             {
                 double currentPrice = marketStreamList.Where(p => p.s == activeOrder.Symbol).Select(p => p.c).FirstOrDefault();
-                Console.WriteLine("Trading - Profit : " + Math.Round(((currentPrice - activeOrder.OpenPrice) * activeOrder.Quantity) - activeOrder.Fee));
+                Console.WriteLine(DateTime.Now + " - Trading - Profit : " + Math.Round(((currentPrice - activeOrder.OpenPrice) * activeOrder.Quantity) - activeOrder.Fee));
             }
             else
             {
-                Console.WriteLine("Trading - No active order");
+                Console.WriteLine(DateTime.Now + " - Trading - No active order");
             }
         }
 

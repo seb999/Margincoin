@@ -1,5 +1,5 @@
 {
-  "FilePath": "c:\\_Git\\Dotnet\\MarginCoin\\MarginCoin.csproj",
+  "FilePath": "c:\\Users\\Administrator\\Documents\\Margincoin\\MarginCoin.csproj",
   "Configuration": {
     "ConfigurationName": "MVC-3.0",
     "LanguageVersion": "5.0",
@@ -15619,12 +15619,12 @@
   "RootNamespace": "MarginCoin",
   "Documents": [
     {
-      "FilePath": "c:\\_Git\\Dotnet\\MarginCoin\\Pages\\Error.cshtml",
+      "FilePath": "c:\\Users\\Administrator\\Documents\\Margincoin\\Pages\\Error.cshtml",
       "TargetPath": "Pages\\Error.cshtml",
       "FileKind": "mvc"
     },
     {
-      "FilePath": "c:\\_Git\\Dotnet\\MarginCoin\\Pages\\_ViewImports.cshtml",
+      "FilePath": "c:\\Users\\Administrator\\Documents\\Margincoin\\Pages\\_ViewImports.cshtml",
       "TargetPath": "Pages\\_ViewImports.cshtml",
       "FileKind": "mvc"
     }

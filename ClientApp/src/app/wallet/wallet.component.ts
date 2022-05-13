@@ -60,12 +60,14 @@ export class WalletComponent {
   }
 
   filterOrderList() {
-    console.log("filter");
+    
     if(this.model==undefined) return;
     this.orderFilter = this.orderList.filter((p: any) => {
      var myDate = p.openDate.split("/");  
      return new Date(myDate[1] + "/" + myDate[0] + "/" + myDate[2]).getTime() > new Date(this.model.month + "/" + this.model.day + "/" + this.model.year).getTime(); 
   });
+
+  this.calculateTotal();
   }
 
   changed(){
@@ -73,8 +75,9 @@ export class WalletComponent {
   }
 
   calculateTotal(){
-    if (this.orderList.length > 0) {
-      this.totalProfit = this.orderList.map(a => (a.profit)).reduce(function (a, b) {
+    this.totalProfit = 0;
+    if (this.orderFilter.length > 0) {
+      this.totalProfit = this.orderFilter.map(a => (a.profit)).reduce(function (a, b) {
         if(a!=0) return a + b;
       });
     }

@@ -384,7 +384,7 @@ namespace MarginCoin.Controllers
                 data = data.Remove(data.IndexOf("}}")+2);
                 var stream = Helper.deserializeHelper<StreamData>(data);
 
-                if (!stream.k.x)
+                if (!stream.k.x && candleList.Count>1)
                 {
                     candleList = candleList.SkipLast(1).ToList();
                 }

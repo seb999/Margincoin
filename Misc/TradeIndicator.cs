@@ -24,11 +24,6 @@ namespace MarginCoin.Misc
             var statusRsi = Core.Rsi(0, data.Length - 1, data, 14, out beginIndex, out outNBElements, rsiValues);
             if (statusRsi == Core.RetCode.Success && outNBElements > 0)
             {
-                // for (int i = 0; i < outNBElements; i++)
-                // {
-                //     quotationList[i + beginIndex].Rsi = rsiValues[i];
-                // }
-
                 for (int i = 0; i < quotationList.Count-14; i++)
                 {
                     quotationList[i + 14].Rsi = rsiValues[i];
@@ -36,41 +31,41 @@ namespace MarginCoin.Misc
             }
 
             //Calculate MACD
-            var statusMacd = Core.Macd(0, data.Length - 1, data, 12, 26, 9, out beginIndex, out outNBElements, outMACD, outMACDSignal, outMACDHist);
-            if (statusMacd == Core.RetCode.Success && outNBElements > 0)
-            {
-                for (int i = 0; i < quotationList.Count - 33; i++)
-                {
-                    quotationList[i + 33].Macd = outMACD[i];
-                    quotationList[i + 33].MacdHist = outMACDHist[i];
-                    quotationList[i + 33].MacdSign = outMACDSignal[i];
-                }
-            }
+            // var statusMacd = Core.Macd(0, data.Length - 1, data, 12, 26, 9, out beginIndex, out outNBElements, outMACD, outMACDSignal, outMACDHist);
+            // if (statusMacd == Core.RetCode.Success && outNBElements > 0 )
+            // {
+            //     for (int i = 0; i < quotationList.Count - 33; i++)
+            //     {
+            //         quotationList[i + 33].Macd = outMACD[i];
+            //         quotationList[i + 33].MacdHist = outMACDHist[i];
+            //         quotationList[i + 33].MacdSign = outMACDSignal[i];
+            //     }
+            // }
 
-            //Calculate EMA50
-            var statusEma = Core.Ema(0, data.Length - 1, data, 50, out beginIndex, out outNBElements, emaValues);
-            if (statusEma == Core.RetCode.Success && outNBElements > 0)
-            {
-                for (int i = 0; i < quotationList.Count -49; i++)
-                {
-                    quotationList[i + 49].Ema = emaValues[i];
-                }
-            }
+            // //Calculate EMA50
+            // var statusEma = Core.Ema(0, data.Length - 1, data, 50, out beginIndex, out outNBElements, emaValues);
+            // if (statusEma == Core.RetCode.Success && outNBElements > 0)
+            // {
+            //     for (int i = 0; i < quotationList.Count -49; i++)
+            //     {
+            //         quotationList[i + 49].Ema = emaValues[i];
+            //     }
+            // }
 
             //Pivot
-            foreach (var (quote, index) in quotationList.Select((v, i)=>(v, i))) {
-                  if(index == 0)continue;
-                  var PP = ((quotationList[index-1].h + quotationList[index-1].l + quotationList[index-1].c) / 3);
-                    quote.PivotPoint = new PivotPOint()
-                    {
-                        R1 = 2 * PP - quotationList[index-1].l,
-                        S1 = 2 * PP - quotationList[index-1].h,
-                        R2 = PP + quotationList[index-1].h - quotationList[index-1].l,
-                        S2 = (PP - quotationList[index-1].h + quotationList[index-1].l),
-                        R3 = (quotationList[index-1].h + 2 * (PP - quotationList[index-1].l)),
-                        S3 = (quotationList[index-1].l - 2 * (quotationList[index-1].h - PP)),
-                    };
-            }
+            // foreach (var (quote, index) in quotationList.Select((v, i)=>(v, i))) {
+            //       if(index == 0)continue;
+            //       var PP = ((quotationList[index-1].h + quotationList[index-1].l + quotationList[index-1].c) / 3);
+            //         quote.PivotPoint = new PivotPOint()
+            //         {
+            //             R1 = 2 * PP - quotationList[index-1].l,
+            //             S1 = 2 * PP - quotationList[index-1].h,
+            //             R2 = PP + quotationList[index-1].h - quotationList[index-1].l,
+            //             S2 = (PP - quotationList[index-1].h + quotationList[index-1].l),
+            //             R3 = (quotationList[index-1].h + 2 * (PP - quotationList[index-1].l)),
+            //             S3 = (quotationList[index-1].l - 2 * (quotationList[index-1].h - PP)),
+            //         };
+            // }
         }
     }
 }
