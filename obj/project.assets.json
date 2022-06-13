@@ -2354,30 +2354,24 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\sdubos\\.nuget\\packages\\": {},
-    "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
+    "C:\\Users\\Administrator\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\_Git\\Dotnet\\MarginCoin\\MarginCoin.csproj",
+      "projectUniqueName": "C:\\Users\\Administrator\\Documents\\Margincoin\\MarginCoin.csproj",
       "projectName": "MarginCoin",
-      "projectPath": "C:\\_Git\\Dotnet\\MarginCoin\\MarginCoin.csproj",
-      "packagesPath": "C:\\Users\\sdubos\\.nuget\\packages\\",
-      "outputPath": "C:\\_Git\\Dotnet\\MarginCoin\\obj\\",
+      "projectPath": "C:\\Users\\Administrator\\Documents\\Margincoin\\MarginCoin.csproj",
+      "packagesPath": "C:\\Users\\Administrator\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\Administrator\\Documents\\Margincoin\\obj\\",
       "projectStyle": "PackageReference",
-      "fallbackFolders": [
-        "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
-      ],
       "configFilePaths": [
-        "C:\\Users\\sdubos\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        "C:\\Users\\Administrator\\AppData\\Roaming\\NuGet\\NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net5.0"
       ],
       "sources": {
-        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {

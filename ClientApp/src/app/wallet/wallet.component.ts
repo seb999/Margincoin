@@ -32,7 +32,7 @@ export class WalletComponent {
   async ngOnInit() {
     //Display list of open orders
     this.orderList = await this.getOpenOrder();
-    this.orderFilter = this.orderList;
+    this.filterOrderList();
     this.calculateTotal();
 
     //Open listener on my API SignalR
@@ -49,6 +49,7 @@ export class WalletComponent {
 
       if (this.serverMsg.msgName == 'newOrder') {
         this.orderList = await this.getOpenOrder();
+        this.orderFilter = this.orderList;
         this.calculateTotal();
       }
     });
@@ -60,8 +61,11 @@ export class WalletComponent {
   }
 
   filterOrderList() {
-    
-    if(this.model==undefined) return;
+    console.log(this.model);
+    if(this.model==undefined){
+      this.orderFilter = this.orderList;
+      return;
+    } 
     this.orderFilter = this.orderList.filter((p: any) => {
      var myDate = p.openDate.split("/");  
      return new Date(myDate[1] + "/" + myDate[0] + "/" + myDate[2]).getTime() > new Date(this.model.month + "/" + this.model.day + "/" + this.model.year).getTime(); 

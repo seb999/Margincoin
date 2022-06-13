@@ -11,6 +11,24 @@ namespace MarginCoin.Misc
 {
     public static class AutotradeHelper
     {
+        //in construction :  idea is to check the market direction with major coins
+         internal static void MarketPerformance(List<MarketStream> marketStreamList)
+        {
+            int marketPerf = 0;
+            foreach (var marketStream in marketStreamList)
+            {
+                if(marketStream.s == "ETHUSDT" 
+                || marketStream.s == "BTCUSDT"
+                || marketStream.s == "BTCUSDT"
+                || marketStream.s == "BTCUSDT"
+                || marketStream.s == "BTCUSDT"
+                || marketStream.s == "BTCUSDT")
+                {
+
+                }
+            }
+        }
+
         internal static void BufferMarketStream(List<MarketStream> marketStreamList, ref List<MarketStream> buffer)
         {
             foreach (var marketStream in marketStreamList)

@@ -8,6 +8,7 @@ export class AppSetting {
    intervalList = [
       { key: '5m', value: '5m' },
       { key: '15m', value: '15m' }, 
+      { key: '30m', value: '30m' }, 
       { key: '1h', value: '1h' }, 
       { key: '4h', value: '4h' },
       { key: '6h', value: '6h' },

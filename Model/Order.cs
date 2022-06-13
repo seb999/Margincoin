@@ -12,6 +12,7 @@ namespace MarginCoin.Model
         public double HighPrice { get; set; }
         public double LowPrice { get; set; }
         public double ClosePrice { get; set; }
+        public double Volume { get; set; }
         public double StopLose { get; set; }
         public double TakeProfit { get; set; }
         public double Profit { get; set; }
@@ -22,6 +23,12 @@ namespace MarginCoin.Model
         public string CloseDate { get; set; }
         public double RSI { get; set; }
         public double MACDHist { get; set; }
+        public double MACDHist_1 { get; set; }
+        public double MACDHist_2 { get; set; }
+        public double MACDHist_3 { get; set; }
+        public int PredictionLBFGS { get; set; }
+         public int PredictionLDSVM { get; set; }
+          public int PredictionSDA { get; set; }
         public double MACD { get; set; }
         public double MACDSign { get; set; }
         public double EMA { get; set; }

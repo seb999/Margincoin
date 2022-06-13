@@ -79,18 +79,16 @@ export class OrderDetailComponent {
     this.coinData = {};
     this.takeProfitOffset = 0.008;
     this.intervalList = this.appSetting.intervalList;
-    this.interval = "5m";
+    this.interval = "30m";
   }
 
   async ngOnInit() {
     this.orderId = this.route.snapshot.paramMap.get("id");
-
     this.openOrder = await this.orderDetailHelper.getOrder(this.orderId);
-
     this.ohlc = await this.orderDetailHelper.getIntradayData(this.openOrder.symbol, 100, this.interval);
 
     //Display historic chart
-    this.displayHighstock('NO_INDICATOR');
+    this.displayHighstock('MACD');
 
     //Open listener on my API SignalR
     this.signalRService.startConnection();
@@ -171,8 +169,9 @@ export class OrderDetailComponent {
         this.ohlc.push([
           this.coinData.E, this.coinData.k.o, this.coinData.k.h, this.coinData.k.l, this.coinData.k.c
         ])
+        
 
-        this.displayHighstock('NO_INDICATOR');
+        this.displayHighstock('MACD');
       });
 
   }
@@ -234,9 +233,8 @@ export class OrderDetailComponent {
     this.openOrder = await this.orderDetailHelper.getOrder(this.orderId);
   }
 
-
-
   async displayHighstock(indicator) {
+
     this.openOrder = await this.orderDetailHelper.getOrder(this.orderId);
 
     let chartData = [] as any;
@@ -265,9 +263,17 @@ export class OrderDetailComponent {
           lineColor: '#cb585f'
         },
       },
+      xAxis: {
+        plotLines: [{
+            color: '#FF0000', // Red
+            width: 2,
+            value: this.getOpenDateTimeSpam(this.openOrder?.openDate),  //display openeing date
+        }]
+    },
       yAxis:
         [
           {
+            crosshair : true,
             labels: { align: 'left' }, height: '80%', plotLines: [
               {
                 color: '#46ff33', width: 1, value: this.openOrder?.openPrice,
@@ -298,12 +304,28 @@ export class OrderDetailComponent {
           { data: volume, type: 'line', yAxis: 1, name: 'volume' }
         ];
     }
+
+    if (indicator == 'MACD') {
+      this.chartOptions.series =
+        [
+          { data: chartData, type: 'candlestick', yAxis: 0, id: 'quote', name: 'quote' },
+          { type: 'macd', yAxis: 1, linkedTo: 'quote', name: 'MACD' }
+        ]
+    }
   }
 
   async changeHighstockResolution(key) {
     let params = key.split(',');
     this.ohlc = await this.orderDetailHelper.getIntradayData(this.openOrder.symbol, 100, params[0]);
-    this.displayHighstock('NO_INDICATOR');
+    this.displayHighstock('MACD');
+  }
+
+  getOpenDateTimeSpam(openDate){
+    console.log(openDate);
+    var openDateArr = openDate.split(" ")[0].split("/");
+    var openTime = openDate.split(" ")[1] + " " + this.openOrder?.openDate.split(" ")[2]
+    //return Date.parse(openDateArr[2] + "/" + openDateArr[1] + "/" + openDateArr[0] + " " + openTime) + new Date().getTimezoneOffset()*60000;
+    return Date.parse(openDateArr[2] + "/" + openDateArr[1] + "/" + openDateArr[0] + " " + openTime);
   }
 
   ngOnDestroy() {

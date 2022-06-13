@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using Binance.Spot;
 using System.Net.WebSockets;
 using System.Threading;
+using static MarginCoin.Class.Prediction;
 
 namespace MarginCoin.Controllers
 {
@@ -30,11 +31,11 @@ namespace MarginCoin.Controllers
         ////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////------------SETTINGS----------/////////////////////////////////////////////
         ////////////////////////////////////////////////////////////////////////////////////////////////////////
-        string interval = "15m";
-        int numberPreviousCandle = 3;
+        string interval = "1h";
+        int numberPreviousCandle = 2;
 
         //move stop lose to buy price when current price raise over:1.2%
-        double secureNoLose = 1.012;
+        double secureNoLose = 1.016;
 
         //used to adjust stopLose to last price - offset
         double offset = 0.8; //in %
@@ -65,11 +66,11 @@ namespace MarginCoin.Controllers
                 dataResult += data;
                 if (dataResult.Contains("}]"))
                 {
-                    if(dataResult.Length > (dataResult.IndexOf("]")+1))
+                    if (dataResult.Length > (dataResult.IndexOf("]") + 1))
                     {
                         dataResult = dataResult.Remove(dataResult.IndexOf("]") + 1);
                     }
-                    
+
                     List<MarketStream> marketStreamList = Helper.deserializeHelper<List<MarketStream>>(dataResult);
 
                     marketStreamList = marketStreamList.Where(p => p.s.Contains("USDT") && !p.s.Contains("DOWNUSDT")).Select(p => p).OrderByDescending(p => p.P).ToList();
@@ -79,7 +80,7 @@ namespace MarginCoin.Controllers
                     nbrUp = buffer.Where(pred => pred.P >= 0).Count();
                     nbrDown = buffer.Where(pred => pred.P < 0).Count();
 
-                     ProcessMarketStream(buffer);
+                    ProcessMarketStream(buffer);
                     _hub.Clients.All.SendAsync("trading");
 
                     dataResult = "";
@@ -113,7 +114,8 @@ namespace MarginCoin.Controllers
             }
             else
             {
-                if (marketFirstCoin.P > marketSecondCoin.P * 1.02)
+                //if (marketFirstCoin.P > marketSecondCoin.P * 1.02)
+                if (marketFirstCoin.P > marketSecondCoin.P * 1.01)
                 {
                     if (candleList.Count == 0)
                     {
@@ -142,30 +144,23 @@ namespace MarginCoin.Controllers
 
             if (candleList.Count < 2) return false;
 
-            for (int j = candleList.Count - 2; j >= candleList.Count - numberCandle; j--)
+            if (marketFirstCoin.s != candleList.Last().s)
             {
-                if (marketFirstCoin.s != candleList[j].s)
-                {
-                    Console.WriteLine("Inconsistancy in candle list");
-                    return false;
-                }
-
-                //green candle and c should be higher than previous c + (h-c)/10
-                if (marketFirstCoin.c < (candleList[j].c + (candleList[j].h - candleList[j].c) / 10) && AutotradeHelper.CandleColor(candleList[j]) == "green")
-                {
-                    return false;
-                }
-
-                //red candle
-                if (marketFirstCoin.c < (candleList[j].o + (candleList[j].h - candleList[j].o) / 10) && AutotradeHelper.CandleColor(candleList[j]) == "red")
-                {
-                    return false;
-                }
+                Console.WriteLine("Inconsistancy in candle list");
+                return false;
             }
+
+            //0 - Don't trade if only 14% coins are up over the last 24h
+            // if ((double)nbrUp / (double)(nbrUp + nbrDown) < 0.14)
+            // {
+            //     return false;
+            // }
 
             for (int i = candleList.Count - numberCandle; i < candleList.Count; i++)
             {
                 Console.WriteLine(AutotradeHelper.CandleColor(candleList[i]));
+
+                //1 - Previous candles are green
                 if ((AutotradeHelper.CandleColor(candleList[i]) == "green") && candleList[i].c > candleList[i - 1].c)
                 {
                     continue;
@@ -176,7 +171,14 @@ namespace MarginCoin.Controllers
                 }
             }
 
-            if (candleList.Last().Rsi < 73 || (GetLastOrder().Symbol == marketFirstCoin.s && candleList.Last().Rsi < 93))
+            //2 - The current should be higther than the previous candle + 1/10
+            if (marketFirstCoin.c < (candleList[candleList.Count - 2].c + (candleList[candleList.Count - 2].h - candleList[candleList.Count - 2].c) / 8))
+            {
+                return false;
+            }
+
+            //3 - RSI should be lower than 72 or RSI lower 80 if we already trade the coin
+            if (candleList.Last().Rsi < 72 || (GetLastOrder().Symbol == marketFirstCoin.s && candleList.Last().Rsi < 80))
             {
                 return true;
             }
@@ -251,6 +253,8 @@ namespace MarginCoin.Controllers
 
             if (GetActiveOrder() != null) return;
 
+            List<ModelOutput> prediction = AIHelper.GetPrediction(candleList);
+
             //1-read from db template
             OrderTemplate orderTemplate = GetOrderTemplate();
 
@@ -260,6 +264,7 @@ namespace MarginCoin.Controllers
             myOrder.OpenPrice = myMarketStream.c;
             myOrder.HighPrice = myMarketStream.c;
             myOrder.LowPrice = myMarketStream.c;
+            myOrder.Volume = myMarketStream.v;
             myOrder.TakeProfit = orderTemplate.TakeProfit;
             myOrder.StopLose = myMarketStream.c * (1 - (orderTemplate.StopLose / 100));
             myOrder.Quantity = quantity;
@@ -268,6 +273,12 @@ namespace MarginCoin.Controllers
             myOrder.Symbol = myMarketStream.s;
             myOrder.RSI = candleList.Last().Rsi;
             myOrder.MACDHist = candleList.Last().MacdHist;
+            myOrder.MACDHist_1 = candleList[candleList.Count - 2].MacdHist;
+            myOrder.MACDHist_2 = candleList[candleList.Count - 3].MacdHist;
+            myOrder.MACDHist_3 = candleList[candleList.Count - 4].MacdHist;
+            myOrder.PredictionLBFGS = prediction[0].Prediction == true ? 1: 0;
+            myOrder.PredictionLDSVM = prediction[1].Prediction == true ? 1: 0;
+            myOrder.PredictionSDA = prediction[2].Prediction == true ? 1: 0;
             myOrder.MACD = candleList.Last().Macd;
             myOrder.MACDSign = candleList.Last().MacdSign;
             myOrder.EMA = candleList.Last().Ema;
@@ -371,22 +382,23 @@ namespace MarginCoin.Controllers
 
         private async void OpenWebSocketOnSpot(string symbol)
         {
-            if(symbol != candleList.Last().s) {
+            if (symbol != candleList.Last().s)
+            {
                 await ws3.DisconnectAsync(CancellationToken.None);
             }
-            
+
             ws3 = new MarketDataWebSocket($"{symbol.ToLower()}@kline_{interval}");
             var onlyOneMessage = new TaskCompletionSource<string>();
- 
+
             ws3.OnMessageReceived(
                 (data) =>
             {
-                data = data.Remove(data.IndexOf("}}")+2);
+                data = data.Remove(data.IndexOf("}}") + 2);
                 var stream = Helper.deserializeHelper<StreamData>(data);
 
-                if (!stream.k.x && candleList.Count>1)
+                if (!stream.k.x)
                 {
-                    candleList = candleList.SkipLast(1).ToList();
+                    if (candleList.Count > 0) candleList = candleList.SkipLast(1).ToList();
                 }
                 else
                 {
@@ -414,20 +426,28 @@ namespace MarginCoin.Controllers
                 string message = await onlyOneMessage.Task;
                 await ws3.DisconnectAsync(CancellationToken.None);
             }
-            catch 
+            catch
             {
                 Console.WriteLine("impossible to open websocket on " + symbol);
             }
             finally
             {
                 ws3 = new MarketDataWebSocket($"{symbol.ToLower()}@kline_{interval}");
-            }  
+            }
         }
 
         private List<Candle> GetCandles(string symbol)
         {
             candleList.Clear();
-            buyOnHold = false;
+            if (GetLastOrder().Symbol == symbol)
+            {
+                buyOnHold = true;
+            }
+            else
+            {
+                buyOnHold = false;
+            }
+
             string apiUrl = $"https://api3.binance.com/api/v3/klines?symbol={symbol}&interval={interval}&limit=100";
             //Get data from Binance API
             List<List<double>> coinQuotation = HttpHelper.GetApiData<List<List<double>>>(new Uri(apiUrl));
