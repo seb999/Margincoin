@@ -13,18 +13,23 @@ namespace MarginCoin.Misc
             //Sometime linq crash and say that p is null
             try
             {
-                quotationList.Select(p => p.c).ToArray();
-                var data = quotationList.Select(p => p.c).ToArray();
+                var dataC = quotationList.Select(p => p.c).ToArray();
+                var dataH = quotationList.Select(p => p.h).ToArray();
+                var dataL = quotationList.Select(p => p.l).ToArray();
                 int beginIndex;
                 int outNBElements;
-                double[] rsiValues = new double[data.Length];
-                double[] outMACD = new double[data.Length];
-                double[] outMACDSignal = new double[data.Length];
-                double[] outMACDHist = new double[data.Length];
-                double[] emaValues = new double[data.Length];
+                double[] rsiValues = new double[dataC.Length];
+                double[] emaValues = new double[dataC.Length];
+
+                double[] outMACD = new double[dataC.Length];
+                double[] outMACDSignal = new double[dataC.Length];
+                double[] outMACDHist = new double[dataC.Length];
+                
+                double[] stochSlowKValues = new double[dataC.Length];
+                double[] stochSlowDValues = new double[dataC.Length];
 
                 //Calculate RSI
-                var statusRsi = Core.Rsi(0, data.Length - 1, data, 14, out beginIndex, out outNBElements, rsiValues);
+                var statusRsi = Core.Rsi(0, dataC.Length - 1, dataC, 14, out beginIndex, out outNBElements, rsiValues);
                 if (statusRsi == Core.RetCode.Success && outNBElements > 0)
                 {
                     for (int i = 0; i < quotationList.Count - 14; i++)
@@ -34,7 +39,7 @@ namespace MarginCoin.Misc
                 }
 
                 //Calculate MACD
-                var statusMacd = Core.Macd(0, data.Length - 1, data, 12, 26, 9, out beginIndex, out outNBElements, outMACD, outMACDSignal, outMACDHist);
+                var statusMacd = Core.Macd(0, dataC.Length - 1, dataC, 12, 26, 9, out beginIndex, out outNBElements, outMACD, outMACDSignal, outMACDHist);
                 if (statusMacd == Core.RetCode.Success && outNBElements > 0)
                 {
                    
@@ -48,21 +53,29 @@ namespace MarginCoin.Misc
                         quotationList[i + 33].Macd = ((outMACD[i] - macdMin) / (macdMax - macdMin)) * 100;
                         quotationList[i + 33].MacdSign = ((outMACDSignal[i] - macdSignMin) / (macdSignMax - macdSignMin)) * 100;
                         quotationList[i + 33].MacdHist = quotationList[i + 33].Macd - quotationList[i + 33].MacdSign;
-
-                         // MACD not normalize
-                        // quotationList[i + 33].Macd = outMACD[i];
-                        // quotationList[i + 33].MacdHist = outMACDHist[i];
-                        // quotationList[i + 33].MacdSign = outMACDSignal[i];
                     }
                 }
 
                 // //Calculate EMA50
-                var statusEma = Core.Ema(0, data.Length - 1, data, 50, out beginIndex, out outNBElements, emaValues);
+                var statusEma = Core.Ema(0, dataC.Length - 1, dataC, 50, out beginIndex, out outNBElements, emaValues);
                 if (statusEma == Core.RetCode.Success && outNBElements > 0)
                 {
+                    var emaMax = emaValues.Max();
+                    var emaMin = emaValues.Min();
                     for (int i = 0; i < quotationList.Count - 49; i++)
                     {
-                        quotationList[i + 49].Ema = emaValues[i];
+                        quotationList[i + 49].Ema = ((emaValues[i]- emaMin) / (emaMax - emaMin)) * 100;
+                    }
+                }
+
+                 //Calculate Stochiastic
+                var statusStoch = Core.Stoch(0, dataC.Length - 1, dataH,dataL, dataC, 5, 3, 0, 3, 0, out beginIndex, out outNBElements, stochSlowKValues, stochSlowDValues);
+                if (statusStoch == Core.RetCode.Success && outNBElements > 0)
+                {
+                    for (int i = 0; i < quotationList.Count - 8; i++)
+                    {
+                        quotationList[i + 8].StochSlowD = stochSlowDValues[i];
+                        quotationList[i + 8].StochSlowK = stochSlowKValues[i];
                     }
                 }
 

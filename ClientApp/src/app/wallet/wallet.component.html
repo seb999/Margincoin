@@ -25,7 +25,7 @@
 </div>
 
 <div class="row">
-  <div class="col-10">
+  <div class="col-8">
     <table class="table table-sm mt-2">
       <thead class="thead-light">
         <tr>
@@ -97,21 +97,33 @@
       </tbody>
     </table>
   </div>
-  <div class="col-2">
-    <table class="table table-sm mt-2">
-      <thead class="thead-light">
-        <tr>
-          <th scope="col" id="last" class="tableTh ">Symbol</th>
-          <th scope="col" id="last" class="tableTh ">Amount</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let symbolList of SymbolWeightList">
-          <td>{{symbolList.s}}</td>
-          <td>{{(symbolList.w)}}</td>
-          <td></td>
-        </tr>
-      </tbody>
-    </table>
+
+  <div class="col-4">
+   
+    <div class="card-body">
+      <div class="row">
+        <!-- <div class="col-2">Amount : {{openOrder?.openPrice * openOrder?.quantity}}</div>
+        <div class="col-2">Price : {{openOrder?.openPrice}}</div>
+        <div class="col-2" *ngIf="(((coinData?.k?.c-openOrder?.openPrice) / (openOrder?.openPrice))*100) >=0"
+          style="color: limegreen;">{{ (((coinData?.k?.c-openOrder?.openPrice) /
+          (openOrder?.openPrice))*100).toFixed(2) }}%</div>
+        <div class="col-2" *ngIf="(((coinData?.k?.c-openOrder?.openPrice) / (openOrder?.openPrice))*100) <0"
+          style="color: red;">{{ (((coinData?.k?.c-openOrder?.openPrice) /
+          (openOrder?.openPrice))*100).toFixed(2) }}%</div>
+        <div class="col-2" *ngIf="(coinData?.k?.c-openOrder?.openPrice) * openOrder?.quantity>=0"
+          style="color: limegreen;">
+          Profit :{{((coinData?.k?.c-openOrder?.openPrice) * openOrder?.quantity).toFixed(2)}}</div>
+        <div class="col-2" *ngIf="(coinData?.k?.c-openOrder?.openPrice) * openOrder?.quantity<0"
+          style="color: red;">Profit
+          :{{((coinData?.k?.c-openOrder?.openPrice) * openOrder?.quantity).toFixed(2)}}</div>
+      </div> -->
+
+      <!-- <div class="row"  *ngIf="chartOptions">
+        <highcharts-chart constructorType='stockChart' [Highcharts]="highcharts" [options]="chartOptions"
+        style="width: 100%; height: 550px; display: block;">
+      </highcharts-chart>
+      </div> -->
+    </div>
+
   </div>
 </div>

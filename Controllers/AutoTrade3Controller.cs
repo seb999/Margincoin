@@ -16,11 +16,12 @@ namespace MarginCoin.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class AutoTrade2Controller : ControllerBase
+    public class AutoTrade3Controller : ControllerBase
     {
         private IHubContext<SignalRHub> _hub;
         private readonly ApplicationDbContext _appDbContext;
         private List<Candle> candleList = new List<Candle>();
+        private List<List<Candle>> candleMatrice = new List<List<Candle>>();
         private List<Candle> candleListMACD = new List<Candle>();
         private List<MarketStream> buffer = new List<MarketStream>();
 
@@ -41,6 +42,9 @@ namespace MarginCoin.Controllers
         //used to adjust stopLose to last price - offset
         double offset = 0.8; //in %
 
+        List<string> myCoinList = new List<string>(){"BTCUSDT", "ETHUSDT", "ADAUSDT", "SOLUSDT", "DOTUSDT", "AVAXUSDT", "MATICUSDT", "MANAUSDT"};
+
+
         ////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////------------END SETTINGS----------/////////////////////////////////////////
         ////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -49,50 +53,98 @@ namespace MarginCoin.Controllers
         MarketDataWebSocket ws = new MarketDataWebSocket("!ticker@arr");
         MarketDataWebSocket ws3 = new MarketDataWebSocket("wss://stream.binance.com:9443/ws/!ticker@arr");
 
-        public AutoTrade2Controller(IHubContext<SignalRHub> hub, [FromServices] ApplicationDbContext appDbContext)
+        public AutoTrade3Controller(IHubContext<SignalRHub> hub, [FromServices] ApplicationDbContext appDbContext)
         {
             _hub = hub;
             _appDbContext = appDbContext;
         }
 
-        [HttpGet("[action]")]
-        public async Task<string> MonitorMarketAsync()
+        private async void OpenWebSocketOnSpot(string symbol)
         {
-            var onlyOneMessage = new TaskCompletionSource<string>();
-            string dataResult = "";
+            if (symbol != candleList.Last().s)
+            {
+                await ws3.DisconnectAsync(CancellationToken.None);
+            }
 
-            ws.OnMessageReceived(
+            ws3 = new MarketDataWebSocket($"{symbol.ToLower()}@kline_{interval}");
+            var onlyOneMessage = new TaskCompletionSource<string>();
+
+            ws3.OnMessageReceived(
                 (data) =>
             {
-                dataResult += data;
-                if (dataResult.Contains("}]"))
+                data = data.Remove(data.IndexOf("}}") + 2);
+                var stream = Helper.deserializeHelper<StreamData>(data);
+
+                if (!stream.k.x)
                 {
-                    if (dataResult.Length > (dataResult.IndexOf("]") + 1))
-                    {
-                        dataResult = dataResult.Remove(dataResult.IndexOf("]") + 1);
-                    }
-
-                    List<MarketStream> marketStreamList = Helper.deserializeHelper<List<MarketStream>>(dataResult);
-
-                    marketStreamList = marketStreamList.Where(p => p.s.Contains("USDT") && !p.s.Contains("DOWNUSDT")).Select(p => p).OrderByDescending(p => p.P).ToList();
-
-                    AutotradeHelper.BufferMarketStream(marketStreamList, ref buffer);
-
-                    nbrUp = buffer.Where(pred => pred.P >= 0).Count();
-                    nbrDown = buffer.Where(pred => pred.P < 0).Count();
-
-                    ProcessMarketStream(buffer);
-                    _hub.Clients.All.SendAsync("trading");
-
-                    dataResult = "";
+                    if (candleList.Count > 0) candleList = candleList.SkipLast(1).ToList();
+                    if (candleListMACD.Count > 0) candleListMACD = candleListMACD.SkipLast(1).ToList();
                 }
+                else
+                {
+                    Console.WriteLine("New candle save");
+                    buyOnHold = false;
+                }
+
+                Candle newCandle = new Candle()
+                {
+                    s = stream.k.s,
+                    o = stream.k.o,
+                    h = stream.k.h,
+                    l = stream.k.l,
+                    c = stream.k.c,
+                };
+                candleList.Add(newCandle);
+                candleListMACD.Add(newCandle);
+
+                TradeIndicator.CalculateIndicator(ref candleList);
+                TradeIndicator.CalculateIndicator(ref candleListMACD);
                 return Task.CompletedTask;
 
             }, CancellationToken.None);
 
-            await ws.ConnectAsync(CancellationToken.None);
-            string message = await onlyOneMessage.Task;
-            await ws.DisconnectAsync(CancellationToken.None);
+            try
+            {
+                await ws3.ConnectAsync(CancellationToken.None);
+                string message = await onlyOneMessage.Task;
+                await ws3.DisconnectAsync(CancellationToken.None);
+            }
+            catch
+            {
+                Console.WriteLine("impossible to open websocket on " + symbol);
+            }
+            finally
+            {
+                ws3 = new MarketDataWebSocket($"{symbol.ToLower()}@kline_{interval}");
+            }
+        }
+
+        private void GetCandles(string symbol)
+        {
+            for (int i = 0; i < candleMatrice.Count; i++)
+            {
+                if(candleMatrice[i][0].s == symbol)
+                candleMatrice[i].Clear();
+            }
+           
+            //Get data from Binance API
+            string apiUrl = $"https://api3.binance.com/api/v3/klines?symbol={symbol}&interval={interval}&limit=100";
+            List<List<double>> coinQuotation = HttpHelper.GetApiData<List<List<double>>>(new Uri(apiUrl));
+            List<Candle> candleList = new List<Candle>();
+            candleList = CreateCandleList(coinQuotation, symbol);
+
+
+
+           
+        }
+
+        [HttpGet("[action]")]
+        public async Task<string> MonitorMarket()
+        {
+            foreach (var item in myCoinList)
+            {
+                GetCandles(item);
+            }
 
             return "";
         }
@@ -337,88 +389,9 @@ namespace MarginCoin.Controllers
 
         #region Helper
 
-        private async void OpenWebSocketOnSpot(string symbol)
-        {
-            if (symbol != candleList.Last().s)
-            {
-                await ws3.DisconnectAsync(CancellationToken.None);
-            }
+    
 
-            ws3 = new MarketDataWebSocket($"{symbol.ToLower()}@kline_{interval}");
-            var onlyOneMessage = new TaskCompletionSource<string>();
-
-            ws3.OnMessageReceived(
-                (data) =>
-            {
-                data = data.Remove(data.IndexOf("}}") + 2);
-                var stream = Helper.deserializeHelper<StreamData>(data);
-
-                if (!stream.k.x)
-                {
-                    if (candleList.Count > 0) candleList = candleList.SkipLast(1).ToList();
-                    if (candleListMACD.Count > 0) candleListMACD = candleListMACD.SkipLast(1).ToList();
-                }
-                else
-                {
-                    Console.WriteLine("New candle save");
-                    buyOnHold = false;
-                }
-
-                Candle newCandle = new Candle()
-                {
-                    s = stream.k.s,
-                    o = stream.k.o,
-                    h = stream.k.h,
-                    l = stream.k.l,
-                    c = stream.k.c,
-                };
-                candleList.Add(newCandle);
-                candleListMACD.Add(newCandle);
-
-                TradeIndicator.CalculateIndicator(ref candleList);
-                TradeIndicator.CalculateIndicator(ref candleListMACD);
-                return Task.CompletedTask;
-
-            }, CancellationToken.None);
-
-            try
-            {
-                await ws3.ConnectAsync(CancellationToken.None);
-                string message = await onlyOneMessage.Task;
-                await ws3.DisconnectAsync(CancellationToken.None);
-            }
-            catch
-            {
-                Console.WriteLine("impossible to open websocket on " + symbol);
-            }
-            finally
-            {
-                ws3 = new MarketDataWebSocket($"{symbol.ToLower()}@kline_{interval}");
-            }
-        }
-
-        private void GetCandles(string symbol)
-        {
-            candleList.Clear();
-            if (GetLastOrder().Symbol == symbol)
-            {
-                buyOnHold = true;
-            }
-            else
-            {
-                buyOnHold = false;
-            }
-
-            //Get data from Binance API
-            string apiUrl = $"https://api3.binance.com/api/v3/klines?symbol={symbol}&interval={interval}&limit=100";
-            List<List<double>> coinQuotation = HttpHelper.GetApiData<List<List<double>>>(new Uri(apiUrl));
-            candleList = CreateCandleList(coinQuotation, symbol);
-
-            //Get data from Binance API for second candle list 15m interval to process MACD indicator and AI
-            string apiUrl2 = $"https://api3.binance.com/api/v3/klines?symbol={symbol}&interval=15m&limit=100";
-            List<List<double>> coinQuotation2 = HttpHelper.GetApiData<List<List<double>>>(new Uri(apiUrl));
-            candleListMACD = CreateCandleList(coinQuotation2, symbol);
-        }
+       
 
         private List<Candle> CreateCandleList(List<List<double>> coinQuotation, string symbol)
         {

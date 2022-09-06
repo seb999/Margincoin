@@ -265,7 +265,7 @@ export class OrderDetailComponent {
       },
       xAxis: {
         plotLines: [{
-            color: '#FF0000', // Red
+            color: '#5EFF00', 
             width: 2,
             value: this.getOpenDateTimeSpam(this.openOrder?.openDate),  //display openeing date
         }]
@@ -276,17 +276,17 @@ export class OrderDetailComponent {
             crosshair : true,
             labels: { align: 'left' }, height: '80%', plotLines: [
               {
-                color: '#46ff33', width: 1, value: this.openOrder?.openPrice,
+                color: '#FF8901', width: 1, value: this.openOrder?.openPrice,
                 label: { text: "Open            ", align: 'right' }
               },
-              {
-                color: '#ff3339', width: 1, value: this.openOrder?.stopLose,
-                label: { text: "stopLose", align: 'right' }
-              },
-              {
-                color: '#ff9333', width: 1, value: (this.openOrder?.highPrice * (1 - (this.openOrder?.takeProfit / 100))),
-                label: { text: "take profit", align: 'right' }
-              },
+              // {
+              //   color: '#ff3339', width: 1, value: this.openOrder?.stopLose,
+              //   label: { text: "stopLose", align: 'right' }
+              // },
+              // {
+              //   color: '#ff9333', width: 1, value: (this.openOrder?.highPrice * (1 - (this.openOrder?.takeProfit / 100))),
+              //   label: { text: "take profit", align: 'right' }
+              // },
               {
                 color: '#333eff', width: 1, value: this.openOrder?.closePrice,
                 label: { text: "close", align: 'right' }
@@ -321,10 +321,8 @@ export class OrderDetailComponent {
   }
 
   getOpenDateTimeSpam(openDate){
-    console.log(openDate);
     var openDateArr = openDate.split(" ")[0].split("/");
-    var openTime = openDate.split(" ")[1] + " " + this.openOrder?.openDate.split(" ")[2]
-    //return Date.parse(openDateArr[2] + "/" + openDateArr[1] + "/" + openDateArr[0] + " " + openTime) + new Date().getTimezoneOffset()*60000;
+    var openTime = openDate.split(" ")[1] + " " + openDate.split(" ")[2];
     return Date.parse(openDateArr[2] + "/" + openDateArr[1] + "/" + openDateArr[0] + " " + openTime);
   }
 
