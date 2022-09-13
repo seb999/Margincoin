@@ -8,6 +8,15 @@ namespace MarginCoin.Misc
 {
     public static class TradeIndicator
     {
+        
+        public static List<T> CalculateIndicator<T>(List<T> quotationList) where T : Candle
+        {
+             CalculateIndicator(ref quotationList);
+
+             return quotationList;
+        }
+        
+        
         public static void CalculateIndicator<T>(ref List<T> quotationList) where T : Candle
         {
             //Sometime linq crash and say that p is null

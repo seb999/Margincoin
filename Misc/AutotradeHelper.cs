@@ -29,6 +29,8 @@ namespace MarginCoin.Misc
             }
         }
 
+
+        //The stream just contain symbol that changed from t-1, we buffer it to get all symbol changed or not changed
         internal static void BufferMarketStream(List<MarketStream> marketStreamList, ref List<MarketStream> buffer)
         {
             foreach (var marketStream in marketStreamList)

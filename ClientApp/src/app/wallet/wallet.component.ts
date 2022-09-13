@@ -222,6 +222,14 @@ export class WalletComponent {
     return await this.httpService.xhr(httpSetting);
   }
 
+  async monitorMyList(): Promise<any> {
+    const httpSetting: HttpSettings = {
+      method: 'GET',
+      url: location.origin + '/api/AutoTrade3/MonitorMarket',
+    };
+    return await this.httpService.xhr(httpSetting);
+  }
+
   getOpenDateTimeSpam(openDate){
     var openDateArr = openDate.split(" ")[0].split("/");
     var openTime = openDate.split(" ")[1] + " " + openDate.split(" ")[2];

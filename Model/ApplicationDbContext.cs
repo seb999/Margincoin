@@ -11,5 +11,6 @@ namespace MarginCoin.Model
         public virtual DbSet<Order> Order { get; set; }
         public virtual DbSet<OrderTemplate> OrderTemplate { get; set; }
         public virtual DbSet<Spot> Spot { get; set; }
+        public virtual DbSet<Symbol> Symbol { get; set; }
     }
 }
