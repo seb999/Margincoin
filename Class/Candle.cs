@@ -13,6 +13,7 @@ namespace MarginCoin.Class
         public double v { get; set; } // volum
         public double t { get; set; } // Close time
         public bool x { get; set; } // Is this kline closed? 
+        public bool IsOnHold { get; set; }
         public double Rsi { get; set; }
         public double Macd { get; set; }
         public double MacdSign { get; set; }

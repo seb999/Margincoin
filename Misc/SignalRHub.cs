@@ -7,9 +7,9 @@ namespace MarginCoin.Misc
 {
     public class SignalRHub : Hub
     {
-        public async Task SendMessage(string message, RsiCandle[] symbolWeight, double rsi, double R1, double S1)
+        public async Task SendMessage(string message, string candleList)
         {
-            await Clients.All.SendAsync("ReceiveMessage", message, symbolWeight, rsi, R1, S1);
+            await Clients.All.SendAsync("ReceiveMessage", message, candleList);
         }
         
     }

@@ -15,7 +15,7 @@ export class Order {
     public margin? : number,
     public openDate? : string,
     public closeDate? : string,
-    public IsClosed?: number,
+    public isClosed?: number,
     )
     {}
 }

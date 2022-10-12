@@ -22,13 +22,10 @@ export class SignalRService {
     }
     
     public addTransferChartDataListener = () => {
-        this.hubConnection.on('trading', (symbolWeight, rsi,r1,s1) => {       
+        this.hubConnection.on('trading', (candleList) => {       
             let serverMsg : ServerMsg = {
                 msgName : 'trading',
-                symbolWeight : symbolWeight,
-                rsi : rsi,
-                r1 : r1,
-                s1 : s1
+                candleList : JSON.parse(candleList)
             }
             return this.eventMessage.emit(serverMsg);
         });

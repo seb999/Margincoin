@@ -315,14 +315,14 @@ export class TradingboardComponent {
               color: '#4169E1', width: 2, value: this.openOrderList[0]?.openPrice,
               label: { text: this.openOrderList[0]?.openPrice.toString(), align: 'right' }
             },
-            {
-              color: '#cc4e20f3', width: 2, value: this.serverMsg?.r1,
-              label: { text: 'R1', align: 'right' }
-            },
-            {
-              color: '#cc4e20f3', width: 2, value: this.serverMsg?.s1,
-              label: { text: 'S1', align: 'right' }
-            },
+            // {
+            //   color: '#cc4e20f3', width: 2, value: this.serverMsg?.r1,
+            //   label: { text: 'R1', align: 'right' }
+            // },
+            // {
+            //   color: '#cc4e20f3', width: 2, value: this.serverMsg?.s1,
+            //   label: { text: 'S1', align: 'right' }
+            // },
           ],
         },
         { labels: { align: 'left' }, top: '80%', height: '20%', offset: 0 },

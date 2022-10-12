@@ -4,6 +4,7 @@ import { Order } from '../class/order';
 import { HttpSettings, HttpService } from '../service/http.service';
 import { SignalRService } from '../service/signalR.service';
 import { ServerMsg } from '../class/serverMsg';
+import { Test } from '../class/Test';
 import {NgbDateStruct} from '@ng-bootstrap/ng-bootstrap';
 
 import * as Highcharts from 'highcharts';
@@ -30,7 +31,7 @@ export class WalletComponent {
 
   public orderList: Order[];
   public orderFilter: Order[];
-  public SymbolWeightList: any[];
+  public CandleList: any[];
   public totalProfit: number;
   public serverMsg: ServerMsg;
   public showMessageInfo: boolean = false;
@@ -49,6 +50,7 @@ export class WalletComponent {
   async ngOnInit() {
     //Display list of open orders
     this.orderList = await this.getOpenOrder();
+    console.log(this.orderList);
     this.filterOrderList();
     this.calculateTotal();
 
@@ -64,7 +66,18 @@ export class WalletComponent {
      
       if (this.serverMsg.msgName == 'trading') {
         this.showMessageInfo = true;
-        this.SymbolWeightList = this.serverMsg.symbolWeight;
+        this.CandleList = this.serverMsg.candleList;
+
+         this.orderList.forEach((order, index) => {
+          this.CandleList.forEach(candle => {
+            if(order.symbol === candle.s && !order.isClosed) {
+              this.orderList[index].closePrice = candle.c;
+              this.orderList[index].profit = (candle.c - order.openPrice)*order.quantity;
+          }
+          });
+          this.calculateTotal();
+      });
+
         setTimeout(() => { this.showMessageInfo = false }, 700);
       }
 
@@ -210,6 +223,15 @@ export class WalletComponent {
     const httpSetting: HttpSettings = {
       method: 'GET',
       url: location.origin + '/api/AutoTrade2/MonitorMarket',
+    };
+    return await this.httpService.xhr(httpSetting);
+  }
+
+  async closeTrade(orderId, lastPrice): Promise<any> {
+    console.log(lastPrice);
+    const httpSetting: HttpSettings = {
+      method: 'GET',
+      url: location.origin + '/api/AutoTrade3/CloseTrade/' + orderId + '/' + lastPrice,
     };
     return await this.httpService.xhr(httpSetting);
   }

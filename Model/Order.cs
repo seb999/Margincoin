@@ -22,16 +22,20 @@ namespace MarginCoin.Model
         public string OpenDate { get; set; }
         public string CloseDate { get; set; }
         public double RSI { get; set; }
+        public double RSI_1 { get; set; }
+        public double RSI_2 { get; set; }
         public double MACDHist { get; set; }
         public double MACDHist_1 { get; set; }
         public double MACDHist_2 { get; set; }
         public double MACDHist_3 { get; set; }
         public int PredictionLBFGS { get; set; }
-         public int PredictionLDSVM { get; set; }
-          public int PredictionSDA { get; set; }
+        public int PredictionLDSVM { get; set; }
+        public int PredictionSDA { get; set; }
         public double MACD { get; set; }
         public double MACDSign { get; set; }
         public double EMA { get; set; }
+        public double StochSlowD { get; set; }
+        public double StochSlowK { get; set; }
         public double R1 { get; set; }
         public double S1 { get; set; }
         public int Lock { get; set; }

@@ -11,6 +11,7 @@ using Binance.Spot;
 using System.Net.WebSockets;
 using System.Threading;
 using static MarginCoin.Class.Prediction;
+using System.Text.Json;
 
 namespace MarginCoin.Controllers
 {
@@ -28,17 +29,16 @@ namespace MarginCoin.Controllers
         private List<MarketStream> marketStreamOnSpot = new List<MarketStream>();
         int nbrUp = 0;
         int nbrDown = 0;
-        bool buyOnHold = true;
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////------------SETTINGS----------/////////////////////////////////////////////
         ////////////////////////////////////////////////////////////////////////////////////////////////////////
-        string interval = "30m";   //1h seem to give better result
+        string interval = "1h";   //1h seem to give better result
         int numberPreviousCandle = 2;
         //move stop lose to buy price when current price raise over:1.2%
         double secureNoLose = 1.016;
         //max trade that can be open
-        int maxOpenTrade = 10;
+        int maxOpenTrade = 6;
         List<string> mySymbolList = new List<string>();
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -53,6 +53,23 @@ namespace MarginCoin.Controllers
         ////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////-----------ALGORYTME----------/////////////////////////////////////////
         ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        [HttpGet("[action]/{orderId}/{lastPrice}")]
+        public async Task<string> CloseTrade(int orderId, double lastPrice)
+        {
+            Order myOrder = _appDbContext.Order.Where(p => p.Id == orderId).Select(p => p).FirstOrDefault();
+            if (myOrder != null)
+            {
+                Globals.symbolOnHold.Add(myOrder.Symbol, true);
+
+                CloseTrade(orderId, lastPrice, "by user");
+
+
+            }
+
+            return "";
+        }
+
         [HttpGet("[action]")]
         public async Task<string> MonitorMarket()
         {
@@ -111,7 +128,6 @@ namespace MarginCoin.Controllers
                 else
                 {
                     Console.WriteLine($"New candle save : {stream.k.s}");
-                    buyOnHold = false;
                 }
 
                 Candle newCandle = new Candle()
@@ -172,7 +188,6 @@ namespace MarginCoin.Controllers
                     nbrDown = marketStreamOnSpot.Where(pred => pred.P < 0).Count();
 
                     ProcessMarketMatrice();
-                    _hub.Clients.All.SendAsync("trading");
 
                     dataResult = "";
                 }
@@ -193,22 +208,35 @@ namespace MarginCoin.Controllers
             {
                 //0-Check each open order if closing is needed
                 List<Order> activeOrderList = GetActiveOrder();
-                if (activeOrderList != null)
+                if (activeOrderList.Count != 0)
                 {
                     activeOrderList.Where(p => CheckStopLose(p)).ToList();
                 }
 
+
                 //1- Get list of symbol spot (24h variation)
                 marketStreamOnSpot = marketStreamOnSpot.Where(p => mySymbolList.Any(p1 => p1 == p.s)).OrderByDescending(p => p.P).ToList();
+                //Send last data to frontend
+                _hub.Clients.All.SendAsync("trading", JsonSerializer.Serialize(marketStreamOnSpot));
+
+                if (activeOrderList.Count == maxOpenTrade) return;
 
                 //2-check candle (indicators, etc, not on hold ) and invest
-                for (int i = 0; i < maxOpenTrade; i++)
+                for (int i = 0; i < maxOpenTrade - activeOrderList.Count; i++)
                 {
                     var symbol = marketStreamOnSpot[i].s;
+
+                    //if there is already a pending order for this symbol we exit
+                    if (activeOrderList.Where(p => p.Symbol == symbol).Select(p => p).ToList().Count != 0)
+                    {
+                        continue;
+                    }
+
                     List<Candle> symbolCandle = candleMatrice.Where(p => p.First().s == symbol).FirstOrDefault();  //get the line that coorespond to the symbol
-                    if (CheckCandle(numberPreviousCandle, marketStreamOnSpot[i], symbolCandle) && !buyOnHold)
+                    if (CheckCandle(numberPreviousCandle, marketStreamOnSpot[i], symbolCandle) && !symbolCandle.Last().IsOnHold && !Globals.symbolOnHold.FirstOrDefault(p => p.Key == symbol).Value)
                     {
                         Console.WriteLine($"Open trade on {symbol}");
+                        Globals.symbolOnHold.Remove(symbol);
                         OpenTrade(marketStreamOnSpot[i], symbolCandle);
                     }
                 }
@@ -263,7 +291,8 @@ namespace MarginCoin.Controllers
             }
 
             //4 - RSI should be lower than 72 or RSI lower 80 if we already trade the coin
-            if (symbolCandle.Last().Rsi < 72 || (GetLastOrder().Symbol == symbolSpot.s && symbolCandle.Last().Rsi < 80))
+            //if (symbolCandle.Last().Rsi < 56)
+            if (symbolCandle.Last().Rsi < 70)
             {
                 return true;
             }
@@ -280,28 +309,24 @@ namespace MarginCoin.Controllers
             Candle lastCandle = new Candle();
 
             //iteration the matrice to find the line for the symbol of the active order
-            foreach (var symbolCandle in candleMatrice)
-            {
-                if (symbolCandle[0].s == activeOrder.Symbol)
-                {
-                    lastPrice = symbolCandle.Select(p => p.c).LastOrDefault();
-                    highPrice = symbolCandle.Select(p => p.h).LastOrDefault();
-                    lastCandle = symbolCandle.Select(p => p).LastOrDefault();
-                    break;
-                }
-            }
+            List<Candle> symbolCandle = candleMatrice.Where(p => p.First().s == activeOrder.Symbol).FirstOrDefault();
+            int symbolCandleIndex = candleMatrice.IndexOf(symbolCandle); //get the line that coorespond to the symbol]
+            lastPrice = symbolCandle.Select(p => p.c).LastOrDefault();
+            highPrice = symbolCandle.Select(p => p.h).LastOrDefault();
+            lastCandle = symbolCandle.Select(p => p).LastOrDefault();
 
             if (lastPrice <= activeOrder.StopLose)
             {
                 Console.WriteLine("Close trade : stop lose ");
-                buyOnHold = true;
-                CloseTrade(activeOrder.Id, lastCandle, $"Stop Lose");
+
+                candleMatrice[symbolCandleIndex].Last().IsOnHold = true;
+                CloseTrade(activeOrder.Id, lastCandle.c, $"Stop Lose");
             }
             else if (lastPrice <= (activeOrder.HighPrice * (1 - (activeOrder.TakeProfit / 100))))
             {
                 Console.WriteLine("Close trade : 4% bellow Higher ");
-                buyOnHold = true;
-                CloseTrade(activeOrder.Id, lastCandle, "4% Limit");
+                candleMatrice[symbolCandleIndex].Last().IsOnHold = true;
+                CloseTrade(activeOrder.Id, lastCandle.c, "4% Limit");
             }
 
             SaveHighLow(lastCandle, activeOrder);
@@ -316,11 +341,9 @@ namespace MarginCoin.Controllers
 
         #region Database Trade accessor
 
-        private void CloseTrade(int orderId, Candle lastCandle, string closeType)
+        private void CloseTrade(int orderId, double closePrice, string closeType)
         {
-
             Order myOrder = _appDbContext.Order.Where(p => p.Id == orderId).Select(p => p).FirstOrDefault();
-            double closePrice = lastCandle.c;
             if (closePrice == 0) return;
 
             myOrder.ClosePrice = closePrice;
@@ -340,9 +363,7 @@ namespace MarginCoin.Controllers
             //Console.Beep();
             Console.WriteLine("Open trade");
 
-            if (GetActiveOrder() != null) return;
-
-            List<ModelOutput> prediction = AIHelper.GetPrediction(candleListMACD);
+            List<ModelOutput> prediction = AIHelper.GetPrediction(symbolCandle);
 
             //1-read from db template
             OrderTemplate orderTemplate = GetOrderTemplate();
@@ -362,13 +383,17 @@ namespace MarginCoin.Controllers
             myOrder.Symbol = symbolSpot.s;
 
             myOrder.RSI = symbolCandle.Last().Rsi;
+            myOrder.RSI_1 = symbolCandle[symbolCandle.Count - 2].Rsi;
+            myOrder.RSI_2 = symbolCandle[symbolCandle.Count - 3].Rsi;
             myOrder.EMA = symbolCandle.Last().Ema;
-            myOrder.MACD = candleListMACD.Last().Macd;
-            myOrder.MACDSign = candleListMACD.Last().MacdSign;
-            myOrder.MACDHist = candleListMACD.Last().MacdHist;
-            myOrder.MACDHist_1 = candleListMACD[symbolCandle.Count - 2].MacdHist;
-            myOrder.MACDHist_2 = candleListMACD[symbolCandle.Count - 3].MacdHist;
-            myOrder.MACDHist_3 = candleListMACD[symbolCandle.Count - 4].MacdHist;
+            myOrder.StochSlowD = symbolCandle.Last().StochSlowD;
+            myOrder.StochSlowK = symbolCandle.Last().StochSlowK;
+            myOrder.MACD = symbolCandle.Last().Macd;
+            myOrder.MACDSign = symbolCandle.Last().MacdSign;
+            myOrder.MACDHist = symbolCandle.Last().MacdHist;
+            myOrder.MACDHist_1 = symbolCandle[symbolCandle.Count - 2].MacdHist;
+            myOrder.MACDHist_2 = symbolCandle[symbolCandle.Count - 3].MacdHist;
+            myOrder.MACDHist_3 = symbolCandle[symbolCandle.Count - 4].MacdHist;
             myOrder.PredictionLBFGS = prediction[0].Prediction == true ? 1 : 0;
             myOrder.PredictionLDSVM = prediction[1].Prediction == true ? 1 : 0;
             myOrder.PredictionSDA = prediction[2].Prediction == true ? 1 : 0;
@@ -461,6 +486,7 @@ namespace MarginCoin.Controllers
                     v = item[5],
                     t = item[6],
                     id = Guid.NewGuid().ToString(),
+                    IsOnHold = false,
                 };
                 candleList.Add(newCandle);
             }

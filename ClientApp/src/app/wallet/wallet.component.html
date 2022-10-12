@@ -26,8 +26,8 @@
 </div>
 
 <div class="row">
-  <div class="col-8">
-    <table class="table table-sm mt-2">
+  <div class="col-9">
+    <table class="table table-sm mt-2 table-dark">
       <thead class="thead-light">
         <tr>
           <th scope="col" id="last" class="tableTh ">Symbol</th>
@@ -38,18 +38,23 @@
           <th scope="col" id="volume" class="tableTh">Close</th>
           <th scope="col" id="volume" class="tableTh">%</th>
           <th scope="col" id="volume" class="tableTh">Profit</th>
+          <th scope="col" id="volume" class="tableTh">Best Profit</th>
           <th scope="col" id="volume" class="tableTh">Open</th>
           <th scope="col" id="volume" class="tableTh">Close</th>
           <th scope="col" id="volume" class="tableTh">Type</th>
           <th scope="col" id="volume" class="tableTh">Rsi</th>
+          <th scope="col" id="volume" class="tableTh">MACD/RSI</th>
+          <th scope="col" id="volume" class="tableTh">MACD/negatif</th>
+          <th scope="col" id="volume" class="tableTh">RSI/cross30</th>
+          <th scope="col" id="volume" class="tableTh"></th>
           <th scope="col" id="volume" class="tableTh"></th>
           <th scope="col" id="volume" class="tableTh"></th>
 
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let order of orderFilter">
-          <td>{{order.symbol}}</td>
+        <tr   *ngFor="let order of orderFilter" class="alert alert-warning" [ngClass]="{'alert alert-warning': order.closeDate == null}">
+          <td >{{order.symbol}}</td>
           <td>{{(order.openPrice * order.quantity).toFixed(0)}}</td>
           <td>{{order.openPrice}}</td>
           <td>{{order.highPrice}}</td>
@@ -59,19 +64,38 @@
           <td *ngIf="order.closePrice==0">--</td>
           <td *ngIf="(order.closePrice - order.openPrice) >=0 && order.closePrice!=0" style="color: limegreen;">{{
             (((order.closePrice - order.openPrice) / (order.openPrice))*100).toFixed(2) }}</td>
-          <td *ngIf="(order.closePrice - order.openPrice) < 0 && order.closePrice!=0" style="color: red;">{{
+          <td *ngIf="(order.closePrice - order.openPrice) < 0 && order.closePrice!=0" style="color: rgb(236, 44, 44);">{{
             (((order.closePrice - order.openPrice) / (order.openPrice))*100).toFixed(2) }}</td>
           <td *ngIf="((order.closePrice - order.openPrice)*order.quantity-order.fee) >=0 && order.closePrice!=0"
             style="color: limegreen;">{{((order.closePrice - order.openPrice)*order.quantity-order.fee).toFixed(2)}}
           </td>
           <td *ngIf="((order.closePrice - order.openPrice)*order.quantity-order.fee) < 0 && order.closePrice!=0"
-            style="color: red;">{{((order.closePrice - order.openPrice)*order.quantity-order.fee).toFixed(2)}}</td>
+          style="color: rgb(236, 44, 44);">{{((order.closePrice - order.openPrice)*order.quantity-order.fee).toFixed(2)}}</td>
+
+          <td *ngIf="((order.highPrice - order.openPrice)*order.quantity-order.fee) < 0 && order.highPrice!=0"
+          style="color: rgb(236, 44, 44);">{{((order.highPrice - order.openPrice)*order.quantity-order.fee).toFixed(2)}}
+        </td>
+        <td *ngIf="((order.highPrice - order.openPrice)*order.quantity-order.fee) >=0 && order.highPrice!=0"
+          style="color: limegreen;">{{((order.highPrice - order.openPrice)*order.quantity-order.fee).toFixed(2)}}
+        </td>
+
           <td>{{order.openDate}}</td>
           <td>{{order.closeDate}}</td>
           <td>{{order.type}}</td>
           <td>{{order.rsi.toFixed(2)}}</td>
-          <td>
-            <button class="btn btn-danger btn-sm" (click)="closeOrder(openOrder.id,coinData.c);"><i class="fa-solid fa-check"></i> Sell</button>
+          <!-- <td *ngIf="((order.macd > order.macdSign && order.rsi>40 ))"  style="color: limegreen;">up</td> -->
+          <td *ngIf="((order.macd <= order.macdSign && order.rsi < 50 ))"  style="color: rgb(236, 44, 44);">down</td>
+          <td *ngIf="((order.macdSign < 0 ))"  style="color: rgb(236, 44, 44);">MACD negatif</td>
+          <td *ngIf="((order.rsI_2 > 65 && order.rsi < 65))"  style="color: rgb(236, 44, 44);">RSI cross </td>
+          <!-- 
+          <td *ngIf="((order.macd > 0 ))"  style="color: limegreen;">up</td>
+           
+         
+          <td *ngIf="((order.rsi_2 < 30 && order.rsi_1 < 30 && order.rsi < 30))"  style="color: limegreen;">up</td> -->
+            <!-- <td *ngIf="((order.macdHist_2>order.macdHist_1 || order.macdHist_1 > order.macdHist))" style="color: rgb(236, 44, 44);">Down</td>0))" style="color: limegreen;">Up</td> -->
+          <!-- <td *ngIf="((order.macdHist_2>order.macdHist_1 || order.macdHist_1 > order.macdHist))" style="color: rgb(236, 44, 44);">Down</td> -->
+            <td>
+            <button class="btn btn-danger btn-sm" (click)="closeTrade(order.id, order.closePrice);"><i class="fa-solid fa-check"></i> Sell</button>
           </td>
           <td>
             <a [routerLink]="['/orderDetail', order.id]" target="_blank" class="btn btn btn-primary btn-sm"><span><i
@@ -86,8 +110,8 @@
           <td></td>
           <td></td>
           <td><b>Total</b></td>
-          <td *ngIf="totalProfit >=0" style="color: limegreen;">{{totalProfit}}</td>
-          <td *ngIf="totalProfit < 0" style="color: red;">{{totalProfit}}</td>
+          <td *ngIf="totalProfit >=0" style="color: limegreen;">{{totalProfit.toFixed(0)}}</td>
+          <td *ngIf="totalProfit < 0" style="color: rgb(255, 57, 57);">{{totalProfit.toFixed(0)}}</td>
           <td></td>
           <td></td>
           <td></td>
@@ -99,10 +123,11 @@
     </table>
   </div>
 
-  <div class="col-4">
+  <div class="col-3">
    
     <div class="card-body">
       <div class="row">
+
         <!-- <div class="col-2">Amount : {{openOrder?.openPrice * openOrder?.quantity}}</div>
         <div class="col-2">Price : {{openOrder?.openPrice}}</div>
         <div class="col-2" *ngIf="(((coinData?.k?.c-openOrder?.openPrice) / (openOrder?.openPrice))*100) >=0"
