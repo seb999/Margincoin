@@ -49,9 +49,9 @@ export class WalletComponent {
 
   async ngOnInit() {
     //Display list of open orders
-    this.orderList = await this.getOpenOrder();
-    console.log(this.orderList);
-    this.filterOrderList();
+    this.model = this.today();
+    this.orderList = await this.getOpenOrder(this.model.day + "-" + this.model.month  + "-" + this.model.year);
+    this.orderFilter = this.orderList;
     this.calculateTotal();
 
     //Open listener on my API SignalR
@@ -82,7 +82,7 @@ export class WalletComponent {
       }
 
       if (this.serverMsg.msgName == 'newOrder') {
-        this.orderList = await this.getOpenOrder();
+        this.orderList = await this.getOpenOrder(this.model.day + "-" + this.model.month  + "-" + this.model.year);
         this.orderFilter = this.orderList;
         this.calculateTotal();
       }
@@ -94,16 +94,19 @@ export class WalletComponent {
     return {day : d.getDate(), month: d.getMonth()+1, year : d.getFullYear()};
   }
 
-  filterOrderList() {
+  async filterOrderList() {
     console.log(this.model);
     if(this.model==undefined){
       this.orderFilter = this.orderList;
       return;
     } 
-    this.orderFilter = this.orderList.filter((p: any) => {
-     var myDate = p.openDate.split("/");  
-     return new Date(myDate[1] + "/" + myDate[0] + "/" + myDate[2]).getTime() > new Date(this.model.month + "/" + this.model.day + "/" + this.model.year).getTime(); 
-  });
+
+    this.orderList = await this.getOpenOrder(this.model.day + "-" + this.model.month  + "-" + this.model.year);
+    this.orderFilter = this.orderList;
+  //   this.orderFilter = this.orderList.filter((p: any) => {
+  //    var myDate = p.openDate.split("/");  
+  //    return new Date(myDate[1] + "/" + myDate[0] + "/" + myDate[2]).getTime() > new Date(this.model.month + "/" + this.model.day + "/" + this.model.year).getTime(); 
+  // });
 
   this.calculateTotal();
   }
@@ -211,10 +214,10 @@ export class WalletComponent {
     return await this.httpService.xhr(httpSetting);
   }
 
-  async getOpenOrder(): Promise<Order[]> {
+  async getOpenOrder(fromDate): Promise<Order[]> {
     const httpSetting: HttpSettings = {
       method: 'GET',
-      url: location.origin + "/api/Order/GetAllCompletedOrder/",
+      url: location.origin + "/api/Order/GetAllOrderFromDate/" + fromDate,
     };
     return await this.httpService.xhr(httpSetting);
   }

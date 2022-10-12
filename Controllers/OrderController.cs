@@ -33,6 +33,19 @@ namespace MarginCoin.Controllers
                return _appDbContext.Order.ToList();
         }
 
+         [HttpGet("[action]/{date}")]
+        public List<Order> GetAllOrderFromDate(string date){
+            List<Order> toto =  _appDbContext.Order.ToList();
+            foreach (var item in toto)
+            {
+                item.OpenDate = item.OpenDate.Split(" ")[0];
+            }
+
+            var ttt = toto.Where(p=>DateTime.ParseExact(p.OpenDate, "dd/MM/yyyy",System.Globalization.CultureInfo.InvariantCulture).CompareTo(DateTime.Parse(date))>0).ToList();
+
+            return toto.Where(p=>DateTime.ParseExact(p.OpenDate, "dd/MM/yyyy",System.Globalization.CultureInfo.InvariantCulture).CompareTo(DateTime.Parse(date))>0).ToList();
+        }
+
         [HttpPost("[action]")]
         public bool OpenOrder([FromBody] Order order)
         {

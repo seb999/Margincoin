@@ -34,6 +34,7 @@ namespace MarginCoin.Controllers
         /////////////////////////////------------SETTINGS----------/////////////////////////////////////////////
         ////////////////////////////////////////////////////////////////////////////////////////////////////////
         string interval = "1h";   //1h seem to give better result
+        
         int numberPreviousCandle = 2;
         //move stop lose to buy price when current price raise over:1.2%
         double secureNoLose = 1.016;

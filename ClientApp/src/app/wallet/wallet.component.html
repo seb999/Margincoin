@@ -19,7 +19,7 @@
   </div>
   <div class="col-2">
     <mat-slide-toggle [(ngModel)]="checked" class="example-margin" [color]="color" (change)="changed()"> <b
-        *ngIf="checked">Binance : On</b> <b *ngIf="!checked">Binance : Off</b>
+        *ngIf="checked"><p style="color: white">Binance : On</p></b> <b *ngIf="!checked"><p style="color: white">Binance : Off</p></b>
     </mat-slide-toggle>
 
   </div>
@@ -43,9 +43,9 @@
           <th scope="col" id="volume" class="tableTh">Close</th>
           <th scope="col" id="volume" class="tableTh">Type</th>
           <th scope="col" id="volume" class="tableTh">Rsi</th>
-          <th scope="col" id="volume" class="tableTh">MACD/RSI</th>
+          <!-- <th scope="col" id="volume" class="tableTh">MACD/RSI</th>
           <th scope="col" id="volume" class="tableTh">MACD/negatif</th>
-          <th scope="col" id="volume" class="tableTh">RSI/cross30</th>
+          <th scope="col" id="volume" class="tableTh">RSI/cross30</th> -->
           <th scope="col" id="volume" class="tableTh"></th>
           <th scope="col" id="volume" class="tableTh"></th>
           <th scope="col" id="volume" class="tableTh"></th>
@@ -84,9 +84,9 @@
           <td>{{order.type}}</td>
           <td>{{order.rsi.toFixed(2)}}</td>
           <!-- <td *ngIf="((order.macd > order.macdSign && order.rsi>40 ))"  style="color: limegreen;">up</td> -->
-          <td *ngIf="((order.macd <= order.macdSign && order.rsi < 50 ))"  style="color: rgb(236, 44, 44);">down</td>
+          <!-- <td *ngIf="((order.macd <= order.macdSign && order.rsi < 50 ))"  style="color: rgb(236, 44, 44);">down</td>
           <td *ngIf="((order.macdSign < 0 ))"  style="color: rgb(236, 44, 44);">MACD negatif</td>
-          <td *ngIf="((order.rsI_2 > 65 && order.rsi < 65))"  style="color: rgb(236, 44, 44);">RSI cross </td>
+          <td *ngIf="((order.rsI_2 > 65 && order.rsi < 65))"  style="color: rgb(236, 44, 44);">RSI cross </td> -->
           <!-- 
           <td *ngIf="((order.macd > 0 ))"  style="color: limegreen;">up</td>
            
