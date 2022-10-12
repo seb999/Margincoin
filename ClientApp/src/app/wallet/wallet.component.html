@@ -2,15 +2,18 @@
 
 <div class="row">
   <div class="col-3">
-    
-    <button class="btn btn-primary btn-sm mr-1" (click)="monitorMarket()"><i class="fa-solid fa-check"></i> Monitor market</button>
-    <button class="btn btn-primary btn-sm mr-1" (click)="monitorMyList()"><i class="fa-solid fa-check"></i> Monitor my coin list</button>
+
+    <button class="btn btn-primary btn-sm mr-1" (click)="monitorMarket()"><i class="fa-solid fa-check"></i> Monitor
+      market</button>
+    <button class="btn btn-primary btn-sm mr-1" (click)="monitorMyList()"><i class="fa-solid fa-check"></i> Monitor my
+      coin list</button>
     <button class="btn btn-danger btn-sm mr-1" (click)="testBuy()"><i class="fa-solid fa-check"></i> Buy 10 ADA</button>
   </div>
   <div class="input-group col-2 input-group-sm">
-    <input class="form-control sm" placeholder="yyyy-mm-dd"
-           name="dp" [(ngModel)]="model" ngbDatepicker #d="ngbDatepicker" (dateSelect)="filterOrderList()">
-    <button class="btn btn-outline-secondary calendar btn-sm mr-1" (click)="d.toggle();filterOrderList();" type="button"><i class="fa-solid fa-calendar-days"></i></button>
+    <input class="form-control sm" placeholder="yyyy-mm-dd" name="dp" [(ngModel)]="model" ngbDatepicker
+      #d="ngbDatepicker" (dateSelect)="filterOrderList()">
+    <button class="btn btn-outline-secondary calendar btn-sm mr-1" (click)="d.toggle();filterOrderList();"
+      type="button"><i class="fa-solid fa-calendar-days"></i></button>
     <button class="btn btn-secondary btn-sm mr-1" (click)="model = today();filterOrderList()">Today</button>
   </div>
   <div class="col-5">
@@ -19,7 +22,11 @@
   </div>
   <div class="col-2">
     <mat-slide-toggle [(ngModel)]="checked" class="example-margin" [color]="color" (change)="changed()"> <b
-        *ngIf="checked"><p style="color: white">Binance : On</p></b> <b *ngIf="!checked"><p style="color: white">Binance : Off</p></b>
+        *ngIf="checked">
+        <p style="color: white">Binance : On</p>
+      </b> <b *ngIf="!checked">
+        <p style="color: white">Binance : Off</p>
+      </b>
     </mat-slide-toggle>
 
   </div>
@@ -46,15 +53,16 @@
           <!-- <th scope="col" id="volume" class="tableTh">MACD/RSI</th>
           <th scope="col" id="volume" class="tableTh">MACD/negatif</th>
           <th scope="col" id="volume" class="tableTh">RSI/cross30</th> -->
-          <th scope="col" id="volume" class="tableTh"></th>
+          <th scope="col" id="volume" class="tableTh">Sell</th>
           <th scope="col" id="volume" class="tableTh"></th>
           <th scope="col" id="volume" class="tableTh"></th>
 
         </tr>
       </thead>
       <tbody>
-        <tr   *ngFor="let order of orderFilter" class="alert alert-warning" [ngClass]="{'alert alert-warning': order.closeDate == null}">
-          <td >{{order.symbol}}</td>
+        <tr *ngFor="let order of orderFilter" class="alert alert-warning"
+          [ngClass]="{'alert alert-warning': order.closeDate == null}">
+          <td>{{order.symbol}}</td>
           <td>{{(order.openPrice * order.quantity).toFixed(0)}}</td>
           <td>{{order.openPrice}}</td>
           <td>{{order.highPrice}}</td>
@@ -64,20 +72,23 @@
           <td *ngIf="order.closePrice==0">--</td>
           <td *ngIf="(order.closePrice - order.openPrice) >=0 && order.closePrice!=0" style="color: limegreen;">{{
             (((order.closePrice - order.openPrice) / (order.openPrice))*100).toFixed(2) }}</td>
-          <td *ngIf="(order.closePrice - order.openPrice) < 0 && order.closePrice!=0" style="color: rgb(236, 44, 44);">{{
+          <td *ngIf="(order.closePrice - order.openPrice) < 0 && order.closePrice!=0" style="color: rgb(236, 44, 44);">
+            {{
             (((order.closePrice - order.openPrice) / (order.openPrice))*100).toFixed(2) }}</td>
           <td *ngIf="((order.closePrice - order.openPrice)*order.quantity-order.fee) >=0 && order.closePrice!=0"
             style="color: limegreen;">{{((order.closePrice - order.openPrice)*order.quantity-order.fee).toFixed(2)}}
           </td>
           <td *ngIf="((order.closePrice - order.openPrice)*order.quantity-order.fee) < 0 && order.closePrice!=0"
-          style="color: rgb(236, 44, 44);">{{((order.closePrice - order.openPrice)*order.quantity-order.fee).toFixed(2)}}</td>
+            style="color: rgb(236, 44, 44);">{{((order.closePrice -
+            order.openPrice)*order.quantity-order.fee).toFixed(2)}}</td>
 
           <td *ngIf="((order.highPrice - order.openPrice)*order.quantity-order.fee) < 0 && order.highPrice!=0"
-          style="color: rgb(236, 44, 44);">{{((order.highPrice - order.openPrice)*order.quantity-order.fee).toFixed(2)}}
-        </td>
-        <td *ngIf="((order.highPrice - order.openPrice)*order.quantity-order.fee) >=0 && order.highPrice!=0"
-          style="color: limegreen;">{{((order.highPrice - order.openPrice)*order.quantity-order.fee).toFixed(2)}}
-        </td>
+            style="color: rgb(236, 44, 44);">{{((order.highPrice -
+            order.openPrice)*order.quantity-order.fee).toFixed(2)}}
+          </td>
+          <td *ngIf="((order.highPrice - order.openPrice)*order.quantity-order.fee) >=0 && order.highPrice!=0"
+            style="color: limegreen;">{{((order.highPrice - order.openPrice)*order.quantity-order.fee).toFixed(2)}}
+          </td>
 
           <td>{{order.openDate}}</td>
           <td>{{order.closeDate}}</td>
@@ -92,14 +103,19 @@
            
          
           <td *ngIf="((order.rsi_2 < 30 && order.rsi_1 < 30 && order.rsi < 30))"  style="color: limegreen;">up</td> -->
-            <!-- <td *ngIf="((order.macdHist_2>order.macdHist_1 || order.macdHist_1 > order.macdHist))" style="color: rgb(236, 44, 44);">Down</td>0))" style="color: limegreen;">Up</td> -->
+          <!-- <td *ngIf="((order.macdHist_2>order.macdHist_1 || order.macdHist_1 > order.macdHist))" style="color: rgb(236, 44, 44);">Down</td>0))" style="color: limegreen;">Up</td> -->
           <!-- <td *ngIf="((order.macdHist_2>order.macdHist_1 || order.macdHist_1 > order.macdHist))" style="color: rgb(236, 44, 44);">Down</td> -->
-            <td>
-            <button class="btn btn-danger btn-sm" (click)="closeTrade(order.id, order.closePrice);"><i class="fa-solid fa-check"></i> Sell</button>
+          <td>
+            <button class="btn" (click)="closeTrade(order.id, order.closePrice);"><span style="color: red"><i
+                  class="far fa-trash-alt"></i> </span></button>
           </td>
           <td>
-            <a [routerLink]="['/orderDetail', order.id]" target="_blank" class="btn btn btn-primary btn-sm"><span><i
-                  class="far fa-file-alt"></i> Show</span></a>
+            <a [routerLink]="['/orderDetail', order.id]" target="_blank" class="btn"><span style="color: orange">
+                <i class="fa-solid fa-chart-line"></i></span></a>
+          </td>
+          <td>
+            <button class="btn" (click)="showChart(order.symbol);"><span style="color: orange"><i
+                  class="fa-solid fa-chart-simple"></i> </span></button>
           </td>
         </tr>
         <tr>
@@ -124,32 +140,25 @@
   </div>
 
   <div class="col-3">
-   
-    <div class="card-body">
-      <div class="row">
+    <div class="card bg-light mb-3">
+      <div class="card-header">
+        <div class="row">
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="row">
+          <select class="form-control" [(ngModel)]="interval" (change)="changeHighstockResolution(interval)">
+            <option *ngFor="let item of intervalList" [value]="item.value">{{ item.value }}
+            </option>
+          </select>
+        </div>
 
-        <!-- <div class="col-2">Amount : {{openOrder?.openPrice * openOrder?.quantity}}</div>
-        <div class="col-2">Price : {{openOrder?.openPrice}}</div>
-        <div class="col-2" *ngIf="(((coinData?.k?.c-openOrder?.openPrice) / (openOrder?.openPrice))*100) >=0"
-          style="color: limegreen;">{{ (((coinData?.k?.c-openOrder?.openPrice) /
-          (openOrder?.openPrice))*100).toFixed(2) }}%</div>
-        <div class="col-2" *ngIf="(((coinData?.k?.c-openOrder?.openPrice) / (openOrder?.openPrice))*100) <0"
-          style="color: red;">{{ (((coinData?.k?.c-openOrder?.openPrice) /
-          (openOrder?.openPrice))*100).toFixed(2) }}%</div>
-        <div class="col-2" *ngIf="(coinData?.k?.c-openOrder?.openPrice) * openOrder?.quantity>=0"
-          style="color: limegreen;">
-          Profit :{{((coinData?.k?.c-openOrder?.openPrice) * openOrder?.quantity).toFixed(2)}}</div>
-        <div class="col-2" *ngIf="(coinData?.k?.c-openOrder?.openPrice) * openOrder?.quantity<0"
-          style="color: red;">Profit
-          :{{((coinData?.k?.c-openOrder?.openPrice) * openOrder?.quantity).toFixed(2)}}</div>
-      </div> -->
-
-      <!-- <div class="row"  *ngIf="chartOptions">
-        <highcharts-chart constructorType='stockChart' [Highcharts]="highcharts" [options]="chartOptions"
-        style="width: 100%; height: 550px; display: block;">
-      </highcharts-chart>
-      </div> -->
-    </div>
-
-  </div>
+        <div class="row" *ngIf="chartOptions">
+          <highcharts-chart constructorType='stockChart' [Highcharts]="highcharts" [options]="chartOptions"
+            style="width: 100%; height: 550px; display: block;">
+          </highcharts-chart>
+        </div>
+      </div>
 </div>
+    </div>
+  </div>
