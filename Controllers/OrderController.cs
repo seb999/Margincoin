@@ -36,10 +36,14 @@ namespace MarginCoin.Controllers
 
          [HttpGet("[action]/{date}")]
         public List<Order> GetAllOrderFromDate(string date){
-            date = date.Replace("-","/");
+            var dateArray = date.Split("-");
+            var myDay = dateArray[0].Length<2 ? "0" + dateArray[0] : dateArray[0];
+            var myMonth = dateArray[1].Length<2 ? "0" + dateArray[1] : dateArray[1];
+            var myYear = dateArray[2].Length<2 ? "0" + dateArray[2] : dateArray[2];
+            
             var provider = new CultureInfo("fr-FR");
             var format = "dd/MM/yyyy";
-            DateTime myDate = DateTime.ParseExact(date, format, provider);
+            DateTime myDate = DateTime.ParseExact(myDay + "/" + myMonth + "/" + myYear, format, provider);
 
             List<Order> myOrders =  _appDbContext.Order.ToList();
             foreach (var item in myOrders)

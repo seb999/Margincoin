@@ -352,7 +352,7 @@ namespace MarginCoin.Controllers
             myOrder.IsClosed = 1;
             myOrder.Type = closeType;
             myOrder.Profit = Math.Round((closePrice - myOrder.OpenPrice) * myOrder.Quantity) - myOrder.Fee;
-            myOrder.CloseDate = DateTime.Now.ToString();
+            myOrder.CloseDate = DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss");
             _appDbContext.SaveChanges();
             Console.Beep();
 
@@ -371,7 +371,7 @@ namespace MarginCoin.Controllers
 
             double quantity = orderTemplate.Amount / symbolSpot.c;
             Order myOrder = new Order();
-            myOrder.OpenDate = DateTime.Now.ToString();
+            myOrder.OpenDate = DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss");
             myOrder.OpenPrice = symbolSpot.c;
             myOrder.HighPrice = symbolSpot.c;
             myOrder.LowPrice = symbolSpot.c;

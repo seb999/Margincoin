@@ -1,34 +1,35 @@
 <h5>wallet</h5>
 
 <div class="row">
-  <div class="col-3">
-
+  
+  <div class="col-5">
     <button class="btn btn-primary btn-sm mr-1" (click)="monitorMarket()"><i class="fa-solid fa-check"></i> Monitor
       market</button>
     <button class="btn btn-primary btn-sm mr-1" (click)="monitorMyList()"><i class="fa-solid fa-check"></i> Monitor my
       coin list</button>
     <button class="btn btn-danger btn-sm mr-1" (click)="testBuy()"><i class="fa-solid fa-check"></i> Buy 10 ADA</button>
   </div>
-  <div class="input-group col-2 input-group-sm">
+
+  <div class="input-group input-group-sm" style="max-width: 200px !important">
     <input class="form-control sm" placeholder="yyyy-mm-dd" name="dp" [(ngModel)]="model" ngbDatepicker
       #d="ngbDatepicker" (dateSelect)="filterOrderList()">
     <button class="btn btn-outline-secondary calendar btn-sm mr-1" (click)="d.toggle();filterOrderList();"
       type="button"><i class="fa-solid fa-calendar-days"></i></button>
     <button class="btn btn-secondary btn-sm mr-1" (click)="model = today();filterOrderList()">Today</button>
   </div>
-  <div class="col-5">
+
+  <div class="col-2">
     <div *ngIf="showMessageInfo" class="alert alert-warning"
       style="height: 30px;padding-top: 3px;margin-bottom: 0px;width: 150px;" role="alert"> Trading </div>
   </div>
   <div class="col-2">
     <mat-slide-toggle [(ngModel)]="checked" class="example-margin" [color]="color" (change)="changed()"> <b
         *ngIf="checked">
-        <p style="color: white">Binance : On</p>
+        <p style="color: white; padding-top: 13px;">On Air</p>
       </b> <b *ngIf="!checked">
-        <p style="color: white">Binance : Off</p>
+        <p style="color: white; padding-top: 13px;">Off</p>
       </b>
     </mat-slide-toggle>
-
   </div>
 </div>
 
@@ -114,7 +115,7 @@
                 <i class="fa-solid fa-chart-line"></i></span></a>
           </td>
           <td>
-            <button class="btn" (click)="showChart(order.symbol);"><span style="color: orange"><i
+            <button class="btn" (click)="showChart(order.symbol, order.id);"><span style="color: orange"><i
                   class="fa-solid fa-chart-simple"></i> </span></button>
           </td>
         </tr>
@@ -140,25 +141,23 @@
   </div>
 
   <div class="col-3">
-    <div class="card bg-light mb-3">
-      <!-- <div class="card-header">
+
+    <!-- <div class="card-header">
       
     
       </div> -->
-      <div class="card-body">
-        <div class="row">
-          <select class="form-control" [(ngModel)]="interval" (change)="changeHighstockResolution(interval)">
-            <option *ngFor="let item of intervalList" [value]="item.value">{{ item.value }}
-            </option>
-          </select>
-        </div>
 
-        <div class="row" *ngIf="chartOptions">
-          <highcharts-chart constructorType='stockChart' [Highcharts]="highcharts" [options]="chartOptions"
-            style="width: 100%; height: 550px; display: block;">
-          </highcharts-chart>
-        </div>
-      </div>
-</div>
+    <div class="row">
+      <select class="form-control" [(ngModel)]="interval" (change)="changeHighstockResolution(interval)">
+        <option *ngFor="let item of intervalList" [value]="item.value">{{ item.value }}
+        </option>
+      </select>
+    </div>
+
+    <div class="row" *ngIf="chartOptions">
+      <highcharts-chart constructorType='stockChart' [Highcharts]="highcharts" [options]="chartOptions"
+        style="width: 100%; height: 550px; display: block;">
+      </highcharts-chart>
     </div>
   </div>
+</div>

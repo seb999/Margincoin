@@ -20,7 +20,7 @@ import HC_INDIC from 'highcharts/indicators/indicators';
 import HC_RSI from 'highcharts/indicators/rsi';
 import HC_EMA from 'highcharts/indicators/ema';
 import HC_MACD from 'highcharts/indicators/macd';
-import HC_THEME from 'highcharts/themes/grid-light';
+import HC_THEME from 'highcharts/themes/dark-unica';
 import { AppSetting } from '../app.settings';
 import { OrderTemplate } from '../class/orderTemplate';
 import { ServerMsg } from '../class/serverMsg';

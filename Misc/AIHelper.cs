@@ -20,7 +20,7 @@ namespace MarginCoin.Misc
             if (quoteList.Count == 0) return predictionList;
 
             //2 - List models available
-            var rootFolder = Environment.CurrentDirectory + "\\AI";
+            var rootFolder = Environment.CurrentDirectory + "/AI";
             var modelPathList = Directory.GetFiles(rootFolder, "*", SearchOption.AllDirectories);
 
             if (modelPathList.Length == 0)
