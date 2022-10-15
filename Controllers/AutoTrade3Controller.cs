@@ -34,8 +34,13 @@ namespace MarginCoin.Controllers
         /////////////////////////////------------SETTINGS----------/////////////////////////////////////////////
         ////////////////////////////////////////////////////////////////////////////////////////////////////////
         string interval = "1h";   //1h seem to give better result
-        
+
         int numberPreviousCandle = 2;
+
+        double stopLose = 0.5;
+
+        double takeProfit = 0.5;
+
         //move stop lose to buy price when current price raise over:1.2%
         double secureNoLose = 1.016;
         //max trade that can be open
@@ -316,18 +321,21 @@ namespace MarginCoin.Controllers
             highPrice = symbolCandle.Select(p => p.h).LastOrDefault();
             lastCandle = symbolCandle.Select(p => p).LastOrDefault();
 
-            if (lastPrice <= activeOrder.StopLose)
+            if (lastPrice <= activeOrder.OpenPrice * (1 - (this.stopLose / 100)))
             {
                 Console.WriteLine("Close trade : stop lose ");
 
                 candleMatrice[symbolCandleIndex].Last().IsOnHold = true;
                 CloseTrade(activeOrder.Id, lastCandle.c, $"Stop Lose");
             }
-            else if (lastPrice <= (activeOrder.HighPrice * (1 - (activeOrder.TakeProfit / 100))))
+            if (lastPrice > activeOrder.OpenPrice)
             {
-                Console.WriteLine("Close trade : 4% bellow Higher ");
-                candleMatrice[symbolCandleIndex].Last().IsOnHold = true;
-                CloseTrade(activeOrder.Id, lastCandle.c, "4% Limit");
+                if (lastPrice <= (activeOrder.HighPrice * (1 - (this.takeProfit  / 100))))
+                {
+                    Console.WriteLine("Close trade : take profit ");
+                    candleMatrice[symbolCandleIndex].Last().IsOnHold = true;
+                    CloseTrade(activeOrder.Id, lastCandle.c, "Take profit");
+                }
             }
 
             SaveHighLow(lastCandle, activeOrder);
