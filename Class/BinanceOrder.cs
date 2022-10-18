@@ -5,9 +5,9 @@ namespace MarginCoin.Class
     public class BinanceOrder
     {
         public double orderId { get; set; }
+        public string clientOrderId { get; set; }
         public string symbol { get; set; }
         public double orderListId { get; set; } //Unless OCO, value will be -1
-        public string clientOrderId { get; set; }
         public long transactTime { get; set; }
         public string price { get; set; }
         public string origQty { get; set; }
@@ -18,10 +18,10 @@ namespace MarginCoin.Class
         public string type { get; set; }
         public string side { get; set; }
 
-        List<Fills> Fills { get; set; }
+        public List<fills> fills { get; set; }
     }
 
-    public class Fills
+    public class fills
     {
         public double tradeId { get; set; }
         public string price { get; set; }

@@ -39,7 +39,7 @@ namespace MarginCoin.Misc
             }
         }
 
-        public static T PostApiData<T>( Uri apiUri, string apiKey, HttpContent data)
+        public static T PostApiData<T>(Uri apiUri, string apiKey, HttpContent data, ref System.Net.HttpStatusCode httpStatusCode)
         {
             JsonSerializerOptions jsonSerializerOptions = new JsonSerializerOptions
             {
@@ -56,12 +56,15 @@ namespace MarginCoin.Misc
                
                 if (response.IsSuccessStatusCode)
                 {
+                    //For debugging
                     var toto = response.Content.ReadAsStringAsync().Result;
                     Console.WriteLine(toto);
+                    httpStatusCode = response.StatusCode;
                     return JsonSerializer.Deserialize<T>(response.Content.ReadAsStringAsync().Result, jsonSerializerOptions);
                 }
                 else
                 {
+                    httpStatusCode = response.StatusCode;
                     Console.WriteLine(response.IsSuccessStatusCode);
                     return default(T);
                 }

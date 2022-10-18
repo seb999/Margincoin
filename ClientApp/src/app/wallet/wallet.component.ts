@@ -5,7 +5,7 @@ import { HttpSettings, HttpService } from '../service/http.service';
 import { SignalRService } from '../service/signalR.service';
 import { ServerMsg } from '../class/serverMsg';
 import { Test } from '../class/Test';
-import {NgbDateStruct} from '@ng-bootstrap/ng-bootstrap';
+import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 import { OrderDetailHelper } from './../orderDetail/orderDetail.helper';
 
 import * as Highcharts from 'highcharts';
@@ -32,17 +32,20 @@ export class WalletComponent {
   model: NgbDateStruct;
 
   private ohlc = [] as any;
+  public PendingOrderList: Order[];
   public orderList: Order[];
-  public orderFilter: Order[];
+  public assetList: any[];
   public CandleList: any[];
   public totalProfit: number;
   public serverMsg: ServerMsg;
   public showMessageInfo: boolean = false;
+  public showMessageError: boolean = false;
+  public messageError: string;
   public interval: string;
   public intervalList = [] as any;
 
   color = 'accent';
-  checked = false;
+  isProd = false;
 
   highcharts = Highcharts;
   chartOptions: Highcharts.Options;
@@ -60,10 +63,9 @@ export class WalletComponent {
   }
 
   async ngOnInit() {
-    //Display list of open orders
+    this.setProdParam(this.isProd);
     this.model = this.today();
-    this.orderList = await this.getOpenOrder(this.model.day + "-" + this.model.month  + "-" + this.model.year);
-    this.orderFilter = this.orderList;
+    this.orderList = await this.getAllOrder(this.model.day + "-" + this.model.month + "-" + this.model.year);
     this.calculateTotal();
 
     //Open listener on my API SignalR
@@ -72,65 +74,74 @@ export class WalletComponent {
 
     this.signalRService.onMessage().subscribe(async message => {
       this.serverMsg = message;
-     
+
       if (this.serverMsg.msgName == 'trading') {
         this.showMessageInfo = true;
         this.CandleList = this.serverMsg.candleList;
 
-         this.orderList.forEach((order, index) => {
+        this.orderList.forEach((order, index) => {
           this.CandleList.forEach(candle => {
-            if(order.symbol === candle.s && !order.isClosed) {
+            if (order.symbol === candle.s && !order.isClosed) {
               this.orderList[index].closePrice = candle.c;
-              this.orderList[index].profit = (candle.c - order.openPrice)*order.quantity;
-          }
+              this.orderList[index].profit = (candle.c - order.openPrice) * order.quantity;
+            }
           });
           this.calculateTotal();
-      });
+        });
 
         setTimeout(() => { this.showMessageInfo = false }, 700);
       }
 
       if (this.serverMsg.msgName == 'newOrder') {
-        this.orderList = await this.getOpenOrder(this.model.day + "-" + this.model.month  + "-" + this.model.year);
-        this.orderFilter = this.orderList;
+        this.orderList = await this.getAllOrder(this.model.day + "-" + this.model.month + "-" + this.model.year);
         this.calculateTotal();
       }
+
+      if (this.serverMsg.msgName == 'binanceAccessFaulty' || this.serverMsg.msgName == 'binanceTooManyRequest' || this.serverMsg.msgName == 'binanceCheckAllowedIP') {
+        this.showMessageError = true;
+        this.messageError = this.serverMsg.msgName;
+        setTimeout(() => { this.showMessageError = false }, 10000);
+      }
     });
+
+    //Get Wallet asset
+    this.assetList = await this.binanceAsset();
   }
 
   today() {
     var d = new Date();
-    return {day : d.getDate(), month: d.getMonth()+1, year : d.getFullYear()};
+    return { day: d.getDate(), month: d.getMonth() + 1, year: d.getFullYear() };
   }
 
   async filterOrderList() {
-    console.log(this.model);
-    if(this.model==undefined){
-      this.orderFilter = this.orderList;
+    if (this.model == undefined) {
       return;
-    } 
-
-    this.orderList = await this.getOpenOrder(this.model.day + "-" + this.model.month  + "-" + this.model.year);
-    this.orderFilter = this.orderList;
-  //   this.orderFilter = this.orderList.filter((p: any) => {
-  //    var myDate = p.openDate.split("/");  
-  //    return new Date(myDate[1] + "/" + myDate[0] + "/" + myDate[2]).getTime() > new Date(this.model.month + "/" + this.model.day + "/" + this.model.year).getTime(); 
-  // });
-
-  this.calculateTotal();
+    }
+    this.orderList = await this.getAllOrder(this.model.day + "-" + this.model.month + "-" + this.model.year);
+    this.calculateTotal();
   }
 
-  changed(){
-    console.log(this.checked)
+  async changed() {
+    console.log(this.isProd);
+    await this.setProdParam(this.isProd);
+    this.assetList = await this.binanceAsset();
   }
 
-  calculateTotal(){
+  calculateTotal() {
     this.totalProfit = 0;
-    if (this.orderFilter.length > 0) {
-      this.totalProfit = this.orderFilter.map(a => (a.profit)).reduce(function (a, b) {
-        if(a!=0) return a + b;
+    if (this.orderList.length > 0) {
+      this.totalProfit = this.orderList.map(a => (a.profit)).reduce(function (a, b) {
+        if (a != 0) return a + b;
       });
     }
+  }
+
+  async setProdParam(isProd): Promise<any> {
+    const httpSetting: HttpSettings = {
+      method: 'GET',
+      url: location.origin + "/api/Globals/SetProdParameter/" + isProd,
+    };
+    return await this.httpService.xhr(httpSetting);
   }
 
   async getSymbolWeight(): Promise<Order[]> {
@@ -141,7 +152,7 @@ export class WalletComponent {
     return await this.httpService.xhr(httpSetting);
   }
 
-  async getOpenOrder(fromDate): Promise<Order[]> {
+  async getAllOrder(fromDate): Promise<Order[]> {
     const httpSetting: HttpSettings = {
       method: 'GET',
       url: location.origin + "/api/Order/GetAllOrderFromDate/" + fromDate,
@@ -169,7 +180,15 @@ export class WalletComponent {
   async testBuy(): Promise<any> {
     const httpSetting: HttpSettings = {
       method: 'GET',
-      url: 'https://localhost:5002/api/AutoTrade2/TestBinanceBuy',
+      url: 'https://localhost:5002/api/AutoTrade3/TestBinanceBuy/',
+    };
+    return await this.httpService.xhr(httpSetting);
+  }
+
+  async binanceAsset(): Promise<any> {
+    const httpSetting: HttpSettings = {
+      method: 'GET',
+      url: 'https://localhost:5002/api/AutoTrade3/BinanceAsset',
     };
     return await this.httpService.xhr(httpSetting);
   }
@@ -182,13 +201,13 @@ export class WalletComponent {
     return await this.httpService.xhr(httpSetting);
   }
 
-  getOpenDateTimeSpam(openDate){
+  getOpenDateTimeSpam(openDate) {
     var openDateArr = openDate.split(" ")[0].split("/");
     var openTime = openDate.split(" ")[1] + " " + openDate.split(" ")[2];
     return Date.parse(openDateArr[2] + "/" + openDateArr[1] + "/" + openDateArr[0] + " " + openTime);
   }
 
-  async showChart(symbol, orderId){
+  async showChart(symbol, orderId) {
     this.displaySymbol = symbol;
     this.displayOrder = await this.orderDetailHelper.getOrder(orderId);
     this.displayHighstock();
@@ -201,7 +220,7 @@ export class WalletComponent {
   }
 
   async displayHighstock() {
-    
+
     this.ohlc = await this.orderDetailHelper.getIntradayData(this.displaySymbol, 100, this.interval);
 
     let chartData = [] as any;
@@ -232,15 +251,15 @@ export class WalletComponent {
       },
       xAxis: {
         plotLines: [{
-            color: '#5EFF00', 
-            width: 2,
-            //value: this.getOpenDateTimeSpam(this.openOrder?.openDate),  //display openeing date
+          color: '#5EFF00',
+          width: 2,
+          //value: this.getOpenDateTimeSpam(this.openOrder?.openDate),  //display openeing date
         }]
-    },
+      },
       yAxis:
         [
           {
-            crosshair : true,
+            crosshair: true,
             labels: { align: 'left' }, height: '80%', plotLines: [
               {
                 color: '#5CE25C', width: 1, value: this.displayOrder?.openPrice,
@@ -256,11 +275,11 @@ export class WalletComponent {
         ],
     }
 
-      this.chartOptions.series =
-        [
-          { data: chartData, type: 'candlestick', yAxis: 0, id: 'quote', name: 'quote' },
-          { type: 'macd', yAxis: 1, linkedTo: 'quote', name: 'MACD' }
-        ]
-  
+    this.chartOptions.series =
+      [
+        { data: chartData, type: 'candlestick', yAxis: 0, id: 'quote', name: 'quote' },
+        { type: 'macd', yAxis: 1, linkedTo: 'quote', name: 'MACD' }
+      ]
+
   }
 }

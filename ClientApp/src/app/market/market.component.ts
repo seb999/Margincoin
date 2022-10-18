@@ -24,36 +24,36 @@ export class MarketComponent {
   }
 
   ngOnDestroy() { 
-    this.service$.close();
-    this.unsubscribe$.next();
-    this.unsubscribe$.complete();
+    // this.service$.close();
+    // this.unsubscribe$.next();
+    // this.unsubscribe$.complete();
   }
 
   async ngOnInit() {
     var i = 29;
-    this.marketDataListener$ = this.service$.connect(WS_MARKET_ENDPOINT).pipe(
-      map(
-        (response: MessageEvent): any => {
-          let data = JSON.parse(response.data);
-          return data;
-        }
-      )
-    );
+    // this.marketDataListener$ = this.service$.connect(WS_MARKET_ENDPOINT).pipe(
+    //   map(
+    //     (response: MessageEvent): any => {
+    //       let data = JSON.parse(response.data);
+    //       return data;
+    //     }
+    //   )
+    // );
 
-    this.marketDataListener$
-      .pipe(takeUntil(this.unsubscribe$))
-      .subscribe(data => {
-        console.log("received data from market");
-        i++;
-        if (i == 30) {
-          i = 0;
-          this.symbolList$ = data.filter(function (symbol) {
-            if (symbol.p < 0) symbol.color = "red";
-            if (symbol.p >= 0) symbol.color = "limegreen";
-            return symbol.s.includes("USDT"); 
-          });
-        };
-      })
+    // this.marketDataListener$
+    //   .pipe(takeUntil(this.unsubscribe$))
+    //   .subscribe(data => {
+    //     console.log("received data from market");
+    //     i++;
+    //     if (i == 30) {
+    //       i = 0;
+    //       this.symbolList$ = data.filter(function (symbol) {
+    //         if (symbol.p < 0) symbol.color = "red";
+    //         if (symbol.p >= 0) symbol.color = "limegreen";
+    //         return symbol.s.includes("USDT"); 
+    //       });
+    //     };
+    //   })
   };
 
   async monitorMarket(): Promise<any> {

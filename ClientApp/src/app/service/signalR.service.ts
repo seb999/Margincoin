@@ -36,6 +36,30 @@ export class SignalRService {
             };
             return this.eventMessage.emit(serverMsg);
         });
+
+        this.hubConnection.on('binanceAccessFaulty', () => {
+            console.log('binanceAccessFaulty');
+            let serverMsg :ServerMsg = {
+                msgName : 'binanceAccessFaulty'
+            };
+            return this.eventMessage.emit(serverMsg);
+        });
+
+        this.hubConnection.on('binanceTooManyRequest', () => {
+            let serverMsg :ServerMsg = {
+                msgName : 'binanceTooManyRequest'
+            };
+            return this.eventMessage.emit(serverMsg);
+        });
+
+        this.hubConnection.on('binanceCheckAllowedIP', () => {
+            let serverMsg :ServerMsg = {
+                msgName : 'binanceCheckAllowedIP'
+            };
+            return this.eventMessage.emit(serverMsg);
+        });
+
+        
     }
 
     //client subscribe to this event

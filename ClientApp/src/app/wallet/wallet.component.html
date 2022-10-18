@@ -1,13 +1,13 @@
 <h5>wallet</h5>
 
 <div class="row">
-  
+
   <div class="col-5">
-    <button class="btn btn-primary btn-sm mr-1" (click)="monitorMarket()"><i class="fa-solid fa-check"></i> Monitor
-      market</button>
-    <button class="btn btn-primary btn-sm mr-1" (click)="monitorMyList()"><i class="fa-solid fa-check"></i> Monitor my
-      coin list</button>
-    <button class="btn btn-danger btn-sm mr-1" (click)="testBuy()"><i class="fa-solid fa-check"></i> Buy 10 ADA</button>
+    <!-- <button class="btn btn-primary btn-sm mr-1" (click)="monitorMarket()"><i class="fa-solid fa-check"></i> Monitor
+      market</button> -->
+    <button class="btn btn-secondary btn-sm mr-1" (click)="monitorMyList()">Start</button>
+    <button class="btn btn-danger btn-sm mr-1" (click)="monitorMyList()">Stop</button>
+    <button class="btn btn-warning btn-sm mr-1" (click)="testBuy()">Test Order</button>
   </div>
 
   <div class="input-group input-group-sm" style="max-width: 200px !important">
@@ -20,14 +20,18 @@
 
   <div class="col-2">
     <div *ngIf="showMessageInfo" class="alert alert-warning"
-      style="height: 30px;padding-top: 3px;margin-bottom: 0px;width: 150px;" role="alert"> Trading </div>
+      style="height: 30px;padding-top: 3px;margin-bottom: 0px;width: 200px;" role="alert"> Trading
+    </div>
+    <div *ngIf="showMessageError" class="alert alert-danger"
+      style="height: 30px;padding-top: 3px;margin-bottom: 0px;width: 200px;" role="alert"> {{messageError}}
+    </div>
   </div>
   <div class="col-2">
-    <mat-slide-toggle [(ngModel)]="checked" class="example-margin" [color]="color" (change)="changed()"> <b
-        *ngIf="checked">
-        <p style="color: white; padding-top: 13px;">On Air</p>
-      </b> <b *ngIf="!checked">
-        <p style="color: white; padding-top: 13px;">Off</p>
+    <mat-slide-toggle [(ngModel)]="isProd" class="example-margin" [color]="color" (change)="changed()"> <b
+        *ngIf="isProd">
+        <p style="color: white; padding-top: 13px;">PROD</p>
+      </b> <b *ngIf="!isProd">
+        <p style="color: white; padding-top: 13px;">TEST</p>
       </b>
     </mat-slide-toggle>
   </div>
@@ -39,7 +43,7 @@
       <thead class="thead-light">
         <tr>
           <th scope="col" id="last" class="tableTh ">Symbol</th>
-          <th scope="col" id="last" class="tableTh ">Amount</th>
+          <!-- <th scope="col" id="last" class="tableTh ">Amount</th> -->
           <th scope="col" id="volume" class="tableTh">Open</th>
           <th scope="col" id="volume" class="tableTh">High</th>
           <th scope="col" id="volume" class="tableTh">Low</th>
@@ -54,17 +58,17 @@
           <!-- <th scope="col" id="volume" class="tableTh">MACD/RSI</th>
           <th scope="col" id="volume" class="tableTh">MACD/negatif</th>
           <th scope="col" id="volume" class="tableTh">RSI/cross30</th> -->
-          <th scope="col" id="volume" class="tableTh">Sell</th>
+          <th scope="col" id="volume" class="tableTh"></th>
           <th scope="col" id="volume" class="tableTh"></th>
           <th scope="col" id="volume" class="tableTh"></th>
 
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let order of orderFilter" class="alert alert-warning"
+        <tr *ngFor="let order of orderList" class="alert alert-warning"
           [ngClass]="{'alert alert-warning': order.closeDate == null}">
           <td>{{order.symbol}}</td>
-          <td>{{(order.openPrice * order.quantity).toFixed(0)}}</td>
+          <!-- <td>{{(order.openPrice * order.quantity).toFixed(0)}}</td> -->
           <td>{{order.openPrice}}</td>
           <td>{{order.highPrice}}</td>
           <td>{{order.lowPrice}}</td>
@@ -141,11 +145,42 @@
   </div>
 
   <div class="col-3">
+    <div class="card text-white mb-2 bg-dark" *ngFor="let asset of assetList">
+      <div class="card-header" ng-hide="assetList ==''">BUY  {{assetList.length}}</div>
+      <div class="card-body">
+        <table class="table table-sm table-dark">
+          <tbody>
+            <tr>
+              <td>Symbol : BTCUSDT</td>
+              <td>Price : 1.1</td>
+            </tr>
+            <tr>
+              <td>Status : not filled</td>
+              <td>Price : 1.1</td>
+            </tr>
+            <tr>
+              <td></td>
+              <td> <button class="btn" (click)="closeTrade(order.id, order.closePrice);"><span style="color: red"><i
+                      class="far fa-trash-alt"></i> </span></button></td>
 
-    <!-- <div class="card-header">
-      
-    
-      </div> -->
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- <ul class="list-group ">
+        <li class="list-group-item list-group-item-dark" *ngFor="let asset of assetList">An item</li>
+      </ul> -->
+
+      <!-- <table class="table table-sm mt-2 table-dark">
+        <tbody>
+          <tr *ngFor="let asset of assetList">
+            <td>{{asset?.asset}}</td>
+            <td>{{asset?.free}}</td>
+          </tr>
+        </tbody>
+      </table> -->
+    </div>
 
     <div class="row">
       <select class="form-control" [(ngModel)]="interval" (change)="changeHighstockResolution(interval)">
@@ -158,6 +193,17 @@
       <highcharts-chart constructorType='stockChart' [Highcharts]="highcharts" [options]="chartOptions"
         style="width: 100%; height: 550px; display: block;">
       </highcharts-chart>
+    </div>
+
+    <div class="row">
+      <table class="table table-sm mt-2 table-dark">
+        <tbody>
+          <tr *ngFor="let asset of assetList">
+            <td>{{asset?.asset}}</td>
+            <td>{{asset?.free}}</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   </div>
 </div>
