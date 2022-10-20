@@ -11,25 +11,6 @@ namespace MarginCoin.Misc
 {
     public static class AutotradeHelper
     {
-        //in construction :  idea is to check the market direction with major coins
-         internal static void MarketPerformance(List<MarketStream> marketStreamList)
-        {
-            int marketPerf = 0;
-            foreach (var marketStream in marketStreamList)
-            {
-                if(marketStream.s == "ETHUSDT" 
-                || marketStream.s == "BTCUSDT"
-                || marketStream.s == "BTCUSDT"
-                || marketStream.s == "BTCUSDT"
-                || marketStream.s == "BTCUSDT"
-                || marketStream.s == "BTCUSDT")
-                {
-
-                }
-            }
-        }
-
-
         //The stream just contain symbol that changed from t-1, we buffer it to get all symbol changed or not changed
         internal static void BufferMarketStream(List<MarketStream> marketStreamList, ref List<MarketStream> buffer)
         {
@@ -68,38 +49,7 @@ namespace MarginCoin.Misc
             buffer = buffer.Select(p => p).OrderByDescending(p => p.P).ToList();
 
         }
-
-        internal static void GetMarketCandles(List<MarketStream> marketStreamList, ref List<List<Candle>> marketCandles, string interval)
-        {
-           
-            //for(int i =0;i<3;i++)
-             foreach (var marketStream in marketStreamList)
-            {
-                string apiUrl = $"https://api3.binance.com/api/v3/klines?symbol={marketStream.s}&interval={interval}&limit=50";
-                List<List<double>> coinQuotation = HttpHelper.GetApiData<List<List<double>>>(new Uri(apiUrl));
-
-                List<Candle> mySymbolCandles = new List<Candle>();
-                foreach (var item in coinQuotation)
-                {
-                    Candle newCandle = new Candle()
-                    {
-                        s = marketStream.s,
-                        T = item[0],
-                        o = item[1],
-                        h = item[2],
-                        l = item[3],
-                        c = item[4],
-                        v = item[5],
-                        t = item[6],
-                    };
-                    mySymbolCandles.Add(newCandle);
-                }
-                TradeIndicator.CalculateIndicator(ref mySymbolCandles);
-
-                marketCandles.Add(mySymbolCandles);
-            }
-        }
-
+        
         internal static void DisplayStatus(Order activeOrder, List<MarketStream> marketStreamList)
         {
             if (activeOrder != null)
