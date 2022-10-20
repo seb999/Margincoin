@@ -573,7 +573,7 @@ namespace MarginCoin.Controllers
         [HttpGet("[action]")]
         public void TestBinanceBuy()
         {
-            BinanceHelper.Buy("ETHUSDT", 10);
+            BinanceHelper.BuyMarket("ETHUSDT", 10);
         }
 
         #endregion

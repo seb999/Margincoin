@@ -13,13 +13,16 @@ namespace MarginCoin.Misc
         const string testSecretKey = "ncSzN6J4Efh8Xb53e1uYkuHCw9VFAemUKjCEPdwY5WtdbMJOAEzEIuP5qMrjKewX";
         const string prodPublicKey = "gIDNZ9OsVIUbvFEuLgOhZ3XoQRnwrJ8krkp3TAR2dxQxwYErmKC6GOsMy50LYGWy";
         static string prodSecretKey = Environment.GetEnvironmentVariable("BSK");
+
+        public static string secretKey ="";
+        public static string publicKey =""; 
+        public static string host  ="";
+       
+        
         public static List<CryptoAsset> Asset(ref System.Net.HttpStatusCode httpStatusCode)
         {
             try
             {
-                string secretKey = "";
-                string publicKey = "";
-                string host = "";
                 SetEnv(ref secretKey, ref publicKey, ref host);
 
                 string parameters = $"timestamp={ServerTime(publicKey)}&recvWindow=60000";
@@ -43,20 +46,91 @@ namespace MarginCoin.Misc
             }
         }
 
-        public static async void Buy(string symbol, double amount)
+        public static async void BuyMarket(string symbol, double quoteOrderQty)
         {
-            string stringAmount = amount.ToString().Replace(",", ".");
+            string stringQuoteOrderQty = quoteOrderQty.ToString().Replace(",", ".");
             System.Net.HttpStatusCode httpStatusCode = System.Net.HttpStatusCode.NoContent;
             try
             {
-                string secretKey = "";
-                string publicKey = "";
-                string host = "";
                 SetEnv(ref secretKey, ref publicKey, ref host);
-
-                string parameters = $"timestamp={ServerTime(publicKey)}&symbol={symbol}&quoteOrderQty={stringAmount}&side=BUY&type=MARKET&recvWindow=60000";
+                string parameters = $"timestamp={ServerTime(publicKey)}&symbol={symbol}&quoteOrderQty={stringQuoteOrderQty}&side=BUY&type=MARKET&recvWindow=60000";
                 string signature = GetSignature(parameters, secretKey);
-                string apiUrl = $"{host}/api/v3/order/test?{parameters}&signature={signature}";
+                string apiUrl = $"{host}/api/v3/order?{parameters}&signature={signature}";
+
+                if(!Globals.isProd)
+                { 
+                    apiUrl = $"{host}/api/v3/order?{parameters}&signature={signature}";
+                }
+                BinanceOrder transaction = HttpHelper.PostApiData<BinanceOrder>(new Uri(apiUrl), publicKey, new StringContent("", Encoding.UTF8, "application/json"), ref httpStatusCode);
+                Console.WriteLine("http request completed");
+                // await _hub.Clients.All.SendAsync("transferExecuted", "done");
+            }
+            catch (System.Exception e)
+            { 
+                Console.WriteLine(e);
+            }
+        }
+
+        public static async void SellMarket(string symbol, double quoteOrderQty)
+        {
+            string stringQuoteOrderQty = quoteOrderQty.ToString().Replace(",", ".");
+            System.Net.HttpStatusCode httpStatusCode = System.Net.HttpStatusCode.NoContent;
+            try
+            {
+                SetEnv(ref secretKey, ref publicKey, ref host);
+                string parameters = $"timestamp={ServerTime(publicKey)}&symbol={symbol}&quoteOrderQty={stringQuoteOrderQty}&side=SELL&type=MARKET&recvWindow=60000";
+                string signature = GetSignature(parameters, secretKey);
+                string apiUrl = $"{host}/api/v3/order?{parameters}&signature={signature}";
+
+                if(!Globals.isProd)
+                { 
+                    apiUrl = $"{host}/api/v3/order?{parameters}&signature={signature}";
+                }
+                BinanceOrder transaction = HttpHelper.PostApiData<BinanceOrder>(new Uri(apiUrl), publicKey, new StringContent("", Encoding.UTF8, "application/json"), ref httpStatusCode);
+                Console.WriteLine("http request completed");
+                // await _hub.Clients.All.SendAsync("transferExecuted", "done");
+            }
+            catch (System.Exception e)
+            { 
+                Console.WriteLine(e);
+            }
+        }
+
+        public static async void BuyLimit(string symbol, double quantity, Enum.TimeInForce timeInForce)
+        {
+            string stringQuantity = quantity.ToString().Replace(",", ".");
+            System.Net.HttpStatusCode httpStatusCode = System.Net.HttpStatusCode.NoContent;
+            try
+            {
+                SetEnv(ref secretKey, ref publicKey, ref host);
+                string parameters = $"timestamp={ServerTime(publicKey)}&symbol={symbol}&quantity={stringQuantity}&timeInForce={timeInForce.ToString()}&side=BUY&type=LIMIT&recvWindow=60000";
+                string signature = GetSignature(parameters, secretKey);
+                string apiUrl = $"{host}/api/v3/order?{parameters}&signature={signature}";
+
+                if(!Globals.isProd)
+                { 
+                    apiUrl = $"{host}/api/v3/order?{parameters}&signature={signature}";
+                }
+                BinanceOrder transaction = HttpHelper.PostApiData<BinanceOrder>(new Uri(apiUrl), publicKey, new StringContent("", Encoding.UTF8, "application/json"), ref httpStatusCode);
+                Console.WriteLine("http request completed");
+                // await _hub.Clients.All.SendAsync("transferExecuted", "done");
+            }
+            catch (System.Exception e)
+            { 
+                Console.WriteLine(e);
+            }
+        }
+
+        public static async void SellLimit(string symbol, double quantity, Enum.TimeInForce timeInForce)
+        {
+            string stringQuantity = quantity.ToString().Replace(",", ".");
+            System.Net.HttpStatusCode httpStatusCode = System.Net.HttpStatusCode.NoContent;
+            try
+            {
+                SetEnv(ref secretKey, ref publicKey, ref host);
+                string parameters = $"timestamp={ServerTime(publicKey)}&symbol={symbol}&quantity={stringQuantity}&timeInForce={timeInForce.ToString()}&side=SELL&type=LIMIT&recvWindow=60000";
+                string signature = GetSignature(parameters, secretKey);
+                string apiUrl = $"{host}/api/v3/order?{parameters}&signature={signature}";
 
                 if(!Globals.isProd)
                 { 
