@@ -4,6 +4,7 @@ using System.Security.Cryptography;
 using System.Text;
 using MarginCoin.Class;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace MarginCoin.Misc
 {
@@ -46,14 +47,14 @@ namespace MarginCoin.Misc
             }
         }
 
-        public static async void BuyMarket(string symbol, double quoteOrderQty)
+        public static BinanceOrder BuyMarket(string symbol, double quoteQty)
         {
-            string stringQuoteOrderQty = quoteOrderQty.ToString().Replace(",", ".");
+            string stringQty= quoteQty.ToString().Replace(",", ".");
             System.Net.HttpStatusCode httpStatusCode = System.Net.HttpStatusCode.NoContent;
             try
             {
                 SetEnv(ref secretKey, ref publicKey, ref host);
-                string parameters = $"timestamp={ServerTime(publicKey)}&symbol={symbol}&quoteOrderQty={stringQuoteOrderQty}&side=BUY&type=MARKET&recvWindow=60000";
+                string parameters = $"timestamp={ServerTime(publicKey)}&symbol={symbol}&quoteOrderQty={stringQty}&side=BUY&type=MARKET&recvWindow=60000";
                 string signature = GetSignature(parameters, secretKey);
                 string apiUrl = $"{host}/api/v3/order?{parameters}&signature={signature}";
 
@@ -61,17 +62,16 @@ namespace MarginCoin.Misc
                 { 
                     apiUrl = $"{host}/api/v3/order?{parameters}&signature={signature}";
                 }
-                BinanceOrder transaction = HttpHelper.PostApiData<BinanceOrder>(new Uri(apiUrl), publicKey, new StringContent("", Encoding.UTF8, "application/json"), ref httpStatusCode);
-                Console.WriteLine("http request completed");
-                // await _hub.Clients.All.SendAsync("transferExecuted", "done");
+                return HttpHelper.PostApiData<BinanceOrder>(new Uri(apiUrl), publicKey, new StringContent("", Encoding.UTF8, "application/json"), ref httpStatusCode);
             }
             catch (System.Exception e)
             { 
                 Console.WriteLine(e);
+                return null;
             }
         }
 
-        public static async void SellMarket(string symbol, double quoteOrderQty)
+        public static BinanceOrder SellMarket(string symbol, double quoteOrderQty)
         {
             string stringQuoteOrderQty = quoteOrderQty.ToString().Replace(",", ".");
             System.Net.HttpStatusCode httpStatusCode = System.Net.HttpStatusCode.NoContent;
@@ -86,17 +86,16 @@ namespace MarginCoin.Misc
                 { 
                     apiUrl = $"{host}/api/v3/order?{parameters}&signature={signature}";
                 }
-                BinanceOrder transaction = HttpHelper.PostApiData<BinanceOrder>(new Uri(apiUrl), publicKey, new StringContent("", Encoding.UTF8, "application/json"), ref httpStatusCode);
-                Console.WriteLine("http request completed");
-                // await _hub.Clients.All.SendAsync("transferExecuted", "done");
+                return HttpHelper.PostApiData<BinanceOrder>(new Uri(apiUrl), publicKey, new StringContent("", Encoding.UTF8, "application/json"), ref httpStatusCode);
             }
             catch (System.Exception e)
             { 
                 Console.WriteLine(e);
+                return null;
             }
         }
 
-        public static async void BuyLimit(string symbol, double quantity, Enum.TimeInForce timeInForce)
+        public static BinanceOrder BuyLimit(string symbol, double quantity, Enum.TimeInForce timeInForce)
         {
             string stringQuantity = quantity.ToString().Replace(",", ".");
             System.Net.HttpStatusCode httpStatusCode = System.Net.HttpStatusCode.NoContent;
@@ -111,13 +110,13 @@ namespace MarginCoin.Misc
                 { 
                     apiUrl = $"{host}/api/v3/order?{parameters}&signature={signature}";
                 }
-                BinanceOrder transaction = HttpHelper.PostApiData<BinanceOrder>(new Uri(apiUrl), publicKey, new StringContent("", Encoding.UTF8, "application/json"), ref httpStatusCode);
-                Console.WriteLine("http request completed");
-                // await _hub.Clients.All.SendAsync("transferExecuted", "done");
+                return HttpHelper.PostApiData<BinanceOrder>(new Uri(apiUrl), publicKey, new StringContent("", Encoding.UTF8, "application/json"), ref httpStatusCode);
+                
             }
             catch (System.Exception e)
             { 
                 Console.WriteLine(e);
+                return null;
             }
         }
 

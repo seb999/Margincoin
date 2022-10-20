@@ -339,6 +339,24 @@ namespace MarginCoin.Controllers
 
         #region Database Trade accessor
 
+        private void Buy(MarketStream symbolSpot, List<Candle> symbolCandleList)
+        {
+            OrderTemplate orderTemplate = GetOrderTemplate();
+            double quoteQty= orderTemplate.Amount;
+            //1
+            BinanceOrder myBinanceOrder = BinanceHelper.BuyMarket(symbolSpot.s, quoteQty);
+
+            if(myBinanceOrder == null) return;
+
+            //2 Display order request in UI
+
+            //3
+            //if Filled then store in local db 
+
+            //3 Update UI
+             _hub.Clients.All.SendAsync("newOrder");
+        }
+
         private void OpenTrade(MarketStream symbolSpot, List<Candle> symbolCandle)
         {
             //Console.Beep();
@@ -348,7 +366,6 @@ namespace MarginCoin.Controllers
 
             //1-read from db template
             OrderTemplate orderTemplate = GetOrderTemplate();
-
             double quantity = orderTemplate.Amount / symbolSpot.c;
             
             Order myOrder = new Order();
