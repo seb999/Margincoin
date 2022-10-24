@@ -336,19 +336,71 @@ namespace MarginCoin.Controllers
             return true;
         }
 
+        private void UpdateTakeProfit(double currentPrice, Order activeOrder)
+        {
+            OrderTemplate orderTemplate = GetOrderTemplate();
+            double pourcent = ((currentPrice - activeOrder.OpenPrice) / activeOrder.OpenPrice) * 100;
 
-        #region Database Trade accessor
+            if (pourcent <= 0) return;
+
+            if (2 < pourcent && pourcent <= 3)
+            {
+                activeOrder.TakeProfit = orderTemplate.TakeProfit - 0.4;
+                _appDbContext.Order.Update(activeOrder);
+                _appDbContext.SaveChanges();
+            }
+
+            if (3 < pourcent && pourcent <= 4)
+            {
+                activeOrder.TakeProfit = orderTemplate.TakeProfit - 0.5;
+                _appDbContext.Order.Update(activeOrder);
+                _appDbContext.SaveChanges();
+            }
+            if (4 < pourcent && pourcent <= 5)
+            {
+                activeOrder.TakeProfit = orderTemplate.TakeProfit - 0.6;
+                _appDbContext.Order.Update(activeOrder);
+                _appDbContext.SaveChanges();
+            }
+            if (5 < pourcent)
+            {
+                activeOrder.TakeProfit = orderTemplate.TakeProfit - 0.7;
+                _appDbContext.Order.Update(activeOrder);
+                _appDbContext.SaveChanges();
+            }
+        }
+
+        private void UpdateStopLose(double lastPrice, Order activeOrder)
+        {
+            if (lastPrice >= activeOrder.OpenPrice * secureNoLose)
+            {
+                activeOrder.StopLose = activeOrder.OpenPrice;
+                _appDbContext.Order.Update(activeOrder);
+                _appDbContext.SaveChanges();
+            }
+        }
+
+        
+        #region Buy / Sell
 
         private void Buy(MarketStream symbolSpot, List<Candle> symbolCandleList)
         {
+            //What we want to buy ?
             OrderTemplate orderTemplate = GetOrderTemplate();
             double quoteQty= orderTemplate.Amount;
-            //1
+            
+            //What type of order we want ?
             BinanceOrder myBinanceOrder = BinanceHelper.BuyMarket(symbolSpot.s, quoteQty);
-
             if(myBinanceOrder == null) return;
 
-            //2 Display order request in UI
+            //Save here binance order result in db
+            //Save here new trade in local db with flag status == not filled
+             _hub.Clients.All.SendAsync("newPendingOrder");
+
+            if(myBinanceOrder.status == "Filled")
+            {
+                //Save trade in local db with BinanceID for future reference
+            }
 
             //3
             //if Filled then store in local db 
@@ -425,93 +477,12 @@ namespace MarginCoin.Controllers
             _hub.Clients.All.SendAsync("newOrder");
         }
 
-        private void UpdateStopLose(double lastPrice, Order activeOrder)
-        {
-            if (lastPrice >= activeOrder.OpenPrice * secureNoLose)
-            {
-                activeOrder.StopLose = activeOrder.OpenPrice;
-                _appDbContext.Order.Update(activeOrder);
-                _appDbContext.SaveChanges();
-            }
-        }
+        
 
-        private void UpdateTakeProfit(double currentPrice, Order activeOrder)
-        {
-            OrderTemplate orderTemplate = GetOrderTemplate();
-            double pourcent = ((currentPrice - activeOrder.OpenPrice) / activeOrder.OpenPrice) * 100;
-
-            if (pourcent <= 0) return;
-
-            if (2 < pourcent && pourcent <= 3)
-            {
-                activeOrder.TakeProfit = orderTemplate.TakeProfit - 0.4;
-                _appDbContext.Order.Update(activeOrder);
-                _appDbContext.SaveChanges();
-            }
-
-            if (3 < pourcent && pourcent <= 4)
-            {
-                activeOrder.TakeProfit = orderTemplate.TakeProfit - 0.5;
-                _appDbContext.Order.Update(activeOrder);
-                _appDbContext.SaveChanges();
-            }
-            if (4 < pourcent && pourcent <= 5)
-            {
-                activeOrder.TakeProfit = orderTemplate.TakeProfit - 0.6;
-                _appDbContext.Order.Update(activeOrder);
-                _appDbContext.SaveChanges();
-            }
-            if (5 < pourcent)
-            {
-                activeOrder.TakeProfit = orderTemplate.TakeProfit - 0.7;
-                _appDbContext.Order.Update(activeOrder);
-                _appDbContext.SaveChanges();
-            }
-        }
-
-        private void SaveHighLow(Candle lastCandle, Order activeOrder)
-        {
-            if (lastCandle.c > activeOrder.HighPrice)
-            {
-                activeOrder.HighPrice = lastCandle.c;
-            }
-
-            if (lastCandle.c < activeOrder.LowPrice)
-            {
-                activeOrder.LowPrice = lastCandle.c;
-            }
-
-            _appDbContext.Order.Update(activeOrder);
-            _appDbContext.SaveChanges();
-        }
 
         #endregion
 
         #region Helper
-
-        private List<Candle> CreateCandleList(List<List<double>> coinQuotation, string symbol)
-        {
-            List<Candle> candleList = new List<Candle>();
-            foreach (var item in coinQuotation)
-            {
-                Candle newCandle = new Candle()
-                {
-                    s = symbol,
-                    T = item[0],
-                    o = item[1],
-                    h = item[2],
-                    l = item[3],
-                    c = item[4],
-                    v = item[5],
-                    t = item[6],
-                    id = Guid.NewGuid().ToString(),
-                    IsOnHold = false,
-                };
-                candleList.Add(newCandle);
-            }
-            TradeIndicator.CalculateIndicator(ref candleList);
-            return candleList;
-        }
 
         private OrderTemplate GetOrderTemplate()
         {
@@ -540,9 +511,22 @@ namespace MarginCoin.Controllers
         {
             return _appDbContext.Symbol.Select(p => p.SymbolName).ToList();
         }
-        #endregion
 
-        #region Binance
+        private void SaveHighLow(Candle lastCandle, Order activeOrder)
+        {
+            if (lastCandle.c > activeOrder.HighPrice)
+            {
+                activeOrder.HighPrice = lastCandle.c;
+            }
+
+            if (lastCandle.c < activeOrder.LowPrice)
+            {
+                activeOrder.LowPrice = lastCandle.c;
+            }
+
+            _appDbContext.Order.Update(activeOrder);
+            _appDbContext.SaveChanges();
+        }
 
         private void GetCandles(string symbol)
         {
@@ -550,9 +534,15 @@ namespace MarginCoin.Controllers
             string apiUrl = $"https://api3.binance.com/api/v3/klines?symbol={symbol}&interval={interval}&limit=100";
             List<List<double>> coinQuotation = HttpHelper.GetApiData<List<List<double>>>(new Uri(apiUrl));
             List<Candle> candleList = new List<Candle>();
-            candleList = CreateCandleList(coinQuotation, symbol);
+            candleList = AutotradeHelper.CreateCandleList(coinQuotation, symbol);
             candleMatrice.Add(candleList);
         }
+
+        #endregion
+
+        #region Binance
+
+        
 
         [HttpGet("[action]")]
         public List<CryptoAsset> BinanceAsset()
