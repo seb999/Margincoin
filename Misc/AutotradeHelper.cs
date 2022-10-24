@@ -47,7 +47,30 @@ namespace MarginCoin.Misc
             }
 
             buffer = buffer.Select(p => p).OrderByDescending(p => p.P).ToList();
+        }
 
+        public static List<Candle> CreateCandleList(List<List<double>> coinQuotation, string symbol)
+        {
+            List<Candle> candleList = new List<Candle>();
+            foreach (var item in coinQuotation)
+            {
+                Candle newCandle = new Candle()
+                {
+                    s = symbol,
+                    T = item[0],
+                    o = item[1],
+                    h = item[2],
+                    l = item[3],
+                    c = item[4],
+                    v = item[5],
+                    t = item[6],
+                    id = Guid.NewGuid().ToString(),
+                    IsOnHold = false,
+                };
+                candleList.Add(newCandle);
+            }
+            TradeIndicator.CalculateIndicator(ref candleList);
+            return candleList;
         }
         
         internal static void DisplayStatus(Order activeOrder, List<MarketStream> marketStreamList)

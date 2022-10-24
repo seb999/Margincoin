@@ -1,7 +1,7 @@
 import { EventEmitter, Injectable } from '@angular/core';
 import * as signalR from "@microsoft/signalr";
-import { Subject } from '@microsoft/signalr';
 import { ServerMsg } from '../class/serverMsg';
+import { BackEndMessage } from '../class/enum';
 
 @Injectable({
     providedIn: 'root'
@@ -20,49 +20,7 @@ export class SignalRService {
             .then(() => console.log('Connection started'))
             .catch(err => console.log('Error while starting SignalR connection: ' + err))
     }
-    
-    public addTransferChartDataListener = () => {
-        this.hubConnection.on('trading', (candleList) => {       
-            let serverMsg : ServerMsg = {
-                msgName : 'trading',
-                candleList : JSON.parse(candleList)
-            }
-            return this.eventMessage.emit(serverMsg);
-        });
 
-        this.hubConnection.on('newOrder', () => {
-            let serverMsg :ServerMsg = {
-                msgName : 'newOrder'
-            };
-            return this.eventMessage.emit(serverMsg);
-        });
-
-        this.hubConnection.on('binanceAccessFaulty', () => {
-            console.log('binanceAccessFaulty');
-            let serverMsg :ServerMsg = {
-                msgName : 'binanceAccessFaulty'
-            };
-            return this.eventMessage.emit(serverMsg);
-        });
-
-        this.hubConnection.on('binanceTooManyRequest', () => {
-            let serverMsg :ServerMsg = {
-                msgName : 'binanceTooManyRequest'
-            };
-            return this.eventMessage.emit(serverMsg);
-        });
-
-        this.hubConnection.on('binanceCheckAllowedIP', () => {
-            let serverMsg :ServerMsg = {
-                msgName : 'binanceCheckAllowedIP'
-            };
-            return this.eventMessage.emit(serverMsg);
-        });
-
-        
-    }
-
-    //client subscribe to this event
     public onMessage() {
         return this.eventMessage;
       }
@@ -70,4 +28,43 @@ export class SignalRService {
     public closeConnection = () =>{
         this.hubConnection.stop();
     }
+    
+    public openDataListener = () => {
+
+        this.hubConnection.on(BackEndMessage.trading, (candleList) => {       
+            let serverMsg : ServerMsg = {
+                msgName : BackEndMessage.trading,
+                candleList : JSON.parse(candleList)
+            }
+            return this.eventMessage.emit(serverMsg);
+        });
+
+        this.hubConnection.on(BackEndMessage.newOrder, () => {
+            let serverMsg :ServerMsg = {
+                msgName : BackEndMessage.newOrder
+            };
+            return this.eventMessage.emit(serverMsg);
+        });
+
+        this.hubConnection.on(BackEndMessage.binanceAccessFaulty, () => {
+            let serverMsg :ServerMsg = {
+                msgName : BackEndMessage.binanceAccessFaulty
+            };
+            return this.eventMessage.emit(serverMsg);
+        });
+
+        this.hubConnection.on(BackEndMessage.binanceTooManyRequest, () => {
+            let serverMsg :ServerMsg = {
+                msgName : BackEndMessage.binanceTooManyRequest
+            };
+            return this.eventMessage.emit(serverMsg);
+        });
+
+        this.hubConnection.on(BackEndMessage.binanceCheckAllowedIP, () => {
+            let serverMsg :ServerMsg = {
+                msgName : BackEndMessage.binanceCheckAllowedIP
+            };
+            return this.eventMessage.emit(serverMsg);
+        });
+    } 
 }

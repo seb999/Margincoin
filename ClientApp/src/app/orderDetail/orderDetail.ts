@@ -92,7 +92,7 @@ export class OrderDetailComponent {
 
     //Open listener on my API SignalR
     this.signalRService.startConnection();
-    this.signalRService.addTransferChartDataListener();
+    this.signalRService.openDataListener();
     this.signalRService.onMessage().subscribe(message => {
       this.serverMsg = message;
       this.showMessageInfo = true;

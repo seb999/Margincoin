@@ -70,7 +70,7 @@ export class WalletComponent {
 
     //Open listener on my API SignalR
     this.signalRService.startConnection();
-    this.signalRService.addTransferChartDataListener();
+    this.signalRService.openDataListener();
 
     this.signalRService.onMessage().subscribe(async message => {
       this.serverMsg = message;

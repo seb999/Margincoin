@@ -71,30 +71,6 @@ namespace MarginCoin.Misc
             }
         }
 
-        public static BinanceOrder SellMarket(string symbol, double quoteOrderQty)
-        {
-            string stringQuoteOrderQty = quoteOrderQty.ToString().Replace(",", ".");
-            System.Net.HttpStatusCode httpStatusCode = System.Net.HttpStatusCode.NoContent;
-            try
-            {
-                SetEnv(ref secretKey, ref publicKey, ref host);
-                string parameters = $"timestamp={ServerTime(publicKey)}&symbol={symbol}&quoteOrderQty={stringQuoteOrderQty}&side=SELL&type=MARKET&recvWindow=60000";
-                string signature = GetSignature(parameters, secretKey);
-                string apiUrl = $"{host}/api/v3/order?{parameters}&signature={signature}";
-
-                if(!Globals.isProd)
-                { 
-                    apiUrl = $"{host}/api/v3/order?{parameters}&signature={signature}";
-                }
-                return HttpHelper.PostApiData<BinanceOrder>(new Uri(apiUrl), publicKey, new StringContent("", Encoding.UTF8, "application/json"), ref httpStatusCode);
-            }
-            catch (System.Exception e)
-            { 
-                Console.WriteLine(e);
-                return null;
-            }
-        }
-
         public static BinanceOrder BuyLimit(string symbol, double quantity, Enum.TimeInForce timeInForce)
         {
             string stringQuantity = quantity.ToString().Replace(",", ".");
@@ -119,6 +95,55 @@ namespace MarginCoin.Misc
                 return null;
             }
         }
+
+        public static BinanceOrder SellMarket(string symbol, double quoteOrderQty)
+        {
+            string stringQuoteOrderQty = quoteOrderQty.ToString().Replace(",", ".");
+            System.Net.HttpStatusCode httpStatusCode = System.Net.HttpStatusCode.NoContent;
+            try
+            {
+                SetEnv(ref secretKey, ref publicKey, ref host);
+                string parameters = $"timestamp={ServerTime(publicKey)}&symbol={symbol}&quoteOrderQty={stringQuoteOrderQty}&side=SELL&type=MARKET&recvWindow=60000";
+                string signature = GetSignature(parameters, secretKey);
+                string apiUrl = $"{host}/api/v3/order?{parameters}&signature={signature}";
+
+                if(!Globals.isProd)
+                { 
+                    apiUrl = $"{host}/api/v3/order?{parameters}&signature={signature}";
+                }
+                return HttpHelper.PostApiData<BinanceOrder>(new Uri(apiUrl), publicKey, new StringContent("", Encoding.UTF8, "application/json"), ref httpStatusCode);
+            }
+            catch (System.Exception e)
+            { 
+                Console.WriteLine(e);
+                return null;
+            }
+        }
+
+        // public static BinanceOrder BuyLimit(string symbol, double quantity, Enum.TimeInForce timeInForce)
+        // {
+        //     string stringQuantity = quantity.ToString().Replace(",", ".");
+        //     System.Net.HttpStatusCode httpStatusCode = System.Net.HttpStatusCode.NoContent;
+        //     try
+        //     {
+        //         SetEnv(ref secretKey, ref publicKey, ref host);
+        //         string parameters = $"timestamp={ServerTime(publicKey)}&symbol={symbol}&quantity={stringQuantity}&timeInForce={timeInForce.ToString()}&side=BUY&type=LIMIT&recvWindow=60000";
+        //         string signature = GetSignature(parameters, secretKey);
+        //         string apiUrl = $"{host}/api/v3/order?{parameters}&signature={signature}";
+
+        //         if(!Globals.isProd)
+        //         { 
+        //             apiUrl = $"{host}/api/v3/order?{parameters}&signature={signature}";
+        //         }
+        //         return HttpHelper.PostApiData<BinanceOrder>(new Uri(apiUrl), publicKey, new StringContent("", Encoding.UTF8, "application/json"), ref httpStatusCode);
+                
+        //     }
+        //     catch (System.Exception e)
+        //     { 
+        //         Console.WriteLine(e);
+        //         return null;
+        //     }
+        // }
 
         public static async void SellLimit(string symbol, double quantity, Enum.TimeInForce timeInForce)
         {
