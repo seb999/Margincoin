@@ -39,6 +39,14 @@ export class SignalRService {
             return this.eventMessage.emit(serverMsg);
         });
 
+        this.hubConnection.on(BackEndMessage.newPendingOrder, (order) => {
+            let serverMsg :ServerMsg = {
+                msgName : BackEndMessage.newPendingOrder,
+                order : JSON.parse(order)
+            };
+            return this.eventMessage.emit(serverMsg);
+        });
+
         this.hubConnection.on(BackEndMessage.newOrder, () => {
             let serverMsg :ServerMsg = {
                 msgName : BackEndMessage.newOrder

@@ -34,6 +34,11 @@ namespace MarginCoin.Controllers
                return _appDbContext.Order.ToList();
         }
 
+        [HttpGet("[action]")]
+        public List<Order> GetPendingdOrder(){
+            return _appDbContext.Order.Where(p=>p.Status == "Pending").ToList();
+        }
+
          [HttpGet("[action]/{date}")]
         public List<Order> GetAllOrderFromDate(string date){
             var dateArray = date.Split("-");

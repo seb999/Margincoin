@@ -47,10 +47,33 @@ namespace MarginCoin.Misc
             }
         }
 
+
+        public static BinanceOrder OrderStatus(string symbol, double orderId)
+        {
+            try
+            {
+                SetEnv(ref secretKey, ref publicKey, ref host);
+                string parameters = $"timestamp={ServerTime(publicKey)}&symbol={symbol}&orderId={orderId}&recvWindow=60000";
+                string signature = GetSignature(parameters, secretKey);
+                string apiUrl = $"{host}/api/v3/order?{parameters}&signature={signature}";
+
+                if(!Globals.isProd)
+                { 
+                    apiUrl = $"{host}/api/v3/order?{parameters}&signature={signature}";
+                }
+                var ttt = HttpHelper.GetApiData<BinanceOrder>(new Uri(apiUrl), publicKey);
+                return ttt;
+            }
+            catch (System.Exception e)
+            { 
+                Console.WriteLine(e);
+                return null;
+            }
+        }
+        
         public static BinanceOrder BuyMarket(string symbol, double quoteQty)
         {
             string stringQty= quoteQty.ToString().Replace(",", ".");
-            System.Net.HttpStatusCode httpStatusCode = System.Net.HttpStatusCode.NoContent;
             try
             {
                 SetEnv(ref secretKey, ref publicKey, ref host);
@@ -62,7 +85,10 @@ namespace MarginCoin.Misc
                 { 
                     apiUrl = $"{host}/api/v3/order?{parameters}&signature={signature}";
                 }
-                return HttpHelper.PostApiData<BinanceOrder>(new Uri(apiUrl), publicKey, new StringContent("", Encoding.UTF8, "application/json"), ref httpStatusCode);
+               
+                var ttt =  HttpHelper.PostApiData<BinanceOrder>(new Uri(apiUrl), publicKey, new StringContent("", Encoding.UTF8, "application/json"));
+                Console.WriteLine(ttt);
+                return ttt;
             }
             catch (System.Exception e)
             { 
@@ -71,14 +97,14 @@ namespace MarginCoin.Misc
             }
         }
 
-        public static BinanceOrder BuyLimit(string symbol, double quantity, Enum.TimeInForce timeInForce)
+        ///Buy as much possible for quoteQty USDT specified
+        public static BinanceOrder BuyLimit(string symbol, double quoteQty, Enum.TimeInForce timeInForce, ref System.Net.HttpStatusCode httpStatusCode)
         {
-            string stringQuantity = quantity.ToString().Replace(",", ".");
-            System.Net.HttpStatusCode httpStatusCode = System.Net.HttpStatusCode.NoContent;
+            string stringQuoteQty = quoteQty.ToString().Replace(",", ".");
             try
             {
                 SetEnv(ref secretKey, ref publicKey, ref host);
-                string parameters = $"timestamp={ServerTime(publicKey)}&symbol={symbol}&quantity={stringQuantity}&timeInForce={timeInForce.ToString()}&side=BUY&type=LIMIT&recvWindow=60000";
+                string parameters = $"timestamp={ServerTime(publicKey)}&symbol={symbol}&quoteOrderQty={stringQuoteQty}&timeInForce={timeInForce.ToString()}&side=BUY&type=LIMIT&recvWindow=60000";
                 string signature = GetSignature(parameters, secretKey);
                 string apiUrl = $"{host}/api/v3/order?{parameters}&signature={signature}";
 
@@ -96,14 +122,15 @@ namespace MarginCoin.Misc
             }
         }
 
-        public static BinanceOrder SellMarket(string symbol, double quoteOrderQty)
+        ///Sell a quantity of the symbol
+        public static BinanceOrder SellMarket(string symbol, double qty)
         {
-            string stringQuoteOrderQty = quoteOrderQty.ToString().Replace(",", ".");
+            string stringQuantity = qty.ToString().Replace(",", ".");
             System.Net.HttpStatusCode httpStatusCode = System.Net.HttpStatusCode.NoContent;
             try
             {
                 SetEnv(ref secretKey, ref publicKey, ref host);
-                string parameters = $"timestamp={ServerTime(publicKey)}&symbol={symbol}&quoteOrderQty={stringQuoteOrderQty}&side=SELL&type=MARKET&recvWindow=60000";
+                string parameters = $"timestamp={ServerTime(publicKey)}&symbol={symbol}&quantity={stringQuantity}&side=SELL&type=MARKET&recvWindow=60000";
                 string signature = GetSignature(parameters, secretKey);
                 string apiUrl = $"{host}/api/v3/order?{parameters}&signature={signature}";
 
@@ -111,7 +138,10 @@ namespace MarginCoin.Misc
                 { 
                     apiUrl = $"{host}/api/v3/order?{parameters}&signature={signature}";
                 }
-                return HttpHelper.PostApiData<BinanceOrder>(new Uri(apiUrl), publicKey, new StringContent("", Encoding.UTF8, "application/json"), ref httpStatusCode);
+                 var ttt =  HttpHelper.PostApiData<BinanceOrder>(new Uri(apiUrl), publicKey, new StringContent("", Encoding.UTF8, "application/json"), ref httpStatusCode);
+                Console.WriteLine(ttt);
+                return ttt;
+               // return HttpHelper.PostApiData<BinanceOrder>(new Uri(apiUrl), publicKey, new StringContent("", Encoding.UTF8, "application/json"), ref httpStatusCode);
             }
             catch (System.Exception e)
             { 
@@ -145,10 +175,9 @@ namespace MarginCoin.Misc
         //     }
         // }
 
-        public static async void SellLimit(string symbol, double quantity, Enum.TimeInForce timeInForce)
+        public static void SellLimit(string symbol, double quantity, Enum.TimeInForce timeInForce, ref System.Net.HttpStatusCode httpStatusCode)
         {
             string stringQuantity = quantity.ToString().Replace(",", ".");
-            System.Net.HttpStatusCode httpStatusCode = System.Net.HttpStatusCode.NoContent;
             try
             {
                 SetEnv(ref secretKey, ref publicKey, ref host);

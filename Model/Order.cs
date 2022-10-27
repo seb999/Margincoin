@@ -39,6 +39,8 @@ namespace MarginCoin.Model
         public double R1 { get; set; }
         public double S1 { get; set; }
         public int Lock { get; set; }
-         public string MarketTrend { get; set; }
+        public string MarketTrend { get; set; }
+        public double OrderId { get; set; }
+        public string Status { get; set; }
     }
 }

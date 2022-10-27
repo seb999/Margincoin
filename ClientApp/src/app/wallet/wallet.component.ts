@@ -7,6 +7,7 @@ import { ServerMsg } from '../class/serverMsg';
 import { Test } from '../class/Test';
 import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 import { OrderDetailHelper } from './../orderDetail/orderDetail.helper';
+import { BackEndMessage } from '../class/enum';
 
 import * as Highcharts from 'highcharts';
 import HC_HIGHSTOCK from 'highcharts/modules/stock';
@@ -32,7 +33,7 @@ export class WalletComponent {
   model: NgbDateStruct;
 
   private ohlc = [] as any;
-  public PendingOrderList: Order[];
+  public pendingOrderList: Order[];
   public orderList: Order[];
   public assetList: any[];
   public CandleList: any[];
@@ -92,12 +93,19 @@ export class WalletComponent {
         setTimeout(() => { this.showMessageInfo = false }, 700);
       }
 
-      if (this.serverMsg.msgName == 'newOrder') {
+      if (this.serverMsg.msgName == BackEndMessage.newPendingOrder) {
+        this.pendingOrderList = await this.getPendingOrder();
+        this.calculateTotal();
+      }
+
+      if (this.serverMsg.msgName == BackEndMessage.newOrder) {
         this.orderList = await this.getAllOrder(this.model.day + "-" + this.model.month + "-" + this.model.year);
         this.calculateTotal();
       }
 
-      if (this.serverMsg.msgName == 'binanceAccessFaulty' || this.serverMsg.msgName == 'binanceTooManyRequest' || this.serverMsg.msgName == 'binanceCheckAllowedIP') {
+      if (this.serverMsg.msgName == BackEndMessage.binanceAccessFaulty 
+        || this.serverMsg.msgName == BackEndMessage.binanceTooManyRequest 
+        || this.serverMsg.msgName == BackEndMessage.binanceCheckAllowedIP) {
         this.showMessageError = true;
         this.messageError = this.serverMsg.msgName;
         setTimeout(() => { this.showMessageError = false }, 10000);
@@ -156,6 +164,14 @@ export class WalletComponent {
     const httpSetting: HttpSettings = {
       method: 'GET',
       url: location.origin + "/api/Order/GetAllOrderFromDate/" + fromDate,
+    };
+    return await this.httpService.xhr(httpSetting);
+  }
+
+  async getPendingOrder(): Promise<Order[]> {
+    const httpSetting: HttpSettings = {
+      method: 'GET',
+      url: location.origin + "/api/Order/GetPendingdOrder/",
     };
     return await this.httpService.xhr(httpSetting);
   }

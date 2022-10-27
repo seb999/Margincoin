@@ -25,7 +25,7 @@ namespace MarginCoin.Misc
                 client.BaseAddress = apiUri;
                 client.DefaultRequestHeaders.Accept.Clear();
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                // client.DefaultRequestHeaders.Add("X-MBX-APIKEY", apiKey);
+                client.DefaultRequestHeaders.Add("X-MBX-APIKEY", apiKey);
 
                 var response = client.GetAsync("").Result;
                 if (response.IsSuccessStatusCode)
@@ -37,6 +37,12 @@ namespace MarginCoin.Misc
                     return default(T);
                 }
             }
+        }
+
+        public static T PostApiData<T>(Uri apiUri, string apiKey, HttpContent data)
+        {
+            System.Net.HttpStatusCode httpStatusCode = new System.Net.HttpStatusCode();
+            return PostApiData<T>(apiUri, apiKey, data, ref httpStatusCode);
         }
 
         public static T PostApiData<T>(Uri apiUri, string apiKey, HttpContent data, ref System.Net.HttpStatusCode httpStatusCode)
@@ -51,21 +57,17 @@ namespace MarginCoin.Misc
                 client.DefaultRequestHeaders.Accept.Clear();
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 client.DefaultRequestHeaders.Add("X-MBX-APIKEY", apiKey);
-                
+
                 var response = client.PostAsync(apiUri, data).Result;
-               
+
                 if (response.IsSuccessStatusCode)
                 {
-                    //For debugging
-                    var toto = response.Content.ReadAsStringAsync().Result;
-                    Console.WriteLine(toto);
                     httpStatusCode = response.StatusCode;
                     return JsonSerializer.Deserialize<T>(response.Content.ReadAsStringAsync().Result, jsonSerializerOptions);
                 }
                 else
                 {
                     httpStatusCode = response.StatusCode;
-                    Console.WriteLine(response.IsSuccessStatusCode);
                     return default(T);
                 }
             }

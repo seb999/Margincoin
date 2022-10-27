@@ -2,7 +2,7 @@
 
 <div class="row">
 
-  <div class="col-5">
+  <div class="col-3">
     <!-- <button class="btn btn-primary btn-sm mr-1" (click)="monitorMarket()"><i class="fa-solid fa-check"></i> Monitor
       market</button> -->
     <button class="btn btn-secondary btn-sm mr-1" (click)="monitorMyList()">Start</button>
@@ -18,15 +18,17 @@
     <button class="btn btn-secondary btn-sm mr-1" (click)="model = today();filterOrderList()">Today</button>
   </div>
 
-  <div class="col-2">
+  <div class="col-1">
     <div *ngIf="showMessageInfo" class="alert alert-warning"
-      style="height: 30px;padding-top: 3px;margin-bottom: 0px;width: 200px;" role="alert"> Trading
+      style="height: 30px;padding-top: 3px;margin-bottom: 0px;width: 100px;" role="alert"> Trading
     </div>
+  </div>
+  <div class="col-2">
     <div *ngIf="showMessageError" class="alert alert-danger"
       style="height: 30px;padding-top: 3px;margin-bottom: 0px;width: 200px;" role="alert"> {{messageError}}
     </div>
   </div>
-  <div class="col-2">
+  <div class="col-1">
     <mat-slide-toggle [(ngModel)]="isProd" class="example-margin" [color]="color" (change)="changed()"> <b
         *ngIf="isProd">
         <p style="color: white; padding-top: 13px;">PROD</p>
@@ -145,41 +147,27 @@
   </div>
 
   <div class="col-3">
-    <div class="card text-white mb-2 bg-dark" *ngFor="let asset of assetList">
-      <div class="card-header" ng-hide="assetList ==''">BUY  {{assetList.length}}</div>
+    <div class="card text-white mb-2 bg-dark" *ngFor="let pendingOrder of pendingOrderList">
+      <div class="card-header">BUY/SELL  {{assetList.length}}</div>
       <div class="card-body">
-        <table class="table table-sm table-dark">
+        <table class="table table-sm table-dark" ng-hide="pendingOrderList ==''">
           <tbody>
             <tr>
-              <td>Symbol : BTCUSDT</td>
-              <td>Price : 1.1</td>
+              <td>Symbol : {{pendingOrder.symbol}}</td>
+              <td>Price : {{pendingOrder.openPrice}}</td>
             </tr>
             <tr>
-              <td>Status : not filled</td>
-              <td>Price : 1.1</td>
+              <td>Qty : {{pendingOrder.quantity}}</td>
+              <td>QuoteQty : {{pendingOrder.quantity}}</td>
             </tr>
             <tr>
+              <td>Status : {{pendingOrder.status}}</td>
               <td></td>
-              <td> <button class="btn" (click)="closeTrade(order.id, order.closePrice);"><span style="color: red"><i
-                      class="far fa-trash-alt"></i> </span></button></td>
-
             </tr>
+           
           </tbody>
         </table>
       </div>
-
-      <!-- <ul class="list-group ">
-        <li class="list-group-item list-group-item-dark" *ngFor="let asset of assetList">An item</li>
-      </ul> -->
-
-      <!-- <table class="table table-sm mt-2 table-dark">
-        <tbody>
-          <tr *ngFor="let asset of assetList">
-            <td>{{asset?.asset}}</td>
-            <td>{{asset?.free}}</td>
-          </tr>
-        </tbody>
-      </table> -->
     </div>
 
     <div class="row">
