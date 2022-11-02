@@ -1,11 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild, ViewEncapsulation  } from '@angular/core';
 import { NumericLiteral } from 'typescript';
 import { Order } from '../class/order';
 import { HttpSettings, HttpService } from '../service/http.service';
 import { SignalRService } from '../service/signalR.service';
 import { ServerMsg } from '../class/serverMsg';
 import { Test } from '../class/Test';
-import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
+import { NgbDateStruct, NgbPopover } from '@ng-bootstrap/ng-bootstrap';
 import { OrderDetailHelper } from './../orderDetail/orderDetail.helper';
 import { BackEndMessage } from '../class/enum';
 
@@ -17,6 +17,7 @@ import HC_EMA from 'highcharts/indicators/ema';
 import HC_MACD from 'highcharts/indicators/macd';
 import HC_THEME from 'highcharts/themes/dark-unica';
 import { AppSetting } from '../app.settings';
+import { BinanceOrder } from '../class/binanceOrder';
 
 HC_HIGHSTOCK(Highcharts);
 HC_INDIC(Highcharts);
@@ -25,12 +26,20 @@ HC_EMA(Highcharts);
 HC_MACD(Highcharts);
 HC_THEME(Highcharts);
 
+
+
 @Component({
   selector: 'app-wallet',
   templateUrl: './wallet.component.html',
+  styleUrls: ['./wallet.component.css'],
+  encapsulation: ViewEncapsulation.None,
 })
+
+
 export class WalletComponent {
   model: NgbDateStruct;
+
+  @ViewChild('p1') orderPopOver: any;
 
   private ohlc = [] as any;
   public pendingOrderList: Order[];
@@ -76,7 +85,7 @@ export class WalletComponent {
     this.signalRService.onMessage().subscribe(async message => {
       this.serverMsg = message;
 
-      if (this.serverMsg.msgName == 'trading') {
+      if (this.serverMsg.msgName == BackEndMessage.trading) {
         this.showMessageInfo = true;
         this.CandleList = this.serverMsg.candleList;
 
@@ -94,8 +103,10 @@ export class WalletComponent {
       }
 
       if (this.serverMsg.msgName == BackEndMessage.newPendingOrder) {
-        this.pendingOrderList = await this.getPendingOrder();
-        this.calculateTotal();
+        let binanceOrder = this.serverMsg.order;
+        this.openPopOver(this.orderPopOver, binanceOrder);
+        //this.pendingOrderList = await this.getPendingOrder();
+        setTimeout(() => { this.openPopOver(this.orderPopOver, binanceOrder); }, 3000);
       }
 
       if (this.serverMsg.msgName == BackEndMessage.newOrder) {
@@ -103,9 +114,9 @@ export class WalletComponent {
         this.calculateTotal();
       }
 
-      if (this.serverMsg.msgName == BackEndMessage.binanceAccessFaulty 
-        || this.serverMsg.msgName == BackEndMessage.binanceTooManyRequest 
-        || this.serverMsg.msgName == BackEndMessage.binanceCheckAllowedIP) {
+      if (this.serverMsg.msgName == BackEndMessage.apiAccessFaulty 
+        || this.serverMsg.msgName == BackEndMessage.apiTooManyRequest 
+        || this.serverMsg.msgName == BackEndMessage.apiCheckAllowedIP) {
         this.showMessageError = true;
         this.messageError = this.serverMsg.msgName;
         setTimeout(() => { this.showMessageError = false }, 10000);
@@ -114,6 +125,20 @@ export class WalletComponent {
 
     //Get Wallet asset
     this.assetList = await this.binanceAsset();
+  }
+
+  openPopOver(popover, order : BinanceOrder) {
+		if (popover.isOpen()) {
+			popover.close();
+		} else {
+			popover.open({ order });
+		}
+	}
+
+  showPopover(){
+    let binanceOrder = new BinanceOrder(
+       1, "ETHUSDT", "1500", "2", "2", "3000", "Filled", "ABC","SELL" );
+    this.openPopOver(this.orderPopOver,  binanceOrder);
   }
 
   today() {

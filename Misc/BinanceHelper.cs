@@ -98,7 +98,7 @@ namespace MarginCoin.Misc
         }
 
         ///Buy as much possible for quoteQty USDT specified
-        public static BinanceOrder BuyLimit(string symbol, double quoteQty, Enum.TimeInForce timeInForce, ref System.Net.HttpStatusCode httpStatusCode)
+        public static BinanceOrder BuyLimit(string symbol, double quoteQty, MyEnum.TimeInForce timeInForce, ref System.Net.HttpStatusCode httpStatusCode)
         {
             string stringQuoteQty = quoteQty.ToString().Replace(",", ".");
             try
@@ -175,7 +175,7 @@ namespace MarginCoin.Misc
         //     }
         // }
 
-        public static void SellLimit(string symbol, double quantity, Enum.TimeInForce timeInForce, ref System.Net.HttpStatusCode httpStatusCode)
+        public static void SellLimit(string symbol, double quantity, MyEnum.TimeInForce timeInForce, ref System.Net.HttpStatusCode httpStatusCode)
         {
             string stringQuantity = quantity.ToString().Replace(",", ".");
             try

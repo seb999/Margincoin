@@ -54,23 +54,23 @@ export class SignalRService {
             return this.eventMessage.emit(serverMsg);
         });
 
-        this.hubConnection.on(BackEndMessage.binanceAccessFaulty, () => {
+        this.hubConnection.on(BackEndMessage.apiAccessFaulty, () => {
             let serverMsg :ServerMsg = {
-                msgName : BackEndMessage.binanceAccessFaulty
+                msgName : BackEndMessage.apiAccessFaulty
             };
             return this.eventMessage.emit(serverMsg);
         });
 
-        this.hubConnection.on(BackEndMessage.binanceTooManyRequest, () => {
+        this.hubConnection.on(BackEndMessage.apiTooManyRequest, () => {
             let serverMsg :ServerMsg = {
-                msgName : BackEndMessage.binanceTooManyRequest
+                msgName : BackEndMessage.apiTooManyRequest
             };
             return this.eventMessage.emit(serverMsg);
         });
 
-        this.hubConnection.on(BackEndMessage.binanceCheckAllowedIP, () => {
+        this.hubConnection.on(BackEndMessage.apiCheckAllowedIP, () => {
             let serverMsg :ServerMsg = {
-                msgName : BackEndMessage.binanceCheckAllowedIP
+                msgName : BackEndMessage.apiCheckAllowedIP
             };
             return this.eventMessage.emit(serverMsg);
         });

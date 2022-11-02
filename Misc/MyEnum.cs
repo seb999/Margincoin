@@ -1,7 +1,14 @@
 namespace MarginCoin.Misc
 {
-    public class Enum
+    public static class MyEnum
     {
+        public enum BinanceHttpError
+        {
+            ApiAccessFaulty,
+            ApiTooManyRequest,
+            ApiCheckAllowedIP
+        }
+
         public enum OrderType
         {
             Market,

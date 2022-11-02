@@ -16,7 +16,7 @@ import { OrderDetailHelper } from './orderDetail/orderDetail.helper';
 import { HighchartsChartModule } from 'highcharts-angular';
 import { AppSetting } from './app.settings';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModule, NgbPopover } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   declarations: [

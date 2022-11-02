@@ -13,6 +13,7 @@ using System.Threading;
 using static MarginCoin.Class.Prediction;
 using System.Text.Json;
 
+
 namespace MarginCoin.Controllers
 {
     [ApiController]
@@ -208,7 +209,6 @@ namespace MarginCoin.Controllers
                 {
                     activeOrderList.Where(p => CheckStopLose(p)).ToList();
                 }
-
 
                 //1- Filter marketStreamOnSpot list to get only the one from mySymbolList
                 marketStreamOnSpot = marketStreamOnSpot.Where(p => mySymbolList.Any(p1 => p1 == p.s)).OrderByDescending(p => p.P).ToList();
@@ -587,15 +587,15 @@ namespace MarginCoin.Controllers
 
             if (httpStatusCode == System.Net.HttpStatusCode.NotFound)
             {
-                _hub.Clients.All.SendAsync("binanceAccessFaulty");
+                _hub.Clients.All.SendAsync(MyEnum.BinanceHttpError.ApiAccessFaulty.ToString());
             }
             if (httpStatusCode == System.Net.HttpStatusCode.TooManyRequests)
             {
-                _hub.Clients.All.SendAsync("binanceTooManyRequest");
+                _hub.Clients.All.SendAsync(MyEnum.BinanceHttpError.ApiTooManyRequest.ToString());
             }
             if (httpStatusCode == System.Net.HttpStatusCode.BadRequest)
             {
-                _hub.Clients.All.SendAsync("binanceCheckAllowedIP");
+                _hub.Clients.All.SendAsync(MyEnum.BinanceHttpError.ApiCheckAllowedIP.ToString());
             }
 
             if (myAsset == null) return null;

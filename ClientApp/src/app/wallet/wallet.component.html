@@ -1,12 +1,14 @@
 <h5>wallet</h5>
 
+
+
 <div class="row">
 
   <div class="col-3">
     <!-- <button class="btn btn-primary btn-sm mr-1" (click)="monitorMarket()"><i class="fa-solid fa-check"></i> Monitor
       market</button> -->
     <button class="btn btn-secondary btn-sm mr-1" (click)="monitorMyList()">Start</button>
-    <button class="btn btn-danger btn-sm mr-1" (click)="monitorMyList()">Stop</button>
+    <button class="btn btn-danger btn-sm mr-1" (click)=" showPopover()">Stop</button>
     <button class="btn btn-warning btn-sm mr-1" (click)="testBuy()">Test Order</button>
   </div>
 
@@ -37,6 +39,7 @@
       </b>
     </mat-slide-toggle>
   </div>
+ 
 </div>
 
 <div class="row">
@@ -146,7 +149,50 @@
     </table>
   </div>
 
+  <ng-template #popTitle let-order="order" >
+    <h3><span *ngIf="order.side == 'BUY'"class="badge badge-success">{{order.side}}</span></h3> 
+    <h3><span *ngIf="order.side == 'SELL'"class="badge badge-danger">{{order.side}}</span></h3>
+    <b>{{order.symbol}}</b>
+  </ng-template>
+    <ng-template #popContent let-order="order">
+    <table>
+      <tr>
+        <td>
+          QuoteQty
+        </td>
+        <td>
+         <b>{{order.cummulativeQuoteQty}}</b> 
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Status
+        </td>
+        <td>
+          <b>{{order.status}}</b>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Price
+        </td>
+        <td>
+          <b>{{order.price}}</b>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Quantity
+        </td>
+        <td>
+          <b>{{order.executedQty}}</b>
+        </td>
+      </tr>
+    </table>
+  </ng-template>
+
   <div class="col-3">
+    
     <div class="card text-white mb-2 bg-dark" *ngFor="let pendingOrder of pendingOrderList">
       <div class="card-header">BUY/SELL  {{assetList.length}}</div>
       <div class="card-body">
@@ -195,3 +241,16 @@
     </div>
   </div>
 </div>
+
+
+  <div style="position: fixed;right:153px !important;bottom:250px;"
+[ngbPopover]="popContent"
+[popoverTitle]="popTitle"
+triggers="manual"
+placement="bottom"
+#p1="ngbPopover">
+</div>
+
+
+	
+
