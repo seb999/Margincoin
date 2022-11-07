@@ -4,7 +4,6 @@ using System.Security.Cryptography;
 using System.Text;
 using MarginCoin.Class;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace MarginCoin.Misc
 {

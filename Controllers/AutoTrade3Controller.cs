@@ -13,7 +13,6 @@ using System.Threading;
 using static MarginCoin.Class.Prediction;
 using System.Text.Json;
 
-
 namespace MarginCoin.Controllers
 {
     [ApiController]
@@ -31,7 +30,6 @@ namespace MarginCoin.Controllers
         private List<MarketStream> marketStreamOnSpot = new List<MarketStream>();
         int nbrUp = 0;
         int nbrDown = 0;
-
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////------------SETTINGS----------/////////////////////////////////////////////
@@ -84,12 +82,14 @@ namespace MarginCoin.Controllers
         }
 
         [HttpGet("[action]/{orderId}/{lastPrice}")]
-        public async Task<string> CloseTrade(int orderId, double lastPrice)
+        public async Task<string> CloseTrade(int orderId)
         {
             Order myOrder = _appDbContext.Order.Where(p => p.Id == orderId).Select(p => p).FirstOrDefault();
             if (myOrder != null)
             {
-                CloseTrade(orderId, lastPrice, "by user");
+                CloseTrade(orderId, "by user");
+
+                Sell(orderId, "by user");
             }
 
             return "";
@@ -229,15 +229,21 @@ namespace MarginCoin.Controllers
                         continue;
                     }
 
-                    
+
                     List<Candle> symbolCandle = candleMatrice.Where(p => p.First().s == symbol).FirstOrDefault();  //get the line that coorespond to the symbol
-               
-                        Buy(marketStreamOnSpot[i], symbolCandle);
-               
+
                     if (CheckCandle(numberPreviousCandle, marketStreamOnSpot[i], symbolCandle) && !symbolCandle.Last().IsOnHold && !Globals.symbolOnHold.FirstOrDefault(p => p.Key == symbol).Value)
                     {
-                        Console.WriteLine($"Open trade on {symbol}");
-                        Buy(marketStreamOnSpot[i], symbolCandle);
+                        if(!Globals.isTradingOpen)
+                        {
+                            Console.WriteLine($"Open trade on {symbol}");
+                            Buy(marketStreamOnSpot[i], symbolCandle);
+                        }
+                        else
+                        {
+                            Console.WriteLine($"Trading closed by user");
+                        }
+                       
                     }
                 }
             }
@@ -320,7 +326,7 @@ namespace MarginCoin.Controllers
                 Console.WriteLine("Close trade : stop lose ");
 
                 candleMatrice[symbolCandleIndex].Last().IsOnHold = true;
-                CloseTrade(activeOrder.Id, lastCandle.c, $"Stop Lose");
+                Sell(activeOrder.Id, "by user");
             }
             if (lastPrice > activeOrder.OpenPrice)
             {
@@ -328,7 +334,7 @@ namespace MarginCoin.Controllers
                 {
                     Console.WriteLine("Close trade : take profit ");
                     candleMatrice[symbolCandleIndex].Last().IsOnHold = true;
-                    CloseTrade(activeOrder.Id, lastCandle.c, "Take profit");
+                    Sell(activeOrder.Id, "Take profit");
                 }
             }
 
@@ -401,30 +407,29 @@ namespace MarginCoin.Controllers
             //Save here binance order result in db
             SaveTrade(symbolSpot, symbolCandleList, myBinanceOrder.orderId);
             await _hub.Clients.All.SendAsync("newPendingOrder", null, JsonSerializer.Serialize(myBinanceOrder));
-            
 
             if (BinanceHelper.OrderStatus(myBinanceOrder.symbol, myBinanceOrder.orderId).status == "Filled")
             {
-                UpdateTrade(myBinanceOrder);
-                await Task.Delay(2000);
+                UpdateTrade(myBinanceOrder, false);
+                await Task.Delay(500);
                 await _hub.Clients.All.SendAsync("newOrder");
             }
         }
 
-        private async void Sell(double id)
+        private async void Sell(double id, string closeType)
         {
-           Order myOrder = _appDbContext.Order.Where(p => p.Id == id).Select(p => p).FirstOrDefault();
+            Order myOrder = _appDbContext.Order.Where(p => p.Id == id).Select(p => p).FirstOrDefault();
 
             //What type of order we want ?
             BinanceOrder myBinanceOrder = BinanceHelper.SellMarket(myOrder.Symbol, myOrder.Quantity);
             if (myBinanceOrder == null) return;
 
-            await Task.Delay(2000);
+            CloseTrade(id, closeType);
 
-            myBinanceOrder = BinanceHelper.OrderStatus(myBinanceOrder.symbol, myBinanceOrder.orderId);
-            if (myBinanceOrder.status == "Filled")
+            if (BinanceHelper.OrderStatus(myBinanceOrder.symbol, myBinanceOrder.orderId).status == "Filled")
             {
-                UpdateTrade(myBinanceOrder);
+                UpdateTrade(myBinanceOrder, true);
+                await Task.Delay(500);
                 await _hub.Clients.All.SendAsync("newOrder");
             }
         }
@@ -476,42 +481,39 @@ namespace MarginCoin.Controllers
 
             _appDbContext.Order.Add(myOrder);
             _appDbContext.SaveChanges();
-
-            //BuyCoin on binance here and pass the orderId
-            _hub.Clients.All.SendAsync("newOrder");
         }
 
-        private void UpdateTrade(BinanceOrder myBinanceOrder)
+        private void UpdateTrade(BinanceOrder myBinanceOrder, bool isClosed)
         {
-           Order myOrder =  _appDbContext.Order.Where(p=>p.OrderId == myBinanceOrder.orderId).Select(p=>p).FirstOrDefault();
+            Order myOrder = _appDbContext.Order.Where(p => p.OrderId == myBinanceOrder.orderId).Select(p => p).FirstOrDefault();
+            myOrder.Status = myBinanceOrder.status;
 
-           myOrder.Status = myBinanceOrder.status;
-           myOrder.OpenPrice = double.Parse(myBinanceOrder.price);
-           myOrder.Quantity = double.Parse(myBinanceOrder.executedQty);
-           _appDbContext.Order.Update(myOrder);
-           _appDbContext.SaveChanges();
+            if (!isClosed)
+            {
+                myOrder.OpenPrice = double.Parse(myBinanceOrder.price);
+                myOrder.Fee = myBinanceOrder.fills.Sum(P => long.Parse(P.commission));
+                myOrder.Quantity = double.Parse(myBinanceOrder.executedQty);
+            }
+            else
+            {
+                myOrder.ClosePrice = double.Parse(myBinanceOrder.price);
+                myOrder.Fee += myBinanceOrder.fills.Sum(P => long.Parse(P.commission));
+                myOrder.Profit = Math.Round((myOrder.ClosePrice - myOrder.OpenPrice) * myOrder.Quantity) - myOrder.Fee;
+                myOrder.IsClosed = 1;
+            }
+
+            _appDbContext.Order.Update(myOrder);
+            _appDbContext.SaveChanges();
         }
 
-        private void CloseTrade(int orderId, double closePrice, string closeType)
+        private void CloseTrade(double orderId, string closeType)
         {
             Order myOrder = _appDbContext.Order.Where(p => p.Id == orderId).Select(p => p).FirstOrDefault();
-            if (closePrice == 0) return;
             Globals.symbolOnHold.Add(myOrder.Symbol, true);
-
-            myOrder.ClosePrice = closePrice;
-            myOrder.Fee = myOrder.Fee + Math.Round((closePrice * myOrder.Quantity) / 100 * 0.1);
-            myOrder.IsClosed = 1;
             myOrder.Type = closeType;
-            myOrder.Profit = Math.Round((closePrice - myOrder.OpenPrice) * myOrder.Quantity) - myOrder.Fee;
             myOrder.CloseDate = DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss");
             _appDbContext.SaveChanges();
-            Console.Beep();
-
-            _hub.Clients.All.SendAsync("newOrder");
         }
-
-
-
 
         #endregion
 
@@ -575,8 +577,6 @@ namespace MarginCoin.Controllers
 
         #region Binance
 
-
-
         [HttpGet("[action]")]
         public List<CryptoAsset> BinanceAsset()
         {
@@ -613,12 +613,9 @@ namespace MarginCoin.Controllers
         [HttpGet("[action]")]
         public void TestBinanceBuy()
         {
-          
-
-          
-
-         var ttt =  BinanceHelper.OrderStatus("ETHUSDT", 6770900) ;
-           // BinanceHelper.BuyMarket("ETHUSDT", 100);
+            //Symbol + USDT amount
+            var ttt = BinanceHelper.OrderStatus("ETHUSDT", 123);
+            // BinanceHelper.BuyMarket("ETHUSDT", 100);
         }
 
         #endregion

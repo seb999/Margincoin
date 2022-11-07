@@ -17,6 +17,12 @@ namespace MarginCoin.Controllers
             Globals.isProd = isProd;
         }
 
+        [HttpGet("[action]/{isOpen}")]
+        public void SetTradeParameter(bool isOpen)
+        {
+            Globals.isTradingOpen = isOpen;
+        }
+
     }
 }
 

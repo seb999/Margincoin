@@ -98,12 +98,12 @@ export class WalletComponent {
           });
           this.calculateTotal();
         });
-
         setTimeout(() => { this.showMessageInfo = false }, 700);
       }
 
       if (this.serverMsg.msgName == BackEndMessage.newPendingOrder) {
         let binanceOrder = this.serverMsg.order;
+        console.log(binanceOrder);
         this.openPopOver(this.orderPopOver, binanceOrder);
         //this.pendingOrderList = await this.getPendingOrder();
         setTimeout(() => { this.openPopOver(this.orderPopOver, binanceOrder); }, 3000);
@@ -119,7 +119,7 @@ export class WalletComponent {
         || this.serverMsg.msgName == BackEndMessage.apiCheckAllowedIP) {
         this.showMessageError = true;
         this.messageError = this.serverMsg.msgName;
-        setTimeout(() => { this.showMessageError = false }, 10000);
+        setTimeout(() => { this.showMessageError = false }, 7000);
       }
     });
 
@@ -177,10 +177,10 @@ export class WalletComponent {
     return await this.httpService.xhr(httpSetting);
   }
 
-  async getSymbolWeight(): Promise<Order[]> {
+  async setTradeParam(isOpen): Promise<any> {
     const httpSetting: HttpSettings = {
       method: 'GET',
-      url: location.origin + "/api/AutoTrade2/GetSymbolWeight",
+      url: location.origin + "/api/Globals/SetTradeParameter/" + isOpen,
     };
     return await this.httpService.xhr(httpSetting);
   }
@@ -197,14 +197,6 @@ export class WalletComponent {
     const httpSetting: HttpSettings = {
       method: 'GET',
       url: location.origin + "/api/Order/GetPendingdOrder/",
-    };
-    return await this.httpService.xhr(httpSetting);
-  }
-
-  async monitorMarket(): Promise<any> {
-    const httpSetting: HttpSettings = {
-      method: 'GET',
-      url: location.origin + '/api/AutoTrade2/MonitorMarket',
     };
     return await this.httpService.xhr(httpSetting);
   }
@@ -234,12 +226,21 @@ export class WalletComponent {
     return await this.httpService.xhr(httpSetting);
   }
 
-  async monitorMyList(): Promise<any> {
+  async trade(): Promise<any> {
+    //we allow system to execute orders
+    this.setTradeParam(true);
+
+    //We start trading
     const httpSetting: HttpSettings = {
       method: 'GET',
       url: location.origin + '/api/AutoTrade3/MonitorMarket',
     };
     return await this.httpService.xhr(httpSetting);
+  }
+
+  async stopTrade(): Promise<any> {
+    //we don't allow system to execute orders
+    this.setTradeParam(false);
   }
 
   getOpenDateTimeSpam(openDate) {

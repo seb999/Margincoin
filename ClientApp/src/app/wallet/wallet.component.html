@@ -1,36 +1,43 @@
 <h5>wallet</h5>
 
-
-
+<!-- Button -->
 <div class="row">
+  <div class="col-9">
+    <div class="row">
+
+      <div class="col-3">
+        <!-- <button class="btn btn-primary btn-sm mr-1" (click)="monitorMarket()"><i class="fa-solid fa-check"></i> Monitor
+          market</button> -->
+        <button class="btn btn-secondary btn-sm mr-1" (click)="trade()">Start</button>
+        <button class="btn btn-danger btn-sm mr-1" (click)="stopTrade()">Stop</button>
+        <button class="btn btn-warning btn-sm mr-1" (click)="testBuy()">Test Order</button>
+      </div>
+
+      <div class="input-group input-group-sm col-3" style="max-width: 200px !important">
+        <input class="form-control sm" placeholder="yyyy-mm-dd" name="dp" [(ngModel)]="model" ngbDatepicker
+          #d="ngbDatepicker" (dateSelect)="filterOrderList()">
+        <button class="btn btn-outline-secondary calendar btn-sm mr-1" (click)="d.toggle();filterOrderList();"
+          type="button"><i class="fa-solid fa-calendar-days"></i></button>
+        <button class="btn btn-secondary btn-sm mr-1" (click)="model = today();filterOrderList()">Today</button>
+      </div>
+
+      <div class="col-1">
+        <div *ngIf="showMessageInfo" class="alert alert-warning"
+          style="height: 30px;padding-top: 3px;margin-bottom: 0px;width: 100px;" role="alert"> Trading
+        </div>
+      </div>
+
+      <div class="col-2">
+        <div *ngIf="showMessageError" class="alert alert-danger"
+          style="height: 30px;padding-top: 3px;margin-bottom: 0px;width: 200px;" role="alert"> {{messageError}}
+        </div>
+      </div>
+
+    </div>
+
+  </div>
 
   <div class="col-3">
-    <!-- <button class="btn btn-primary btn-sm mr-1" (click)="monitorMarket()"><i class="fa-solid fa-check"></i> Monitor
-      market</button> -->
-    <button class="btn btn-secondary btn-sm mr-1" (click)="monitorMyList()">Start</button>
-    <button class="btn btn-danger btn-sm mr-1" (click)=" showPopover()">Stop</button>
-    <button class="btn btn-warning btn-sm mr-1" (click)="testBuy()">Test Order</button>
-  </div>
-
-  <div class="input-group input-group-sm" style="max-width: 200px !important">
-    <input class="form-control sm" placeholder="yyyy-mm-dd" name="dp" [(ngModel)]="model" ngbDatepicker
-      #d="ngbDatepicker" (dateSelect)="filterOrderList()">
-    <button class="btn btn-outline-secondary calendar btn-sm mr-1" (click)="d.toggle();filterOrderList();"
-      type="button"><i class="fa-solid fa-calendar-days"></i></button>
-    <button class="btn btn-secondary btn-sm mr-1" (click)="model = today();filterOrderList()">Today</button>
-  </div>
-
-  <div class="col-1">
-    <div *ngIf="showMessageInfo" class="alert alert-warning"
-      style="height: 30px;padding-top: 3px;margin-bottom: 0px;width: 100px;" role="alert"> Trading
-    </div>
-  </div>
-  <div class="col-2">
-    <div *ngIf="showMessageError" class="alert alert-danger"
-      style="height: 30px;padding-top: 3px;margin-bottom: 0px;width: 200px;" role="alert"> {{messageError}}
-    </div>
-  </div>
-  <div class="col-1">
     <mat-slide-toggle [(ngModel)]="isProd" class="example-margin" [color]="color" (change)="changed()"> <b
         *ngIf="isProd">
         <p style="color: white; padding-top: 13px;">PROD</p>
@@ -39,23 +46,22 @@
       </b>
     </mat-slide-toggle>
   </div>
- 
 </div>
 
 <div class="row">
+  <!-- Order table -->
   <div class="col-9">
     <table class="table table-sm mt-2 table-dark">
       <thead class="thead-light">
         <tr>
           <th scope="col" id="last" class="tableTh ">Symbol</th>
-          <!-- <th scope="col" id="last" class="tableTh ">Amount</th> -->
           <th scope="col" id="volume" class="tableTh">Open</th>
           <th scope="col" id="volume" class="tableTh">High</th>
           <th scope="col" id="volume" class="tableTh">Low</th>
           <th scope="col" id="volume" class="tableTh">Close</th>
           <th scope="col" id="volume" class="tableTh">%</th>
           <th scope="col" id="volume" class="tableTh">Profit</th>
-          <th scope="col" id="volume" class="tableTh">Best Profit</th>
+          <th scope="col" id="volume" class="tableTh">Best P.</th>
           <th scope="col" id="volume" class="tableTh">Open</th>
           <th scope="col" id="volume" class="tableTh">Close</th>
           <th scope="col" id="volume" class="tableTh">Type</th>
@@ -66,14 +72,12 @@
           <th scope="col" id="volume" class="tableTh"></th>
           <th scope="col" id="volume" class="tableTh"></th>
           <th scope="col" id="volume" class="tableTh"></th>
-
         </tr>
       </thead>
       <tbody>
         <tr *ngFor="let order of orderList" class="alert alert-warning"
           [ngClass]="{'alert alert-warning': order.closeDate == null}">
           <td>{{order.symbol}}</td>
-          <!-- <td>{{(order.openPrice * order.quantity).toFixed(0)}}</td> -->
           <td>{{order.openPrice}}</td>
           <td>{{order.highPrice}}</td>
           <td>{{order.lowPrice}}</td>
@@ -91,7 +95,6 @@
           <td *ngIf="((order.closePrice - order.openPrice)*order.quantity-order.fee) < 0 && order.closePrice!=0"
             style="color: rgb(236, 44, 44);">{{((order.closePrice -
             order.openPrice)*order.quantity-order.fee).toFixed(2)}}</td>
-
           <td *ngIf="((order.highPrice - order.openPrice)*order.quantity-order.fee) < 0 && order.highPrice!=0"
             style="color: rgb(236, 44, 44);">{{((order.highPrice -
             order.openPrice)*order.quantity-order.fee).toFixed(2)}}
@@ -99,7 +102,6 @@
           <td *ngIf="((order.highPrice - order.openPrice)*order.quantity-order.fee) >=0 && order.highPrice!=0"
             style="color: limegreen;">{{((order.highPrice - order.openPrice)*order.quantity-order.fee).toFixed(2)}}
           </td>
-
           <td>{{order.openDate}}</td>
           <td>{{order.closeDate}}</td>
           <td>{{order.type}}</td>
@@ -116,15 +118,18 @@
           <!-- <td *ngIf="((order.macdHist_2>order.macdHist_1 || order.macdHist_1 > order.macdHist))" style="color: rgb(236, 44, 44);">Down</td>0))" style="color: limegreen;">Up</td> -->
           <!-- <td *ngIf="((order.macdHist_2>order.macdHist_1 || order.macdHist_1 > order.macdHist))" style="color: rgb(236, 44, 44);">Down</td> -->
           <td>
-            <button class="btn" (click)="closeTrade(order.id, order.closePrice);"><span style="color: red"><i
-                  class="far fa-trash-alt"></i> </span></button>
+            <button class="btn" (click)="closeTrade(order.id, order.closePrice);"
+              style="padding-left: 0px;padding-right:0px"><span style="color: red"><i class="far fa-trash-alt"></i>
+              </span></button>
           </td>
           <td>
-            <a [routerLink]="['/orderDetail', order.id]" target="_blank" class="btn"><span style="color: orange">
+            <a [routerLink]="['/orderDetail', order.id]" target="_blank" class="btn"
+              style="padding-left: 0px;padding-right:0px"><span style="color: orange;">
                 <i class="fa-solid fa-chart-line"></i></span></a>
           </td>
           <td>
-            <button class="btn" (click)="showChart(order.symbol, order.id);"><span style="color: orange"><i
+            <button class="btn" (click)="showChart(order.symbol, order.id);"
+              style="padding-left: 0px;padding-right:0px"><span style="color: orange"><i
                   class="fa-solid fa-chart-simple"></i> </span></button>
           </td>
         </tr>
@@ -149,74 +154,9 @@
     </table>
   </div>
 
-  <ng-template #popTitle let-order="order" >
-    <h3><span *ngIf="order.side == 'BUY'"class="badge badge-success">{{order.side}}</span></h3> 
-    <h3><span *ngIf="order.side == 'SELL'"class="badge badge-danger">{{order.side}}</span></h3>
-    <b>{{order.symbol}}</b>
-  </ng-template>
-    <ng-template #popContent let-order="order">
-    <table>
-      <tr>
-        <td>
-          QuoteQty
-        </td>
-        <td>
-         <b>{{order.cummulativeQuoteQty}}</b> 
-        </td>
-      </tr>
-      <tr>
-        <td>
-          Status
-        </td>
-        <td>
-          <b>{{order.status}}</b>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          Price
-        </td>
-        <td>
-          <b>{{order.price}}</b>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          Quantity
-        </td>
-        <td>
-          <b>{{order.executedQty}}</b>
-        </td>
-      </tr>
-    </table>
-  </ng-template>
-
   <div class="col-3">
-    
-    <div class="card text-white mb-2 bg-dark" *ngFor="let pendingOrder of pendingOrderList">
-      <div class="card-header">BUY/SELL  {{assetList.length}}</div>
-      <div class="card-body">
-        <table class="table table-sm table-dark" ng-hide="pendingOrderList ==''">
-          <tbody>
-            <tr>
-              <td>Symbol : {{pendingOrder.symbol}}</td>
-              <td>Price : {{pendingOrder.openPrice}}</td>
-            </tr>
-            <tr>
-              <td>Qty : {{pendingOrder.quantity}}</td>
-              <td>QuoteQty : {{pendingOrder.quantity}}</td>
-            </tr>
-            <tr>
-              <td>Status : {{pendingOrder.status}}</td>
-              <td></td>
-            </tr>
-           
-          </tbody>
-        </table>
-      </div>
-    </div>
 
-    <div class="row">
+    <div class="row mt-2">
       <select class="form-control" [(ngModel)]="interval" (change)="changeHighstockResolution(interval)">
         <option *ngFor="let item of intervalList" [value]="item.value">{{ item.value }}
         </option>
@@ -242,15 +182,47 @@
   </div>
 </div>
 
-
-  <div style="position: fixed;right:153px !important;bottom:250px;"
-[ngbPopover]="popContent"
-[popoverTitle]="popTitle"
-triggers="manual"
-placement="bottom"
-#p1="ngbPopover">
+<ng-template #popTitle let-order="order">
+  <h3><span *ngIf="order.side == 'BUY'" class="badge badge-success">{{order.side}}</span></h3>
+  <h3><span *ngIf="order.side == 'SELL'" class="badge badge-danger">{{order.side}}</span></h3>
+  <b>{{order.symbol}}</b>
+</ng-template>
+<ng-template #popContent let-order="order">
+  <table>
+    <tr>
+      <td>
+        QuoteQty
+      </td>
+      <td>
+        <b>{{order.cummulativeQuoteQty}}</b>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        Status
+      </td>
+      <td>
+        <b>{{order.status}}</b>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        Price
+      </td>
+      <td>
+        <b>{{order.price}}</b>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        Quantity
+      </td>
+      <td>
+        <b>{{order.executedQty}}</b>
+      </td>
+    </tr>
+  </table>
+</ng-template>
+<div style="position: fixed;right:153px !important;bottom:250px;" [ngbPopover]="popContent" [popoverTitle]="popTitle"
+  triggers="manual" placement="bottom" #p1="ngbPopover">
 </div>
-
-
-	
-
