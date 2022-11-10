@@ -26,8 +26,8 @@ namespace MarginCoin.Controllers
         private IHubContext<SignalRHub> _hub;
         private readonly ApplicationDbContext _appDbContext;
         private List<List<Candle>> candleMatrice = new List<List<Candle>>();
-        private List<Candle> candleListMACD = new List<Candle>();
         private List<MarketStream> marketStreamOnSpot = new List<MarketStream>();
+        private List<string> mySymbolList = new List<string>();
         int nbrUp = 0;
         int nbrDown = 0;
 
@@ -45,9 +45,8 @@ namespace MarginCoin.Controllers
         //move stop lose to buy price when current price raise over:1.2%
         double secureNoLose = 1.016;
         //max trade that can be open
-        int maxOpenTrade = 6;
-        List<string> mySymbolList = new List<string>();
-
+        int maxOpenTrade = 3;
+       
         ////////////////////////////////////////////////////////////////////////////////////////////////////////
         ///////////////////////////////-----------Constructor----------/////////////////////////////////////////
         ////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -81,14 +80,12 @@ namespace MarginCoin.Controllers
             return "";
         }
 
-        [HttpGet("[action]/{orderId}/{lastPrice}")]
-        public async Task<string> CloseTrade(int orderId)
+        [HttpGet("[action]/{orderId}")]
+        public string CloseTrade(int orderId)
         {
             Order myOrder = _appDbContext.Order.Where(p => p.Id == orderId).Select(p => p).FirstOrDefault();
             if (myOrder != null)
             {
-                CloseTrade(orderId, "by user");
-
                 Sell(orderId, "by user");
             }
 
@@ -229,12 +226,11 @@ namespace MarginCoin.Controllers
                         continue;
                     }
 
-
                     List<Candle> symbolCandle = candleMatrice.Where(p => p.First().s == symbol).FirstOrDefault();  //get the line that coorespond to the symbol
 
-                    if (CheckCandle(numberPreviousCandle, marketStreamOnSpot[i], symbolCandle) && !symbolCandle.Last().IsOnHold && !Globals.symbolOnHold.FirstOrDefault(p => p.Key == symbol).Value)
+                    if (CheckCandle(numberPreviousCandle, marketStreamOnSpot[i], symbolCandle) && !Globals.symbolOnHold.FirstOrDefault(p => p.Key == symbol).Value)
                     {
-                        if(!Globals.isTradingOpen)
+                        if(Globals.isTradingOpen)
                         {
                             Console.WriteLine($"Open trade on {symbol}");
                             Buy(marketStreamOnSpot[i], symbolCandle);
@@ -264,8 +260,9 @@ namespace MarginCoin.Controllers
                 return false;
             }
 
-            //0 - Don't trade if only 14% coins are up over the last 24h
-            if ((double)nbrUp < 40)
+            //0 - Don't trade if only 14% coins are up over the last 24h AND coin is slittly negatif
+            //    If the coin is very negatif over last 24h we are in a dive and we want to trade at reversal tendance
+            if ((double)nbrUp < 40 && symbolSpot.P > -5)
             {
                 return false;
             }
@@ -321,19 +318,19 @@ namespace MarginCoin.Controllers
             highPrice = symbolCandle.Select(p => p.h).LastOrDefault();
             lastCandle = symbolCandle.Select(p => p).LastOrDefault();
 
+            //Up to +2% we use stop loose
             if (lastPrice <= activeOrder.OpenPrice * (1 - (this.stopLose / 100)))
             {
                 Console.WriteLine("Close trade : stop lose ");
-
-                candleMatrice[symbolCandleIndex].Last().IsOnHold = true;
                 Sell(activeOrder.Id, "by user");
             }
-            if (lastPrice > activeOrder.OpenPrice)
+
+            //Up to +2% we use a take profit limit
+            if (lastPrice > activeOrder.OpenPrice * 1.02)
             {
                 if (lastPrice <= (activeOrder.HighPrice * (1 - (this.takeProfit / 100))))
                 {
                     Console.WriteLine("Close trade : take profit ");
-                    candleMatrice[symbolCandleIndex].Last().IsOnHold = true;
                     Sell(activeOrder.Id, "Take profit");
                 }
             }
@@ -347,10 +344,10 @@ namespace MarginCoin.Controllers
             return true;
         }
 
-        private void UpdateTakeProfit(double currentPrice, Order activeOrder)
+        private void UpdateTakeProfit(double lastPrice, Order activeOrder)
         {
             OrderTemplate orderTemplate = GetOrderTemplate();
-            double pourcent = ((currentPrice - activeOrder.OpenPrice) / activeOrder.OpenPrice) * 100;
+            double pourcent = ((lastPrice - activeOrder.OpenPrice) / activeOrder.OpenPrice) * 100;
 
             if (pourcent <= 0) return;
 
@@ -383,12 +380,37 @@ namespace MarginCoin.Controllers
 
         private void UpdateStopLose(double lastPrice, Order activeOrder)
         {
-            if (lastPrice >= activeOrder.OpenPrice * secureNoLose)
+            if (lastPrice >= activeOrder.OpenPrice * 1.02)
+            {
+                activeOrder.StopLose = activeOrder.OpenPrice * 1.015;
+                 _appDbContext.Order.Update(activeOrder);
+                _appDbContext.SaveChanges();
+                return;
+            }
+
+            if (lastPrice >= activeOrder.OpenPrice * 1.015)
+            {
+                activeOrder.StopLose = activeOrder.OpenPrice * 1.01;
+                 _appDbContext.Order.Update(activeOrder);
+                _appDbContext.SaveChanges();
+                return;
+            }
+
+            if (lastPrice >= activeOrder.OpenPrice * 1.01)
+            {
+                activeOrder.StopLose = activeOrder.OpenPrice * 1.005;
+                 _appDbContext.Order.Update(activeOrder);
+                _appDbContext.SaveChanges();
+                return;
+            }
+
+            if (lastPrice >= activeOrder.OpenPrice * 1.005)
             {
                 activeOrder.StopLose = activeOrder.OpenPrice;
-                _appDbContext.Order.Update(activeOrder);
+                 _appDbContext.Order.Update(activeOrder);
                 _appDbContext.SaveChanges();
-            }
+                return;
+            }      
         }
 
 

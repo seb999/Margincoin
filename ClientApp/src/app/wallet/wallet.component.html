@@ -9,9 +9,10 @@
         <!-- <button class="btn btn-primary btn-sm mr-1" (click)="monitorMarket()"><i class="fa-solid fa-check"></i> Monitor
           market</button> -->
         <button class="btn btn-secondary btn-sm mr-1" (click)="trade()">Start</button>
-        <button class="btn btn-danger btn-sm mr-1" (click)="stopTrade()">Stop</button>
+        <button class="btn btn-danger btn-sm mr-1" *ngIf="tradeOpen" (click)="stopTrade()">Stop</button>
+        <button class="btn btn-warning btn-sm mr-1" *ngIf="!tradeOpen" (click)="resumTrade()">Resum</button>
         <button class="btn btn-warning btn-sm mr-1" (click)="testBuy()">Test Order</button>
-      </div>
+        </div>
 
       <div class="input-group input-group-sm col-3" style="max-width: 200px !important">
         <input class="form-control sm" placeholder="yyyy-mm-dd" name="dp" [(ngModel)]="model" ngbDatepicker

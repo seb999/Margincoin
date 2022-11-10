@@ -18,6 +18,7 @@ import HC_MACD from 'highcharts/indicators/macd';
 import HC_THEME from 'highcharts/themes/dark-unica';
 import { AppSetting } from '../app.settings';
 import { BinanceOrder } from '../class/binanceOrder';
+import { FindValueSubscriber } from 'rxjs/internal/operators/find';
 
 HC_HIGHSTOCK(Highcharts);
 HC_INDIC(Highcharts);
@@ -53,6 +54,7 @@ export class WalletComponent {
   public messageError: string;
   public interval: string;
   public intervalList = [] as any;
+  public tradeOpen: boolean;
 
   color = 'accent';
   isProd = false;
@@ -73,6 +75,7 @@ export class WalletComponent {
   }
 
   async ngOnInit() {
+    this.tradeOpen = false;
     this.setProdParam(this.isProd);
     this.model = this.today();
     this.orderList = await this.getAllOrder(this.model.day + "-" + this.model.month + "-" + this.model.year);
@@ -178,6 +181,7 @@ export class WalletComponent {
   }
 
   async setTradeParam(isOpen): Promise<any> {
+    this.tradeOpen = isOpen;
     const httpSetting: HttpSettings = {
       method: 'GET',
       url: location.origin + "/api/Globals/SetTradeParameter/" + isOpen,
@@ -228,6 +232,7 @@ export class WalletComponent {
 
   async trade(): Promise<any> {
     //we allow system to execute orders
+    this.tradeOpen = true;
     this.setTradeParam(true);
 
     //We start trading
@@ -241,6 +246,11 @@ export class WalletComponent {
   async stopTrade(): Promise<any> {
     //we don't allow system to execute orders
     this.setTradeParam(false);
+  }
+
+  async resumTrade(): Promise<any> {
+    //we don't allow system to execute orders
+    this.setTradeParam(true);
   }
 
   getOpenDateTimeSpam(openDate) {
