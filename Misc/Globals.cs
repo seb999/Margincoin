@@ -8,5 +8,7 @@ public static class Globals
     public static bool isProd = false;
 
     public static bool isTradingOpen = false;
+
+    public static bool swallowOneOrder = false;
 }
 

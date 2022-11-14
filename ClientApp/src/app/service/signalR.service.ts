@@ -40,6 +40,8 @@ export class SignalRService {
         });
 
         this.hubConnection.on(BackEndMessage.newPendingOrder, (order) => {
+            console.log("SignalR service ");
+            console.log(order);
             let serverMsg :ServerMsg = {
                 msgName : BackEndMessage.newPendingOrder,
                 order : JSON.parse(order)

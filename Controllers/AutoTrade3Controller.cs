@@ -228,8 +228,10 @@ namespace MarginCoin.Controllers
 
                     List<Candle> symbolCandle = candleMatrice.Where(p => p.First().s == symbol).FirstOrDefault();  //get the line that coorespond to the symbol
 
-                    if (CheckCandle(numberPreviousCandle, marketStreamOnSpot[i], symbolCandle) && !Globals.symbolOnHold.FirstOrDefault(p => p.Key == symbol).Value)
+                    //if ((CheckCandle(numberPreviousCandle, marketStreamOnSpot[i], symbolCandle) && !Globals.symbolOnHold.FirstOrDefault(p => p.Key == symbol).Value) || Globals.swallowOneOrder)
+                    if (Globals.swallowOneOrder)
                     {
+                        Globals.swallowOneOrder = false;
                         if(Globals.isTradingOpen)
                         {
                             Console.WriteLine($"Open trade on {symbol}");
@@ -325,7 +327,7 @@ namespace MarginCoin.Controllers
                 Sell(activeOrder.Id, "by user");
             }
 
-            //Up to +2% we use a take profit limit
+            //Up to +2% we use a take profit
             if (lastPrice > activeOrder.OpenPrice * 1.02)
             {
                 if (lastPrice <= (activeOrder.HighPrice * (1 - (this.takeProfit / 100))))
@@ -635,8 +637,9 @@ namespace MarginCoin.Controllers
         [HttpGet("[action]")]
         public void TestBinanceBuy()
         {
+            Globals.swallowOneOrder = true;
             //Symbol + USDT amount
-            var ttt = BinanceHelper.OrderStatus("ETHUSDT", 123);
+            //var ttt = BinanceHelper.OrderStatus("ETHUSDT", 123);
             // BinanceHelper.BuyMarket("ETHUSDT", 100);
         }
 
