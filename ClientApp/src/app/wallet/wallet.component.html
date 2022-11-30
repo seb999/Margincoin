@@ -77,10 +77,10 @@
         <tr *ngFor="let order of orderList" class="alert alert-warning"
           [ngClass]="{'alert alert-warning': order.closeDate == null}">
           <td>{{order.symbol}}</td>
-          <td>{{order.openPrice}}</td>
-          <td>{{order.highPrice}}</td>
-          <td>{{order.lowPrice}}</td>
-          <td>{{order.closePrice}}</td>
+          <td>{{order.openPrice.toFixed(5)}}</td>
+          <td>{{order.highPrice.toFixed(5)}}</td>
+          <td>{{order.lowPrice.toFixed(5)}}</td>
+          <td>{{order.closePrice.toFixed(5)}}</td>
           <td *ngIf="order.closePrice==0">--</td>
           <td *ngIf="order.closePrice==0">--</td>
           <td *ngIf="(order.closePrice - order.openPrice) >=0 && order.closePrice!=0" style="color: limegreen;">{{
@@ -117,8 +117,11 @@
           <!-- <td *ngIf="((order.macdHist_2>order.macdHist_1 || order.macdHist_1 > order.macdHist))" style="color: rgb(236, 44, 44);">Down</td>0))" style="color: limegreen;">Up</td> -->
           <!-- <td *ngIf="((order.macdHist_2>order.macdHist_1 || order.macdHist_1 > order.macdHist))" style="color: rgb(236, 44, 44);">Down</td> -->
           <td>
-            <button class="btn" (click)="closeTrade(order.id, order.closePrice);"
-              style="padding-left: 0px;padding-right:0px"><span style="color: red"><i class="far fa-trash-alt"></i>
+            <button class="btn"  *ngIf="order.isClosed" (click)="closeTrade(order.id);" disabled
+              style="padding-left: 0px;padding-right:0px"><span style="color: orange"><i class="far fa-trash-alt"></i>
+              </span></button>
+              <button class="btn"  *ngIf="!order.isClosed" (click)="closeTrade(order.id);"
+              style="padding-left: 0px;padding-right:0px"><span style="color: orange"><i class="far fa-trash-alt"></i>
               </span></button>
           </td>
           <td>
@@ -140,8 +143,8 @@
           <td></td>
           <td></td>
           <td><b>Total</b></td>
-          <td *ngIf="totalProfit >=0" style="color: limegreen;">{{totalProfit.toFixed(0)}}</td>
-          <td *ngIf="totalProfit < 0" style="color: rgb(255, 57, 57);">{{totalProfit.toFixed(0)}}</td>
+          <td *ngIf="totalProfit >=0" style="color: limegreen;">{{totalProfit.toFixed(4)}}</td>
+          <td *ngIf="totalProfit < 0" style="color: rgb(255, 57, 57);">{{totalProfit.toFixed(4)}}</td>
           <td></td>
           <td></td>
           <td></td>
@@ -170,10 +173,22 @@
 
     <div class="row">
       <table class="table table-sm mt-2 table-dark">
+        <thead>
+          <th>Asset</th>
+          <th>Free</th>
+          <th>Locked</th>
+          <th></th>
+        </thead>
         <tbody>
-          <tr *ngFor="let asset of assetList">
+          <tr *ngFor="let asset of myAccount?.balances">
             <td>{{asset?.asset}}</td>
             <td>{{asset?.free}}</td>
+            <td>{{asset?.locked}}</td>
+            <td>
+              <button class="btn" (click)="openPopup(popupTemplate, asset?.asset, asset?.free);"
+              style="padding: 0px;padding:0px"><span style="color: orange"><i class="fa-sharp fa-solid fa-circle-dollar-to-slot"></i>
+              </span></button>
+            </td>
           </tr>
         </tbody>
       </table>
@@ -222,6 +237,32 @@
     </tr>
   </table>
 </ng-template>
+
 <div style="position: fixed;right:153px !important;bottom:250px;" [ngbPopover]="popContent" [popoverTitle]="popTitle"
   triggers="manual" placement="bottom" #p1="ngbPopover">
 </div>
+
+<ng-template #popupTemplate let-modal>
+  <div class="modal-header">
+    <h3 class="modal-title" id="modal-basic-title"><span class="badge badge-success">SELL</span></h3>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form>
+      <h4>{{this.popupSymbol}}</h4>
+      <div class="form-group row no-gutters">
+        <label for="amount" class="col-sm-3 col-form-label">Amount</label>
+        <div class="col-sm-9">
+          <input id="amount" class="form-control form-control-sm" name="amount" required
+            [(ngModel)]="this.popupQty">
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary btn-sm" (click)="modal.dismiss()" ngbAutofocus>Cancel</button>
+    <button type="submit" class="btn btn-success btn-sm" (click)="modal.close('sell')">Sell</button>
+  </div>
+</ng-template>

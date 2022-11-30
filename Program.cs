@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Serilog;
 
 namespace MarginCoin
 {
@@ -13,11 +14,34 @@ namespace MarginCoin
     {
         public static void Main(string[] args)
         {
-            CreateHostBuilder(args).Build().Run();
+            Log.Logger = new LoggerConfiguration()
+               .MinimumLevel.Warning()
+               .WriteTo.Console()
+               .WriteTo.Seq("http://localhost:5004")
+               .WriteTo.File("logs/myapp.txt", rollingInterval: RollingInterval.Day)
+               .CreateLogger();
+
+            try
+            {
+                Log.Warning("MarginCoin, started!");
+                CreateHostBuilder(args).Build().Run();
+            }
+            catch (Exception ex)
+            {
+                Log.Fatal(ex, "Application terminated unexpectedly");
+                throw;
+            }
+            finally
+            {
+                Log.CloseAndFlush();
+            }
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
+
+
             Host.CreateDefaultBuilder(args)
+                 .UseSerilog()
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();

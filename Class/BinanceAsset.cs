@@ -1,6 +1,6 @@
 namespace MarginCoin.Class
 {
-    public class CryptoAsset
+    public class BinanceAsset
     {
         public string Asset { get; set; }
         public string Free { get; set; }

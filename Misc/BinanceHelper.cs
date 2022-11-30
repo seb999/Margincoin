@@ -4,6 +4,10 @@ using System.Security.Cryptography;
 using System.Text;
 using MarginCoin.Class;
 using System.Collections.Generic;
+using MarginCoin.Controllers;
+using MarginCoin.Model;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 
 namespace MarginCoin.Misc
 {
@@ -17,9 +21,8 @@ namespace MarginCoin.Misc
         public static string secretKey ="";
         public static string publicKey =""; 
         public static string host  ="";
-       
-        
-        public static List<CryptoAsset> Asset(ref System.Net.HttpStatusCode httpStatusCode)
+
+        public static BinanceAccount Account(ref System.Net.HttpStatusCode httpStatusCode)
         {
             try
             {
@@ -27,9 +30,14 @@ namespace MarginCoin.Misc
 
                 string parameters = $"timestamp={ServerTime(publicKey)}&recvWindow=60000";
                 string signature = GetSignature(parameters, secretKey);
-                string apiUrl = $"{host}/sapi/v3/asset/getUserAsset?{parameters}&signature={signature}";
+                string apiUrl = $"{host}/api/v3/account?{parameters}&signature={signature}";
 
-                var result = HttpHelper.PostApiData<List<CryptoAsset>>(new Uri(apiUrl), publicKey, new StringContent("", Encoding.UTF8, "application/json"), ref httpStatusCode);
+                if(!Globals.isProd)
+                { 
+                    apiUrl = $"{host}/api/v3/account?{parameters}&signature={signature}";
+                }
+
+                var result = HttpHelper.GetApiData<BinanceAccount>(new Uri(apiUrl), publicKey, ref httpStatusCode);
                 if (result != null)
                 {
                     return result;
@@ -70,7 +78,7 @@ namespace MarginCoin.Misc
             }
         }
         
-        public static BinanceOrder BuyMarket(string symbol, double quoteQty)
+        public static BinanceOrder BuyMarket(string symbol, double quoteQty, ref System.Net.HttpStatusCode httpStatusCode)
         {
             string stringQty= quoteQty.ToString().Replace(",", ".");
             try
@@ -85,9 +93,7 @@ namespace MarginCoin.Misc
                     apiUrl = $"{host}/api/v3/order?{parameters}&signature={signature}";
                 }
                
-                var ttt =  HttpHelper.PostApiData<BinanceOrder>(new Uri(apiUrl), publicKey, new StringContent("", Encoding.UTF8, "application/json"));
-                Console.WriteLine(ttt);
-                return ttt;
+                return HttpHelper.PostApiData<BinanceOrder>(new Uri(apiUrl), publicKey, new StringContent("", Encoding.UTF8, "application/json"), ref httpStatusCode);
             }
             catch (System.Exception e)
             { 
@@ -111,8 +117,7 @@ namespace MarginCoin.Misc
                 { 
                     apiUrl = $"{host}/api/v3/order?{parameters}&signature={signature}";
                 }
-                return HttpHelper.PostApiData<BinanceOrder>(new Uri(apiUrl), publicKey, new StringContent("", Encoding.UTF8, "application/json"), ref httpStatusCode);
-                
+                return HttpHelper.PostApiData<BinanceOrder>(new Uri(apiUrl), publicKey, new StringContent("", Encoding.UTF8, "application/json"), ref httpStatusCode); 
             }
             catch (System.Exception e)
             { 
@@ -122,10 +127,9 @@ namespace MarginCoin.Misc
         }
 
         ///Sell a quantity of the symbol
-        public static BinanceOrder SellMarket(string symbol, double qty)
+        public static BinanceOrder SellMarket(string symbol, double qty, ref System.Net.HttpStatusCode httpStatusCode)
         {
             string stringQuantity = qty.ToString().Replace(",", ".");
-            System.Net.HttpStatusCode httpStatusCode = System.Net.HttpStatusCode.NoContent;
             try
             {
                 SetEnv(ref secretKey, ref publicKey, ref host);
@@ -137,10 +141,7 @@ namespace MarginCoin.Misc
                 { 
                     apiUrl = $"{host}/api/v3/order?{parameters}&signature={signature}";
                 }
-                 var ttt =  HttpHelper.PostApiData<BinanceOrder>(new Uri(apiUrl), publicKey, new StringContent("", Encoding.UTF8, "application/json"), ref httpStatusCode);
-                Console.WriteLine(ttt);
-                return ttt;
-               // return HttpHelper.PostApiData<BinanceOrder>(new Uri(apiUrl), publicKey, new StringContent("", Encoding.UTF8, "application/json"), ref httpStatusCode);
+                return  HttpHelper.PostApiData<BinanceOrder>(new Uri(apiUrl), publicKey, new StringContent("", Encoding.UTF8, "application/json"), ref httpStatusCode);
             }
             catch (System.Exception e)
             { 

@@ -6,5 +6,6 @@ export enum BackEndMessage
     newOrder = 'newOrder',
     apiAccessFaulty = 'apiAccessFaulty',
     apiTooManyRequest = 'apiTooManyRequest',
-    apiCheckAllowedIP = 'apiCheckAllowedIP'
+    apiCheckAllowedIP = 'apiCheckAllowedIP',
+    sellOrderFilled = 'sellOrderFilled'
 };

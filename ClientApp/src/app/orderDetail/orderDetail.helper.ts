@@ -13,7 +13,7 @@ export class OrderDetailHelper {
   async getIntradayData(symbol, limit, interval): Promise<any> {
     const httpSetting: HttpSettings = {
       method: 'GET',
-      url: 'https://api3.binance.com/api/v3/klines?symbol=' + symbol + '&interval=' + interval + '&limit=' + limit
+      url: 'https://api3.binance.com/api/v3/klines?symbol=' + symbol + '&interval=' + interval + '&limit=' + 100
     };
     return await this.httpService.xhr(httpSetting);
   }

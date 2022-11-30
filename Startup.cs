@@ -10,6 +10,7 @@ using MarginCoin.Model;
 using System.Text.Json;
 using System;
 using MarginCoin.Misc;
+using Serilog;
 
 namespace MarginCoin
 {
@@ -25,6 +26,8 @@ namespace MarginCoin
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddTransient<IBinanceService, BinanceService>();
+
             services.AddSignalR();
 
             services.AddControllers().AddJsonOptions(options =>
@@ -59,7 +62,8 @@ namespace MarginCoin
                 app.UseHsts();
             }
 
-             app.UseWebSockets();
+            app.UseSerilogRequestLogging(); 
+            app.UseWebSockets();
             var webSocketOptions = new WebSocketOptions(){KeepAliveInterval = TimeSpan.FromSeconds(120)};
             app.UseWebSockets(webSocketOptions);
 

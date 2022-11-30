@@ -1,10 +1,10 @@
-import { Component, ViewChild, ViewEncapsulation  } from '@angular/core';
+import { Component, ViewChild, ViewEncapsulation } from '@angular/core';
 import { NumericLiteral } from 'typescript';
 import { Order } from '../class/order';
 import { HttpSettings, HttpService } from '../service/http.service';
 import { SignalRService } from '../service/signalR.service';
 import { ServerMsg } from '../class/serverMsg';
-import { Test } from '../class/Test';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NgbDateStruct, NgbPopover } from '@ng-bootstrap/ng-bootstrap';
 import { OrderDetailHelper } from './../orderDetail/orderDetail.helper';
 import { BackEndMessage } from '../class/enum';
@@ -19,6 +19,7 @@ import HC_THEME from 'highcharts/themes/dark-unica';
 import { AppSetting } from '../app.settings';
 import { BinanceOrder } from '../class/binanceOrder';
 import { FindValueSubscriber } from 'rxjs/internal/operators/find';
+import { BinanceAccount } from '../class/binanceAccount';
 
 HC_HIGHSTOCK(Highcharts);
 HC_INDIC(Highcharts);
@@ -44,6 +45,7 @@ export class WalletComponent {
 
   private ohlc = [] as any;
   public pendingOrderList: Order[];
+  public myAccount: BinanceAccount;
   public orderList: Order[];
   public assetList: any[];
   public CandleList: any[];
@@ -55,6 +57,8 @@ export class WalletComponent {
   public interval: string;
   public intervalList = [] as any;
   public tradeOpen: boolean;
+  public popupSymbol: string;
+  public popupQty: number;
 
   color = 'accent';
   isProd = false;
@@ -65,6 +69,7 @@ export class WalletComponent {
   displayOrder: Order;
 
   constructor(
+    public modalService: NgbModal,
     private httpService: HttpService,
     private signalRService: SignalRService,
     private orderDetailHelper: OrderDetailHelper,
@@ -94,6 +99,7 @@ export class WalletComponent {
 
         this.orderList.forEach((order, index) => {
           this.CandleList.forEach(candle => {
+
             if (order.symbol === candle.s && !order.isClosed) {
               this.orderList[index].closePrice = candle.c;
               this.orderList[index].profit = (candle.c - order.openPrice) * order.quantity;
@@ -106,19 +112,34 @@ export class WalletComponent {
 
       if (this.serverMsg.msgName == BackEndMessage.newPendingOrder) {
         let binanceOrder = this.serverMsg.order;
-        console.log(binanceOrder);
+        if (this.orderPopOver.isOpen()) {
+          setTimeout(() => { this.openPopOver(this.orderPopOver, binanceOrder); }, 6000);
+          setTimeout(() => { this.closePopOver(this.orderPopOver); }, 11000);
+        }
+        else {
+          this.openPopOver(this.orderPopOver, binanceOrder);
+          setTimeout(() => { this.closePopOver(this.orderPopOver); }, 5000);
+        }
+      }
+
+      if (this.serverMsg.msgName == BackEndMessage.sellOrderFilled) {
+        this.orderList = await this.getAllOrder(this.model.day + "-" + this.model.month + "-" + this.model.year);
+        let binanceOrder = this.serverMsg.order;
         this.openPopOver(this.orderPopOver, binanceOrder);
-        //this.pendingOrderList = await this.getPendingOrder();
-        setTimeout(() => { this.openPopOver(this.orderPopOver, binanceOrder); }, 3000);
+        setTimeout(() => {
+          this.closePopOver(this.orderPopOver);
+          this.refreshUI();
+        }, 5000);
       }
 
       if (this.serverMsg.msgName == BackEndMessage.newOrder) {
         this.orderList = await this.getAllOrder(this.model.day + "-" + this.model.month + "-" + this.model.year);
         this.calculateTotal();
+        this.refreshUI();
       }
 
-      if (this.serverMsg.msgName == BackEndMessage.apiAccessFaulty 
-        || this.serverMsg.msgName == BackEndMessage.apiTooManyRequest 
+      if (this.serverMsg.msgName == BackEndMessage.apiAccessFaulty
+        || this.serverMsg.msgName == BackEndMessage.apiTooManyRequest
         || this.serverMsg.msgName == BackEndMessage.apiCheckAllowedIP) {
         this.showMessageError = true;
         this.messageError = this.serverMsg.msgName;
@@ -127,21 +148,40 @@ export class WalletComponent {
     });
 
     //Get Wallet asset
-    this.assetList = await this.binanceAsset();
+    // this.assetList = await this.binanceAsset();
+    this.myAccount = await this.binanceAccount();
   }
 
-  openPopOver(popover, order : BinanceOrder) {
-		if (popover.isOpen()) {
-			popover.close();
-		} else {
-			popover.open({ order });
-		}
-	}
+  async refreshUI() {
+    this.myAccount = await this.binanceAccount();
+  }
 
-  showPopover(){
+  openPopOver(popover, order: BinanceOrder) {
+    // if (popover.isOpen()) {
+    // 	popover.close();
+    // } else {
+    popover.open({ order });
+    // }
+  }
+
+  closePopOver(popover) {
+    if (popover.isOpen()) popover.close();
+  }
+
+  showPopover() {
     let binanceOrder = new BinanceOrder(
-       1, "ETHUSDT", "1500", "2", "2", "3000", "Filled", "ABC","SELL" );
-    this.openPopOver(this.orderPopOver,  binanceOrder);
+      1, "ETHUSDT", "1500", "2", "2", "3000", "Filled", "ABC", "SELL");
+    this.openPopOver(this.orderPopOver, binanceOrder);
+  }
+
+  openPopup(popupTemplate, symbol, availableQty) {
+    this.popupSymbol = symbol;
+    this.popupQty = availableQty;
+    this.modalService.open(popupTemplate, { ariaLabelledBy: 'modal-basic-title', size: 'sm' }).result.then((result) => {
+      if (result == 'sell') {
+        this.sell(symbol, this.popupQty);
+      }
+    }, (reason) => { });
   }
 
   today() {
@@ -158,9 +198,9 @@ export class WalletComponent {
   }
 
   async changed() {
-    console.log(this.isProd);
     await this.setProdParam(this.isProd);
-    this.assetList = await this.binanceAsset();
+    //this.assetList = await this.binanceAsset();
+    this.myAccount = await this.binanceAccount();
   }
 
   calculateTotal() {
@@ -205,11 +245,20 @@ export class WalletComponent {
     return await this.httpService.xhr(httpSetting);
   }
 
-  async closeTrade(orderId, lastPrice): Promise<any> {
-    console.log(lastPrice);
+  async closeTrade(orderId): Promise<any> {
+    console.log(orderId);
     const httpSetting: HttpSettings = {
       method: 'GET',
-      url: location.origin + '/api/AutoTrade3/CloseTrade/' + orderId + '/' + lastPrice,
+      url: location.origin + '/api/AutoTrade3/CloseTrade/' + orderId
+    };
+    return await this.httpService.xhr(httpSetting);
+  }
+
+  async sell(asset, qty): Promise<any> {
+    let symbol = asset + "USDT";
+    const httpSetting: HttpSettings = {
+      method: 'GET',
+      url: location.origin + '/api/Binance/Sell/' + symbol + "/" + qty
     };
     return await this.httpService.xhr(httpSetting);
   }
@@ -217,7 +266,7 @@ export class WalletComponent {
   async testBuy(): Promise<any> {
     const httpSetting: HttpSettings = {
       method: 'GET',
-      url: 'https://localhost:5002/api/AutoTrade3/TestBinanceBuy/',
+      url: location.origin + '/api/AutoTrade3/TestBinanceBuy/',
     };
     return await this.httpService.xhr(httpSetting);
   }
@@ -225,9 +274,17 @@ export class WalletComponent {
   async binanceAsset(): Promise<any> {
     const httpSetting: HttpSettings = {
       method: 'GET',
-      url: 'https://localhost:5002/api/AutoTrade3/BinanceAsset',
+      url: location.origin + '/api/Binance/BinanceAsset',
     };
     return await this.httpService.xhr(httpSetting);
+  }
+
+  binanceAccount(): Promise<any> {
+    const httpSetting: HttpSettings = {
+      method: 'GET',
+      url: location.origin + '/api/Binance/BinanceAccount',
+    };
+    return this.httpService.xhr(httpSetting);
   }
 
   async trade(): Promise<any> {
@@ -266,13 +323,15 @@ export class WalletComponent {
   }
 
   async changeHighstockResolution(key) {
-    let params = key.split(',');
-    this.interval = params[0];
+    this.interval = key
+    // let params = key.split(',');
+    // console.log(params);
+    // this.interval = params[0];
     this.displayHighstock();
   }
 
   async displayHighstock() {
-
+    this.ohlc = null;
     this.ohlc = await this.orderDetailHelper.getIntradayData(this.displaySymbol, 100, this.interval);
 
     let chartData = [] as any;

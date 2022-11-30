@@ -31,20 +31,26 @@ export class SignalRService {
     
     public openDataListener = () => {
 
-        this.hubConnection.on(BackEndMessage.trading, (candleList) => {       
+        this.hubConnection.on(BackEndMessage.trading, (data) => {    
             let serverMsg : ServerMsg = {
                 msgName : BackEndMessage.trading,
-                candleList : JSON.parse(candleList)
+                candleList : JSON.parse(data)
             }
             return this.eventMessage.emit(serverMsg);
         });
 
-        this.hubConnection.on(BackEndMessage.newPendingOrder, (order) => {
-            console.log("SignalR service ");
-            console.log(order);
+        this.hubConnection.on(BackEndMessage.newPendingOrder, (data) => {
             let serverMsg :ServerMsg = {
                 msgName : BackEndMessage.newPendingOrder,
-                order : JSON.parse(order)
+                order : JSON.parse(data)
+            };
+            return this.eventMessage.emit(serverMsg);
+        });
+
+        this.hubConnection.on(BackEndMessage.sellOrderFilled, (data) => {
+            let serverMsg :ServerMsg = {
+                msgName : BackEndMessage.sellOrderFilled,
+                order : JSON.parse(data)
             };
             return this.eventMessage.emit(serverMsg);
         });
@@ -76,5 +82,7 @@ export class SignalRService {
             };
             return this.eventMessage.emit(serverMsg);
         });
+
+      
     } 
 }

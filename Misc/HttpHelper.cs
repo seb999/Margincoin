@@ -14,6 +14,12 @@ namespace MarginCoin.Misc
 
         public static T GetApiData<T>(Uri apiUri, string apiKey)
         {
+            System.Net.HttpStatusCode httpStatusCode = new System.Net.HttpStatusCode();
+            return GetApiData<T>(apiUri, apiKey, ref httpStatusCode);
+        }
+
+        public static T GetApiData<T>(Uri apiUri, string apiKey, ref System.Net.HttpStatusCode httpStatusCode)
+        {
             JsonSerializerOptions jsonSerializerOptions = new JsonSerializerOptions
             {
                 PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
@@ -30,10 +36,12 @@ namespace MarginCoin.Misc
                 var response = client.GetAsync("").Result;
                 if (response.IsSuccessStatusCode)
                 {
+                    httpStatusCode = response.StatusCode;
                     return JsonSerializer.Deserialize<T>(response.Content.ReadAsStringAsync().Result, jsonSerializerOptions);
                 }
                 else
                 {
+                    httpStatusCode = response.StatusCode;
                     return default(T);
                 }
             }
