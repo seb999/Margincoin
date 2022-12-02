@@ -9,10 +9,15 @@ namespace MarginCoin.Misc
             ApiCheckAllowedIP
         }
 
-        public enum OrderType
+        public enum BinanceApiCall
         {
-            Market,
-            Limit
+            BuyMarket,
+            SellMarket,
+            BuyLimit,
+            SellLimit,
+            Asset,
+            Account,
+            OrderStatus,
         }
 
         public enum TimeInForce

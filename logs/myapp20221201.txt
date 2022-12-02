@@ -1,0 +1,9 @@
+2022-12-01 23:24:05.747 +01:00 [WRN] MarginCoin, started!
+2022-12-01 23:24:41.778 +01:00 [WRN] OK
+2022-12-01 23:25:36.947 +01:00 [WRN] OK
+2022-12-01 23:29:09.850 +01:00 [WRN] MarginCoin, started!
+2022-12-01 23:30:20.859 +01:00 [WRN] MarginCoin, started!
+2022-12-01 23:30:27.982 +01:00 [WRN] Get Account OK
+2022-12-01 23:31:09.725 +01:00 [WRN] MarginCoin, started!
+2022-12-01 23:31:25.296 +01:00 [WRN] Get Account OK
+2022-12-01 23:31:52.674 +01:00 [WRN] MarginCoin, started!

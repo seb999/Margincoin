@@ -31,37 +31,10 @@ namespace MarginCoin.Misc
 
         public BinanceOrder BuyMarket(string symbol, double quoteQty, ref System.Net.HttpStatusCode httpStatusCode);
 
-        ///Buy as much possible for quoteQty USDT specified
-        public BinanceOrder BuyLimit(string symbol, double quoteQty, MyEnum.TimeInForce timeInForce, ref System.Net.HttpStatusCode httpStatusCode);
-
-        ///Sell a quantity of the symbol
         public BinanceOrder SellMarket(string symbol, double qty, ref System.Net.HttpStatusCode httpStatusCode);
 
-        // public static BinanceOrder BuyLimit(string symbol, double quantity, Enum.TimeInForce timeInForce)
-        // {
-        //     string stringQuantity = quantity.ToString().Replace(",", ".");
-        //     System.Net.HttpStatusCode httpStatusCode = System.Net.HttpStatusCode.NoContent;
-        //     try
-        //     {
-        //         SetEnv(ref secretKey, ref publicKey, ref host);
-        //         string parameters = $"timestamp={ServerTime(publicKey)}&symbol={symbol}&quantity={stringQuantity}&timeInForce={timeInForce.ToString()}&side=BUY&type=LIMIT&recvWindow=60000";
-        //         string signature = GetSignature(parameters, secretKey);
-        //         string apiUrl = $"{host}/api/v3/order?{parameters}&signature={signature}";
+        public BinanceOrder BuyLimit(string symbol, double qty, MyEnum.TimeInForce timeInForce);
 
-        //         if(!Globals.isProd)
-        //         { 
-        //             apiUrl = $"{host}/api/v3/order?{parameters}&signature={signature}";
-        //         }
-        //         return HttpHelper.PostApiData<BinanceOrder>(new Uri(apiUrl), publicKey, new StringContent("", Encoding.UTF8, "application/json"), ref httpStatusCode);
-
-        //     }
-        //     catch (System.Exception e)
-        //     { 
-        //         Console.WriteLine(e);
-        //         return null;
-        //     }
-        // }
-
-        public void SellLimit(string symbol, double quantity, MyEnum.TimeInForce timeInForce, ref System.Net.HttpStatusCode httpStatusCode);
+        public BinanceOrder SellLimit(string symbol, double qty, MyEnum.TimeInForce timeInForce, ref System.Net.HttpStatusCode httpStatusCode);
     }
 }
