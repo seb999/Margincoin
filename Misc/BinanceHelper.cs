@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.SignalR;
 
 namespace MarginCoin.Misc
 {
-    public static class BinanceHelper
+    public static class BinanceHelper123
     {
         const string testPublicKey = "HsKWfKtktmw07gqsCyK1TJThULUnAivnFxF13vFUZf4WjLJXsbwmaPOIgw5rNAuQ";  //for https://testnet.binance.vision/
         const string testSecretKey = "ncSzN6J4Efh8Xb53e1uYkuHCw9VFAemUKjCEPdwY5WtdbMJOAEzEIuP5qMrjKewX";

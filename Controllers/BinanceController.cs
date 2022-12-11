@@ -54,7 +54,7 @@ namespace MarginCoin.Controllers
         public async void Sell(string symbol, double qty)
         {
             System.Net.HttpStatusCode httpStatusCode = System.Net.HttpStatusCode.NoContent;
-            BinanceOrder myBinanceOrder = BinanceHelper.SellMarket(symbol, qty, ref httpStatusCode);
+            BinanceOrder myBinanceOrder = _binanceService.SellMarket(symbol, qty, ref httpStatusCode);
             if (myBinanceOrder == null) return;
             if (myBinanceOrder.status == "FILLED")
             {
@@ -62,7 +62,7 @@ namespace MarginCoin.Controllers
                 return;
             }
             await Task.Delay(500);
-            if (BinanceHelper.OrderStatus(myBinanceOrder.symbol, myBinanceOrder.orderId).status == "FILLED")
+            if (_binanceService.OrderStatus(myBinanceOrder.symbol, myBinanceOrder.orderId).status == "FILLED")
             {
                 await _hub.Clients.All.SendAsync("sellOrderFilled", JsonSerializer.Serialize(myBinanceOrder));
             }

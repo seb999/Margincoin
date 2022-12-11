@@ -45,7 +45,7 @@ namespace MarginCoin.Controllers
         double takeProfit = 1;
 
         //max trade that can be open
-        int maxOpenTrade = 1;
+        int maxOpenTrade = 3;
 
         int quoteOrderQty = 1000;
 
@@ -61,7 +61,7 @@ namespace MarginCoin.Controllers
             _hub = hub;
             _binanceService = binanceService;
             _appDbContext = appDbContext;
-            logger.LogWarning("Weather Forecast executing...");
+            logger.LogWarning("Start trading market...");
         }
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -236,8 +236,8 @@ namespace MarginCoin.Controllers
 
                     List<Candle> symbolCandle = candleMatrice.Where(p => p.First().s == symbol).FirstOrDefault();  //get the line that coorespond to the symbol
 
-                    //if ((CheckCandle(numberPreviousCandle, marketStreamOnSpot[i], symbolCandle) && !Globals.symbolOnHold.FirstOrDefault(p => p.Key == symbol).Value) || Globals.swallowOneOrder)
-                    if (Globals.swallowOneOrder)
+                    //if (Globals.swallowOneOrder)
+                    if((CheckCandle(numberPreviousCandle, marketStreamOnSpot[i], symbolCandle) && !Globals.onHold.FirstOrDefault(p => p.Key == symbol).Value) || Globals.swallowOneOrder)
                     {
                         Globals.swallowOneOrder = false;
                         if (Globals.isTradingOpen)
@@ -430,7 +430,7 @@ namespace MarginCoin.Controllers
             int quoteQty = quoteOrderQty;
 
             if (splitOrder) { quoteQty = quoteQty / 2; }
-            BinanceOrder myBinanceOrder = BinanceHelper.BuyMarket(symbolSpot.s, quoteQty, ref httpStatusCode);
+            BinanceOrder myBinanceOrder = _binanceService.BuyMarket(symbolSpot.s, quoteQty, ref httpStatusCode);
 
             //if order doesn't pass we split it
             if (httpStatusCode == System.Net.HttpStatusCode.BadRequest)
@@ -445,7 +445,7 @@ namespace MarginCoin.Controllers
             while (myBinanceOrder.status != "FILLED")
             {
                 if (i == 5) break;
-                myBinanceOrder = BinanceHelper.OrderStatus(myBinanceOrder.symbol, myBinanceOrder.orderId);
+                myBinanceOrder = _binanceService.OrderStatus(myBinanceOrder.symbol, myBinanceOrder.orderId);
                 i++;
             }
 
@@ -464,7 +464,7 @@ namespace MarginCoin.Controllers
             System.Net.HttpStatusCode httpStatusCode = System.Net.HttpStatusCode.NoContent;
 
             Order myOrder = _appDbContext.Order.Where(p => p.Id == id).Select(p => p).FirstOrDefault();
-            BinanceOrder myBinanceOrder = BinanceHelper.SellMarket(myOrder.Symbol, myOrder.Quantity, ref httpStatusCode);
+            BinanceOrder myBinanceOrder = _binanceService.SellMarket(myOrder.Symbol, myOrder.Quantity, ref httpStatusCode);
 
             if (myBinanceOrder == null) return;
 
@@ -472,7 +472,7 @@ namespace MarginCoin.Controllers
             while (myBinanceOrder.status != "FILLED")
             {
                 if (i == 5) break;
-                myBinanceOrder = BinanceHelper.OrderStatus(myBinanceOrder.symbol, myBinanceOrder.orderId);
+                myBinanceOrder = _binanceService.OrderStatus(myBinanceOrder.symbol, myBinanceOrder.orderId);
                 i++;
             }
 

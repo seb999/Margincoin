@@ -1,11 +1,12 @@
 <!-- Button -->
 <div class="row">
+
+ 
+
   <div class="col-9">
     <div class="row">
 
       <div class="col-3">
-        <!-- <button class="btn btn-primary btn-sm mr-1" (click)="monitorMarket()"><i class="fa-solid fa-check"></i> Monitor
-          market</button> -->
         <button class="btn btn-secondary btn-sm mr-1" (click)="trade()">Start</button>
         <button class="btn btn-danger btn-sm mr-1" *ngIf="tradeOpen" (click)="stopTrade()">Stop</button>
         <button class="btn btn-warning btn-sm mr-1" *ngIf="!tradeOpen" (click)="resumTrade()">Resum</button>
@@ -36,7 +37,7 @@
 
   </div>
 
-  <div class="col-3">
+  <div class="col-2">
     <mat-slide-toggle [(ngModel)]="isProd" class="example-margin" [color]="color" (change)="changed()"> <b
         *ngIf="isProd">
         <p style="color: white; padding-top: 13px;">PROD</p>
@@ -44,6 +45,15 @@
         <p style="color: white; padding-top: 13px;">TEST</p>
       </b>
     </mat-slide-toggle>
+  </div>
+  <div class="col-1">
+
+     <button class="btn" 
+     (click)="isCollapsed = ! isCollapsed"
+		[attr.aria-expanded]="!isCollapsed"
+		aria-controls="collapseExample"
+    style="padding-left: 0px;padding-right:0px; float: right;"><span style="color: orange"><i class="fa fa-flask"></i>
+    </span></button>
   </div>
 </div>
 
@@ -266,3 +276,13 @@
     <button type="submit" class="btn btn-success btn-sm" (click)="modal.close('sell')">Sell</button>
   </div>
 </ng-template>
+
+<div class="fixed-bottom bg-dark" #collapse="ngbCollapse" [(ngbCollapse)]="isCollapsed">
+  <div class="card bg-dark">
+		<div class="card-body" style="color:white">
+      <ul style="height: 140px; overflow: scroll;">
+        <li *ngFor="let item of logList">{{item}}</li>
+      </ul>
+	</div>
+</div>
+

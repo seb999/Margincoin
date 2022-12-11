@@ -28,8 +28,6 @@ HC_EMA(Highcharts);
 HC_MACD(Highcharts);
 HC_THEME(Highcharts);
 
-
-
 @Component({
   selector: 'app-wallet',
   templateUrl: './wallet.component.html',
@@ -47,7 +45,7 @@ export class WalletComponent {
   public pendingOrderList: Order[];
   public myAccount: BinanceAccount;
   public orderList: Order[];
-  public assetList: any[];
+  public logList: any[];
   public CandleList: any[];
   public totalProfit: number;
   public serverMsg: ServerMsg;
@@ -59,6 +57,7 @@ export class WalletComponent {
   public tradeOpen: boolean;
   public popupSymbol: string;
   public popupQty: number;
+  public isCollapsed = true;
 
   color = 'accent';
   isProd = false;
@@ -148,12 +147,13 @@ export class WalletComponent {
     });
 
     //Get Wallet asset
-    // this.assetList = await this.binanceAsset();
+    this.logList = await this.getLog();
     this.myAccount = await this.binanceAccount();
   }
 
   async refreshUI() {
     this.myAccount = await this.binanceAccount();
+    this.logList = await this.getLog();
   }
 
   openPopOver(popover, order: BinanceOrder) {
@@ -271,10 +271,10 @@ export class WalletComponent {
     return await this.httpService.xhr(httpSetting);
   }
 
-  async binanceAsset(): Promise<any> {
+  async getLog(): Promise<any> {
     const httpSetting: HttpSettings = {
       method: 'GET',
-      url: location.origin + '/api/Binance/BinanceAsset',
+      url: location.origin + '/api/Log/GetLog',
     };
     return await this.httpService.xhr(httpSetting);
   }

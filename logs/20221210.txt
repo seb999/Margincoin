@@ -1,0 +1,57 @@
+2022-12-10 11:54:37.803 +01:00 [WRN] MarginCoin, started!
+2022-12-10 11:55:55.117 +01:00 [WRN] Get Account OK
+2022-12-10 12:02:30.183 +01:00 [WRN] Get Account OK
+2022-12-10 12:03:51.318 +01:00 [WRN] Get Account OK
+2022-12-10 12:04:15.628 +01:00 [WRN] Get Account OK
+2022-12-10 12:04:20.363 +01:00 [WRN] Get Account OK
+2022-12-10 12:04:40.577 +01:00 [WRN] Get Account OK
+2022-12-10 12:04:46.731 +01:00 [WRN] Get Account OK
+2022-12-10 12:05:06.109 +01:00 [WRN] Get Account OK
+2022-12-10 12:05:38.860 +01:00 [WRN] Get Account OK
+2022-12-10 12:08:08.643 +01:00 [WRN] Get Account OK
+2022-12-10 12:08:26.425 +01:00 [WRN] Get Account OK
+2022-12-10 12:09:15.444 +01:00 [WRN] Get Account OK
+2022-12-10 12:19:51.424 +01:00 [WRN] Get Account OK
+2022-12-10 15:33:39.130 +01:00 [WRN] MarginCoin, started!
+2022-12-10 15:34:38.072 +01:00 [WRN] Get Account OK
+2022-12-10 15:34:51.583 +01:00 [WRN] OK
+2022-12-10 15:34:58.177 +01:00 [WRN] Get Account OK
+2022-12-10 15:35:16.259 +01:00 [WRN] OK
+2022-12-10 15:35:23.219 +01:00 [WRN] Get Account OK
+2022-12-10 15:38:43.346 +01:00 [WRN] OK
+2022-12-10 15:38:50.677 +01:00 [WRN] Get Account OK
+2022-12-10 15:41:17.465 +01:00 [WRN] MarginCoin, started!
+2022-12-10 15:41:22.543 +01:00 [WRN] Get Account OK
+2022-12-10 15:41:32.450 +01:00 [WRN] Call SellMarket OK
+2022-12-10 15:41:39.532 +01:00 [WRN] Get Account OK
+2022-12-10 15:51:48.077 +01:00 [WRN] Get Account OK
+2022-12-10 23:36:52.216 +01:00 [WRN] MarginCoin, started!
+2022-12-10 23:36:59.047 +01:00 [WRN] Get Account OK
+2022-12-10 23:37:00.754 +01:00 [WRN] Get Account OK
+2022-12-10 23:37:41.604 +01:00 [WRN] Call SellMarket OK
+2022-12-10 23:37:49.082 +01:00 [WRN] Get Account OK
+2022-12-10 23:38:23.036 +01:00 [WRN] Weather Forecast executing...
+2022-12-10 23:39:07.610 +01:00 [WRN] Weather Forecast executing...
+2022-12-10 23:39:24.765 +01:00 [WRN] Weather Forecast executing...
+2022-12-10 23:39:34.065 +01:00 [WRN] Weather Forecast executing...
+2022-12-10 23:39:56.645 +01:00 [WRN] Weather Forecast executing...
+2022-12-10 23:40:24.233 +01:00 [WRN] MarginCoin, started!
+2022-12-10 23:40:33.241 +01:00 [WRN] Get Account OK
+2022-12-10 23:40:47.564 +01:00 [WRN] Get Account OK
+2022-12-10 23:40:53.399 +01:00 [WRN] Start trading market...
+2022-12-10 23:41:04.477 +01:00 [WRN] Start trading market...
+2022-12-10 23:44:03.005 +01:00 [WRN] Call BuyMarket NoContent
+2022-12-10 23:44:21.443 +01:00 [WRN] MarginCoin, started!
+2022-12-10 23:44:54.663 +01:00 [WRN] Get Account OK
+2022-12-10 23:44:55.185 +01:00 [WRN] Start trading market...
+2022-12-10 23:45:07.334 +01:00 [WRN] Start trading market...
+2022-12-10 23:45:08.467 +01:00 [WRN] Call BuyMarket NoContent
+2022-12-10 23:45:11.345 +01:00 [WRN] Get Account OK
+2022-12-10 23:48:26.854 +01:00 [WRN] MarginCoin, started!
+2022-12-10 23:48:32.876 +01:00 [WRN] Get Account OK
+2022-12-10 23:48:45.358 +01:00 [WRN] Get Account OK
+2022-12-10 23:48:47.854 +01:00 [WRN] Start trading market...
+2022-12-10 23:49:03.136 +01:00 [WRN] Start trading market...
+2022-12-10 23:49:05.330 +01:00 [WRN] Call BuyMarket OK
+2022-12-10 23:49:07.478 +01:00 [WRN] Get Account OK
+2022-12-10 23:49:37.072 +01:00 [WRN] Get Account OK

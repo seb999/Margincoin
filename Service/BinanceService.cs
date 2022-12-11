@@ -77,7 +77,7 @@ namespace MarginCoin.Misc
                 var result = HttpHelper.GetApiData<BinanceAccount>(new Uri(apiUrl), publicKey, ref httpStatusCode);
                 if (result != null)
                 {
-                    _logger.LogTrace($"Get {MyEnum.BinanceApiCall.Account} {httpStatusCode.ToString()}");
+                    _logger.LogWarning($"Get {MyEnum.BinanceApiCall.Account} {httpStatusCode.ToString()}");
                     return result;
                 }
                 else
@@ -88,7 +88,7 @@ namespace MarginCoin.Misc
             }
             catch (System.Exception e)
             {
-                _logger.LogError(e, "Get " + MyEnum.BinanceApiCall.Account);
+                _logger.LogError(e, $"Get {MyEnum.BinanceApiCall.Account}");
                 return null;
             }
         }
@@ -110,7 +110,7 @@ namespace MarginCoin.Misc
                 }
 
                 var result = HttpHelper.GetApiData<BinanceOrder>(new Uri(apiUrl), publicKey, ref httpStatusCode);
-                _logger.LogWarning(httpStatusCode.ToString(), "Get " + MyEnum.BinanceApiCall.OrderStatus);
+                _logger.LogWarning($"Get {MyEnum.BinanceApiCall.OrderStatus} {httpStatusCode.ToString()}");
                 return result;
             }
             catch (System.Exception e)
@@ -135,12 +135,13 @@ namespace MarginCoin.Misc
                     apiUrl = $"{host}/api/v3/order?{parameters}&signature={signature}";
                 }
 
-                _logger.LogWarning(httpStatusCode.ToString(), "Call " + MyEnum.BinanceApiCall.BuyMarket);
-                return HttpHelper.PostApiData<BinanceOrder>(new Uri(apiUrl), publicKey, new StringContent("", Encoding.UTF8, "application/json"), ref httpStatusCode);
+                var result = HttpHelper.PostApiData<BinanceOrder>(new Uri(apiUrl), publicKey, new StringContent("", Encoding.UTF8, "application/json"), ref httpStatusCode);
+                _logger.LogWarning($"Call {MyEnum.BinanceApiCall.BuyMarket} {httpStatusCode.ToString()}");
+                return result;
             }
             catch (System.Exception e)
             {
-                _logger.LogError(e, "Binance BuyMarket call");
+                _logger.LogError(e, $"Call {MyEnum.BinanceApiCall.BuyMarket}");
                 return null;
             }
         }
@@ -161,12 +162,12 @@ namespace MarginCoin.Misc
                 }
 
                 var result = HttpHelper.PostApiData<BinanceOrder>(new Uri(apiUrl), publicKey, new StringContent("", Encoding.UTF8, "application/json"), ref httpStatusCode);
-                _logger.LogWarning(httpStatusCode.ToString(), "Call " + MyEnum.BinanceApiCall.SellMarket);
+                _logger.LogWarning($"Call {MyEnum.BinanceApiCall.SellMarket} {httpStatusCode.ToString()}");
                 return result;
             }
             catch (System.Exception e)
             {
-                _logger.LogError(e, "Call " + MyEnum.BinanceApiCall.SellMarket);
+                _logger.LogError(e, $"Call {MyEnum.BinanceApiCall.SellMarket}");
                 return null;
             }
         }
@@ -193,7 +194,7 @@ namespace MarginCoin.Misc
             }
             catch (System.Exception e)
             {
-                _logger.LogError(e, "Call " + MyEnum.BinanceApiCall.BuyLimit);
+                _logger.LogError(e, $"Call {MyEnum.BinanceApiCall.BuyLimit}");
                 return null;
             }
         }
@@ -214,12 +215,12 @@ namespace MarginCoin.Misc
                 }
                
                 var result = HttpHelper.PostApiData<BinanceOrder>(new Uri(apiUrl), publicKey, new StringContent("", Encoding.UTF8, "application/json"), ref httpStatusCode);
-             _logger.LogWarning(httpStatusCode.ToString(), "Call " + MyEnum.BinanceApiCall.SellLimit);
+                _logger.LogWarning($"Call {MyEnum.BinanceApiCall.SellLimit} {httpStatusCode.ToString()}");
              return result;
             }
             catch (System.Exception e)
             {
-                _logger.LogError(e, "Call " + MyEnum.BinanceApiCall.SellLimit);
+                _logger.LogError(e, $"Call {MyEnum.BinanceApiCall.SellLimit}");
                 return null;
             }
         }
