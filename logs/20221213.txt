@@ -1,0 +1,81 @@
+2022-12-13 11:09:59.945 +01:00 [ERR] HTTP GET /sockjs-node/032/mxqeqnj3/websocket responded 500 in 294153.6711 ms
+System.Net.WebSockets.WebSocketException (0x80004005): The WebSocket is in an invalid state ('Aborted') for this operation. Valid states are: 'Open, CloseReceived'
+   at System.Net.WebSockets.WebSocketValidate.ThrowIfInvalidState(WebSocketState currentState, Boolean isDisposed, WebSocketState[] validStates)
+   at System.Net.WebSockets.ManagedWebSocket.CloseOutputAsyncCore(WebSocketCloseStatus closeStatus, String statusDescription, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.SpaServices.Extensions.Proxy.SpaProxy.PumpWebSocket(WebSocket source, WebSocket destination, Int32 bufferSize, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.SpaServices.Extensions.Proxy.SpaProxy.AcceptProxyWebSocketRequest(HttpContext context, Uri destinationUri, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.SpaServices.Extensions.Proxy.SpaProxy.PerformProxyRequest(HttpContext context, HttpClient httpClient, Task`1 baseUriTask, CancellationToken applicationStoppingToken, Boolean proxy404s)
+   at Microsoft.AspNetCore.Builder.SpaProxyingExtensions.<>c__DisplayClass2_0.<<UseProxyToSpaDevelopmentServer>b__0>d.MoveNext()
+--- End of stack trace from previous location ---
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+2022-12-13 11:09:59.999 +01:00 [ERR] An unhandled exception has occurred while executing the request.
+System.Net.WebSockets.WebSocketException (0x80004005): The WebSocket is in an invalid state ('Aborted') for this operation. Valid states are: 'Open, CloseReceived'
+   at System.Net.WebSockets.WebSocketValidate.ThrowIfInvalidState(WebSocketState currentState, Boolean isDisposed, WebSocketState[] validStates)
+   at System.Net.WebSockets.ManagedWebSocket.CloseOutputAsyncCore(WebSocketCloseStatus closeStatus, String statusDescription, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.SpaServices.Extensions.Proxy.SpaProxy.PumpWebSocket(WebSocket source, WebSocket destination, Int32 bufferSize, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.SpaServices.Extensions.Proxy.SpaProxy.AcceptProxyWebSocketRequest(HttpContext context, Uri destinationUri, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.SpaServices.Extensions.Proxy.SpaProxy.PerformProxyRequest(HttpContext context, HttpClient httpClient, Task`1 baseUriTask, CancellationToken applicationStoppingToken, Boolean proxy404s)
+   at Microsoft.AspNetCore.Builder.SpaProxyingExtensions.<>c__DisplayClass2_0.<<UseProxyToSpaDevelopmentServer>b__0>d.MoveNext()
+--- End of stack trace from previous location ---
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware.Invoke(HttpContext context)
+2022-12-13 11:10:00.003 +01:00 [WRN] The response has already started, the error page middleware will not be executed.
+2022-12-13 11:10:00.012 +01:00 [ERR] Connection id "0HMMSG2HLDTA2", Request id "0HMMSG2HLDTA2:00000002": An unhandled exception was thrown by the application.
+System.Net.WebSockets.WebSocketException (0x80004005): The WebSocket is in an invalid state ('Aborted') for this operation. Valid states are: 'Open, CloseReceived'
+   at System.Net.WebSockets.WebSocketValidate.ThrowIfInvalidState(WebSocketState currentState, Boolean isDisposed, WebSocketState[] validStates)
+   at System.Net.WebSockets.ManagedWebSocket.CloseOutputAsyncCore(WebSocketCloseStatus closeStatus, String statusDescription, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.SpaServices.Extensions.Proxy.SpaProxy.PumpWebSocket(WebSocket source, WebSocket destination, Int32 bufferSize, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.SpaServices.Extensions.Proxy.SpaProxy.AcceptProxyWebSocketRequest(HttpContext context, Uri destinationUri, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.SpaServices.Extensions.Proxy.SpaProxy.PerformProxyRequest(HttpContext context, HttpClient httpClient, Task`1 baseUriTask, CancellationToken applicationStoppingToken, Boolean proxy404s)
+   at Microsoft.AspNetCore.Builder.SpaProxyingExtensions.<>c__DisplayClass2_0.<<UseProxyToSpaDevelopmentServer>b__0>d.MoveNext()
+--- End of stack trace from previous location ---
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.HttpProtocol.ProcessRequests[TContext](IHttpApplication`1 application)
+2022-12-13 11:10:03.257 +01:00 [WRN] Get Account OK
+2022-12-13 11:10:05.868 +01:00 [WRN] Start trading market...
+2022-12-13 11:10:18.486 +01:00 [FTL] Connection id "0HMMSG2HLDT90" application never completed
+2022-12-13 11:10:18.486 +01:00 [FTL] Connection id "0HMMSG2HLDT7L" application never completed
+2022-12-13 11:10:19.214 +01:00 [WRN] Call BuyMarket OK
+2022-12-13 11:10:21.005 +01:00 [WRN] Get Account OK
+2022-12-13 11:12:25.151 +01:00 [WRN] Get Account OK
+2022-12-13 11:12:25.817 +01:00 [WRN] Get Account OK
+2022-12-13 11:14:49.128 +01:00 [WRN] Get Account OK
+2022-12-13 11:34:13.038 +01:00 [WRN] Get Account OK
+2022-12-13 11:34:20.979 +01:00 [WRN] MarginCoin, started!
+2022-12-13 11:34:25.903 +01:00 [WRN] Get Account OK
+2022-12-13 11:34:26.330 +01:00 [WRN] Start trading market...
+2022-12-13 11:38:50.368 +01:00 [WRN] Call BuyMarket XRPUSDT OK
+2022-12-13 11:38:51.583 +01:00 [WRN] Get Account OK
+2022-12-13 13:36:52.842 +01:00 [WRN] MarginCoin, started!
+2022-12-13 13:36:59.100 +01:00 [WRN] Start trading market...
+2022-12-13 13:37:00.198 +01:00 [WRN] Get Account OK
+2022-12-13 16:07:15.704 +01:00 [WRN] MarginCoin, started!
+2022-12-13 16:07:22.424 +01:00 [WRN] Start trading market...
+2022-12-13 16:07:22.990 +01:00 [WRN] Get Account OK
+2022-12-13 16:17:27.552 +01:00 [WRN] Get Account OK
+2022-12-13 16:17:54.375 +01:00 [WRN] Start trading market...
+2022-12-13 16:18:20.165 +01:00 [WRN] Get Account OK
+2022-12-13 16:19:15.306 +01:00 [WRN] Start trading market...
+2022-12-13 16:19:15.902 +01:00 [WRN] Call SellMarket LTCUSDT OK
+2022-12-13 16:19:22.628 +01:00 [WRN] Get Account OK
+2022-12-13 16:19:26.795 +01:00 [WRN] Start trading market...
+2022-12-13 16:19:27.625 +01:00 [WRN] Call SellMarket XRPUSDT OK
+2022-12-13 16:19:34.936 +01:00 [WRN] Get Account OK
+2022-12-13 16:28:21.239 +01:00 [WRN] MarginCoin, started!
+2022-12-13 16:28:46.487 +01:00 [WRN] Get Account OK
+2022-12-13 16:28:47.328 +01:00 [WRN] Start trading market...
+2022-12-13 16:35:55.994 +01:00 [WRN] Get Account OK
+2022-12-13 16:36:18.103 +01:00 [WRN] Start trading market...
+2022-12-13 16:36:20.534 +01:00 [WRN] Get Account OK
+2022-12-13 16:36:22.093 +01:00 [WRN] Get Account OK
+2022-12-13 16:36:23.654 +01:00 [WRN] Get Account OK
+2022-12-13 16:36:24.675 +01:00 [WRN] Get Account OK
+2022-12-13 16:36:30.151 +01:00 [WRN] Get Account OK
+2022-12-13 16:59:17.564 +01:00 [WRN] Start trading market...
+2022-12-13 17:49:50.330 +01:00 [WRN] MarginCoin, started!
+2022-12-13 17:49:57.992 +01:00 [WRN] Get Account OK
+2022-12-13 17:50:01.573 +01:00 [WRN] Get Account OK
+2022-12-13 17:50:10.367 +01:00 [WRN] Start trading market...
+2022-12-13 19:04:01.014 +01:00 [WRN] Start trading market...

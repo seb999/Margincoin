@@ -136,7 +136,7 @@ namespace MarginCoin.Misc
                 }
 
                 var result = HttpHelper.PostApiData<BinanceOrder>(new Uri(apiUrl), publicKey, new StringContent("", Encoding.UTF8, "application/json"), ref httpStatusCode);
-                _logger.LogWarning($"Call {MyEnum.BinanceApiCall.BuyMarket} {httpStatusCode.ToString()}");
+                _logger.LogWarning($"Call {MyEnum.BinanceApiCall.BuyMarket} {symbol} {httpStatusCode.ToString()}");
                 return result;
             }
             catch (System.Exception e)
@@ -162,7 +162,7 @@ namespace MarginCoin.Misc
                 }
 
                 var result = HttpHelper.PostApiData<BinanceOrder>(new Uri(apiUrl), publicKey, new StringContent("", Encoding.UTF8, "application/json"), ref httpStatusCode);
-                _logger.LogWarning($"Call {MyEnum.BinanceApiCall.SellMarket} {httpStatusCode.ToString()}");
+                _logger.LogWarning($"Call {MyEnum.BinanceApiCall.SellMarket} {symbol} {httpStatusCode.ToString()}");
                 return result;
             }
             catch (System.Exception e)

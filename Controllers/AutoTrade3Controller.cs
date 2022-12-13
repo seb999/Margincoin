@@ -237,9 +237,9 @@ namespace MarginCoin.Controllers
                     List<Candle> symbolCandle = candleMatrice.Where(p => p.First().s == symbol).FirstOrDefault();  //get the line that coorespond to the symbol
 
                     //if (Globals.swallowOneOrder)
-                    if((CheckCandle(numberPreviousCandle, marketStreamOnSpot[i], symbolCandle) && !Globals.onHold.FirstOrDefault(p => p.Key == symbol).Value) || Globals.swallowOneOrder)
+                    if((CheckCandle(numberPreviousCandle, marketStreamOnSpot[i], symbolCandle) && !Globals.onHold.FirstOrDefault(p => p.Key == symbol).Value))
                     {
-                        Globals.swallowOneOrder = false;
+                        //Globals.swallowOneOrder = false;
                         if (Globals.isTradingOpen)
                         {
                             Console.WriteLine($"Open trade on {symbol}");
@@ -272,7 +272,7 @@ namespace MarginCoin.Controllers
 
             //0 - Don't trade if only 14% coins are up over the last 24h AND coin is slittly negatif
             //    If the coin is very negatif over last 24h we are in a dive and we want to trade at reversal tendance
-            if ((double)nbrUp < 40 && symbolSpot.P > -5)
+            if ((double)nbrUp < 30 && symbolSpot.P > -5)
             {
                 return false;
             }
@@ -321,14 +321,14 @@ namespace MarginCoin.Controllers
             double highPrice = 0;
             Candle lastCandle = new Candle();
 
-            SaveHighLow(lastCandle, activeOrder);
-
             //iteration the matrice to find the line for the symbol of the active order
             List<Candle> symbolCandle = candleMatrice.Where(p => p.First().s == activeOrder.Symbol).FirstOrDefault();
             int symbolCandleIndex = candleMatrice.IndexOf(symbolCandle); //get the line that coorespond to the symbol]
             lastPrice = symbolCandle.Select(p => p.c).LastOrDefault();
             highPrice = symbolCandle.Select(p => p.h).LastOrDefault();
             lastCandle = symbolCandle.Select(p => p).LastOrDefault();
+
+             SaveHighLow(lastCandle, activeOrder);
 
             if (lastPrice <= activeOrder.OpenPrice * (1 - (activeOrder.StopLose / 100)))
             {

@@ -1,0 +1,64 @@
+2022-12-12 12:11:31.778 +01:00 [WRN] MarginCoin, started!
+2022-12-12 12:11:52.804 +01:00 [WRN] Get Account OK
+2022-12-12 12:12:13.172 +01:00 [WRN] Start trading market...
+2022-12-12 12:12:45.946 +01:00 [WRN] Get Account OK
+2022-12-12 12:45:07.792 +01:00 [WRN] Get Account OK
+2022-12-12 12:46:12.931 +01:00 [WRN] Call SellMarket OK
+2022-12-12 12:46:19.531 +01:00 [WRN] Get Account OK
+2022-12-12 14:23:34.405 +01:00 [WRN] Get Account OK
+2022-12-12 14:23:35.526 +01:00 [WRN] Start trading market...
+2022-12-12 15:48:53.531 +01:00 [WRN] Get Account OK
+2022-12-12 15:54:02.343 +01:00 [WRN] Get Account OK
+2022-12-12 15:54:09.812 +01:00 [WRN] Start trading market...
+2022-12-12 15:57:22.882 +01:00 [WRN] Get Account OK
+2022-12-12 18:06:01.714 +01:00 [WRN] Start trading market...
+2022-12-12 18:06:03.034 +01:00 [WRN] Get Account OK
+2022-12-12 18:06:13.565 +01:00 [FTL] Connection id "0HMMS66K1L0ND" application never completed
+2022-12-12 18:06:13.566 +01:00 [FTL] Connection id "0HMMS66K1L0LJ" application never completed
+2022-12-12 18:06:32.739 +01:00 [WRN] Start trading market...
+2022-12-12 18:08:17.874 +01:00 [FTL] Connection id "0HMMS66K1L0MS" application never completed
+2022-12-12 21:18:08.366 +01:00 [WRN] Get Account OK
+2022-12-12 21:19:16.891 +01:00 [WRN] Get Account OK
+2022-12-12 21:20:31.837 +01:00 [WRN] Get Account OK
+2022-12-12 21:20:36.937 +01:00 [WRN] Get Account OK
+2022-12-12 21:20:43.527 +01:00 [WRN] Get Account OK
+2022-12-12 21:27:32.420 +01:00 [WRN] Get Account OK
+2022-12-12 21:27:46.138 +01:00 [WRN] Get Account OK
+2022-12-12 21:33:05.463 +01:00 [WRN] MarginCoin, started!
+2022-12-12 21:33:11.165 +01:00 [WRN] Get Account OK
+2022-12-12 21:34:15.056 +01:00 [WRN] Start trading market...
+2022-12-12 21:34:16.743 +01:00 [WRN] Get Account OK
+2022-12-12 21:34:48.026 +01:00 [WRN] MarginCoin, started!
+2022-12-12 21:34:55.122 +01:00 [WRN] Get Account OK
+2022-12-12 21:35:02.877 +01:00 [WRN] Start trading market...
+2022-12-12 21:35:47.698 +01:00 [WRN] Get Account OK
+2022-12-12 21:37:02.896 +01:00 [WRN] MarginCoin, started!
+2022-12-12 21:37:11.292 +01:00 [WRN] Get Account OK
+2022-12-12 21:37:17.666 +01:00 [WRN] Start trading market...
+2022-12-12 21:37:31.078 +01:00 [WRN] Call BuyMarket OK
+2022-12-12 21:37:31.802 +01:00 [WRN] Call BuyMarket OK
+2022-12-12 21:37:32.932 +01:00 [WRN] Get Account OK
+2022-12-12 21:37:33.968 +01:00 [WRN] Get Account OK
+2022-12-12 22:00:03.945 +01:00 [WRN] Call BuyMarket OK
+2022-12-12 22:00:05.276 +01:00 [WRN] Get Account OK
+2022-12-12 22:26:03.739 +01:00 [WRN] Get Account OK
+2022-12-12 22:26:04.925 +01:00 [WRN] Get Account OK
+2022-12-12 22:50:55.270 +01:00 [WRN] Get Account OK
+2022-12-12 22:51:27.552 +01:00 [WRN] Get Account OK
+2022-12-12 23:20:24.785 +01:00 [WRN] Get Account OK
+2022-12-12 23:20:24.834 +01:00 [WRN] Start trading market...
+2022-12-12 23:23:56.547 +01:00 [WRN] Start trading market...
+2022-12-12 23:23:58.243 +01:00 [WRN] Call SellMarket OK
+2022-12-12 23:24:05.510 +01:00 [WRN] Get Account OK
+2022-12-12 23:24:10.479 +01:00 [WRN] Start trading market...
+2022-12-12 23:24:12.038 +01:00 [WRN] Call SellMarket OK
+2022-12-12 23:24:19.173 +01:00 [WRN] Get Account OK
+2022-12-12 23:24:23.444 +01:00 [WRN] Start trading market...
+2022-12-12 23:24:24.766 +01:00 [WRN] Call SellMarket OK
+2022-12-12 23:24:31.836 +01:00 [WRN] Get Account OK
+2022-12-12 23:25:36.747 +01:00 [WRN] Call SellMarket BadRequest
+2022-12-12 23:25:47.938 +01:00 [WRN] Get Account OK
+2022-12-12 23:25:59.716 +01:00 [WRN] Get Account OK
+2022-12-12 23:26:11.866 +01:00 [WRN] Call SellMarket OK
+2022-12-12 23:26:18.646 +01:00 [WRN] Get Account OK
+2022-12-12 23:26:32.829 +01:00 [WRN] Get Account OK

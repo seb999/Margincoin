@@ -191,7 +191,10 @@
         </thead>
         <tbody>
           <tr *ngFor="let asset of myAccount?.balances">
-            <td>{{asset?.asset}}</td>
+            <td>
+              <a style="color: orange" [routerLink]="" (click)="showChart2(asset.asset);">{{asset?.asset}}</a>
+             
+            </td>
             <td>{{asset?.free}}</td>
             <td>{{asset?.locked}}</td>
             <td>
@@ -280,6 +283,9 @@
 <div class="fixed-bottom bg-dark" #collapse="ngbCollapse" [(ngbCollapse)]="isCollapsed">
   <div class="card bg-dark">
 		<div class="card-body" style="color:white">
+      <button class="btn" (click)="refreshUI()"
+     style="padding-left: 0px;padding-right:0px; float: left;"><span style="color: orange"><i class="fa fa-arrows-rotate"></i>
+     </span></button>
       <ul style="height: 140px; overflow: scroll;">
         <li *ngFor="let item of logList">{{item}}</li>
       </ul>

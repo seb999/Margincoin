@@ -322,6 +322,11 @@ export class WalletComponent {
     this.displayHighstock();
   }
 
+  async showChart2(coin) {
+    this.displaySymbol = coin + "USDT";
+    this.displayHighstock();
+  }
+
   async changeHighstockResolution(key) {
     this.interval = key
     // let params = key.split(',');
