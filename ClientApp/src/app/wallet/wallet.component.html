@@ -151,10 +151,11 @@
           <td></td>
           <td></td>
           <td></td>
-          <td></td>
+         
           <td><b>Total</b></td>
           <td *ngIf="totalProfit >=0" style="color: limegreen;">{{totalProfit.toFixed(4)}}</td>
           <td *ngIf="totalProfit < 0" style="color: rgb(255, 57, 57);">{{totalProfit.toFixed(4)}}</td>
+          <td></td>
           <td></td>
           <td></td>
           <td></td>
@@ -246,6 +247,14 @@
       </td>
       <td>
         <b>{{order.executedQty}}</b>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        Fee
+      </td>
+      <td>
+        <b>{{order.fee}}</b>
       </td>
     </tr>
   </table>

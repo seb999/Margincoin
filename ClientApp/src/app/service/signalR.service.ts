@@ -76,6 +76,13 @@ export class SignalRService {
             return this.eventMessage.emit(serverMsg);
         });
 
+        this.hubConnection.on(BackEndMessage.sellOrderExired, () => {
+            let serverMsg :ServerMsg = {
+                msgName : BackEndMessage.sellOrderExired
+            };
+            return this.eventMessage.emit(serverMsg);
+        });
+
         this.hubConnection.on(BackEndMessage.apiCheckAllowedIP, () => {
             let serverMsg :ServerMsg = {
                 msgName : BackEndMessage.apiCheckAllowedIP

@@ -12,6 +12,7 @@ using System.Net.WebSockets;
 using System.Threading;
 using static MarginCoin.Class.Prediction;
 using System.Text.Json;
+using Microsoft.Extensions.Logging;
 
 namespace MarginCoin.Controllers
 {
@@ -22,14 +23,17 @@ namespace MarginCoin.Controllers
         private IHubContext<SignalRHub> _hub;
         private IBinanceService _binanceService;
         private readonly ApplicationDbContext _appDbContext;
+        private ILogger _logger;
 
         public BinanceController(IHubContext<SignalRHub> hub, 
             [FromServices] ApplicationDbContext appDbContext,
+            ILogger<AutoTrade3Controller> logger,
             IBinanceService binanceService)
         {
             _hub = hub;
             _appDbContext = appDbContext;
             _binanceService = binanceService;
+             _logger = logger;
         }
 
         [HttpGet("[action]")]
@@ -61,6 +65,14 @@ namespace MarginCoin.Controllers
                 await _hub.Clients.All.SendAsync("sellOrderFilled", JsonSerializer.Serialize(myBinanceOrder));
                 return;
             }
+
+            if(myBinanceOrder.status == "EXPIRED")
+            {
+                await _hub.Clients.All.SendAsync(MyEnum.BinanceHttpError.sellOrderExired.ToString());
+                _logger.LogWarning($"Call {MyEnum.BinanceApiCall.SellMarket} {symbol} Expired");
+                
+            }
+
             await Task.Delay(500);
             if (_binanceService.OrderStatus(myBinanceOrder.symbol, myBinanceOrder.orderId).status == "FILLED")
             {

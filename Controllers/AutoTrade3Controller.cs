@@ -27,6 +27,7 @@ namespace MarginCoin.Controllers
         private IHubContext<SignalRHub> _hub;
         private IBinanceService _binanceService;
         private readonly ApplicationDbContext _appDbContext;
+        private ILogger _logger;
         private List<List<Candle>> candleMatrice = new List<List<Candle>>();
         private List<MarketStream> marketStreamOnSpot = new List<MarketStream>();
         private List<string> mySymbolList = new List<string>();
@@ -47,7 +48,7 @@ namespace MarginCoin.Controllers
         //max trade that can be open
         int maxOpenTrade = 3;
 
-        int quoteOrderQty = 1000;
+        int quoteOrderQty = 2000;
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////
         ///////////////////////////////-----------Constructor----------/////////////////////////////////////////
@@ -61,7 +62,7 @@ namespace MarginCoin.Controllers
             _hub = hub;
             _binanceService = binanceService;
             _appDbContext = appDbContext;
-            logger.LogWarning("Start trading market...");
+            _logger = logger;
         }
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -71,6 +72,8 @@ namespace MarginCoin.Controllers
         [HttpGet("[action]")]
         public async Task<string> MonitorMarket()
         {
+             _logger.LogWarning("Start trading market...");
+
             //Get the list of symbol that we agree to trade from DB
             mySymbolList = GetSymbolList();
 
@@ -441,6 +444,13 @@ namespace MarginCoin.Controllers
 
             if (myBinanceOrder == null) return;
 
+            if(myBinanceOrder.status == "EXPIRED")
+            {
+                await _hub.Clients.All.SendAsync(MyEnum.BinanceHttpError.sellOrderExired.ToString());
+                _logger.LogWarning($"Call {MyEnum.BinanceApiCall.BuyMarket} {symbolSpot.s} Expired");
+                return;
+                
+            }
             int i = 0;
             while (myBinanceOrder.status != "FILLED")
             {

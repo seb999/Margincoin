@@ -139,7 +139,8 @@ export class WalletComponent {
 
       if (this.serverMsg.msgName == BackEndMessage.apiAccessFaulty
         || this.serverMsg.msgName == BackEndMessage.apiTooManyRequest
-        || this.serverMsg.msgName == BackEndMessage.apiCheckAllowedIP) {
+        || this.serverMsg.msgName == BackEndMessage.apiCheckAllowedIP
+        || this.serverMsg.msgName == BackEndMessage.sellOrderExired) {
         this.showMessageError = true;
         this.messageError = this.serverMsg.msgName;
         setTimeout(() => { this.showMessageError = false }, 7000);

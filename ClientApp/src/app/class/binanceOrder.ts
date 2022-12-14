@@ -6,6 +6,7 @@ export class BinanceOrder {
     public origQty: string,
     public executedQty: string,
     public cummulativeQuoteQty: string,
+    public fee: string,
     public status: string,
     public type?: string,
     public side?: string
