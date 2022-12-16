@@ -39,14 +39,14 @@ namespace MarginCoin.Controllers
         ////////////////////////////////////////////////////////////////////////////////////////////////////////
         string interval = "1h";   //1h seem to give better result
 
-        int numberPreviousCandle = 2;
+        int numberPreviousCandle = 3;
 
         double stopLose = 0.5;
 
         double takeProfit = 1;
 
         //max trade that can be open
-        int maxOpenTrade = 3;
+        int maxOpenTrade = 5;
 
         int quoteOrderQty = 2000;
 
@@ -333,7 +333,7 @@ namespace MarginCoin.Controllers
 
              SaveHighLow(lastCandle, activeOrder);
 
-            if (lastPrice <= activeOrder.OpenPrice * (1 - (activeOrder.StopLose / 100)))
+            if (lastPrice <= (activeOrder.StopLose))
             {
                 Console.WriteLine("Close trade : stop lose ");
                 Sell(activeOrder.Id, "stop lose");
@@ -436,7 +436,7 @@ namespace MarginCoin.Controllers
             BinanceOrder myBinanceOrder = _binanceService.BuyMarket(symbolSpot.s, quoteQty, ref httpStatusCode);
 
             //if order doesn't pass we split it
-            if (httpStatusCode == System.Net.HttpStatusCode.BadRequest)
+            if (httpStatusCode == System.Net.HttpStatusCode.BadRequest && !splitOrder)
             {
                 Buy(symbolSpot, symbolCandleList, true);
                 Buy(symbolSpot, symbolCandleList, true);
