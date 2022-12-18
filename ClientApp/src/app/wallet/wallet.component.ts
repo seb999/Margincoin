@@ -16,6 +16,9 @@ import HC_RSI from 'highcharts/indicators/rsi';
 import HC_EMA from 'highcharts/indicators/ema';
 import HC_MACD from 'highcharts/indicators/macd';
 import HC_THEME from 'highcharts/themes/dark-unica';
+import HC_exporting from "highcharts/modules/exporting";
+import HC_exporting_offline from "highcharts/modules/offline-exporting";
+import HC_Data from "highcharts/modules/export-data";
 import { AppSetting } from '../app.settings';
 import { BinanceOrder } from '../class/binanceOrder';
 import { FindValueSubscriber } from 'rxjs/internal/operators/find';
@@ -27,6 +30,9 @@ HC_RSI(Highcharts);
 HC_EMA(Highcharts);
 HC_MACD(Highcharts);
 HC_THEME(Highcharts);
+HC_exporting(Highcharts);
+HC_Data(Highcharts);
+HC_exporting_offline(Highcharts);
 
 @Component({
   selector: 'app-wallet',
@@ -35,11 +41,16 @@ HC_THEME(Highcharts);
   encapsulation: ViewEncapsulation.None,
 })
 
-
 export class WalletComponent {
+  @ViewChild("lineChart", { static: false }) lineChart: any;
+  highcharts = Highcharts;
+  chartOptions: Highcharts.Options;
+
   model: NgbDateStruct;
 
   @ViewChild('p1') orderPopOver: any;
+  @ViewChild("popupPrintScreen", { static: true }) popupPrintScreen: Element;
+
 
   private ohlc = [] as any;
   public pendingOrderList: Order[];
@@ -62,8 +73,7 @@ export class WalletComponent {
   color = 'accent';
   isProd = false;
 
-  highcharts = Highcharts;
-  chartOptions: Highcharts.Options;
+
   displaySymbol: string;
   displayOrder: Order;
 
@@ -137,6 +147,12 @@ export class WalletComponent {
         this.refreshUI();
       }
 
+      if (this.serverMsg.msgName == BackEndMessage.exportChart) {
+        this.showMessageError = true;
+        this.messageError = "Exporting charts...";
+         this.exportChart();
+      }
+
       if (this.serverMsg.msgName == BackEndMessage.apiAccessFaulty
         || this.serverMsg.msgName == BackEndMessage.apiTooManyRequest
         || this.serverMsg.msgName == BackEndMessage.apiCheckAllowedIP
@@ -158,21 +174,11 @@ export class WalletComponent {
   }
 
   openPopOver(popover, order: BinanceOrder) {
-    // if (popover.isOpen()) {
-    // 	popover.close();
-    // } else {
     popover.open({ order });
-    // }
   }
 
   closePopOver(popover) {
     if (popover.isOpen()) popover.close();
-  }
-
-  showPopover() {
-    let binanceOrder = new BinanceOrder(
-      1, "ETHUSDT", "1500", "2", "2", "3000", "Filled", "ABC", "SELL");
-    this.openPopOver(this.orderPopOver, binanceOrder);
   }
 
   openPopup(popupTemplate, symbol, availableQty) {
@@ -312,27 +318,50 @@ export class WalletComponent {
   }
 
   getOpenDateTimeSpam(openDate) {
-    var openDateArr = openDate.split(" ")[0].split("/");
-    var openTime = openDate.split(" ")[1] + " " + openDate.split(" ")[2];
-    return Date.parse(openDateArr[2] + "/" + openDateArr[1] + "/" + openDateArr[0] + " " + openTime);
+    if (openDate != null) {
+      var openDateArr = openDate.split(" ")[0].split("/");
+      var openTime = openDate.split(" ")[1] + " " + openDate.split(" ")[2];
+      return Date.parse(openDateArr[2] + "/" + openDateArr[1] + "/" + openDateArr[0] + " " + openTime);
+    }
+  }
+
+
+
+  /////////////////////////////////////////////////////////////
+  /////////////    HighChart methods     //////////////////////
+  ////////////////////////////////////////////////////////////?
+
+  async exportChart() {
+    for (var i = 0; i < this.myAccount?.balances.length; i++) {
+      if (this.myAccount?.balances[i].asset == "USDT") continue;
+      await new Promise(next => {
+        this.displaySymbol = this.myAccount?.balances[i].asset + "USDT";
+        this.displayHighstock();
+        setTimeout(() => {
+          this.lineChart.chart.exportChartLocal({
+            type: "image/jpeg",
+            filename: new Date().getUTCDate.toString(),
+          });
+          next("d");
+        }, 3000);
+      });
+    }
+    setTimeout(() => { this.showMessageError = false }, 2000);
   }
 
   async showChart(symbol, orderId) {
-    this.displaySymbol = symbol;
-    this.displayOrder = await this.orderDetailHelper.getOrder(orderId);
-    this.displayHighstock();
-  }
-
-  async showChart2(coin) {
-    this.displaySymbol = coin + "USDT";
+    if (orderId != null) {
+      this.displaySymbol = symbol;
+      this.displayOrder = await this.orderDetailHelper.getOrder(orderId);
+    }
+    else {
+      this.displaySymbol = symbol + "USDT";
+    }
     this.displayHighstock();
   }
 
   async changeHighstockResolution(key) {
     this.interval = key
-    // let params = key.split(',');
-    // console.log(params);
-    // this.interval = params[0];
     this.displayHighstock();
   }
 
@@ -369,15 +398,15 @@ export class WalletComponent {
       xAxis: {
         plotLines: [{
           color: '#5EFF00',
-          width: 2,
-          //value: this.getOpenDateTimeSpam(this.openOrder?.openDate),  //display openeing date
+          width: 1,
+          value: this.getOpenDateTimeSpam(this.displayOrder?.openDate),  //display openeing date
         }]
       },
       yAxis:
         [
           {
-            crosshair: true,
-            labels: { align: 'left' }, height: '80%', plotLines: [
+            crosshair: false,
+            labels: { align: 'left' }, height: '60%', plotLines: [
               {
                 color: '#5CE25C', width: 1, value: this.displayOrder?.openPrice,
                 label: { text: "Open            ", align: 'right' }
@@ -388,15 +417,29 @@ export class WalletComponent {
               },
             ],
           },
-          { labels: { align: 'left' }, top: '80%', height: '20%', offset: 0 },
+          {
+            minorTickInterval: 0.1,
+            labels: { align: 'left' }, top: '60%', height: '30%', offset: 0
+          },
+          {
+            minorTickInterval: 0.1,
+            labels: { align: 'left' }, top: '90%', height: '10%', offset: 0
+          },
         ],
+      chart: {
+        type: "line",
+        renderTo: "chart",
+        events: {
+          load: function (event) { }
+        }
+      },
     }
 
     this.chartOptions.series =
       [
         { data: chartData, type: 'candlestick', yAxis: 0, id: 'quote', name: 'quote' },
-        { type: 'macd', yAxis: 1, linkedTo: 'quote', name: 'MACD' }
+        { type: 'macd', yAxis: 1, linkedTo: 'quote', name: 'MACD' },
+        { type: 'rsi', yAxis: 2, linkedTo: 'quote', name: 'RSI' }
       ]
-
   }
 }

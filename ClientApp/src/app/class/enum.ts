@@ -8,5 +8,6 @@ export enum BackEndMessage
     apiTooManyRequest = 'apiTooManyRequest',
     apiCheckAllowedIP = 'apiCheckAllowedIP',
     sellOrderFilled = 'sellOrderFilled',
-    sellOrderExired = 'sellOrderExired'
+    sellOrderExired = 'sellOrderExired',
+    exportChart = 'exportChart',
 };

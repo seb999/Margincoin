@@ -209,6 +209,11 @@ namespace MarginCoin.Controllers
 
         private void ProcessMarketMatrice()
         {
+            if(DateTime.Now.Minute == 0 && DateTime.Now.Second == 0)
+            { 
+                _hub.Clients.All.SendAsync("exportChart");   ///export chart for all symbol monitorerd
+            }
+
             try
             {
                 //0-Check each open order if closing is needed
@@ -440,6 +445,8 @@ namespace MarginCoin.Controllers
             {
                 Buy(symbolSpot, symbolCandleList, true);
                 Buy(symbolSpot, symbolCandleList, true);
+                if (!Globals.onHold.ContainsKey(symbolSpot.s)) Globals.onHold.Add(symbolSpot.s, true);
+                _logger.LogWarning($"Call {MyEnum.BinanceApiCall.BuyMarket} {symbolSpot.s} Locked");
             }
 
             if (myBinanceOrder == null) return;
