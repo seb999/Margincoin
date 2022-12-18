@@ -209,7 +209,8 @@ namespace MarginCoin.Controllers
 
         private void ProcessMarketMatrice()
         {
-            if(DateTime.Now.Minute == 0 && DateTime.Now.Second == 0)
+            //if(DateTime.Now.Minute == 0 && DateTime.Now.Second == 0)
+            if(DateTime.Now.Minute == 14 && DateTime.Now.Second == 0)
             { 
                 _hub.Clients.All.SendAsync("exportChart");   ///export chart for all symbol monitorerd
             }

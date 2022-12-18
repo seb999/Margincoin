@@ -4,3 +4,7 @@
 2022-12-19 00:03:02.068 +01:00 [WRN] Get Account OK
 2022-12-19 00:06:22.875 +01:00 [WRN] Get Account OK
 2022-12-19 00:08:29.180 +01:00 [WRN] Get Account OK
+2022-12-19 00:11:24.322 +01:00 [WRN] Get Account OK
+2022-12-19 00:12:25.459 +01:00 [WRN] MarginCoin, started!
+2022-12-19 00:12:33.449 +01:00 [WRN] Get Account OK
+2022-12-19 00:12:35.694 +01:00 [WRN] Start trading market...

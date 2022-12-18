@@ -340,7 +340,7 @@ export class WalletComponent {
         setTimeout(() => {
           this.lineChart.chart.exportChartLocal({
             type: "image/jpeg",
-            filename: new Date().getUTCDate.toString(),
+            filename: this.displaySymbol + new Date().getHours().toString(),
           });
           next("d");
         }, 3000);
