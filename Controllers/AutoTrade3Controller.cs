@@ -33,11 +33,12 @@ namespace MarginCoin.Controllers
         private List<string> mySymbolList = new List<string>();
         int nbrUp = 0;
         int nbrDown = 0;
+        private bool exportStarted = false;
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////------------SETTINGS----------/////////////////////////////////////////////
         ////////////////////////////////////////////////////////////////////////////////////////////////////////
-        string interval = "1h";   //1h seem to give better result
+        string interval = "3m";   //1h seem to give better result
 
         int numberPreviousCandle = 3;
 
@@ -128,11 +129,13 @@ namespace MarginCoin.Controllers
                 if (!stream.k.x)
                 {
                     if (candleMatrice[symbolIndex].Count > 0) candleMatrice[symbolIndex] = candleMatrice[symbolIndex].SkipLast(1).ToList();
+                    ExportChart(false);
                 }
                 else
                 {
                     Console.WriteLine($"New candle save : {stream.k.s}");
                     Globals.onHold.Remove(stream.k.s);
+                    ExportChart(true);
                 }
 
                 Candle newCandle = new Candle()
@@ -209,11 +212,11 @@ namespace MarginCoin.Controllers
 
         private void ProcessMarketMatrice()
         {
-            //if(DateTime.Now.Minute == 0 && DateTime.Now.Second == 0)
-            if(DateTime.Now.Minute == 14 && DateTime.Now.Second == 0)
-            { 
-                _hub.Clients.All.SendAsync("exportChart");   ///export chart for all symbol monitorerd
-            }
+            // //if(DateTime.Now.Minute == 0 && DateTime.Now.Second == 0)
+            // if(DateTime.Now.Minute == 14 && DateTime.Now.Second == 0)
+            // { 
+            //     _hub.Clients.All.SendAsync("exportChart");   ///export chart for all symbol monitorerd
+            // }
 
             try
             {
@@ -572,10 +575,23 @@ namespace MarginCoin.Controllers
 
         #region Helper
 
-        // private OrderTemplate GetOrderTemplate()
-        // {
-        //     return _appDbContext.OrderTemplate.Where(p => p.IsInactive != 1).Select(p => p).FirstOrDefault();
-        // }
+        private void ExportChart(bool doExport)
+        {
+            if(exportStarted && doExport)
+            {
+                return;
+            }
+
+            if(!exportStarted && doExport)
+            {
+                exportStarted = true;
+                 _hub.Clients.All.SendAsync("exportChart");   ///export chart for all symbol monitorerd
+            }
+
+            if(!doExport) {
+                exportStarted = false;
+            }
+        }
 
         private List<Order> GetActiveOrder()
         {

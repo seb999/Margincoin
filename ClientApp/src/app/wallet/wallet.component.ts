@@ -332,10 +332,12 @@ export class WalletComponent {
   ////////////////////////////////////////////////////////////?
 
   async exportChart() {
+    this.interval = "1h";
     for (var i = 0; i < this.myAccount?.balances.length; i++) {
       if (this.myAccount?.balances[i].asset == "USDT") continue;
       await new Promise(next => {
         this.displaySymbol = this.myAccount?.balances[i].asset + "USDT";
+        this.interval = "1h";
         this.displayHighstock();
         setTimeout(() => {
           this.lineChart.chart.exportChartLocal({
