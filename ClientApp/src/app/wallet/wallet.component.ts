@@ -49,8 +49,6 @@ export class WalletComponent {
   model: NgbDateStruct;
 
   @ViewChild('p1') orderPopOver: any;
-  @ViewChild("popupPrintScreen", { static: true }) popupPrintScreen: Element;
-
 
   private ohlc = [] as any;
   public pendingOrderList: Order[];
@@ -150,7 +148,7 @@ export class WalletComponent {
       if (this.serverMsg.msgName == BackEndMessage.exportChart) {
         this.showMessageError = true;
         this.messageError = "Exporting charts...";
-         this.exportChart();
+        this.exportChart();
       }
 
       if (this.serverMsg.msgName == BackEndMessage.apiAccessFaulty
@@ -390,6 +388,14 @@ export class WalletComponent {
 
     this.chartOptions = {
       plotOptions: {
+        //   macd: {   there is a bug here, second drowing not working
+        //     zones: [{
+        //         value: 0,
+        //         color: '#cb585f'
+        //     }, {
+        //         color: '#41c9ad'
+        //     }]
+        // },
         candlestick: {
           upColor: '#41c9ad',
           color: '#cb585f',
@@ -420,28 +426,36 @@ export class WalletComponent {
             ],
           },
           {
-            minorTickInterval: 0.1,
-            labels: { align: 'left' }, top: '60%', height: '30%', offset: 0
-          },
-          {
-            minorTickInterval: 0.1,
-            labels: { align: 'left' }, top: '90%', height: '10%', offset: 0
-          },
+            minorTickInterval: null,
+            labels: { align: 'left' }, top: '60%', height: '40%', offset: 50
+          }
         ],
-      chart: {
-        type: "line",
-        renderTo: "chart",
-        events: {
-          load: function (event) { }
-        }
-      },
     }
-
     this.chartOptions.series =
       [
-        { data: chartData, type: 'candlestick', yAxis: 0, id: 'quote', name: 'quote' },
-        { type: 'macd', yAxis: 1, linkedTo: 'quote', name: 'MACD' },
-        { type: 'rsi', yAxis: 2, linkedTo: 'quote', name: 'RSI' }
+        {
+          data: chartData,
+          type: 'candlestick',
+          yAxis: 0,
+          id: 'quote',
+          name: 'quote'
+        },
+        {
+          type: 'macd',
+          yAxis: 1,
+          linkedTo: 'quote',
+          name: 'MACD',
+          macdLine: {
+            zones: [{
+              color: '#41c9ad'
+            }]
+          },
+          signalLine: {
+            zones: [{
+              color: 'orange'
+            }]
+          }
+        }
       ]
   }
 }

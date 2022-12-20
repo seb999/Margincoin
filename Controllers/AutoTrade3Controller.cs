@@ -38,7 +38,7 @@ namespace MarginCoin.Controllers
         ////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////------------SETTINGS----------/////////////////////////////////////////////
         ////////////////////////////////////////////////////////////////////////////////////////////////////////
-        string interval = "3m";   //1h seem to give better result
+        string interval = "1h";   //1h seem to give better result
 
         int numberPreviousCandle = 3;
 
@@ -212,12 +212,6 @@ namespace MarginCoin.Controllers
 
         private void ProcessMarketMatrice()
         {
-            // //if(DateTime.Now.Minute == 0 && DateTime.Now.Second == 0)
-            // if(DateTime.Now.Minute == 14 && DateTime.Now.Second == 0)
-            // { 
-            //     _hub.Clients.All.SendAsync("exportChart");   ///export chart for all symbol monitorerd
-            // }
-
             try
             {
                 //0-Check each open order if closing is needed
@@ -255,6 +249,7 @@ namespace MarginCoin.Controllers
                         if (Globals.isTradingOpen)
                         {
                             Console.WriteLine($"Open trade on {symbol}");
+                            if (!Globals.onHold.ContainsKey(symbol)) Globals.onHold.Add(symbol, true);
                             Buy(marketStreamOnSpot[i], symbolCandle, false);
                         }
                         else
@@ -449,16 +444,26 @@ namespace MarginCoin.Controllers
             {
                 Buy(symbolSpot, symbolCandleList, true);
                 Buy(symbolSpot, symbolCandleList, true);
-                if (!Globals.onHold.ContainsKey(symbolSpot.s)) Globals.onHold.Add(symbolSpot.s, true);
-                _logger.LogWarning($"Call {MyEnum.BinanceApiCall.BuyMarket} {symbolSpot.s} Locked");
             }
 
-            if (myBinanceOrder == null) return;
+            //and if split not working we lock it
+            if (httpStatusCode == System.Net.HttpStatusCode.BadRequest && splitOrder)
+            {
+                _logger.LogWarning($"Call {MyEnum.BinanceApiCall.BuyMarket} {symbolSpot.s} Locked");
+                return;
+            }
+
+            if (myBinanceOrder == null) 
+            {
+                Globals.onHold.Remove(symbolSpot.s);
+                return;
+            }
 
             if(myBinanceOrder.status == "EXPIRED")
             {
                 await _hub.Clients.All.SendAsync(MyEnum.BinanceHttpError.sellOrderExired.ToString());
                 _logger.LogWarning($"Call {MyEnum.BinanceApiCall.BuyMarket} {symbolSpot.s} Expired");
+                Globals.onHold.Remove(symbolSpot.s);
                 return;
                 
             }
@@ -474,6 +479,7 @@ namespace MarginCoin.Controllers
             {
                 //Save here binance order result in db
                 SaveTrade(symbolSpot, symbolCandleList, myBinanceOrder);
+                Globals.onHold.Remove(symbolSpot.s);
                 await _hub.Clients.All.SendAsync("newPendingOrder", JsonSerializer.Serialize(myBinanceOrder));
                 await Task.Delay(500);
                 await _hub.Clients.All.SendAsync("newOrder");
