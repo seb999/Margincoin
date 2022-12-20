@@ -249,8 +249,8 @@ namespace MarginCoin.Controllers
                         if (Globals.isTradingOpen)
                         {
                             Console.WriteLine($"Open trade on {symbol}");
-                            if (!Globals.onHold.ContainsKey(symbol)) Globals.onHold.Add(symbol, true);
-                            Buy(marketStreamOnSpot[i], symbolCandle, false);
+                            if (!Globals.onHold.ContainsKey(symbol)) Globals.onHold.Add(symbol, true);  //to avoid multi buy
+                            Buy(marketStreamOnSpot[i], symbolCandle);
                         }
                         else
                         {
@@ -431,31 +431,20 @@ namespace MarginCoin.Controllers
 
         #region Buy / Sell
 
-        private async void Buy(MarketStream symbolSpot, List<Candle> symbolCandleList, bool splitOrder)
+        private async void Buy(MarketStream symbolSpot, List<Candle> symbolCandleList)
         {
             System.Net.HttpStatusCode httpStatusCode = System.Net.HttpStatusCode.NoContent;
-            int quoteQty = quoteOrderQty;
-
-            if (splitOrder) { quoteQty = quoteQty / 2; }
-            BinanceOrder myBinanceOrder = _binanceService.BuyMarket(symbolSpot.s, quoteQty, ref httpStatusCode);
-
-            //if order doesn't pass we split it
-            if (httpStatusCode == System.Net.HttpStatusCode.BadRequest && !splitOrder)
-            {
-                Buy(symbolSpot, symbolCandleList, true);
-                Buy(symbolSpot, symbolCandleList, true);
-            }
-
-            //and if split not working we lock it
-            if (httpStatusCode == System.Net.HttpStatusCode.BadRequest && splitOrder)
-            {
-                _logger.LogWarning($"Call {MyEnum.BinanceApiCall.BuyMarket} {symbolSpot.s} Locked");
-                return;
-            }
+            BinanceOrder myBinanceOrder = _binanceService.BuyMarket(symbolSpot.s, quoteOrderQty, ref httpStatusCode);
 
             if (myBinanceOrder == null) 
             {
                 Globals.onHold.Remove(symbolSpot.s);
+                return;
+            }
+
+            if (httpStatusCode == System.Net.HttpStatusCode.BadRequest)
+            {
+                _logger.LogWarning($"Call {MyEnum.BinanceApiCall.BuyMarket} {symbolSpot.s} Locked");
                 return;
             }
 

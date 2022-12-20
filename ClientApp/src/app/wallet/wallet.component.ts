@@ -315,16 +315,6 @@ export class WalletComponent {
     this.setTradeParam(true);
   }
 
-  getOpenDateTimeSpam(openDate) {
-    if (openDate != null) {
-      var openDateArr = openDate.split(" ")[0].split("/");
-      var openTime = openDate.split(" ")[1] + " " + openDate.split(" ")[2];
-      return Date.parse(openDateArr[2] + "/" + openDateArr[1] + "/" + openDateArr[0] + " " + openTime);
-    }
-  }
-
-
-
   /////////////////////////////////////////////////////////////
   /////////////    HighChart methods     //////////////////////
   ////////////////////////////////////////////////////////////?
@@ -353,11 +343,21 @@ export class WalletComponent {
     if (orderId != null) {
       this.displaySymbol = symbol;
       this.displayOrder = await this.orderDetailHelper.getOrder(orderId);
+      console.log(this.displayOrder);
     }
     else {
       this.displaySymbol = symbol + "USDT";
+      this.displayOrder = null;
     }
     this.displayHighstock();
+  }
+
+  getOpenDateTimeSpam(openDate) {
+    if (openDate != null) {
+      var openDateArr = openDate.split(" ")[0].split("/");
+      var openTime = openDate.split(" ")[1];
+      return Date.parse(openDateArr[2] + "/" + openDateArr[1] + "/" + openDateArr[0] + " " + openTime);
+    }
   }
 
   async changeHighstockResolution(key) {
@@ -386,6 +386,8 @@ export class WalletComponent {
         ])
     });
 
+    console.log(this.getOpenDateTimeSpam(this.displayOrder?.openDate));
+
     this.chartOptions = {
       plotOptions: {
         //   macd: {   there is a bug here, second drowing not working
@@ -405,7 +407,7 @@ export class WalletComponent {
       },
       xAxis: {
         plotLines: [{
-          color: '#5EFF00',
+          color: 'green',
           width: 1,
           value: this.getOpenDateTimeSpam(this.displayOrder?.openDate),  //display openeing date
         }]
