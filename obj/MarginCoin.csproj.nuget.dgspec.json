@@ -1,33 +1,35 @@
 {
   "format": 1,
   "restore": {
-    "/Users/sebastien/_Git/Dotnet/Margincoin/MarginCoin.csproj": {}
+    "C:\\_Git\\Dotnet\\MarginCoin\\MarginCoin.csproj": {}
   },
   "projects": {
-    "/Users/sebastien/_Git/Dotnet/Margincoin/MarginCoin.csproj": {
+    "C:\\_Git\\Dotnet\\MarginCoin\\MarginCoin.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/sebastien/_Git/Dotnet/Margincoin/MarginCoin.csproj",
+        "projectUniqueName": "C:\\_Git\\Dotnet\\MarginCoin\\MarginCoin.csproj",
         "projectName": "MarginCoin",
-        "projectPath": "/Users/sebastien/_Git/Dotnet/Margincoin/MarginCoin.csproj",
-        "packagesPath": "/Users/sebastien/.nuget/packages/",
-        "outputPath": "/Users/sebastien/_Git/Dotnet/Margincoin/obj/",
+        "projectPath": "C:\\_Git\\Dotnet\\MarginCoin\\MarginCoin.csproj",
+        "packagesPath": "C:\\Users\\sdubos\\.nuget\\packages\\",
+        "outputPath": "C:\\_Git\\Dotnet\\MarginCoin\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
-          "/usr/local/share/dotnet/sdk/NuGetFallbackFolder"
+          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
         ],
         "configFilePaths": [
-          "/Users/sebastien/.nuget/NuGet/NuGet.Config"
+          "C:\\Users\\sdubos\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
-          "net5.0"
+          "net6.0"
         ],
         "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
-          "net5.0": {
-            "targetAlias": "net5.0",
+          "net6.0": {
+            "targetAlias": "net6.0",
             "projectReferences": {}
           }
         },
@@ -38,8 +40,8 @@
         }
       },
       "frameworks": {
-        "net5.0": {
-          "targetAlias": "net5.0",
+        "net6.0": {
+          "targetAlias": "net6.0",
           "dependencies": {
             "Binance.Spot": {
               "target": "Package",
@@ -51,31 +53,31 @@
             },
             "Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore": {
               "target": "Package",
-              "version": "[5.0.9, )"
+              "version": "[6.0.12, )"
             },
             "Microsoft.AspNetCore.Identity.EntityFrameworkCore": {
               "target": "Package",
-              "version": "[5.0.9, )"
+              "version": "[6.0.12, )"
             },
             "Microsoft.AspNetCore.SpaServices.Extensions": {
               "target": "Package",
-              "version": "[5.0.9, )"
+              "version": "[6.0.12, )"
             },
             "Microsoft.EntityFrameworkCore": {
               "target": "Package",
-              "version": "[5.0.9, )"
+              "version": "[6.0.12, )"
             },
             "Microsoft.EntityFrameworkCore.Sqlite": {
               "target": "Package",
-              "version": "[5.0.9, )"
+              "version": "[6.0.12, )"
             },
             "Microsoft.Extensions.Logging": {
               "target": "Package",
-              "version": "[7.0.0, )"
+              "version": "[6.0.0, )"
             },
             "Microsoft.ML": {
               "target": "Package",
-              "version": "[1.7.0, )"
+              "version": "[1.7.1, )"
             },
             "Serilog": {
               "target": "Package",
@@ -99,7 +101,7 @@
             },
             "Websocket.Client": {
               "target": "Package",
-              "version": "[4.3.38, )"
+              "version": "[4.4.43, )"
             }
           },
           "imports": [
@@ -108,7 +110,8 @@
             "net47",
             "net471",
             "net472",
-            "net48"
+            "net48",
+            "net481"
           ],
           "assetTargetFallback": true,
           "warn": true,
@@ -120,7 +123,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/5.0.403/RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.101\\RuntimeIdentifierGraph.json"
         }
       }
     }

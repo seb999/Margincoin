@@ -26,7 +26,7 @@ namespace MarginCoin
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddTransient<IBinanceService, BinanceService>();
+            services.AddTransient<IBinanceService, BinanceService>();
 
             services.AddSignalR();
 
@@ -64,7 +64,7 @@ namespace MarginCoin
 
             app.UseSerilogRequestLogging(); 
             app.UseWebSockets();
-            var webSocketOptions = new WebSocketOptions(){KeepAliveInterval = TimeSpan.FromSeconds(120)};
+            var webSocketOptions = new WebSocketOptions(){KeepAliveInterval = TimeSpan.FromSeconds(600)};
             app.UseWebSockets(webSocketOptions);
 
             app.UseHttpsRedirection();

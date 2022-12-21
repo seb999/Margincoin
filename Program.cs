@@ -18,7 +18,7 @@ namespace MarginCoin
                .MinimumLevel.Warning()
                .WriteTo.Console()
                .WriteTo.Seq("http://localhost:5004")
-               .WriteTo.File("logs/.txt", rollingInterval: RollingInterval.Day)
+               .WriteTo.File("logs/.txt", shared: true, rollingInterval: RollingInterval.Day )
                .CreateLogger();
 
             try

@@ -294,7 +294,7 @@
       <button class="btn" (click)="refreshUI()"
      style="padding-left: 0px;padding-right:0px; float: left;"><span style="color: orange"><i class="fa fa-arrows-rotate"></i>
      </span></button>
-      <ul style="height: 140px; overflow: scroll;">
+      <ul style="height: 140px; overflow: scroll; overflow-x: hidden; overflow-y: auto;">
         <li *ngFor="let item of logList">{{item}}</li>
       </ul>
 	</div>

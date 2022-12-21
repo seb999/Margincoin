@@ -256,12 +256,12 @@ namespace MarginCoin.Controllers
                         {
                             Console.WriteLine($"Trading closed by user");
                         }
-
                     }
                 }
             }
-            catch (System.Exception)
+            catch (System.Exception e)
             {
+                _logger.LogError(e, " ProcessMarketMatrice");
                 return;
             }
         }

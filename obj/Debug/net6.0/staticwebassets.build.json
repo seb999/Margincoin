@@ -1,0 +1,37 @@
+{
+  "Version": 1,
+  "Hash": "jX6HcOU4qBkmPWyaYcM1xm8PqQu9Pu6zAE0d8GPE9Wk=",
+  "Source": "MarginCoin",
+  "BasePath": "_content/MarginCoin",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [
+    {
+      "Name": "MarginCoin\\wwwroot",
+      "Source": "MarginCoin",
+      "ContentRoot": "C:\\_Git\\Dotnet\\MarginCoin\\wwwroot\\",
+      "BasePath": "_content/MarginCoin",
+      "Pattern": "**"
+    }
+  ],
+  "Assets": [
+    {
+      "Identity": "C:\\_Git\\Dotnet\\MarginCoin\\wwwroot\\favicon.ico",
+      "SourceId": "MarginCoin",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\_Git\\Dotnet\\MarginCoin\\wwwroot\\",
+      "BasePath": "_content/MarginCoin",
+      "RelativePath": "favicon.ico",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\favicon.ico"
+    }
+  ]
+}

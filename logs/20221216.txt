@@ -1,5 +1,0 @@
-2022-12-16 23:04:52.223 +01:00 [WRN] MarginCoin, started!
-2022-12-16 23:05:06.592 +01:00 [WRN] Get Account OK
-2022-12-16 23:05:19.635 +01:00 [WRN] Call SellMarket ETHUSDT OK
-2022-12-16 23:05:27.296 +01:00 [WRN] Get Account OK
-2022-12-16 23:05:34.193 +01:00 [WRN] Start trading market...
