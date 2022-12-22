@@ -14,3 +14,4 @@
 2022-12-21 22:30:33.233 +01:00 [WRN] Get Account OK
 2022-12-21 22:31:12.950 +01:00 [WRN] Call SellMarket BNBUSDT OK
 2022-12-21 22:31:19.839 +01:00 [WRN] Get Account OK
+2022-12-21 22:49:57.394 +01:00 [WRN] MarginCoin, started!

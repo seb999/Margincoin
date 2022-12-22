@@ -10,9 +10,9 @@ using System.Threading.Tasks;
 using Binance.Spot;
 using System.Net.WebSockets;
 using System.Threading;
-using static MarginCoin.Class.Prediction;
 using System.Text.Json;
 using Microsoft.Extensions.Logging;
+using MarginCoin.Service;
 
 namespace MarginCoin.Controllers
 {
@@ -26,7 +26,9 @@ namespace MarginCoin.Controllers
         ////////////////////////////////////////////////////////////////////////////////////////////////////////
         private IHubContext<SignalRHub> _hub;
         private IBinanceService _binanceService;
+        private IMLService _mlService;
         private readonly ApplicationDbContext _appDbContext;
+
         private ILogger _logger;
         private List<List<Candle>> candleMatrice = new List<List<Candle>>();
         private List<MarketStream> marketStreamOnSpot = new List<MarketStream>();
@@ -58,22 +60,29 @@ namespace MarginCoin.Controllers
             IHubContext<SignalRHub> hub, 
             [FromServices] ApplicationDbContext appDbContext, 
             ILogger<AutoTrade3Controller> logger,
-            IBinanceService binanceService)
+            IBinanceService binanceService,
+            IMLService mLService)
         {
             _hub = hub;
             _binanceService = binanceService;
             _appDbContext = appDbContext;
             _logger = logger;
+            _mlService = mLService;
         }
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////-----------ALGORYTME----------/////////////////////////////////////////
         ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+        #region http API request
+
         [HttpGet("[action]")]
         public async Task<string> MonitorMarket()
         {
              _logger.LogWarning("Start trading market...");
+
+            _mlService.CleanMLImageFolder();
+             _mlService.ActivateML();
 
             //Get the list of symbol that we agree to trade from DB
             mySymbolList = GetSymbolList();
@@ -104,6 +113,15 @@ namespace MarginCoin.Controllers
             return "";
         }
 
+        [HttpGet("[action]")]
+        public string UpdateML()
+        {
+            _mlService.UpdateML();
+            return "";
+        }
+
+        #endregion
+
         private async void OpenWebSocketOnSymbol(string symbol)
         {
             MarketDataWebSocket ws = new MarketDataWebSocket($"{symbol.ToLower()}@kline_{interval}");
@@ -129,13 +147,13 @@ namespace MarginCoin.Controllers
                 if (!stream.k.x)
                 {
                     if (candleMatrice[symbolIndex].Count > 0) candleMatrice[symbolIndex] = candleMatrice[symbolIndex].SkipLast(1).ToList();
-                    ExportChart(false);
+                    //ExportChart(false);
                 }
                 else
                 {
                     Console.WriteLine($"New candle save : {stream.k.s}");
                     Globals.onHold.Remove(stream.k.s);
-                    ExportChart(true);
+                    //ExportChart(true);
                 }
 
                 Candle newCandle = new Candle()
@@ -240,10 +258,15 @@ namespace MarginCoin.Controllers
                         continue;
                     }
 
-                    List<Candle> symbolCandle = candleMatrice.Where(p => p.First().s == symbol).FirstOrDefault();  //get the line that coorespond to the symbol
+                    //Find the line that coorespond to the symbol in the Matrice
+                    List<Candle> symbolCandle = candleMatrice.Where(p => p.First().s == symbol).FirstOrDefault();  
 
                     //if (Globals.swallowOneOrder)
-                    if((CheckCandle(numberPreviousCandle, marketStreamOnSpot[i], symbolCandle) && !Globals.onHold.FirstOrDefault(p => p.Key == symbol).Value))
+                    //For testing just leave in Check candel the green check
+                    if((CheckCandle(numberPreviousCandle, marketStreamOnSpot[i], symbolCandle) 
+                        && !Globals.onHold.FirstOrDefault(p => p.Key == symbol).Value)
+                        && _mlService.MLPredList.Where(p=>p.Symbol == symbol).Select(p=>p.PredictedLabel).FirstOrDefault() =="up"
+                        && _mlService.MLPredList.Where(p=>p.Symbol == symbol).Select(p=>p.Score[0]).FirstOrDefault() >= 60)
                     {
                         //Globals.swallowOneOrder = false;
                         if (Globals.isTradingOpen)

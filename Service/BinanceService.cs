@@ -4,13 +4,10 @@ using System.Security.Cryptography;
 using System.Text;
 using MarginCoin.Class;
 using System.Collections.Generic;
-using MarginCoin.Controllers;
-using MarginCoin.Model;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
+using MarginCoin.Misc;
 
-namespace MarginCoin.Misc
+namespace MarginCoin.Service
 {
     public class BinanceService : IBinanceService
     {

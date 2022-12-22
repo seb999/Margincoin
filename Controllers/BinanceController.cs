@@ -3,9 +3,6 @@ using MarginCoin.Misc;
 using MarginCoin.Model;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Binance.Spot;
 using System.Net.WebSockets;
@@ -13,6 +10,7 @@ using System.Threading;
 using static MarginCoin.Class.Prediction;
 using System.Text.Json;
 using Microsoft.Extensions.Logging;
+using MarginCoin.Service;
 
 namespace MarginCoin.Controllers
 {

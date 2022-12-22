@@ -83,10 +83,14 @@ export class WalletComponent {
     private appSetting: AppSetting,
   ) {
     this.intervalList = this.appSetting.intervalList;
-    this.interval = "1h";
+    this.interval = "15m";
   }
 
   async ngOnInit() {
+   
+
+
+    
     this.tradeOpen = false;
     this.setProdParam(this.isProd);
     this.model = this.today();
@@ -284,6 +288,14 @@ export class WalletComponent {
     return await this.httpService.xhr(httpSetting);
   }
 
+  async mlUpdate(): Promise<any> {
+    const httpSetting: HttpSettings = {
+      method: 'GET',
+      url: location.origin + '/api/AutoTrade3/UpdateML',
+    };
+    return await this.httpService.xhr(httpSetting);
+  }
+
   binanceAccount(): Promise<any> {
     const httpSetting: HttpSettings = {
       method: 'GET',
@@ -320,23 +332,23 @@ export class WalletComponent {
   ////////////////////////////////////////////////////////////?
 
   async exportChart() {
-    this.interval = "1h";
+    this.interval = "15m";
     for (var i = 0; i < this.myAccount?.balances.length; i++) {
       if (this.myAccount?.balances[i].asset == "USDT") continue;
       await new Promise(next => {
         this.displaySymbol = this.myAccount?.balances[i].asset + "USDT";
-        this.interval = "1h";
         this.displayHighstock();
         setTimeout(() => {
           this.lineChart.chart.exportChartLocal({
             type: "image/jpeg",
-            filename: this.displaySymbol + new Date().getHours().toString(),
+            filename: this.displaySymbol,//this.displaySymbol + new Date().getHours().toString(),
           });
           next("d");
         }, 3000);
       });
     }
     setTimeout(() => { this.showMessageError = false }, 2000);
+    this.mlUpdate();
   }
 
   async showChart(symbol, orderId) {

@@ -4,7 +4,7 @@ namespace MarginCoin.Class
 {
     public class Prediction
     {
-        public class ModelInput
+        public class ModelInput2
         {
            [LoadColumn(13)]
             public float Rsi { get; set; }
@@ -25,7 +25,7 @@ namespace MarginCoin.Class
             public bool FuturePrice { get; set; }
         }
 
-        public class ModelOutput
+        public class ModelOutput2
         {
              [ColumnName("PredictedLabel")]
             public bool Prediction { get; set; }

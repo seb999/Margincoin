@@ -38,9 +38,6 @@ namespace MarginCoin.Controllers
         //move stop lose to buy price when current price raise over:1.2%
         double secureNoLose = 1.016;
 
-        //used to adjust stopLose to last price - offset
-        double offset = 0.8; //in %
-
         ////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////------------END SETTINGS----------/////////////////////////////////////////
         ////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -250,7 +247,7 @@ namespace MarginCoin.Controllers
 
             if (GetActiveOrder() != null) return;
 
-            List<ModelOutput> prediction = AIHelper.GetPrediction(candleListMACD);
+            List<ModelOutput2> prediction = AIHelper.GetPrediction(candleListMACD);
 
             //1-read from db template
             OrderTemplate orderTemplate = GetOrderTemplate();

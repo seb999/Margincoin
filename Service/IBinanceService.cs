@@ -1,15 +1,9 @@
 using System;
-using System.Net.Http;
-using System.Security.Cryptography;
-using System.Text;
 using MarginCoin.Class;
 using System.Collections.Generic;
-using MarginCoin.Controllers;
-using MarginCoin.Model;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.SignalR;
+using MarginCoin.Misc;
 
-namespace MarginCoin.Misc
+namespace MarginCoin.Service
 {
     public interface IBinanceService
     {

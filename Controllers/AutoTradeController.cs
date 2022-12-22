@@ -316,7 +316,7 @@ namespace MarginCoin.Controllers
                 }
                 _appDbContext.SaveChanges();
             }
-            catch (System.Exception ex)
+            catch (System.Exception)
             {
                 return false;
             }

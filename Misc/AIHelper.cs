@@ -13,9 +13,9 @@ namespace MarginCoin.Misc
     public static class AIHelper
     {
 
-        public static List<ModelOutput> GetPrediction(List<Candle> quoteList)
+        public static List<ModelOutput2> GetPrediction(List<Candle> quoteList)
         {
-            List<ModelOutput> predictionList = new List<ModelOutput>();
+            List<ModelOutput2> predictionList = new List<ModelOutput2>();
 
             if (quoteList.Count == 0) return predictionList;
 
@@ -26,7 +26,7 @@ namespace MarginCoin.Misc
             if (modelPathList.Length == 0)
                 return predictionList;
 
-            ModelInput newModelInput = new ModelInput()
+            ModelInput2 newModelInput = new ModelInput2()
             {
                 Rsi = (float)quoteList.Last().Rsi,
                 MacdHistN0 = (float)quoteList.Last().MacdHist,
@@ -38,7 +38,7 @@ namespace MarginCoin.Misc
             // //3 - Iterate throw model and fire prediction
             foreach (var modelPath in modelPathList)
             {
-                ModelOutput output = new ModelOutput();
+                ModelOutput2 output = new ModelOutput2();
 
                 var fromIndex = Path.GetFileName(modelPath).IndexOf("-") + 1;
                 var toIndex = Path.GetFileName(modelPath).Length - fromIndex - 4;
@@ -52,7 +52,7 @@ namespace MarginCoin.Misc
             return predictionList;
         }
 
-        private static ModelOutput CalculatePrediction(ModelInput data, string modelPath)
+        private static ModelOutput2 CalculatePrediction(ModelInput2 data, string modelPath)
         {
             //Load model
             ITransformer loadedModel = LoadModel(modelPath);
@@ -74,11 +74,11 @@ namespace MarginCoin.Misc
             return loadedModel;
         }
 
-        private static ModelOutput PredictFuturePrice(ModelInput input, ITransformer model)
+        private static ModelOutput2 PredictFuturePrice(ModelInput2 input, ITransformer model)
         {
             MLContext mlContext = new MLContext();
-            var predEngine = mlContext.Model.CreatePredictionEngine<ModelInput, ModelOutput>(model);
-            ModelOutput prediction = predEngine.Predict(new ModelInput
+            var predEngine = mlContext.Model.CreatePredictionEngine<ModelInput2, ModelOutput2>(model);
+            ModelOutput2 prediction = predEngine.Predict(new ModelInput2
             {
                 Rsi = (float)input.Rsi,
                 MacdHistN0 = (float)input.MacdHistN0,

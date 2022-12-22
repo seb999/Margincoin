@@ -11,6 +11,7 @@ using System.Text.Json;
 using System;
 using MarginCoin.Misc;
 using Serilog;
+using MarginCoin.Service;
 
 namespace MarginCoin
 {
@@ -26,8 +27,9 @@ namespace MarginCoin
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddTransient<IBinanceService, BinanceService>();
-
+            //Add here dependency injection services
+            services.AddScoped<IBinanceService, BinanceService>();
+            services.AddScoped<IMLService, MLService>();
             services.AddSignalR();
 
             services.AddControllers().AddJsonOptions(options =>

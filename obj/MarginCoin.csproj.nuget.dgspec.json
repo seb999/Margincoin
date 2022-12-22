@@ -79,6 +79,14 @@
               "target": "Package",
               "version": "[1.7.1, )"
             },
+            "Microsoft.ML.Vision": {
+              "target": "Package",
+              "version": "[1.7.1, )"
+            },
+            "SciSharp.TensorFlow.Redist": {
+              "target": "Package",
+              "version": "[2.3.1, )"
+            },
             "Serilog": {
               "target": "Package",
               "version": "[2.12.0, )"

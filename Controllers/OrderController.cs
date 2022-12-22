@@ -71,7 +71,7 @@ namespace MarginCoin.Controllers
                 _appDbContext.Order.Add(order);
                 _appDbContext.SaveChanges(); 
             }
-            catch (System.Exception ex)
+            catch (System.Exception)
             {
                 return false;
             }
@@ -92,7 +92,7 @@ namespace MarginCoin.Controllers
                 myOrder.CloseDate = DateTime.Now.ToString();
                 _appDbContext.SaveChanges(); 
             }
-            catch (System.Exception ex)
+            catch (System.Exception)
             {
                 return false;
             }

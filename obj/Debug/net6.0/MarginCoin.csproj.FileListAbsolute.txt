@@ -104,3 +104,14 @@ C:\_Git\Dotnet\MarginCoin\obj\Debug\net6.0\refint\MarginCoin.dll
 C:\_Git\Dotnet\MarginCoin\obj\Debug\net6.0\MarginCoin.pdb
 C:\_Git\Dotnet\MarginCoin\obj\Debug\net6.0\MarginCoin.genruntimeconfig.cache
 C:\_Git\Dotnet\MarginCoin\obj\Debug\net6.0\ref\MarginCoin.dll
+C:\_Git\Dotnet\MarginCoin\bin\Debug\net6.0\Google.Protobuf.dll
+C:\_Git\Dotnet\MarginCoin\bin\Debug\net6.0\Microsoft.ML.TensorFlow.dll
+C:\_Git\Dotnet\MarginCoin\bin\Debug\net6.0\Microsoft.ML.Vision.dll
+C:\_Git\Dotnet\MarginCoin\bin\Debug\net6.0\NumSharp.Lite.dll
+C:\_Git\Dotnet\MarginCoin\bin\Debug\net6.0\Protobuf.Text.dll
+C:\_Git\Dotnet\MarginCoin\bin\Debug\net6.0\TensorFlow.NET.dll
+C:\_Git\Dotnet\MarginCoin\bin\Debug\net6.0\runtimes\linux-x64\native\libtensorflow.so
+C:\_Git\Dotnet\MarginCoin\bin\Debug\net6.0\runtimes\linux-x64\native\libtensorflow_framework.so.2
+C:\_Git\Dotnet\MarginCoin\bin\Debug\net6.0\runtimes\osx-x64\native\libtensorflow.dylib
+C:\_Git\Dotnet\MarginCoin\bin\Debug\net6.0\runtimes\osx-x64\native\libtensorflow_framework.2.dylib
+C:\_Git\Dotnet\MarginCoin\bin\Debug\net6.0\runtimes\win-x64\native\tensorflow.dll
