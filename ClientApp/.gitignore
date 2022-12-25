@@ -34,6 +34,7 @@ npm-debug.log
 yarn-error.log
 testem.log
 /typings
+MLModel/*
 
 # System Files
 .DS_Store

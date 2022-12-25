@@ -13,6 +13,7 @@ using System.Threading;
 using System.Text.Json;
 using Microsoft.Extensions.Logging;
 using MarginCoin.Service;
+using MarginCoin.MLClass;
 
 namespace MarginCoin.Controllers
 {
@@ -33,6 +34,7 @@ namespace MarginCoin.Controllers
         private List<List<Candle>> candleMatrice = new List<List<Candle>>();
         private List<MarketStream> marketStreamOnSpot = new List<MarketStream>();
         private List<string> mySymbolList = new List<string>();
+        
         int nbrUp = 0;
         int nbrDown = 0;
         private bool exportStarted = false;
@@ -116,7 +118,7 @@ namespace MarginCoin.Controllers
         [HttpGet("[action]")]
         public string UpdateML()
         {
-            _mlService.UpdateML();
+            _mlService.GetUpdatedML();
             return "";
         }
 

@@ -16,26 +16,19 @@ namespace MarginCoin.Service
     {
         private ILogger _logger;
         private IHubContext<SignalRHub> _hub;
-        private readonly ApplicationDbContext _appDbContext;
-
+        private System.Timers.Timer MLTimer = new System.Timers.Timer();
         public List<MLPrediction> MLPredList {get; set;}
 
-        private System.Timers.Timer MLTimer = new System.Timers.Timer();
-
         public MLService(ILogger<MLService> logger,
-            [FromServices] ApplicationDbContext appDbContext,
             IHubContext<SignalRHub> hub)
         {
             _logger = logger;
-            _appDbContext = appDbContext;
             _hub = hub;
-
-            Console.WriteLine("Constructor Service ML");
+            MLPredList = new List<MLPrediction>();
         }
 
         public void ActivateML()
         {
-            MLPredList = new List<MLPrediction>();
             MLTimer.Interval =  60000; //every min
             MLTimer.Elapsed += new ElapsedEventHandler(MLTimer_Elapsed);
             MLTimer.Start();   
@@ -43,21 +36,33 @@ namespace MarginCoin.Service
 
         public void MLTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
+
+            //for debug 
+             _hub.Clients.All.SendAsync("exportChart");
+
             //Export charts
-            if (DateTime.Now.Minute == 2
-                || DateTime.Now.Minute == 10
-                || DateTime.Now.Minute == 30
-                || DateTime.Now.Minute == 59)
-            {
-                _hub.Clients.All.SendAsync("exportChart");
-            }
+            // if (DateTime.Now.Minute == 9
+            //     || DateTime.Now.Minute == 12
+            //     || DateTime.Now.Minute == 30
+            //     || DateTime.Now.Minute == 44)
+            // {
+            //     _hub.Clients.All.SendAsync("exportChart");
+            // }
         }
 
         //Callback from UI after chart export
-        public void UpdateML()
+        public void GetUpdatedML()
         {
             var downloadFolder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + @"\Downloads";
             var imagePathList = Directory.GetFiles(downloadFolder, "*.jpeg", SearchOption.TopDirectoryOnly).ToList();
+
+            //we keep a copy of all chart to train the model 
+            var backupFolder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + @"\Downloads\MCModel";
+            foreach (var fileName in imagePathList)
+            {
+                 File.Copy(fileName, Path.Combine(backupFolder, Path.GetFileNameWithoutExtension(fileName)+DateTime.Now.Year + DateTime.Now.Year + DateTime.Now.Year + Path.GetExtension(fileName)), true);
+            }
+            
             if (imagePathList.Count == 0) return;
 
             foreach (string imagePath in imagePathList)

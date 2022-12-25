@@ -29,7 +29,7 @@ namespace MarginCoin
         {
             //Add here dependency injection services
             services.AddScoped<IBinanceService, BinanceService>();
-            services.AddScoped<IMLService, MLService>();
+            services.AddSingleton<IMLService, MLService>();
             services.AddSignalR();
 
             services.AddControllers().AddJsonOptions(options =>

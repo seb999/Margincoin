@@ -6,11 +6,11 @@ namespace MarginCoin.Service
 {
     
     public interface IMLService
-    {
-         public List<MLPrediction> MLPredList {get; set;}
-         
+    {     
+        public List<MLPrediction> MLPredList { get; set; }
+
          public void ActivateML();
-         public void UpdateML();
+         public void GetUpdatedML();
          public void MLTimer_Elapsed(object sender, ElapsedEventArgs e);
 
          public void CleanMLImageFolder();
