@@ -34,7 +34,7 @@ namespace MarginCoin.Controllers
         private List<List<Candle>> candleMatrice = new List<List<Candle>>();
         private List<MarketStream> marketStreamOnSpot = new List<MarketStream>();
         private List<string> mySymbolList = new List<string>();
-        
+
         int nbrUp = 0;
         int nbrDown = 0;
         private bool exportStarted = false;
@@ -59,8 +59,8 @@ namespace MarginCoin.Controllers
         ///////////////////////////////-----------Constructor----------/////////////////////////////////////////
         ////////////////////////////////////////////////////////////////////////////////////////////////////////
         public AutoTrade3Controller(
-            IHubContext<SignalRHub> hub, 
-            [FromServices] ApplicationDbContext appDbContext, 
+            IHubContext<SignalRHub> hub,
+            [FromServices] ApplicationDbContext appDbContext,
             ILogger<AutoTrade3Controller> logger,
             IBinanceService binanceService,
             IMLService mLService)
@@ -81,10 +81,9 @@ namespace MarginCoin.Controllers
         [HttpGet("[action]")]
         public async Task<string> MonitorMarket()
         {
-             _logger.LogWarning("Start trading market...");
-
-            _mlService.CleanMLImageFolder();
-             _mlService.ActivateML();
+            _logger.LogWarning("Start trading market...");
+            _mlService.CleanImageFolder();
+            _mlService.ActivateML();
 
             //Get the list of symbol that we agree to trade from DB
             mySymbolList = GetSymbolList();
@@ -118,7 +117,7 @@ namespace MarginCoin.Controllers
         [HttpGet("[action]")]
         public string UpdateML()
         {
-            _mlService.GetUpdatedML();
+            _mlService.UpdateML();
             return "";
         }
 
@@ -215,7 +214,10 @@ namespace MarginCoin.Controllers
                     nbrUp = marketStreamOnSpot.Where(pred => pred.P >= 0).Count();
                     nbrDown = marketStreamOnSpot.Where(pred => pred.P < 0).Count();
 
-                    ProcessMarketMatrice();
+                    if (Globals.isTradingOpen)
+                    {
+                        ProcessMarketMatrice();
+                    }
 
                     dataResult = "";
                 }
@@ -261,26 +263,18 @@ namespace MarginCoin.Controllers
                     }
 
                     //Find the line that coorespond to the symbol in the Matrice
-                    List<Candle> symbolCandle = candleMatrice.Where(p => p.First().s == symbol).FirstOrDefault();  
+                    List<Candle> symbolCandle = candleMatrice.Where(p => p.First().s == symbol).FirstOrDefault();
 
                     //if (Globals.swallowOneOrder)
                     //For testing just leave in Check candel the green check
-                    if((CheckCandle(numberPreviousCandle, marketStreamOnSpot[i], symbolCandle) 
+                    if ((CheckCandle(numberPreviousCandle, marketStreamOnSpot[i], symbolCandle)
                         && !Globals.onHold.FirstOrDefault(p => p.Key == symbol).Value)
-                        && _mlService.MLPredList.Where(p=>p.Symbol == symbol).Select(p=>p.PredictedLabel).FirstOrDefault() =="up"
-                        && _mlService.MLPredList.Where(p=>p.Symbol == symbol).Select(p=>p.Score[0]).FirstOrDefault() >= 60)
+                        && _mlService.MLPredList.Where(p => p.Symbol == symbol).Select(p => p.PredictedLabel).FirstOrDefault() == "up"
+                        && _mlService.MLPredList.Where(p => p.Symbol == symbol).Select(p => p.Score[0]).FirstOrDefault() >= 60)
                     {
-                        //Globals.swallowOneOrder = false;
-                        if (Globals.isTradingOpen)
-                        {
-                            Console.WriteLine($"Open trade on {symbol}");
-                            if (!Globals.onHold.ContainsKey(symbol)) Globals.onHold.Add(symbol, true);  //to avoid multi buy
-                            Buy(marketStreamOnSpot[i], symbolCandle);
-                        }
-                        else
-                        {
-                            Console.WriteLine($"Trading closed by user");
-                        }
+                        Console.WriteLine($"Open trade on {symbol}");
+                        if (!Globals.onHold.ContainsKey(symbol)) Globals.onHold.Add(symbol, true);  //to avoid multi buy
+                        Buy(marketStreamOnSpot[i], symbolCandle);
                     }
                 }
             }
@@ -304,10 +298,10 @@ namespace MarginCoin.Controllers
 
             //0 - Don't trade if only 14% coins are up over the last 24h AND coin is slittly negatif
             //    If the coin is very negatif over last 24h we are in a dive and we want to trade at reversal tendance
-            if ((double)nbrUp < 30 && symbolSpot.P > -5)
-            {
-                return false;
-            }
+            // if ((double)nbrUp < 30 && symbolSpot.P > -5)
+            // {
+            //     return false;
+            // }
 
             //1 - Previous candles are green
             for (int i = symbolCandle.Count - numberCandle; i < symbolCandle.Count; i++)
@@ -360,7 +354,7 @@ namespace MarginCoin.Controllers
             highPrice = symbolCandle.Select(p => p.h).LastOrDefault();
             lastCandle = symbolCandle.Select(p => p).LastOrDefault();
 
-             SaveHighLow(lastCandle, activeOrder);
+            SaveHighLow(lastCandle, activeOrder);
 
             if (lastPrice <= (activeOrder.StopLose))
             {
@@ -461,7 +455,7 @@ namespace MarginCoin.Controllers
             System.Net.HttpStatusCode httpStatusCode = System.Net.HttpStatusCode.NoContent;
             BinanceOrder myBinanceOrder = _binanceService.BuyMarket(symbolSpot.s, quoteOrderQty, ref httpStatusCode);
 
-            if (myBinanceOrder == null) 
+            if (myBinanceOrder == null)
             {
                 Globals.onHold.Remove(symbolSpot.s);
                 return;
@@ -473,13 +467,13 @@ namespace MarginCoin.Controllers
                 return;
             }
 
-            if(myBinanceOrder.status == "EXPIRED")
+            if (myBinanceOrder.status == "EXPIRED")
             {
                 await _hub.Clients.All.SendAsync(MyEnum.BinanceHttpError.sellOrderExired.ToString());
                 _logger.LogWarning($"Call {MyEnum.BinanceApiCall.BuyMarket} {symbolSpot.s} Expired");
                 Globals.onHold.Remove(symbolSpot.s);
                 return;
-                
+
             }
             int i = 0;
             while (myBinanceOrder.status != "FILLED")
@@ -597,18 +591,19 @@ namespace MarginCoin.Controllers
 
         private void ExportChart(bool doExport)
         {
-            if(exportStarted && doExport)
+            if (exportStarted && doExport)
             {
                 return;
             }
 
-            if(!exportStarted && doExport)
+            if (!exportStarted && doExport)
             {
                 exportStarted = true;
-                 _hub.Clients.All.SendAsync("exportChart");   ///export chart for all symbol monitorerd
+                _hub.Clients.All.SendAsync("exportChart");   ///export chart for all symbol monitorerd
             }
 
-            if(!doExport) {
+            if (!doExport)
+            {
                 exportStarted = false;
             }
         }

@@ -87,10 +87,6 @@ export class WalletComponent {
   }
 
   async ngOnInit() {
-   
-
-
-    
     this.tradeOpen = false;
     this.setProdParam(this.isProd);
     this.model = this.today();
@@ -105,6 +101,7 @@ export class WalletComponent {
       this.serverMsg = message;
 
       if (this.serverMsg.msgName == BackEndMessage.trading) {
+        this.tradeOpen = true;
         this.showMessageInfo = true;
         this.CandleList = this.serverMsg.candleList;
 
@@ -229,11 +226,10 @@ export class WalletComponent {
     return await this.httpService.xhr(httpSetting);
   }
 
-  async setTradeParam(isOpen): Promise<any> {
-    this.tradeOpen = isOpen;
+  async setTradeParam(): Promise<any> {
     const httpSetting: HttpSettings = {
       method: 'GET',
-      url: location.origin + "/api/Globals/SetTradeParameter/" + isOpen,
+      url: location.origin + "/api/Globals/SetTradeParameter/" + this.tradeOpen,
     };
     return await this.httpService.xhr(httpSetting);
   }
@@ -307,7 +303,7 @@ export class WalletComponent {
   async trade(): Promise<any> {
     //we allow system to execute orders
     this.tradeOpen = true;
-    this.setTradeParam(true);
+    this.setTradeParam();
 
     //We start trading
     const httpSetting: HttpSettings = {
@@ -318,13 +314,8 @@ export class WalletComponent {
   }
 
   async stopTrade(): Promise<any> {
-    //we don't allow system to execute orders
-    this.setTradeParam(false);
-  }
-
-  async resumTrade(): Promise<any> {
-    //we don't allow system to execute orders
-    this.setTradeParam(true);
+    this.tradeOpen = !this.tradeOpen;
+    this.setTradeParam();
   }
 
   /////////////////////////////////////////////////////////////
@@ -341,14 +332,16 @@ export class WalletComponent {
         setTimeout(() => {
           this.lineChart.chart.exportChartLocal({
             type: "image/jpeg",
-            filename: this.displaySymbol,//this.displaySymbol + new Date().getHours().toString(),
+            filename: this.displaySymbol,
           });
           next("d");
         }, 3000);
       });
     }
-    setTimeout(() => { this.showMessageError = false }, 2000);
-    this.mlUpdate();
+    setTimeout(() => {
+      this.showMessageError = false
+      this.mlUpdate();
+    }, 2000);
   }
 
   async showChart(symbol, orderId) {
@@ -378,6 +371,7 @@ export class WalletComponent {
   }
 
   async displayHighstock() {
+    let chartHeight='';
     this.ohlc = null;
     this.ohlc = await this.orderDetailHelper.getIntradayData(this.displaySymbol, 100, this.interval);
 
@@ -398,53 +392,52 @@ export class WalletComponent {
         ])
     });
 
-    console.log(this.getOpenDateTimeSpam(this.displayOrder?.openDate));
-
-    this.chartOptions = {
-      plotOptions: {
-        //   macd: {   there is a bug here, second drowing not working
-        //     zones: [{
-        //         value: 0,
-        //         color: '#cb585f'
-        //     }, {
-        //         color: '#41c9ad'
-        //     }]
-        // },
-        candlestick: {
-          upColor: '#41c9ad',
-          color: '#cb585f',
-          upLineColor: '#41c9ad',
-          lineColor: '#cb585f'
-        },
-      },
-      xAxis: {
-        plotLines: [{
-          color: 'green',
-          width: 1,
-          value: this.getOpenDateTimeSpam(this.displayOrder?.openDate),  //display openeing date
-        }]
-      },
-      yAxis:
-        [
-          {
-            crosshair: false,
-            labels: { align: 'left' }, height: '60%', plotLines: [
-              {
-                color: '#5CE25C', width: 1, value: this.displayOrder?.openPrice,
-                label: { text: "Open            ", align: 'right' }
-              },
-              {
-                color: '#FF8901', width: 1, value: this.displayOrder?.closePrice,
-                label: { text: "close", align: 'right' }
-              },
-            ],
+      this.chartOptions = {
+        plotOptions: {
+          //   macd: {   there is a bug here, second drowing not working
+          //     zones: [{
+          //         value: 0,
+          //         color: '#cb585f'
+          //     }, {
+          //         color: '#41c9ad'
+          //     }]
+          // },
+          candlestick: {
+            upColor: '#41c9ad',
+            color: '#cb585f',
+            upLineColor: '#41c9ad',
+            lineColor: '#cb585f'
           },
-          {
-            minorTickInterval: null,
-            labels: { align: 'left' }, top: '60%', height: '40%', offset: 50
-          }
-        ],
-    }
+        },
+        xAxis: {
+          plotLines: [{
+            color: 'green',
+            width: 1,
+            value: this.getOpenDateTimeSpam(this.displayOrder?.openDate),  //display openeing date
+          }]
+        },
+        yAxis:
+          [
+            {
+              crosshair: false,
+              labels: { align: 'left' }, height: '60%', plotLines: [
+                {
+                  color: '#5CE25C', width: 1, value: this.displayOrder?.openPrice,
+                  label: { text: "Open            ", align: 'right' }
+                },
+                {
+                  color: '#FF8901', width: 1, value: this.displayOrder?.closePrice,
+                  label: { text: "close", align: 'right' }
+                },
+              ],
+            },
+            {
+              minorTickInterval: null,
+              labels: { align: 'left' }, top: '60%', height: '40%', offset: 50
+            }
+          ],
+      }
+
     this.chartOptions.series =
       [
         {

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Timers;
@@ -14,10 +15,12 @@ namespace MarginCoin.Service
 {
     public class MLService : IMLService
     {
+        private readonly string downloadFolder;
+        private readonly string backupFolder;
         private ILogger _logger;
         private IHubContext<SignalRHub> _hub;
         private System.Timers.Timer MLTimer = new System.Timers.Timer();
-        public List<MLPrediction> MLPredList {get; set;}
+        public List<MLPrediction> MLPredList { get; set; }
 
         public MLService(ILogger<MLService> logger,
             IHubContext<SignalRHub> hub)
@@ -25,85 +28,109 @@ namespace MarginCoin.Service
             _logger = logger;
             _hub = hub;
             MLPredList = new List<MLPrediction>();
+
+            downloadFolder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + @"\Downloads";
+            backupFolder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + @"\Downloads\MCModel";
         }
 
         public void ActivateML()
         {
-            MLTimer.Interval =  60000; //every min
+            MLTimer.Interval = 120000; //every min
             MLTimer.Elapsed += new ElapsedEventHandler(MLTimer_Elapsed);
-            MLTimer.Start();   
+            MLTimer.Start();
         }
 
-        public void MLTimer_Elapsed(object sender, ElapsedEventArgs e)
+        public void StopML()
+        {
+            MLTimer.Stop();
+        }
+
+        private void MLTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
 
             //for debug 
              _hub.Clients.All.SendAsync("exportChart");
 
             //Export charts
-            // if (DateTime.Now.Minute == 9
-            //     || DateTime.Now.Minute == 12
+            // if (Globals.isTradingOpen
+            //     && (DateTime.Now.Minute == 0
+            //     || DateTime.Now.Minute == 15
             //     || DateTime.Now.Minute == 30
-            //     || DateTime.Now.Minute == 44)
+            //     || DateTime.Now.Minute == 45))
             // {
             //     _hub.Clients.All.SendAsync("exportChart");
             // }
         }
 
         //Callback from UI after chart export
-        public void GetUpdatedML()
+        public void UpdateML()
+        {
+            //read all images available
+            List<string> imagePathList = Directory.GetFiles(downloadFolder, "*.jpeg", SearchOption.TopDirectoryOnly).ToList();
+
+            foreach (var imagePath in imagePathList)
+            {
+                //Backup the image
+                File.Copy(imagePath, Path.Combine(backupFolder, Path.GetFileNameWithoutExtension(imagePath) + DateTime.Now.Year + DateTime.Now.Month + DateTime.Now.Day + DateTime.Now.Hour + DateTime.Now.Minute + Path.GetExtension(imagePath)), true);
+
+                //Crop the image and delete original
+                CropImage(imagePath, downloadFolder);
+
+                //Test image with ML algo and store result in a list
+                ProcessImage(imagePath);
+            }
+        }
+
+        public void CleanImageFolder()
         {
             var downloadFolder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + @"\Downloads";
             var imagePathList = Directory.GetFiles(downloadFolder, "*.jpeg", SearchOption.TopDirectoryOnly).ToList();
-
-            //we keep a copy of all chart to train the model 
-            var backupFolder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + @"\Downloads\MCModel";
-            foreach (var fileName in imagePathList)
-            {
-                 File.Copy(fileName, Path.Combine(backupFolder, Path.GetFileNameWithoutExtension(fileName)+DateTime.Now.Year + DateTime.Now.Year + DateTime.Now.Year + Path.GetExtension(fileName)), true);
-            }
-            
-            if (imagePathList.Count == 0) return;
-
             foreach (string imagePath in imagePathList)
             {
-                // Create single instance of sample data from first line of dataset for model input
-                var imageBytes = File.ReadAllBytes(imagePath);
-                var imageName = Path.GetFileNameWithoutExtension(imagePath);
-                var previousPred = MLPredList.Find(p => p.Symbol == imageName);
-                MCModel.ModelInput sampleData = new MCModel.ModelInput()
-                {
-                    ImageSource = imageBytes,
-                };
-
-                // // Make a single prediction
-                var predictionResult = MCModel.Predict(sampleData);
-                _logger.LogWarning($"Call Prediction on {imageName} {predictionResult.PredictedLabel} {predictionResult.Score[0]},{predictionResult.Score[1]}");
-
-                if (previousPred != null)
-                {
-                    MLPredList.Remove(previousPred);
-                }
-
-                MLPredList.Add(new MLPrediction
-                {
-                    Symbol = Path.GetFileNameWithoutExtension(imagePath),
-                    Score = predictionResult.Score,
-                    PredictedLabel = predictionResult.PredictedLabel
-                });
-
                 File.Delete(imagePath);
             }
         }
 
-        public void CleanMLImageFolder()
+        private void CropImage(string filename, string downloadFolder)
         {
-            var downloadFolder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + @"\Downloads";
-            var imagePathList = Directory.GetFiles(downloadFolder, "*.jpeg", SearchOption.TopDirectoryOnly).ToList();
-            foreach (string imagePath in imagePathList)
+            var myImage = Image.FromFile(filename);
+            var myBitmap = new Bitmap(myImage).Clone(new Rectangle(800, 550, 205, 290), myImage.PixelFormat);
+
+            myImage.Dispose();
+            if (File.Exists(filename)) File.Delete(filename);
+
+            myBitmap.Save(filename);
+            myBitmap.Dispose();
+        }
+
+        private void ProcessImage(string imagePath)
+        {
+            // Create single instance of sample data from first line of dataset for model input
+            var imageBytes = File.ReadAllBytes(imagePath);
+            var imageName = Path.GetFileNameWithoutExtension(imagePath);
+            var previousPred = MLPredList.Find(p => p.Symbol == imageName);
+            MCModel.ModelInput sampleData = new MCModel.ModelInput()
             {
-                File.Delete(imagePath);
+                ImageSource = imageBytes,
+            };
+
+            // // Make a single prediction
+            var predictionResult = MCModel.Predict(sampleData);
+            _logger.LogWarning($"Call Prediction on {imageName} {predictionResult.PredictedLabel}");
+
+            if (previousPred != null)
+            {
+                MLPredList.Remove(previousPred);
             }
+
+            MLPredList.Add(new MLPrediction
+            {
+                Symbol = Path.GetFileNameWithoutExtension(imagePath),
+                Score = predictionResult.Score,
+                PredictedLabel = predictionResult.PredictedLabel
+            });
+
+            //File.Delete(imagePath);
         }
     }
 }

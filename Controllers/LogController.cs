@@ -52,7 +52,7 @@ namespace MarginCoin.Controllers
         {
             using (FileStream fs = System.IO.File.Open(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             {
-                byte[] b = new byte[1024];
+                byte[] b = new byte[2130702268];
                 UTF8Encoding temp = new UTF8Encoding(true);
                 int readLen;
                 string rawString="";

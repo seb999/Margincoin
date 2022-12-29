@@ -1,16 +1,27 @@
 <!-- Button -->
 <div class="row">
-
- 
-
   <div class="col-9">
     <div class="row">
-
       <div class="col-3">
-        <button class="btn btn-secondary btn-sm mr-1" (click)="trade()">Start</button>
-        <button class="btn btn-danger btn-sm mr-1" *ngIf="tradeOpen" (click)="stopTrade()">Stop</button>
-        <button class="btn btn-warning btn-sm mr-1" *ngIf="!tradeOpen" (click)="resumTrade()">Resum</button>
-        <button class="btn btn-warning btn-sm mr-1" (click)="testBuy()">Test Order</button>
+        <!-- <button class="btn btn-secondary btn-sm mr-1" (click)="trade()">Start</button> -->
+        <button *ngIf="!tradeOpen" class="btn" (click)="trade()">
+          <span style="color: green"> 
+            <i class="fa-solid fa-play fa-xl"></i>
+          </span>
+        </button>
+        <button *ngIf="tradeOpen" class="btn" disabled>
+          <span style="color: green"> 
+            <i class="fa-solid fa-play fa-xl"></i>
+          </span>
+        </button>
+       
+        <button class="btn" style="padding: 0px;padding:0px mr-10" (click)="stopTrade()">
+          <span style="color: orange"> 
+            <i class="fa-solid fa-pause fa-xl"></i>
+          </span>
+        </button>
+        
+        <!-- <button class="btn btn-outline-warning btn-sm pl-20" (click)="testBuy()">Test Order</button> -->
         </div>
 
       <div class="input-group input-group-sm col-3" style="max-width: 200px !important">
@@ -48,6 +59,9 @@
   </div>
   <div class="col-1">
 
+    <button class="btn" style="padding-right: 10px;padding-right:0px; float: right;"><span style="color: orange"> <i class="fa-solid fa-eraser"></i>
+   </span></button>
+   
      <button class="btn" 
      (click)="isCollapsed = ! isCollapsed"
 		[attr.aria-expanded]="!isCollapsed"
