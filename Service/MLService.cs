@@ -30,9 +30,9 @@ namespace MarginCoin.Service
             _hub = hub;
             MLPredList = new List<MLPrediction>();
 
-            downloadFolder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + @"\Downloads";
-            screenShotFolder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + @"\Downloads\MCModel";
-            imageFolder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + @"\Downloads\MCImage";
+            downloadFolder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + @"/Downloads";
+            screenShotFolder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + @"/Downloads/MCModel";
+            imageFolder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + @"/Downloads/MCImage";
         }
 
         public void ActivateML()

@@ -25,7 +25,7 @@ namespace MarginCoin.Controllers
         {
             try
             {
-                var rootFolder = Environment.CurrentDirectory + "\\logs";
+                var rootFolder = Environment.CurrentDirectory + @"/logs";
                 var LogList = Directory.GetFiles(rootFolder, "*", SearchOption.AllDirectories);
 
                 //Find the log.txt of the day from all logs files
