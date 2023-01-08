@@ -16,7 +16,8 @@ namespace MarginCoin.Service
     public class MLService : IMLService
     {
         private readonly string downloadFolder;
-        private readonly string backupFolder;
+        private readonly string screenShotFolder;
+        private readonly string imageFolder;
         private ILogger _logger;
         private IHubContext<SignalRHub> _hub;
         private System.Timers.Timer MLTimer = new System.Timers.Timer();
@@ -30,12 +31,13 @@ namespace MarginCoin.Service
             MLPredList = new List<MLPrediction>();
 
             downloadFolder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + @"\Downloads";
-            backupFolder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + @"\Downloads\MCModel";
+            screenShotFolder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + @"\Downloads\MCModel";
+            imageFolder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + @"\Downloads\MCImage";
         }
 
         public void ActivateML()
         {
-            MLTimer.Interval = 120000; //every min
+            MLTimer.Interval = 60000; //every min
             MLTimer.Elapsed += new ElapsedEventHandler(MLTimer_Elapsed);
             MLTimer.Start();
         }
@@ -49,41 +51,48 @@ namespace MarginCoin.Service
         {
 
             //for debug 
-             _hub.Clients.All.SendAsync("exportChart");
+            // _hub.Clients.All.SendAsync("exportChart");
 
             //Export charts
-            // if (Globals.isTradingOpen
-            //     && (DateTime.Now.Minute == 0
-            //     || DateTime.Now.Minute == 15
-            //     || DateTime.Now.Minute == 30
-            //     || DateTime.Now.Minute == 45))
-            // {
-            //     _hub.Clients.All.SendAsync("exportChart");
-            // }
+            if (Globals.isTradingOpen
+                && (DateTime.Now.Minute == 0
+                || DateTime.Now.Minute == 15
+                || DateTime.Now.Minute == 30
+                || DateTime.Now.Minute == 45))
+            {
+                //CleanImageFolder();
+                _hub.Clients.All.SendAsync("exportChart");
+            }
         }
 
         //Callback from UI after chart export
         public void UpdateML()
         {
-            //read all images available
-            List<string> imagePathList = Directory.GetFiles(downloadFolder, "*.jpeg", SearchOption.TopDirectoryOnly).ToList();
-
-            foreach (var imagePath in imagePathList)
+            try
             {
-                //Backup the image
-                File.Copy(imagePath, Path.Combine(backupFolder, Path.GetFileNameWithoutExtension(imagePath) + DateTime.Now.Year + DateTime.Now.Month + DateTime.Now.Day + DateTime.Now.Hour + DateTime.Now.Minute + Path.GetExtension(imagePath)), true);
+                //read all images available
+                List<string> imagePathList = Directory.GetFiles(downloadFolder, "*.jpeg", SearchOption.TopDirectoryOnly).ToList();
 
-                //Crop the image and delete original
-                CropImage(imagePath, downloadFolder);
+                foreach (var imagePath in imagePathList)
+                {
+                    //Backup the image
+                    //File.Copy(imagePath, Path.Combine(screenShotFolder, Path.GetFileNameWithoutExtension(imagePath) + DateTime.Now.Year + DateTime.Now.Month + DateTime.Now.Day + "-" +  DateTime.Now.Hour + DateTime.Now.Minute + Path.GetExtension(imagePath)), true);
 
-                //Test image with ML algo and store result in a list
-                ProcessImage(imagePath);
+                    //Crop the image and delete original
+                    CropImage(imagePath, downloadFolder);
+
+                    //Test image with ML algo and store result in a list
+                    ProcessImage(imagePath);
+                }
+            }
+            catch (System.Exception e)
+            {
+                _logger.LogError(e, "MLService UpdateML fail");
             }
         }
 
         public void CleanImageFolder()
         {
-            var downloadFolder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + @"\Downloads";
             var imagePathList = Directory.GetFiles(downloadFolder, "*.jpeg", SearchOption.TopDirectoryOnly).ToList();
             foreach (string imagePath in imagePathList)
             {
@@ -94,7 +103,7 @@ namespace MarginCoin.Service
         private void CropImage(string filename, string downloadFolder)
         {
             var myImage = Image.FromFile(filename);
-            var myBitmap = new Bitmap(myImage).Clone(new Rectangle(800, 550, 205, 290), myImage.PixelFormat);
+            var myBitmap = new Bitmap(myImage).Clone(new Rectangle(myImage.Width-195 ,myImage.Height-410, 180, 160), myImage.PixelFormat);
 
             myImage.Dispose();
             if (File.Exists(filename)) File.Delete(filename);
@@ -130,7 +139,8 @@ namespace MarginCoin.Service
                 PredictedLabel = predictionResult.PredictedLabel
             });
 
-            //File.Delete(imagePath);
+            File.Copy(imagePath, Path.Combine(imageFolder, Path.GetFileNameWithoutExtension(imagePath) + DateTime.Now.Year + DateTime.Now.Month + DateTime.Now.Day + "-" +  DateTime.Now.Hour + DateTime.Now.Minute + Path.GetExtension(imagePath)), true);
+            File.Delete(imagePath);
         }
     }
 }
