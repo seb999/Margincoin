@@ -44,7 +44,7 @@ namespace MarginCoin.Controllers
         ////////////////////////////////////////////////////////////////////////////////////////////////////////
         string interval = "1h";   //1h seem to give better result
 
-        int numberPreviousCandle = 3;
+        int numberPreviousCandle = 1;
 
         double stopLose = 0.5;
 
@@ -269,8 +269,8 @@ namespace MarginCoin.Controllers
                     //For testing just leave in Check candel the green check
                     if ((CheckCandle(numberPreviousCandle, marketStreamOnSpot[i], symbolCandle)
                         && !Globals.onHold.FirstOrDefault(p => p.Key == symbol).Value)
-                        && _mlService.MLPredList.Where(p => p.Symbol == symbol).Select(p => p.PredictedLabel).FirstOrDefault() == "up"
-                        && _mlService.MLPredList.Where(p => p.Symbol == symbol).Select(p => p.Score[0]).FirstOrDefault() >= 60)
+                        && _mlService.MLPredList.Where(p => p.Symbol == symbol).Select(p => p.PredictedLabel).FirstOrDefault() == "up")
+                        //&& _mlService.MLPredList.Where(p => p.Symbol == symbol).Select(p => p.Score[0]).FirstOrDefault() >= 60)
                     {
                         Console.WriteLine($"Open trade on {symbol}");
                         if (!Globals.onHold.ContainsKey(symbol)) Globals.onHold.Add(symbol, true);  //to avoid multi buy
@@ -372,6 +372,14 @@ namespace MarginCoin.Controllers
                 }
             }
 
+            // if( _mlService.MLPredList.Where(p => p.Symbol == activeOrder.Symbol).Select(p => p.PredictedLabel).FirstOrDefault() == "down")
+            // {
+            //     Console.WriteLine("Close trade : AI take profit ");
+            //     Sell(activeOrder.Id, "AI sold");
+            // }
+
+                     
+
             UpdateStopLose(lastPrice, activeOrder);
 
             UpdateTakeProfit(lastPrice, activeOrder);
@@ -408,7 +416,7 @@ namespace MarginCoin.Controllers
             {
                 activeOrder.TakeProfit = takeProfit - 0.5;
                 _appDbContext.Order.Update(activeOrder);
-                _appDbContext.SaveChanges();
+                _appDbContext.SaveChanges(); 
             }
         }
 

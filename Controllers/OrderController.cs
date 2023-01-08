@@ -51,12 +51,15 @@ namespace MarginCoin.Controllers
             DateTime myDate = DateTime.ParseExact(myDay + "/" + myMonth + "/" + myYear, format, provider);
 
             List<Order> myOrders =  _appDbContext.Order.ToList();
-            foreach (var item in myOrders)
+            myOrders = myOrders.Where(p=>DateTime.ParseExact(p.OpenDate.Split(" ")[0], "dd/MM/yyyy",System.Globalization.CultureInfo.InvariantCulture).CompareTo(myDate)>=0).ToList();
+
+             foreach (var item in myOrders)
             {
-                item.OpenDate = item.OpenDate.Split(" ")[0];
+                item.OpenDate = item.OpenDate.Split(" ")[1];
+                item.CloseDate = item.CloseDate != null ? item.CloseDate.Split(" ")[1] : null;
             }
 
-            return myOrders.Where(p=>DateTime.ParseExact(p.OpenDate, "dd/MM/yyyy",System.Globalization.CultureInfo.InvariantCulture).CompareTo(myDate)>=0).ToList();
+            return myOrders;
         }
 
         [HttpPost("[action]")]

@@ -25,7 +25,7 @@ namespace MarginCoin.Controllers
         {
             try
             {
-                var rootFolder = Environment.CurrentDirectory + "/logs";
+                var rootFolder = Environment.CurrentDirectory + "\\logs";
                 var LogList = Directory.GetFiles(rootFolder, "*", SearchOption.AllDirectories);
 
                 //Find the log.txt of the day from all logs files
@@ -33,7 +33,8 @@ namespace MarginCoin.Controllers
                 {
                     var logFileName = Path.GetFileNameWithoutExtension(logFile);
                     var currrentDay = DateTime.Now.Day < 10 ? "0" + DateTime.Now.Day.ToString() : DateTime.Now.Day.ToString();
-                    if (logFileName == $"{DateTime.Now.Year}{DateTime.Now.Month}{currrentDay}")
+                    var currrentMonth = DateTime.Now.Month < 10 ? "0" + DateTime.Now.Month.ToString() : DateTime.Now.Month.ToString();
+                    if (logFileName == $"{DateTime.Now.Year}{currrentMonth}{currrentDay}")
                     {
                         //Extract the content in a list
                         return GetLog(logFile);

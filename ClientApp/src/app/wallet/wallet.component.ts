@@ -42,9 +42,14 @@ HC_exporting_offline(Highcharts);
 })
 
 export class WalletComponent {
-  @ViewChild("lineChart", { static: false }) lineChart: any;
-  highcharts = Highcharts;
+
+  highcharts: typeof Highcharts = Highcharts;
   chartOptions: Highcharts.Options;
+  // @ViewChild("chart", { static: false }) chart: any;
+  @ViewChild('chart') componentRef;
+  chartRef;
+  updateFlag;
+
 
   model: NgbDateStruct;
 
@@ -203,7 +208,7 @@ export class WalletComponent {
     this.calculateTotal();
   }
 
-  async changed() {
+  async changeTradeMode() {
     await this.setProdParam(this.isProd);
     //this.assetList = await this.binanceAsset();
     this.myAccount = await this.binanceAccount();
@@ -218,6 +223,14 @@ export class WalletComponent {
     }
   }
 
+  async stopTrade(): Promise<any> {
+    this.tradeOpen = !this.tradeOpen;
+    this.setTradeParam();
+  }
+
+  /////////////////////////////////////////////////////////////
+  /////////////       API calls          //////////////////////
+  /////////////////////////////////////////////////////////////
   async setProdParam(isProd): Promise<any> {
     const httpSetting: HttpSettings = {
       method: 'GET',
@@ -313,14 +326,9 @@ export class WalletComponent {
     return await this.httpService.xhr(httpSetting);
   }
 
-  async stopTrade(): Promise<any> {
-    this.tradeOpen = !this.tradeOpen;
-    this.setTradeParam();
-  }
-
   /////////////////////////////////////////////////////////////
   /////////////    HighChart methods     //////////////////////
-  ////////////////////////////////////////////////////////////?
+  /////////////////////////////////////////////////////////////
 
   async exportChart() {
     this.interval = "15m";
@@ -330,10 +338,11 @@ export class WalletComponent {
         this.displaySymbol = this.myAccount?.balances[i].asset + "USDT";
         this.displayHighstock();
         setTimeout(() => {
-          this.lineChart.chart.exportChartLocal({
+          this.componentRef.chart.exportChartLocal({
             type: "image/jpeg",
             filename: this.displaySymbol,
           });
+         
           next("d");
         }, 3000);
       });
@@ -348,13 +357,23 @@ export class WalletComponent {
     if (orderId != null) {
       this.displaySymbol = symbol;
       this.displayOrder = await this.orderDetailHelper.getOrder(orderId);
-      console.log(this.displayOrder);
     }
     else {
       this.displaySymbol = symbol + "USDT";
       this.displayOrder = null;
     }
     this.displayHighstock();
+  }
+
+  chartCallback: Highcharts.ChartCallbackFunction = (chart) => {
+    console.log("chart callback function");
+    this.chartRef = chart;
+  };
+
+  clearChart() {
+    this.chartRef.destroy();
+    this.componentRef.chart = null;
+    this.updateFlag = true;
   }
 
   getOpenDateTimeSpam(openDate) {
@@ -371,7 +390,7 @@ export class WalletComponent {
   }
 
   async displayHighstock() {
-    let chartHeight='';
+    let chartHeight = '';
     this.ohlc = null;
     this.ohlc = await this.orderDetailHelper.getIntradayData(this.displaySymbol, 100, this.interval);
 
@@ -392,51 +411,68 @@ export class WalletComponent {
         ])
     });
 
-      this.chartOptions = {
-        plotOptions: {
-          //   macd: {   there is a bug here, second drowing not working
-          //     zones: [{
-          //         value: 0,
-          //         color: '#cb585f'
-          //     }, {
-          //         color: '#41c9ad'
-          //     }]
-          // },
-          candlestick: {
-            upColor: '#41c9ad',
-            color: '#cb585f',
-            upLineColor: '#41c9ad',
-            lineColor: '#cb585f'
-          },
+    this.chartOptions = {
+      plotOptions: {
+        //   macd: {   there is a bug here, second drowing not working
+        //     zones: [{
+        //         value: 0,
+        //         color: '#cb585f'
+        //     }, {
+        //         color: '#41c9ad'
+        //     }]
+        // },
+        candlestick: {
+          upColor: '#41c9ad',
+          color: '#cb585f',
+          upLineColor: '#41c9ad',
+          lineColor: '#cb585f'
         },
-        xAxis: {
-          plotLines: [{
-            color: 'green',
-            width: 1,
-            value: this.getOpenDateTimeSpam(this.displayOrder?.openDate),  //display openeing date
-          }]
+      },
+      xAxis: {
+        labels : {y:-2 },
+        showLastLabel:false,
+        plotLines: [{
+          color: 'green',
+          width: 1,
+          value: this.getOpenDateTimeSpam(this.displayOrder?.openDate),  //display openeing date
         },
-        yAxis:
-          [
-            {
-              crosshair: false,
-              labels: { align: 'left' }, height: '60%', plotLines: [
-                {
-                  color: '#5CE25C', width: 1, value: this.displayOrder?.openPrice,
-                  label: { text: "Open            ", align: 'right' }
-                },
-                {
-                  color: '#FF8901', width: 1, value: this.displayOrder?.closePrice,
-                  label: { text: "close", align: 'right' }
-                },
-              ],
+        {
+          color: 'green',
+          width: 1,
+          value: this.getOpenDateTimeSpam(this.displayOrder?.closeDate),  //display openeing date
+        }]
+      },
+      yAxis:
+        [
+          {
+            crosshair: false,
+            labels: {
+              align: 'right',
+              x: -8
             },
-            {
-              minorTickInterval: null,
-              labels: { align: 'left' }, top: '60%', height: '40%', offset: 50
-            }
-          ],
-      }
+            height: '60%',
+            opposite: true,
+            plotLines: [
+              {
+                color: '#5CE25C', width: 1, value: this.displayOrder?.openPrice,
+                label: { text: "Open            ", align: 'right' }
+              },
+              {
+                color: '#FF8901', width: 1, value: this.displayOrder?.closePrice,
+                label: { text: "close", align: 'left' }
+              },
+            ],
+          },
+          {
+            minorTickInterval: null,
+            labels: { align: 'left', enabled: false },
+            top: '60%',
+            height: '40%',
+
+            //offset: -5
+          }
+        ],
+    }
 
     this.chartOptions.series =
       [
