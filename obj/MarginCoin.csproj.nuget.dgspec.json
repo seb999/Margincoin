@@ -107,9 +107,9 @@
               "target": "Package",
               "version": "[5.2.2, )"
             },
-            "System.Drawing.Common": {
+            "SixLabors.ImageSharp": {
               "target": "Package",
-              "version": "[6.0.0, )"
+              "version": "[2.1.3, )"
             },
             "Websocket.Client": {
               "target": "Package",

@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Timers;
@@ -10,6 +9,9 @@ using MarginCoin.Model;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
+
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Processing;
 
 namespace MarginCoin.Service
 {
@@ -40,6 +42,9 @@ namespace MarginCoin.Service
             MLTimer.Interval = 60000; //every min
             MLTimer.Elapsed += new ElapsedEventHandler(MLTimer_Elapsed);
             MLTimer.Start();
+
+            //we do a first call at startup to get data
+             _hub.Clients.All.SendAsync("exportChart");
         }
 
         public void StopML()
@@ -51,7 +56,7 @@ namespace MarginCoin.Service
         {
 
             //for debug 
-            // _hub.Clients.All.SendAsync("exportChart");
+           // _hub.Clients.All.SendAsync("exportChart");
 
             //Export charts
             if (Globals.isTradingOpen
@@ -75,7 +80,7 @@ namespace MarginCoin.Service
 
                 foreach (var imagePath in imagePathList)
                 {
-                    //Backup the image
+                    //Backup the image Not needed anymore
                     //File.Copy(imagePath, Path.Combine(screenShotFolder, Path.GetFileNameWithoutExtension(imagePath) + DateTime.Now.Year + DateTime.Now.Month + DateTime.Now.Day + "-" +  DateTime.Now.Hour + DateTime.Now.Minute + Path.GetExtension(imagePath)), true);
 
                     //Crop the image and delete original
@@ -102,14 +107,24 @@ namespace MarginCoin.Service
 
         private void CropImage(string filename, string downloadFolder)
         {
-            var myImage = Image.FromFile(filename);
-            var myBitmap = new Bitmap(myImage).Clone(new Rectangle(myImage.Width-195 ,myImage.Height-410, 180, 160), myImage.PixelFormat);
+            //System.Drawing replaced with SixLabors.ImageSharp for IOS
+            using (var img = Image.Load(filename))
+            {
+                var ttt = img.Width;
+                var ddd = img.Height;
+                Image myImage = img.Clone(x=>x.Crop(new Rectangle(img.Width-200, img.Height-400, 180, 200)));
+                myImage.Save(filename);
+            }
 
-            myImage.Dispose();
-            if (File.Exists(filename)) File.Delete(filename);
+            //Code that works only on Windows
+            // var myImage = Image.FromFile(filename);
+            // var myBitmap = new Bitmap(myImage).Clone(new System.Drawing.Rectangle(myImage.Width-195 ,myImage.Height-410, 180, 160), myImage.PixelFormat);
 
-            myBitmap.Save(filename);
-            myBitmap.Dispose();
+            // myImage.Dispose();
+            // if (File.Exists(filename)) File.Delete(filename);
+
+            // myBitmap.Save(filename);
+            // myBitmap.Dispose();
         }
 
         private void ProcessImage(string imagePath)
@@ -125,7 +140,7 @@ namespace MarginCoin.Service
 
             // // Make a single prediction
             var predictionResult = MCModel.Predict(sampleData);
-            _logger.LogWarning($"Call Prediction on {imageName} {predictionResult.PredictedLabel}");
+            _logger.LogWarning($"Call Prediction on {imageName} {predictionResult.PredictedLabel} {predictionResult.Score[0]}/{predictionResult.Score[1]}");
 
             if (previousPred != null)
             {
@@ -139,7 +154,7 @@ namespace MarginCoin.Service
                 PredictedLabel = predictionResult.PredictedLabel
             });
 
-            File.Copy(imagePath, Path.Combine(imageFolder, Path.GetFileNameWithoutExtension(imagePath) + DateTime.Now.Year + DateTime.Now.Month + DateTime.Now.Day + "-" +  DateTime.Now.Hour + DateTime.Now.Minute + Path.GetExtension(imagePath)), true);
+            File.Copy(imagePath, Path.Combine(imageFolder, Path.GetFileNameWithoutExtension(imagePath) + DateTime.Now.Year + DateTime.Now.Month + DateTime.Now.Day + "-" + DateTime.Now.Hour + DateTime.Now.Minute + Path.GetExtension(imagePath)), true);
             File.Delete(imagePath);
         }
     }

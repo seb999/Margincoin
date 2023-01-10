@@ -34,7 +34,7 @@ npm-debug.log
 yarn-error.log
 testem.log
 /typings
-MLModel/*
+logs/*
 bin/*
 
 # System Files

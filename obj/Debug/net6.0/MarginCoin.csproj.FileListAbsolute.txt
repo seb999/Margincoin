@@ -115,8 +115,4 @@ C:\_Git\Dotnet\MarginCoin\bin\Debug\net6.0\runtimes\linux-x64\native\libtensorfl
 C:\_Git\Dotnet\MarginCoin\bin\Debug\net6.0\runtimes\osx-x64\native\libtensorflow.dylib
 C:\_Git\Dotnet\MarginCoin\bin\Debug\net6.0\runtimes\osx-x64\native\libtensorflow_framework.2.dylib
 C:\_Git\Dotnet\MarginCoin\bin\Debug\net6.0\runtimes\win-x64\native\tensorflow.dll
-C:\_Git\Dotnet\MarginCoin\bin\Debug\net6.0\Microsoft.Win32.SystemEvents.dll
-C:\_Git\Dotnet\MarginCoin\bin\Debug\net6.0\System.Drawing.Common.dll
-C:\_Git\Dotnet\MarginCoin\bin\Debug\net6.0\runtimes\win\lib\net6.0\Microsoft.Win32.SystemEvents.dll
-C:\_Git\Dotnet\MarginCoin\bin\Debug\net6.0\runtimes\unix\lib\net6.0\System.Drawing.Common.dll
-C:\_Git\Dotnet\MarginCoin\bin\Debug\net6.0\runtimes\win\lib\net6.0\System.Drawing.Common.dll
+C:\_Git\Dotnet\MarginCoin\bin\Debug\net6.0\SixLabors.ImageSharp.dll

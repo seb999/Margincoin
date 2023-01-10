@@ -42,11 +42,11 @@ namespace MarginCoin.Controllers
         ////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////------------SETTINGS----------/////////////////////////////////////////////
         ////////////////////////////////////////////////////////////////////////////////////////////////////////
-        string interval = "1h";   //1h seem to give better result
+        string interval = "15m";   //1h seem to give better result
 
-        int numberPreviousCandle = 1;
+        int numberPreviousCandle = 2;
 
-        double stopLose = 0.5;
+        double stopLose = 0.8;
 
         double takeProfit = 1;
 
@@ -267,14 +267,15 @@ namespace MarginCoin.Controllers
 
                     //if (Globals.swallowOneOrder)
                     //For testing just leave in Check candel the green check
-                    if ((CheckCandle(numberPreviousCandle, marketStreamOnSpot[i], symbolCandle)
-                        && !Globals.onHold.FirstOrDefault(p => p.Key == symbol).Value)
-                        && _mlService.MLPredList.Where(p => p.Symbol == symbol).Select(p => p.PredictedLabel).FirstOrDefault() == "up")
-                        //&& _mlService.MLPredList.Where(p => p.Symbol == symbol).Select(p => p.Score[0]).FirstOrDefault() >= 60)
+                    if (_mlService.MLPredList.Where(p => p.Symbol == symbol).Select(p => p.PredictedLabel).FirstOrDefault() == "up")  
+                    //&& _mlService.MLPredList.Where(p => p.Symbol == symbol).Select(p => p.Score[0]).FirstOrDefault() >= 60)
                     {
-                        Console.WriteLine($"Open trade on {symbol}");
-                        if (!Globals.onHold.ContainsKey(symbol)) Globals.onHold.Add(symbol, true);  //to avoid multi buy
-                        Buy(marketStreamOnSpot[i], symbolCandle);
+                        if ((CheckCandle(numberPreviousCandle, marketStreamOnSpot[i], symbolCandle) && !Globals.onHold.FirstOrDefault(p => p.Key == symbol).Value))       
+                        {
+                            Console.WriteLine($"Open trade on {symbol}");
+                            if (!Globals.onHold.ContainsKey(symbol)) Globals.onHold.Add(symbol, true);  //to avoid multi buy
+                            Buy(marketStreamOnSpot[i], symbolCandle);
+                        }
                     }
                 }
             }
@@ -289,12 +290,6 @@ namespace MarginCoin.Controllers
         {   //Question : why using the marketFirstCoin parameter as we have the last value in the last candle in the list
 
             if (symbolCandle.Count < 2) return false;
-
-            if (symbolSpot.s != symbolCandle.Last().s)
-            {
-                Console.WriteLine("Inconsistancy in candle list");
-                return false;
-            }
 
             //0 - Don't trade if only 14% coins are up over the last 24h AND coin is slittly negatif
             //    If the coin is very negatif over last 24h we are in a dive and we want to trade at reversal tendance
@@ -315,12 +310,6 @@ namespace MarginCoin.Controllers
                 {
                     return false;
                 }
-            }
-
-            //2 - The current should be higther than the previous candle + 1/10
-            if (symbolSpot.c < (symbolCandle[symbolCandle.Count - 2].c + (symbolCandle[symbolCandle.Count - 2].h - symbolCandle[symbolCandle.Count - 2].c) / 8))
-            {
-                return false;
             }
 
             //3 - If MACD 100 don't buy
@@ -372,13 +361,11 @@ namespace MarginCoin.Controllers
                 }
             }
 
-            // if( _mlService.MLPredList.Where(p => p.Symbol == activeOrder.Symbol).Select(p => p.PredictedLabel).FirstOrDefault() == "down")
-            // {
-            //     Console.WriteLine("Close trade : AI take profit ");
-            //     Sell(activeOrder.Id, "AI sold");
-            // }
-
-                     
+            if( _mlService.MLPredList.Where(p => p.Symbol == activeOrder.Symbol).Select(p => p.PredictedLabel).FirstOrDefault() == "down")
+            {
+                Console.WriteLine("Close trade : AI take profit ");
+                Sell(activeOrder.Id, "AI sold");
+            }
 
             UpdateStopLose(lastPrice, activeOrder);
 
@@ -416,7 +403,7 @@ namespace MarginCoin.Controllers
             {
                 activeOrder.TakeProfit = takeProfit - 0.5;
                 _appDbContext.Order.Update(activeOrder);
-                _appDbContext.SaveChanges(); 
+                _appDbContext.SaveChanges();
             }
         }
 
@@ -463,15 +450,15 @@ namespace MarginCoin.Controllers
             System.Net.HttpStatusCode httpStatusCode = System.Net.HttpStatusCode.NoContent;
             BinanceOrder myBinanceOrder = _binanceService.BuyMarket(symbolSpot.s, quoteOrderQty, ref httpStatusCode);
 
-            if (myBinanceOrder == null)
-            {
-                Globals.onHold.Remove(symbolSpot.s);
-                return;
-            }
-
             if (httpStatusCode == System.Net.HttpStatusCode.BadRequest)
             {
                 _logger.LogWarning($"Call {MyEnum.BinanceApiCall.BuyMarket} {symbolSpot.s} Locked");
+                return;
+            }
+
+            if (myBinanceOrder == null)
+            {
+                Globals.onHold.Remove(symbolSpot.s);
                 return;
             }
 
