@@ -14,6 +14,7 @@ using System.Text.Json;
 using Microsoft.Extensions.Logging;
 using MarginCoin.Service;
 using MarginCoin.MLClass;
+using System.Globalization;
 
 namespace MarginCoin.Controllers
 {
@@ -267,8 +268,8 @@ namespace MarginCoin.Controllers
 
                     //if (Globals.swallowOneOrder)
                     //For testing just leave in Check candel the green check
-                    if (_mlService.MLPredList.Where(p => p.Symbol == symbol).Select(p => p.PredictedLabel).FirstOrDefault() == "up")  
-                    //&& _mlService.MLPredList.Where(p => p.Symbol == symbol).Select(p => p.Score[0]).FirstOrDefault() >= 60)
+                    if (_mlService.MLPredList.Where(p => p.Symbol == symbol).Select(p => p.PredictedLabel).FirstOrDefault() == "up" 
+                        && _mlService.MLPredList.Where(p => p.Symbol == symbol).Select(p => p.Score[1]).FirstOrDefault() >= 0.60)
                     {
                         if ((CheckCandle(numberPreviousCandle, marketStreamOnSpot[i], symbolCandle) && !Globals.onHold.FirstOrDefault(p => p.Key == symbol).Value))       
                         {
@@ -336,9 +337,12 @@ namespace MarginCoin.Controllers
             double highPrice = 0;
             Candle lastCandle = new Candle();
 
+            //to avoid bug during iteration when the source 'candleMatrice' change from WebSocket
+            var myCandleMatrice = candleMatrice;
+
             //iteration the matrice to find the line for the symbol of the active order
-            List<Candle> symbolCandle = candleMatrice.Where(p => p.First().s == activeOrder.Symbol).FirstOrDefault();
-            int symbolCandleIndex = candleMatrice.IndexOf(symbolCandle); //get the line that coorespond to the symbol]
+            List<Candle> symbolCandle = myCandleMatrice.Where(p => p.First().s == activeOrder.Symbol).FirstOrDefault();
+            int symbolCandleIndex = myCandleMatrice.IndexOf(symbolCandle); //get the line that coorespond to the symbol]
             lastPrice = symbolCandle.Select(p => p.c).LastOrDefault();
             highPrice = symbolCandle.Select(p => p.h).LastOrDefault();
             lastCandle = symbolCandle.Select(p => p).LastOrDefault();
@@ -361,7 +365,8 @@ namespace MarginCoin.Controllers
                 }
             }
 
-            if( _mlService.MLPredList.Where(p => p.Symbol == activeOrder.Symbol).Select(p => p.PredictedLabel).FirstOrDefault() == "down")
+            if( _mlService.MLPredList.Where(p => p.Symbol == activeOrder.Symbol).Select(p => p.PredictedLabel).FirstOrDefault() == "down"
+             && _mlService.MLPredList.Where(p => p.Symbol == activeOrder.Symbol).Select(p => p.Score[0]).FirstOrDefault() >= 0.60)
             {
                 Console.WriteLine("Close trade : AI take profit ");
                 Sell(activeOrder.Id, "AI sold");
@@ -529,9 +534,9 @@ namespace MarginCoin.Controllers
             myOrder.Volume = symbolSpot.v;
             myOrder.TakeProfit = takeProfit;
             myOrder.StopLose = CalculateAvragePrice(binanceOrder) * (1 - (stopLose / 100));
-            myOrder.Quantity = double.Parse(binanceOrder.executedQty);
+            myOrder.Quantity = double.Parse(binanceOrder.executedQty, new CultureInfo("en-US"));
             myOrder.IsClosed = 0;
-            myOrder.Fee = Globals.isProd ? binanceOrder.fills.Sum(p => double.Parse(p.commission)) : Math.Round((CalculateAvragePrice(binanceOrder) * double.Parse(binanceOrder.executedQty)) / 100) * 0.1;
+            myOrder.Fee = Globals.isProd ? binanceOrder.fills.Sum(p => double.Parse(p.commission, new CultureInfo("en-US"))) : Math.Round((CalculateAvragePrice(binanceOrder) * double.Parse(binanceOrder.executedQty, new CultureInfo("en-US"))) / 100) * 0.1;
             myOrder.Symbol = binanceOrder.symbol;
 
             myOrder.RSI = symbolCandle.Last().Rsi;
@@ -575,8 +580,8 @@ namespace MarginCoin.Controllers
 
         private double CalculateAvragePrice(BinanceOrder myOrder)
         {
-            var executedAmount = myOrder.fills.Sum(p => double.Parse(p.price) * double.Parse(p.qty));
-            var executedQty = myOrder.fills.Sum(p => double.Parse(p.qty));
+            var executedAmount = myOrder.fills.Sum(p => double.Parse(p.price, new CultureInfo("en-US")) * double.Parse(p.qty, new CultureInfo("en-US")));
+            var executedQty = myOrder.fills.Sum(p => double.Parse(p.qty, new CultureInfo("en-US")));
             return executedAmount / executedQty;
         }
 
