@@ -24,6 +24,7 @@ import { BinanceOrder } from '../class/binanceOrder';
 import { FindValueSubscriber } from 'rxjs/internal/operators/find';
 import { BinanceAccount } from '../class/binanceAccount';
 
+
 HC_HIGHSTOCK(Highcharts);
 HC_INDIC(Highcharts);
 HC_RSI(Highcharts);
@@ -58,6 +59,7 @@ export class WalletComponent {
   private ohlc = [] as any;
   public pendingOrderList: Order[];
   public myAccount: BinanceAccount;
+  public symbolList: any[];
   public orderList: Order[];
   public logList: any[];
   public CandleList: any[];
@@ -167,7 +169,7 @@ export class WalletComponent {
       }
     });
 
-    //Get Wallet asset
+    this.symbolList = await this.getSymbolList();
     this.logList = await this.getLog();
     this.myAccount = await this.binanceAccount();
   }
@@ -281,7 +283,7 @@ export class WalletComponent {
     return await this.httpService.xhr(httpSetting);
   }
 
-  async testBuy(): Promise<any> {
+  async debugBuy(): Promise<any> {
     const httpSetting: HttpSettings = {
       method: 'GET',
       url: location.origin + '/api/AutoTrade3/TestBinanceBuy/',
@@ -313,6 +315,14 @@ export class WalletComponent {
     return this.httpService.xhr(httpSetting);
   }
 
+  async getSymbolList(): Promise<any[]> {
+    const httpSetting: HttpSettings = {
+      method: 'GET',
+      url: location.origin + '/api/AutoTrade3/GetSymbolList',
+    };
+    return await this.httpService.xhr(httpSetting);
+  }
+
   async trade(): Promise<any> {
     //we allow system to execute orders
     this.tradeOpen = true;
@@ -332,17 +342,15 @@ export class WalletComponent {
 
   async exportChart() {
     this.interval = "15m";
-    for (var i = 0; i < this.myAccount?.balances.length; i++) {
-      if (this.myAccount?.balances[i].asset == "USDT") continue;
+    for (var i = 0; i < this.symbolList?.length; i++) {
       await new Promise(next => {
-        this.displaySymbol = this.myAccount?.balances[i].asset + "USDT";
+        this.displaySymbol = this.symbolList[i];
         this.displayHighstock();
         setTimeout(() => {
           this.componentRef.chart.exportChartLocal({
             type: "image/jpeg",
             filename: this.displaySymbol,
           });
-         
           next("d");
         }, 3000);
       });

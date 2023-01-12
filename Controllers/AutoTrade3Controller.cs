@@ -43,7 +43,7 @@ namespace MarginCoin.Controllers
         ////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////------------SETTINGS----------/////////////////////////////////////////////
         ////////////////////////////////////////////////////////////////////////////////////////////////////////
-        string interval = "15m";   //1h seem to give better result
+        string interval = "30m";   //1h seem to give better result
 
         int numberPreviousCandle = 2;
 
@@ -122,7 +122,15 @@ namespace MarginCoin.Controllers
             return "";
         }
 
+        [HttpGet("[action]")]
+        public List<string> GetSymbolList()
+        {
+            return _appDbContext.Symbol.Select(p => p.SymbolName).ToList();
+        }
+
         #endregion
+
+        #region Web Sockets - Algo
 
         private async void OpenWebSocketOnSymbol(string symbol)
         {
@@ -365,12 +373,12 @@ namespace MarginCoin.Controllers
                 }
             }
 
-            if( _mlService.MLPredList.Where(p => p.Symbol == activeOrder.Symbol).Select(p => p.PredictedLabel).FirstOrDefault() == "down"
-             && _mlService.MLPredList.Where(p => p.Symbol == activeOrder.Symbol).Select(p => p.Score[0]).FirstOrDefault() >= 0.60)
-            {
-                Console.WriteLine("Close trade : AI take profit ");
-                Sell(activeOrder.Id, "AI sold");
-            }
+            // if( _mlService.MLPredList.Where(p => p.Symbol == activeOrder.Symbol).Select(p => p.PredictedLabel).FirstOrDefault() == "down"
+            //  && _mlService.MLPredList.Where(p => p.Symbol == activeOrder.Symbol).Select(p => p.Score[0]).FirstOrDefault() >= 0.60)
+            // {
+            //     Console.WriteLine("Close trade : AI take profit ");
+            //     Sell(activeOrder.Id, "AI sold");
+            // }
 
             UpdateStopLose(lastPrice, activeOrder);
 
@@ -447,6 +455,7 @@ namespace MarginCoin.Controllers
             }
         }
 
+        #endregion
 
         #region Buy / Sell
 
@@ -626,11 +635,6 @@ namespace MarginCoin.Controllers
             }
         }
 
-        private List<string> GetSymbolList()
-        {
-            return _appDbContext.Symbol.Select(p => p.SymbolName).ToList();
-        }
-
         private void SaveHighLow(Candle lastCandle, Order activeOrder)
         {
             if (lastCandle.c > activeOrder.HighPrice)
@@ -659,7 +663,7 @@ namespace MarginCoin.Controllers
 
         #endregion
 
-        #region Binance
+        #region Debug
 
         [HttpGet("[action]")]
         public void TestBinanceBuy()

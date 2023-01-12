@@ -45,7 +45,7 @@ namespace MarginCoin.MLClass
 
         #endregion
 
-        private static string MLNetModelPath = Path.GetFullPath(Environment.CurrentDirectory + @"\MLModel\MCModel.zip");
+        private static string MLNetModelPath = Path.GetFullPath(Environment.CurrentDirectory + @"/MLModel/MCModel.zip");
 
         public static readonly Lazy<PredictionEngine<ModelInput, ModelOutput>> PredictEngine = new Lazy<PredictionEngine<ModelInput, ModelOutput>>(() => CreatePredictEngine(), true);
 
