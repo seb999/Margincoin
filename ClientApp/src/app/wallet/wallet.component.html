@@ -5,24 +5,24 @@
       <div class="col-3">
         <!-- <button class="btn btn-secondary btn-sm mr-1" (click)="trade()">Start</button> -->
         <button *ngIf="!tradeOpen" class="btn" (click)="trade()">
-          <span style="color: green"> 
+          <span style="color: green">
             <i class="fa-solid fa-play fa-xl"></i>
           </span>
         </button>
         <button *ngIf="tradeOpen" class="btn" disabled>
-          <span style="color: green"> 
+          <span style="color: green">
             <i class="fa-solid fa-play fa-xl"></i>
           </span>
         </button>
-       
+
         <button class="btn" style="padding: 0px;padding:0px mr-10" (click)="stopTrade()">
-          <span style="color: orange"> 
+          <span style="color: orange">
             <i class="fa-solid fa-pause fa-xl"></i>
           </span>
         </button>
-        
+
         <button class="btn btn-outline-warning btn-sm pl-20" (click)="debugBuy()">Test Order</button>
-        </div>
+      </div>
 
       <div class="input-group col-3" style="max-width: 200px !important">
         <input class="form-control sm" placeholder="yyyy-mm-dd" name="dp" [(ngModel)]="model" ngbDatepicker
@@ -48,26 +48,34 @@
 
   </div>
 
-  <div class="col-2">
-    <mat-slide-toggle [(ngModel)]="isProd" class="example-margin" [color]="color" (change)="changeTradeMode()"> <b
+  <div class="col-1">
+    <mat-slide-toggle [(ngModel)]="isProd" [color]="color" (change)="changeTradeServer()"> <b
         *ngIf="isProd">
-        <p style="color: white; padding-top: 13px;">PROD</p>
+        <p style="color: white; padding-top: 13px;">Prod</p>
       </b> <b *ngIf="!isProd">
-        <p style="color: white; padding-top: 13px;">TEST</p>
+        <p style="color: white; padding-top: 13px;">Test</p>
       </b>
     </mat-slide-toggle>
   </div>
   <div class="col-1">
+    <mat-slide-toggle [(ngModel)]="isOnAir" [color]="color" (change)="changeTradingMode()"> <b
+        *ngIf="isOnAir">
+        <p style="color: white; padding-top: 13px;">On Air</p>
+      </b> <b *ngIf="!isOnAir">
+        <p style="color: white; padding-top: 13px;">Off</p>
+      </b>
+    </mat-slide-toggle>
+  </div>
 
-    <button class="btn" (click)="clearChart()" style="padding-right: 10px;padding-right:0px; float: right;"><span style="color: orange"> <i class="fa-solid fa-eraser"></i>
-   </span></button>
-   
-     <button class="btn" 
-     (click)="isCollapsed = ! isCollapsed"
-		[attr.aria-expanded]="!isCollapsed"
-		aria-controls="collapseExample"
-    style="padding-left: 0px;padding-right:0px; float: right;"><span style="color: orange"><i class="fa fa-flask"></i>
-    </span></button>
+  <div class="col-1">
+    <button class="btn" (click)="clearChart()" style="padding-right: 10px;padding-right:0px; float: right;"><span
+        style="color: orange"> <i class="fa-solid fa-eraser"></i>
+      </span></button>
+
+    <button class="btn" (click)="isCollapsed = ! isCollapsed" [attr.aria-expanded]="!isCollapsed"
+      aria-controls="collapseExample" style="padding-left: 0px;padding-right:0px; float: right;"><span
+        style="color: orange"><i class="fa fa-flask"></i>
+      </span></button>
   </div>
 </div>
 
@@ -141,10 +149,10 @@
           <!-- <td *ngIf="((order.macdHist_2>order.macdHist_1 || order.macdHist_1 > order.macdHist))" style="color: rgb(236, 44, 44);">Down</td>0))" style="color: limegreen;">Up</td> -->
           <!-- <td *ngIf="((order.macdHist_2>order.macdHist_1 || order.macdHist_1 > order.macdHist))" style="color: rgb(236, 44, 44);">Down</td> -->
           <td>
-            <button class="btn"  *ngIf="order.isClosed" (click)="closeTrade(order.id);" disabled
+            <button class="btn" *ngIf="order.isClosed" (click)="closeTrade(order.id, order.closePrice);" disabled
               style="padding-left: 0px;padding-right:0px"><span style="color: orange"><i class="far fa-trash-alt"></i>
               </span></button>
-              <button class="btn"  *ngIf="!order.isClosed" (click)="closeTrade(order.id);"
+            <button class="btn" *ngIf="!order.isClosed" (click)="closeTrade(order.id, order.closePrice);"
               style="padding-left: 0px;padding-right:0px"><span style="color: orange"><i class="far fa-trash-alt"></i>
               </span></button>
           </td>
@@ -165,7 +173,7 @@
           <td></td>
           <td></td>
           <td></td>
-         
+
           <td><b>Total</b></td>
           <td *ngIf="totalProfit >=0" style="color: limegreen;">{{totalProfit.toFixed(4)}}</td>
           <td *ngIf="totalProfit < 0" style="color: rgb(255, 57, 57);">{{totalProfit.toFixed(4)}}</td>
@@ -191,12 +199,8 @@
     </div>
 
     <div class="row" *ngIf="chartOptions">
-      <highcharts-chart #chart constructorType='stockChart' 
-      [Highcharts]="highcharts" 
-      [options]="chartOptions"
-      [callbackFunction]="chartCallback"
-      [update]="updateFlag"
-      style="width: 100%; height: 100%; display: block;">
+      <highcharts-chart #chart constructorType='stockChart' [Highcharts]="highcharts" [options]="chartOptions"
+        [callbackFunction]="chartCallback" [update]="updateFlag" style="width: 100%; height: 100%; display: block;">
       </highcharts-chart>
     </div>
 
@@ -212,14 +216,15 @@
           <tr *ngFor="let asset of myAccount?.balances">
             <td>
               <a style="color: orange" [routerLink]="" (click)="showChart(asset.asset, null);">{{asset?.asset}}</a>
-             
+
             </td>
             <td>{{asset?.free}}</td>
             <td>{{asset?.locked}}</td>
             <td>
               <button class="btn" (click)="openPopup(popupTemplate, asset?.asset, asset?.free);"
-              style="padding: 0px;padding:0px"><span style="color: orange"><i class="fa-sharp fa-solid fa-circle-dollar-to-slot"></i>
-              </span></button>
+                style="padding: 0px;padding:0px"><span style="color: orange"><i
+                    class="fa-sharp fa-solid fa-circle-dollar-to-slot"></i>
+                </span></button>
             </td>
           </tr>
         </tbody>
@@ -294,8 +299,7 @@
       <div class="form-group row no-gutters">
         <label for="amount" class="col-sm-3 col-form-label">Amount</label>
         <div class="col-sm-9">
-          <input id="amount" class="form-control form-control-sm" name="amount" required
-            [(ngModel)]="this.popupQty">
+          <input id="amount" class="form-control form-control-sm" name="amount" required [(ngModel)]="this.popupQty">
         </div>
       </div>
     </form>
@@ -308,12 +312,12 @@
 
 <div class="fixed-bottom bg-dark" #collapse="ngbCollapse" [(ngbCollapse)]="isCollapsed">
   <div class="card bg-dark">
-		<div class="card-body" style="color:white">
-      <button class="btn" (click)="refreshUI()"
-     style="padding-left: 0px;padding-right:0px; float: left;"><span style="color: orange"><i class="fa fa-arrows-rotate"></i>
-     </span></button>
+    <div class="card-body" style="color:white">
+      <button class="btn" (click)="refreshUI()" style="padding-left: 0px;padding-right:0px; float: left;"><span
+          style="color: orange"><i class="fa fa-arrows-rotate"></i>
+        </span></button>
       <ul style="height: 140px; overflow: scroll; overflow-x: hidden; overflow-y: auto;">
         <li *ngFor="let item of logList">{{item}}</li>
       </ul>
-	</div>
-</div>
+    </div>
+  </div>

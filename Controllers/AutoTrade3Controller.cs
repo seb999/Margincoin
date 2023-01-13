@@ -30,31 +30,26 @@ namespace MarginCoin.Controllers
         private IBinanceService _binanceService;
         private IMLService _mlService;
         private readonly ApplicationDbContext _appDbContext;
-
         private ILogger _logger;
         private List<List<Candle>> candleMatrice = new List<List<Candle>>();
         private List<MarketStream> marketStreamOnSpot = new List<MarketStream>();
         private List<string> mySymbolList = new List<string>();
-
         int nbrUp = 0;
         int nbrDown = 0;
-        private bool exportStarted = false;
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////------------SETTINGS----------/////////////////////////////////////////////
         ////////////////////////////////////////////////////////////////////////////////////////////////////////
         string interval = "30m";   //1h seem to give better result
-
         int numberPreviousCandle = 2;
-
         double stopLose = 0.8;
-
         double takeProfit = 1;
-
         //max trade that can be open
         int maxOpenTrade = 5;
-
+        //Max amount to invest for each trade
         int quoteOrderQty = 2000;
+        //Select short list of symbol or full list(on test server on 6 symbols allowed)
+        bool fullSymbolList = true;
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////
         ///////////////////////////////-----------Constructor----------/////////////////////////////////////////
@@ -74,9 +69,8 @@ namespace MarginCoin.Controllers
         }
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /////////////////////////////////-----------ALGORYTME----------/////////////////////////////////////////
+        /////////////////////////////////-----------HTTP REQUEST-------/////////////////////////////////////////
         ////////////////////////////////////////////////////////////////////////////////////////////////////////
-
         #region http API request
 
         [HttpGet("[action]")]
@@ -103,15 +97,23 @@ namespace MarginCoin.Controllers
             return "";
         }
 
-        [HttpGet("[action]/{orderId}")]
-        public string CloseTrade(int orderId)
+        [HttpGet("[action]/{orderId}/{lastPrice}")]
+        public string CloseTrade(int orderId, double lastPrice)
         {
             Order myOrder = _appDbContext.Order.Where(p => p.Id == orderId).Select(p => p).FirstOrDefault();
             if (myOrder != null)
             {
-                Sell(orderId, "by user");
+                if (Globals.onAir)
+                {
+                    Console.WriteLine("Close trade : by user");
+                    Sell(orderId, "by user");
+                }
+                else
+                {
+                    Console.WriteLine("Close fake trade : by user");
+                    SellFack(orderId, "by user", lastPrice);
+                }
             }
-
             return "";
         }
 
@@ -125,11 +127,21 @@ namespace MarginCoin.Controllers
         [HttpGet("[action]")]
         public List<string> GetSymbolList()
         {
-            return _appDbContext.Symbol.Select(p => p.SymbolName).ToList();
+            if (fullSymbolList)
+            {
+                return _appDbContext.Symbol.Where(p => p.IsOnProd != 0).Select(p => p.SymbolName).ToList();
+            }
+            else
+            {
+                return _appDbContext.Symbol.Where(p => p.IsOnTest != 0).Select(p => p.SymbolName).ToList();
+            }
         }
 
         #endregion
 
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /////////////////////////////////-----------ALGORYTME----------/////////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////
         #region Web Sockets - Algo
 
         private async void OpenWebSocketOnSymbol(string symbol)
@@ -157,13 +169,11 @@ namespace MarginCoin.Controllers
                 if (!stream.k.x)
                 {
                     if (candleMatrice[symbolIndex].Count > 0) candleMatrice[symbolIndex] = candleMatrice[symbolIndex].SkipLast(1).ToList();
-                    //ExportChart(false);
                 }
                 else
                 {
                     Console.WriteLine($"New candle save : {stream.k.s}");
                     Globals.onHold.Remove(stream.k.s);
-                    //ExportChart(true);
                 }
 
                 Candle newCandle = new Candle()
@@ -274,16 +284,39 @@ namespace MarginCoin.Controllers
                     //Find the line that coorespond to the symbol in the Matrice
                     List<Candle> symbolCandle = candleMatrice.Where(p => p.First().s == symbol).FirstOrDefault();
 
-                    //if (Globals.swallowOneOrder)
-                    //For testing just leave in Check candel the green check
-                    if (_mlService.MLPredList.Where(p => p.Symbol == symbol).Select(p => p.PredictedLabel).FirstOrDefault() == "up" 
-                        && _mlService.MLPredList.Where(p => p.Symbol == symbol).Select(p => p.Score[1]).FirstOrDefault() >= 0.60)
+                    //For debugging, comment out
+                    if (Globals.swallowOneOrder)
                     {
-                        if ((CheckCandle(numberPreviousCandle, marketStreamOnSpot[i], symbolCandle) && !Globals.onHold.FirstOrDefault(p => p.Key == symbol).Value))       
+                        Globals.swallowOneOrder = false;
+                        if (Globals.onAir)
                         {
                             Console.WriteLine($"Open trade on {symbol}");
-                            if (!Globals.onHold.ContainsKey(symbol)) Globals.onHold.Add(symbol, true);  //to avoid multi buy
                             Buy(marketStreamOnSpot[i], symbolCandle);
+                        }
+                        else
+                        {
+                            Console.WriteLine($"Open Fack trade on {symbol}");
+                            BuyFack(marketStreamOnSpot[i], symbolCandle);
+                        }
+                    }
+
+                    if (_mlService.MLPredList.Where(p => p.Symbol == symbol).Select(p => p.PredictedLabel).FirstOrDefault() == "up"
+                        && _mlService.MLPredList.Where(p => p.Symbol == symbol).Select(p => p.Score[1]).FirstOrDefault() >= 0.60)
+                    {
+                        if ((CheckCandle(numberPreviousCandle, marketStreamOnSpot[i], symbolCandle) && !Globals.onHold.FirstOrDefault(p => p.Key == symbol).Value))
+                        {
+                            
+                            if (!Globals.onHold.ContainsKey(symbol)) Globals.onHold.Add(symbol, true);  //to avoid multi buy
+                            if (Globals.onAir)
+                            {
+                                Console.WriteLine($"Open trade on {symbol}");
+                                Buy(marketStreamOnSpot[i], symbolCandle);
+                            }
+                            else
+                            {
+                                Console.WriteLine($"Open Fack trade on {symbol}");
+                                BuyFack(marketStreamOnSpot[i], symbolCandle);
+                            }
                         }
                     }
                 }
@@ -322,14 +355,14 @@ namespace MarginCoin.Controllers
             }
 
             //3 - If MACD 100 don't buy
-            if (symbolCandle.Last().Macd == 100)
-            {
-                return false;
-            }
+            // if (symbolCandle.Last().Macd == 100)
+            // {
+            //     return false;
+            // }
 
             //4 - RSI should be lower than 72 or RSI lower 80 if we already trade the coin
             //if (symbolCandle.Last().Rsi < 56)
-            if (symbolCandle.Last().Rsi < 70)
+            if (symbolCandle.Last().Rsi < 75)
             {
                 return true;
             }
@@ -356,11 +389,18 @@ namespace MarginCoin.Controllers
             lastCandle = symbolCandle.Select(p => p).LastOrDefault();
 
             SaveHighLow(lastCandle, activeOrder);
-
             if (lastPrice <= (activeOrder.StopLose))
             {
-                Console.WriteLine("Close trade : stop lose ");
-                Sell(activeOrder.Id, "stop lose");
+                if (Globals.onAir)
+                {
+                    Console.WriteLine("Close trade : stop lose ");
+                    Sell(activeOrder.Id, "stop lose");
+                }
+                else
+                {
+                    Console.WriteLine("Close fake trade : stop lose ");
+                    SellFack(activeOrder.Id, "stop lose", lastPrice);
+                }
             }
 
             //After +2% we use a take profit
@@ -368,17 +408,25 @@ namespace MarginCoin.Controllers
             {
                 if (lastPrice <= (activeOrder.HighPrice * (1 - (activeOrder.TakeProfit / 100))))
                 {
-                    Console.WriteLine("Close trade : take profit ");
-                    Sell(activeOrder.Id, "Take profit");
+                    if (Globals.onAir)
+                    {
+                        Console.WriteLine("Close trade : take profit ");
+                        Sell(activeOrder.Id, "Take profit");
+                    }
+                    else
+                    {
+                        Console.WriteLine("Close fake trade : take profit ");
+                        SellFack(activeOrder.Id, "stop lose", lastPrice);
+                    }
                 }
             }
 
-            // if( _mlService.MLPredList.Where(p => p.Symbol == activeOrder.Symbol).Select(p => p.PredictedLabel).FirstOrDefault() == "down"
-            //  && _mlService.MLPredList.Where(p => p.Symbol == activeOrder.Symbol).Select(p => p.Score[0]).FirstOrDefault() >= 0.60)
-            // {
-            //     Console.WriteLine("Close trade : AI take profit ");
-            //     Sell(activeOrder.Id, "AI sold");
-            // }
+            if (_mlService.MLPredList.Where(p => p.Symbol == activeOrder.Symbol).Select(p => p.PredictedLabel).FirstOrDefault() == "down"
+             && _mlService.MLPredList.Where(p => p.Symbol == activeOrder.Symbol).Select(p => p.Score[0]).FirstOrDefault() >= 0.85)
+            {
+                Console.WriteLine("Close trade : AI take profit ");
+                Sell(activeOrder.Id, "AI sold");
+            }
 
             UpdateStopLose(lastPrice, activeOrder);
 
@@ -478,7 +526,7 @@ namespace MarginCoin.Controllers
 
             if (myBinanceOrder.status == "EXPIRED")
             {
-                await _hub.Clients.All.SendAsync(MyEnum.BinanceHttpError.sellOrderExired.ToString());
+                await _hub.Clients.All.SendAsync(MyEnum.BinanceHttpError.BinanceSellOrderExpired.ToString());
                 _logger.LogWarning($"Call {MyEnum.BinanceApiCall.BuyMarket} {symbolSpot.s} Expired");
                 Globals.onHold.Remove(symbolSpot.s);
                 return;
@@ -598,25 +646,6 @@ namespace MarginCoin.Controllers
 
         #region Helper
 
-        private void ExportChart(bool doExport)
-        {
-            if (exportStarted && doExport)
-            {
-                return;
-            }
-
-            if (!exportStarted && doExport)
-            {
-                exportStarted = true;
-                _hub.Clients.All.SendAsync("exportChart");   ///export chart for all symbol monitorerd
-            }
-
-            if (!doExport)
-            {
-                exportStarted = false;
-            }
-        }
-
         private List<Order> GetActiveOrder()
         {
             return _appDbContext.Order.Where(p => p.IsClosed == 0).ToList();
@@ -664,6 +693,51 @@ namespace MarginCoin.Controllers
         #endregion
 
         #region Debug
+
+        private async void BuyFack(MarketStream symbolSpot, List<Candle> symbolCandleList)
+        {
+            BinanceOrder fackBinanceOrder = new BinanceOrder();
+            fackBinanceOrder.symbol = symbolSpot.s;
+            fackBinanceOrder.executedQty = (quoteOrderQty / symbolSpot.c).ToString();
+            fackBinanceOrder.cummulativeQuoteQty = quoteOrderQty.ToString();
+            fackBinanceOrder.status = "FACK!";
+            fackBinanceOrder.price = symbolSpot.c.ToString();
+            fackBinanceOrder.side = "BUY";
+            fills theOrderDetail = new fills();
+            theOrderDetail.price = symbolSpot.c.ToString();
+            theOrderDetail.qty = (quoteOrderQty / symbolSpot.c).ToString();
+            fackBinanceOrder.fills = new List<fills>();
+            fackBinanceOrder.fills.Add(theOrderDetail);
+
+            SaveTrade(symbolSpot, symbolCandleList, fackBinanceOrder);
+            Globals.onHold.Remove(symbolSpot.s);
+            await _hub.Clients.All.SendAsync("newPendingOrder", JsonSerializer.Serialize(fackBinanceOrder));
+            await Task.Delay(500);
+            await _hub.Clients.All.SendAsync("newOrder");
+        }
+
+        private async void SellFack(double id, string closeType, double lastPrice)
+        {
+            Order myOrder = _appDbContext.Order.Where(p => p.Id == id).Select(p => p).FirstOrDefault();
+
+            BinanceOrder fackBinanceOrder = new BinanceOrder();
+            fackBinanceOrder.symbol = myOrder.Symbol;
+            fackBinanceOrder.executedQty = (quoteOrderQty / lastPrice).ToString();
+            fackBinanceOrder.cummulativeQuoteQty = quoteOrderQty.ToString();
+            fackBinanceOrder.status = "FACK!";
+            fackBinanceOrder.price = lastPrice.ToString();
+            fackBinanceOrder.side = "SELL";
+            fills theOrderDetail = new fills();
+            theOrderDetail.price = lastPrice.ToString();
+            theOrderDetail.qty = (quoteOrderQty / lastPrice).ToString();
+            fackBinanceOrder.fills = new List<fills>();
+            fackBinanceOrder.fills.Add(theOrderDetail);
+
+            CloseTrade(id, closeType, fackBinanceOrder);
+            await Task.Delay(500);
+            await _hub.Clients.All.SendAsync("sellOrderFilled", JsonSerializer.Serialize(fackBinanceOrder));
+
+        }
 
         [HttpGet("[action]")]
         public void TestBinanceBuy()

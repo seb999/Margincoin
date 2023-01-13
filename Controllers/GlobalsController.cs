@@ -11,12 +11,33 @@ namespace MarginCoin.Controllers
         {
         }
 
+        // Select Binance server - Prod or test
+        [HttpGet("[action]")]
+        public bool GetServer()
+        {
+            return Globals.isProd;
+        }
+
         [HttpGet("[action]/{isProd}")]
-        public void SetProdParameter(bool isProd)
+        public void SetServer(bool isProd)
         {
             Globals.isProd = isProd;
         }
 
+        // When server is production, execute real order or not
+        [HttpGet("[action]")]
+        public bool GetTradingMode()
+        {
+            return Globals.onAir;
+        }
+
+        [HttpGet("[action]/{onAir}")]
+        public void SetTradingMode(bool onAir)
+        {
+            Globals.onAir = onAir;
+        }
+
+        // START and STOP the trading
         [HttpGet("[action]/{isOpen}")]
         public void SetTradeParameter(bool isOpen)
         {

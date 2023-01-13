@@ -7,5 +7,7 @@ namespace MarginCoin.Model
         [Key]
         public int Id { get; set; }
         public string SymbolName { get; set; }
+        public int IsOnProd { get; set;}
+        public int IsOnTest { get; set;}
     }
 }

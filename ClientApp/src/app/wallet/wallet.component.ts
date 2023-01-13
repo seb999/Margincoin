@@ -22,7 +22,7 @@ import HC_Data from "highcharts/modules/export-data";
 import { AppSetting } from '../app.settings';
 import { BinanceOrder } from '../class/binanceOrder';
 import { FindValueSubscriber } from 'rxjs/internal/operators/find';
-import { BinanceAccount } from '../class/binanceAccount';
+import { BinanceAccount } from '../class/binanceAccount'; 
 
 
 HC_HIGHSTOCK(Highcharts);
@@ -77,6 +77,7 @@ export class WalletComponent {
 
   color = 'accent';
   isProd = false;
+  isOnAir = false;
 
 
   displaySymbol: string;
@@ -95,9 +96,13 @@ export class WalletComponent {
 
   async ngOnInit() {
     this.tradeOpen = false;
-    this.setProdParam(this.isProd);
     this.model = this.today();
     this.orderList = await this.getAllOrder(this.model.day + "-" + this.model.month + "-" + this.model.year);
+    this.isProd = await this.getServer();
+    this.isOnAir = await this.getTradingMode();
+    this.symbolList = await this.getSymbolList();
+    this.logList = await this.getLog();
+    this.myAccount = await this.binanceAccount();
     this.calculateTotal();
 
     //Open listener on my API SignalR
@@ -168,10 +173,6 @@ export class WalletComponent {
         setTimeout(() => { this.showMessageError = false }, 7000);
       }
     });
-
-    this.symbolList = await this.getSymbolList();
-    this.logList = await this.getLog();
-    this.myAccount = await this.binanceAccount();
   }
 
   async refreshUI() {
@@ -210,10 +211,14 @@ export class WalletComponent {
     this.calculateTotal();
   }
 
-  async changeTradeMode() {
-    await this.setProdParam(this.isProd);
+  async changeTradeServer() {
+    await this.setServer(this.isProd);
     //this.assetList = await this.binanceAsset();
     this.myAccount = await this.binanceAccount();
+  }
+
+  async changeTradingMode() {
+    await this.setTradingMode(this.isOnAir);
   }
 
   calculateTotal() {
@@ -233,10 +238,35 @@ export class WalletComponent {
   /////////////////////////////////////////////////////////////
   /////////////       API calls          //////////////////////
   /////////////////////////////////////////////////////////////
-  async setProdParam(isProd): Promise<any> {
+  async setServer(isProd): Promise<any> {
     const httpSetting: HttpSettings = {
       method: 'GET',
-      url: location.origin + "/api/Globals/SetProdParameter/" + isProd,
+      url: location.origin + "/api/Globals/SetServer/" + isProd,
+    };
+    return await this.httpService.xhr(httpSetting);
+  }
+
+  async getServer(): Promise<boolean> {
+    const httpSetting: HttpSettings = {
+      method: 'GET',
+      url: location.origin + "/api/Globals/GetServer",
+      
+    };
+    return await this.httpService.xhr(httpSetting);
+  }
+
+  async setTradingMode(isFack): Promise<any> {
+    const httpSetting: HttpSettings = {
+      method: 'GET',
+      url: location.origin + "/api/Globals/SetTradingMode/" + isFack,
+    };
+    return await this.httpService.xhr(httpSetting);
+  }
+
+  async getTradingMode(): Promise<boolean> {
+    const httpSetting: HttpSettings = {
+      method: 'GET',
+      url: location.origin + "/api/Globals/GetTradingMode",
     };
     return await this.httpService.xhr(httpSetting);
   }
@@ -265,11 +295,11 @@ export class WalletComponent {
     return await this.httpService.xhr(httpSetting);
   }
 
-  async closeTrade(orderId): Promise<any> {
+  async closeTrade(orderId, lastPrice): Promise<any> {
     console.log(orderId);
     const httpSetting: HttpSettings = {
       method: 'GET',
-      url: location.origin + '/api/AutoTrade3/CloseTrade/' + orderId
+      url: location.origin + '/api/AutoTrade3/CloseTrade/' + orderId + "/" + lastPrice,
     };
     return await this.httpService.xhr(httpSetting);
   }
@@ -437,8 +467,8 @@ export class WalletComponent {
         },
       },
       xAxis: {
-        labels : {y:-2 },
-        showLastLabel:false,
+        labels: { y: -2 },
+        showLastLabel: false,
         plotLines: [{
           color: 'green',
           width: 1,

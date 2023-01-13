@@ -4,10 +4,10 @@ namespace MarginCoin.Misc
     {
         public enum BinanceHttpError
         {
-            ApiAccessFaulty,
-            ApiTooManyRequest,
-            ApiCheckAllowedIP,
-            sellOrderExired,
+            BinanceAccessFaulty,
+            BinanceTooManyRequest,
+            BinanceCheckAllowedIP,
+            BinanceSellOrderExpired,
         }
 
         public enum BinanceApiCall

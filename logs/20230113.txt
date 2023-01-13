@@ -1,0 +1,854 @@
+2023-01-13 19:29:53.973 +01:00 [WRN] MarginCoin, started!
+2023-01-13 19:29:59.985 +01:00 [FTL] Application terminated unexpectedly
+System.InvalidOperationException: Unable to configure HTTPS endpoint. No server certificate was specified, and the default developer certificate could not be found or is out of date.
+To generate a developer certificate run 'dotnet dev-certs https'. To trust the certificate (Windows and macOS only) run 'dotnet dev-certs https --trust'.
+For more information on configuring HTTPS see https://go.microsoft.com/fwlink/?linkid=848054.
+   at Microsoft.AspNetCore.Hosting.ListenOptionsHttpsExtensions.UseHttps(ListenOptions listenOptions, Action`1 configureOptions)
+   at Microsoft.AspNetCore.Hosting.ListenOptionsHttpsExtensions.UseHttps(ListenOptions listenOptions)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.AddressBinder.AddressesStrategy.BindAsync(AddressBindContext context, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.AddressBinder.BindAsync(IEnumerable`1 listenOptions, AddressBindContext context, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.KestrelServerImpl.BindAsync(CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.KestrelServerImpl.StartAsync[TContext](IHttpApplication`1 application, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Hosting.GenericWebHostService.StartAsync(CancellationToken cancellationToken)
+   at Microsoft.Extensions.Hosting.Internal.Host.StartAsync(CancellationToken cancellationToken)
+   at Microsoft.Extensions.Hosting.HostingAbstractionsHostExtensions.RunAsync(IHost host, CancellationToken token)
+   at Microsoft.Extensions.Hosting.HostingAbstractionsHostExtensions.RunAsync(IHost host, CancellationToken token)
+   at Microsoft.Extensions.Hosting.HostingAbstractionsHostExtensions.Run(IHost host)
+   at MarginCoin.Program.Main(String[] args) in C:\_Git\Dotnet\MarginCoin\Program.cs:line 27
+2023-01-13 19:30:45.087 +01:00 [WRN] MarginCoin, started!
+2023-01-13 19:30:47.514 +01:00 [FTL] Application terminated unexpectedly
+System.InvalidOperationException: Unable to configure HTTPS endpoint. No server certificate was specified, and the default developer certificate could not be found or is out of date.
+To generate a developer certificate run 'dotnet dev-certs https'. To trust the certificate (Windows and macOS only) run 'dotnet dev-certs https --trust'.
+For more information on configuring HTTPS see https://go.microsoft.com/fwlink/?linkid=848054.
+   at Microsoft.AspNetCore.Hosting.ListenOptionsHttpsExtensions.UseHttps(ListenOptions listenOptions, Action`1 configureOptions)
+   at Microsoft.AspNetCore.Hosting.ListenOptionsHttpsExtensions.UseHttps(ListenOptions listenOptions)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.AddressBinder.AddressesStrategy.BindAsync(AddressBindContext context, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.AddressBinder.BindAsync(IEnumerable`1 listenOptions, AddressBindContext context, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.KestrelServerImpl.BindAsync(CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.KestrelServerImpl.StartAsync[TContext](IHttpApplication`1 application, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Hosting.GenericWebHostService.StartAsync(CancellationToken cancellationToken)
+   at Microsoft.Extensions.Hosting.Internal.Host.StartAsync(CancellationToken cancellationToken)
+   at Microsoft.Extensions.Hosting.HostingAbstractionsHostExtensions.RunAsync(IHost host, CancellationToken token)
+   at Microsoft.Extensions.Hosting.HostingAbstractionsHostExtensions.RunAsync(IHost host, CancellationToken token)
+   at Microsoft.Extensions.Hosting.HostingAbstractionsHostExtensions.Run(IHost host)
+   at MarginCoin.Program.Main(String[] args) in C:\_Git\Dotnet\MarginCoin\Program.cs:line 27
+2023-01-13 19:31:45.501 +01:00 [WRN] MarginCoin, started!
+2023-01-13 19:31:47.759 +01:00 [FTL] Application terminated unexpectedly
+System.InvalidOperationException: Unable to configure HTTPS endpoint. No server certificate was specified, and the default developer certificate could not be found or is out of date.
+To generate a developer certificate run 'dotnet dev-certs https'. To trust the certificate (Windows and macOS only) run 'dotnet dev-certs https --trust'.
+For more information on configuring HTTPS see https://go.microsoft.com/fwlink/?linkid=848054.
+   at Microsoft.AspNetCore.Hosting.ListenOptionsHttpsExtensions.UseHttps(ListenOptions listenOptions, Action`1 configureOptions)
+   at Microsoft.AspNetCore.Hosting.ListenOptionsHttpsExtensions.UseHttps(ListenOptions listenOptions)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.AddressBinder.AddressesStrategy.BindAsync(AddressBindContext context, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.AddressBinder.BindAsync(IEnumerable`1 listenOptions, AddressBindContext context, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.KestrelServerImpl.BindAsync(CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.KestrelServerImpl.StartAsync[TContext](IHttpApplication`1 application, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Hosting.GenericWebHostService.StartAsync(CancellationToken cancellationToken)
+   at Microsoft.Extensions.Hosting.Internal.Host.StartAsync(CancellationToken cancellationToken)
+   at Microsoft.Extensions.Hosting.HostingAbstractionsHostExtensions.RunAsync(IHost host, CancellationToken token)
+   at Microsoft.Extensions.Hosting.HostingAbstractionsHostExtensions.RunAsync(IHost host, CancellationToken token)
+   at Microsoft.Extensions.Hosting.HostingAbstractionsHostExtensions.Run(IHost host)
+   at MarginCoin.Program.Main(String[] args) in C:\_Git\Dotnet\MarginCoin\Program.cs:line 27
+2023-01-13 19:32:32.434 +01:00 [WRN] MarginCoin, started!
+2023-01-13 19:37:00.821 +01:00 [WRN] Unauthorized
+2023-01-13 19:37:03.764 +01:00 [ERR] HTTP GET /sockjs-node/404/hdzqvf4f/websocket responded 500 in 102467.0497 ms
+System.Net.WebSockets.WebSocketException (0x80004005): The WebSocket is in an invalid state ('Aborted') for this operation. Valid states are: 'Open, CloseReceived'
+   at System.Net.WebSockets.WebSocketValidate.ThrowIfInvalidState(WebSocketState currentState, Boolean isDisposed, WebSocketState[] validStates)
+   at System.Net.WebSockets.ManagedWebSocket.CloseOutputAsyncCore(WebSocketCloseStatus closeStatus, String statusDescription, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.SpaServices.Extensions.Proxy.SpaProxy.PumpWebSocket(WebSocket source, WebSocket destination, Int32 bufferSize, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.SpaServices.Extensions.Proxy.SpaProxy.AcceptProxyWebSocketRequest(HttpContext context, Uri destinationUri, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.SpaServices.Extensions.Proxy.SpaProxy.PerformProxyRequest(HttpContext context, HttpClient httpClient, Task`1 baseUriTask, CancellationToken applicationStoppingToken, Boolean proxy404s)
+   at Microsoft.AspNetCore.Builder.SpaProxyingExtensions.<>c__DisplayClass2_0.<<UseProxyToSpaDevelopmentServer>b__0>d.MoveNext()
+--- End of stack trace from previous location ---
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+2023-01-13 19:37:04.125 +01:00 [ERR] An unhandled exception has occurred while executing the request.
+System.Net.WebSockets.WebSocketException (0x80004005): The WebSocket is in an invalid state ('Aborted') for this operation. Valid states are: 'Open, CloseReceived'
+   at System.Net.WebSockets.WebSocketValidate.ThrowIfInvalidState(WebSocketState currentState, Boolean isDisposed, WebSocketState[] validStates)
+   at System.Net.WebSockets.ManagedWebSocket.CloseOutputAsyncCore(WebSocketCloseStatus closeStatus, String statusDescription, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.SpaServices.Extensions.Proxy.SpaProxy.PumpWebSocket(WebSocket source, WebSocket destination, Int32 bufferSize, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.SpaServices.Extensions.Proxy.SpaProxy.AcceptProxyWebSocketRequest(HttpContext context, Uri destinationUri, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.SpaServices.Extensions.Proxy.SpaProxy.PerformProxyRequest(HttpContext context, HttpClient httpClient, Task`1 baseUriTask, CancellationToken applicationStoppingToken, Boolean proxy404s)
+   at Microsoft.AspNetCore.Builder.SpaProxyingExtensions.<>c__DisplayClass2_0.<<UseProxyToSpaDevelopmentServer>b__0>d.MoveNext()
+--- End of stack trace from previous location ---
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware.Invoke(HttpContext context)
+2023-01-13 19:37:04.147 +01:00 [WRN] The response has already started, the error page middleware will not be executed.
+2023-01-13 19:37:04.188 +01:00 [ERR] Connection id "0HMNLII86PFQV", Request id "0HMNLII86PFQV:00000002": An unhandled exception was thrown by the application.
+System.Net.WebSockets.WebSocketException (0x80004005): The WebSocket is in an invalid state ('Aborted') for this operation. Valid states are: 'Open, CloseReceived'
+   at System.Net.WebSockets.WebSocketValidate.ThrowIfInvalidState(WebSocketState currentState, Boolean isDisposed, WebSocketState[] validStates)
+   at System.Net.WebSockets.ManagedWebSocket.CloseOutputAsyncCore(WebSocketCloseStatus closeStatus, String statusDescription, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.SpaServices.Extensions.Proxy.SpaProxy.PumpWebSocket(WebSocket source, WebSocket destination, Int32 bufferSize, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.SpaServices.Extensions.Proxy.SpaProxy.AcceptProxyWebSocketRequest(HttpContext context, Uri destinationUri, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.SpaServices.Extensions.Proxy.SpaProxy.PerformProxyRequest(HttpContext context, HttpClient httpClient, Task`1 baseUriTask, CancellationToken applicationStoppingToken, Boolean proxy404s)
+   at Microsoft.AspNetCore.Builder.SpaProxyingExtensions.<>c__DisplayClass2_0.<<UseProxyToSpaDevelopmentServer>b__0>d.MoveNext()
+--- End of stack trace from previous location ---
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.HttpProtocol.ProcessRequests[TContext](IHttpApplication`1 application)
+2023-01-13 19:45:13.440 +01:00 [WRN] MarginCoin, started!
+2023-01-13 19:58:48.127 +01:00 [WRN] MarginCoin, started!
+2023-01-13 20:00:29.084 +01:00 [WRN] Get Account OK
+2023-01-13 20:01:11.578 +01:00 [WRN] Get Account OK
+2023-01-13 20:01:26.614 +01:00 [WRN] Get Account OK
+2023-01-13 20:02:09.640 +01:00 [WRN] Get Account OK
+2023-01-13 20:02:32.663 +01:00 [WRN] Get Account OK
+2023-01-13 20:03:40.173 +01:00 [WRN] Get Account OK
+2023-01-13 20:04:09.136 +01:00 [WRN] Get Account OK
+2023-01-13 20:49:04.404 +01:00 [WRN] MarginCoin, started!
+2023-01-13 20:49:19.846 +01:00 [WRN] Get Account OK
+2023-01-13 20:50:06.619 +01:00 [WRN] Get Account OK
+2023-01-13 20:50:59.075 +01:00 [WRN] MarginCoin, started!
+2023-01-13 20:51:11.546 +01:00 [WRN] Get Account OK
+2023-01-13 20:51:18.051 +01:00 [WRN] Get Account OK
+2023-01-13 20:51:49.401 +01:00 [WRN] Get Account OK
+2023-01-13 20:52:36.484 +01:00 [WRN] Get Account OK
+2023-01-13 20:53:05.399 +01:00 [WRN] Get Account OK
+2023-01-13 20:53:44.071 +01:00 [WRN] Get Account OK
+2023-01-13 20:54:46.369 +01:00 [WRN] Get Account OK
+2023-01-13 20:54:51.098 +01:00 [WRN] Unauthorized
+2023-01-13 20:54:52.105 +01:00 [WRN] Get Account OK
+2023-01-13 20:54:55.708 +01:00 [WRN] Unauthorized
+2023-01-13 20:55:02.345 +01:00 [WRN] Get Account OK
+2023-01-13 20:55:41.763 +01:00 [WRN] Start trading market...
+2023-01-13 20:55:57.115 +01:00 [WRN] Call SellMarket ETHUSDT BadRequest
+2023-01-13 20:55:57.655 +01:00 [WRN] Call SellMarket LTCUSDT BadRequest
+2023-01-13 20:56:46.155 +01:00 [WRN] MarginCoin, started!
+2023-01-13 20:56:56.924 +01:00 [WRN] Get Account OK
+2023-01-13 20:56:58.853 +01:00 [WRN] Start trading market...
+2023-01-13 20:57:09.642 +01:00 [WRN] Call SellMarket ETHUSDT BadRequest
+2023-01-13 20:57:10.635 +01:00 [WRN] Call SellMarket LTCUSDT BadRequest
+2023-01-13 20:57:11.651 +01:00 [WRN] Call SellMarket ETHUSDT BadRequest
+2023-01-13 20:57:12.170 +01:00 [WRN] Call SellMarket LTCUSDT BadRequest
+2023-01-13 20:57:12.821 +01:00 [WRN] Call SellMarket ETHUSDT BadRequest
+2023-01-13 20:57:13.344 +01:00 [WRN] Call SellMarket LTCUSDT BadRequest
+2023-01-13 20:57:14.027 +01:00 [WRN] Call SellMarket ETHUSDT BadRequest
+2023-01-13 20:57:14.553 +01:00 [WRN] Call SellMarket LTCUSDT BadRequest
+2023-01-13 20:57:15.189 +01:00 [WRN] Call SellMarket ETHUSDT BadRequest
+2023-01-13 20:57:15.723 +01:00 [WRN] Call SellMarket LTCUSDT BadRequest
+2023-01-13 20:57:16.366 +01:00 [WRN] Call SellMarket ETHUSDT BadRequest
+2023-01-13 20:57:16.887 +01:00 [WRN] Call SellMarket LTCUSDT BadRequest
+2023-01-13 20:57:17.545 +01:00 [WRN] Call SellMarket ETHUSDT BadRequest
+2023-01-13 20:57:18.073 +01:00 [WRN] Call SellMarket LTCUSDT BadRequest
+2023-01-13 20:57:18.713 +01:00 [WRN] Call SellMarket ETHUSDT BadRequest
+2023-01-13 20:57:19.230 +01:00 [WRN] Call SellMarket LTCUSDT BadRequest
+2023-01-13 20:57:19.877 +01:00 [WRN] Call SellMarket ETHUSDT BadRequest
+2023-01-13 20:57:20.422 +01:00 [WRN] Call SellMarket LTCUSDT BadRequest
+2023-01-13 20:57:21.061 +01:00 [WRN] Call SellMarket ETHUSDT BadRequest
+2023-01-13 20:57:21.584 +01:00 [WRN] Call SellMarket LTCUSDT BadRequest
+2023-01-13 20:57:22.236 +01:00 [WRN] Call SellMarket ETHUSDT BadRequest
+2023-01-13 20:57:22.750 +01:00 [WRN] Call SellMarket LTCUSDT BadRequest
+2023-01-13 20:57:23.559 +01:00 [WRN] Call SellMarket ETHUSDT BadRequest
+2023-01-13 20:57:24.076 +01:00 [WRN] Call SellMarket LTCUSDT BadRequest
+2023-01-13 20:57:24.735 +01:00 [WRN] Call SellMarket ETHUSDT BadRequest
+2023-01-13 20:57:25.732 +01:00 [WRN] Call SellMarket LTCUSDT BadRequest
+2023-01-13 20:57:26.364 +01:00 [WRN] Call SellMarket ETHUSDT BadRequest
+2023-01-13 20:57:26.901 +01:00 [WRN] Call SellMarket LTCUSDT BadRequest
+2023-01-13 20:57:27.578 +01:00 [WRN] Call SellMarket ETHUSDT BadRequest
+2023-01-13 20:57:28.604 +01:00 [WRN] Call SellMarket LTCUSDT BadRequest
+2023-01-13 20:57:29.248 +01:00 [WRN] Call SellMarket ETHUSDT BadRequest
+2023-01-13 20:57:29.775 +01:00 [WRN] Call SellMarket LTCUSDT BadRequest
+2023-01-13 20:57:30.437 +01:00 [WRN] Call SellMarket ETHUSDT BadRequest
+2023-01-13 20:57:30.956 +01:00 [WRN] Call SellMarket LTCUSDT BadRequest
+2023-01-13 20:57:31.600 +01:00 [WRN] Call SellMarket ETHUSDT BadRequest
+2023-01-13 20:57:32.122 +01:00 [WRN] Call SellMarket LTCUSDT BadRequest
+2023-01-13 20:57:32.782 +01:00 [WRN] Call SellMarket ETHUSDT BadRequest
+2023-01-13 20:57:33.315 +01:00 [WRN] Call SellMarket LTCUSDT BadRequest
+2023-01-13 20:57:33.982 +01:00 [WRN] Call SellMarket ETHUSDT BadRequest
+2023-01-13 20:57:34.175 +01:00 [WRN] Call Prediction on BNBUSDT down 0.9651683/0.03483172
+2023-01-13 20:57:34.426 +01:00 [WRN] Call Prediction on BTCUSDT down 0.9939866/0.006013401
+2023-01-13 20:57:34.532 +01:00 [WRN] Call SellMarket LTCUSDT BadRequest
+2023-01-13 20:57:34.863 +01:00 [WRN] Call Prediction on ETHUSDT down 0.98965997/0.010340007
+2023-01-13 20:57:35.318 +01:00 [WRN] Call Prediction on LTCUSDT up 0.04484331/0.9551567
+2023-01-13 20:57:35.597 +01:00 [WRN] Call Prediction on TRXUSDT down 0.9999194/8.0634396E-05
+2023-01-13 20:57:35.658 +01:00 [WRN] Call SellMarket ETHUSDT BadRequest
+2023-01-13 20:57:35.868 +01:00 [WRN] Call Prediction on XRPUSDT up 0.14056149/0.8594385
+2023-01-13 20:57:36.218 +01:00 [WRN] Call SellMarket LTCUSDT BadRequest
+2023-01-13 20:57:36.893 +01:00 [WRN] Call SellMarket ETHUSDT BadRequest
+2023-01-13 20:57:37.413 +01:00 [WRN] Call SellMarket LTCUSDT BadRequest
+2023-01-13 20:57:38.031 +01:00 [WRN] Call SellMarket ETHUSDT BadRequest
+2023-01-13 20:57:38.547 +01:00 [WRN] Call SellMarket LTCUSDT BadRequest
+2023-01-13 20:57:39.212 +01:00 [WRN] Call SellMarket ETHUSDT BadRequest
+2023-01-13 20:57:39.747 +01:00 [WRN] Call SellMarket LTCUSDT BadRequest
+2023-01-13 20:57:40.373 +01:00 [WRN] Call SellMarket ETHUSDT BadRequest
+2023-01-13 20:59:03.074 +01:00 [WRN] MarginCoin, started!
+2023-01-13 20:59:42.184 +01:00 [WRN] Get Account OK
+2023-01-13 20:59:44.105 +01:00 [WRN] Start trading market...
+2023-01-13 21:00:01.465 +01:00 [ERR] HTTP GET /api/AutoTrade3/MonitorMarket responded 500 in 17376.3051 ms
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at MarginCoin.Misc.AutotradeHelper.CreateCandleList(List`1 coinQuotation, String symbol) in C:\_Git\Dotnet\MarginCoin\Misc\AutotradeHelper.cs:line 55
+   at MarginCoin.Controllers.AutoTrade3Controller.GetCandles(String symbol) in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 692
+   at MarginCoin.Controllers.AutoTrade3Controller.MonitorMarket() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 99
+   at lambda_method412(Closure , Object )
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.AwaitableObjectResultExecutor.Execute(IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Awaited|12_0(ControllerActionInvoker invoker, ValueTask`1 actionResultValueTask)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeInnerFilterAsync()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeNextResourceFilter>g__Awaited|25_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.Rethrow(ResourceExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.InvokeFilterPipelineAsync()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.<Invoke>g__AwaitRequestTask|6_0(Endpoint endpoint, Task requestTask, ILogger logger)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+2023-01-13 21:00:01.601 +01:00 [ERR] An unhandled exception has occurred while executing the request.
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at MarginCoin.Misc.AutotradeHelper.CreateCandleList(List`1 coinQuotation, String symbol) in C:\_Git\Dotnet\MarginCoin\Misc\AutotradeHelper.cs:line 55
+   at MarginCoin.Controllers.AutoTrade3Controller.GetCandles(String symbol) in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 692
+   at MarginCoin.Controllers.AutoTrade3Controller.MonitorMarket() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 99
+   at lambda_method412(Closure , Object )
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.AwaitableObjectResultExecutor.Execute(IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Awaited|12_0(ControllerActionInvoker invoker, ValueTask`1 actionResultValueTask)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeInnerFilterAsync()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeNextResourceFilter>g__Awaited|25_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.Rethrow(ResourceExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.InvokeFilterPipelineAsync()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.<Invoke>g__AwaitRequestTask|6_0(Endpoint endpoint, Task requestTask, ILogger logger)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware.Invoke(HttpContext context)
+2023-01-13 21:01:01.398 +01:00 [WRN] Call Prediction on ADAUSDT down 0.58642364/0.4135764
+2023-01-13 21:01:01.650 +01:00 [WRN] Call Prediction on AVAXUSDT up 0.0001330163/0.99986696
+2023-01-13 21:01:01.922 +01:00 [WRN] Call Prediction on BCTUSDT down 0.9886712/0.011328794
+2023-01-13 21:01:02.182 +01:00 [WRN] Call Prediction on BNBUSDT down 0.9651683/0.03483172
+2023-01-13 21:01:02.435 +01:00 [WRN] Call Prediction on BTCUSDT (1) up 0.053831186/0.94616884
+2023-01-13 21:01:02.714 +01:00 [WRN] Call Prediction on BTCUSDT down 0.9939866/0.006013401
+2023-01-13 21:01:03.118 +01:00 [WRN] Call Prediction on DOTUSDT up 0.053831186/0.94616884
+2023-01-13 21:01:03.367 +01:00 [WRN] Call Prediction on ETHUSDT (1) down 0.9886712/0.011328794
+2023-01-13 21:01:03.622 +01:00 [WRN] Call Prediction on ETHUSDT down 0.98965997/0.010340007
+2023-01-13 21:01:03.869 +01:00 [WRN] Call Prediction on FLUXUSDT up 0.010719866/0.98928016
+2023-01-13 21:01:04.130 +01:00 [WRN] Call Prediction on FTMUSDT up 0.00069455366/0.9993055
+2023-01-13 21:01:04.477 +01:00 [WRN] Call Prediction on LTCUSDT up 0.04484331/0.9551567
+2023-01-13 21:01:04.856 +01:00 [WRN] Call Prediction on MANAUSDT (1) up 0.06723389/0.9327661
+2023-01-13 21:01:05.184 +01:00 [WRN] Call Prediction on MANAUSDT up 0.06723389/0.9327661
+2023-01-13 21:01:05.678 +01:00 [WRN] Call Prediction on MATICUSDT (1) down 0.98585886/0.0141411815
+2023-01-13 21:01:06.036 +01:00 [WRN] Call Prediction on MATICUSDT down 0.98585886/0.0141411815
+2023-01-13 21:01:06.311 +01:00 [WRN] Call Prediction on SOLUSDT down 0.84949994/0.15050004
+2023-01-13 21:01:06.599 +01:00 [WRN] Call Prediction on TRXUSDT down 0.9999194/8.0634396E-05
+2023-01-13 21:01:06.879 +01:00 [WRN] Call Prediction on XRPUSDT up 0.14056149/0.8594385
+2023-01-13 21:01:07.180 +01:00 [WRN] Call Prediction on ZILUSDT up 0.20755407/0.79244596
+2023-01-13 21:01:12.368 +01:00 [WRN] Get Account OK
+2023-01-13 21:01:26.272 +01:00 [WRN] Start trading market...
+2023-01-13 21:01:44.684 +01:00 [ERR] HTTP GET /api/AutoTrade3/MonitorMarket responded 500 in 18413.1657 ms
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at MarginCoin.Misc.AutotradeHelper.CreateCandleList(List`1 coinQuotation, String symbol) in C:\_Git\Dotnet\MarginCoin\Misc\AutotradeHelper.cs:line 55
+   at MarginCoin.Controllers.AutoTrade3Controller.GetCandles(String symbol) in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 692
+   at MarginCoin.Controllers.AutoTrade3Controller.MonitorMarket() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 99
+   at lambda_method412(Closure , Object )
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.AwaitableObjectResultExecutor.Execute(IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Awaited|12_0(ControllerActionInvoker invoker, ValueTask`1 actionResultValueTask)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeInnerFilterAsync()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeNextResourceFilter>g__Awaited|25_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.Rethrow(ResourceExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.InvokeFilterPipelineAsync()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.<Invoke>g__AwaitRequestTask|6_0(Endpoint endpoint, Task requestTask, ILogger logger)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+2023-01-13 21:01:44.690 +01:00 [ERR] An unhandled exception has occurred while executing the request.
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at MarginCoin.Misc.AutotradeHelper.CreateCandleList(List`1 coinQuotation, String symbol) in C:\_Git\Dotnet\MarginCoin\Misc\AutotradeHelper.cs:line 55
+   at MarginCoin.Controllers.AutoTrade3Controller.GetCandles(String symbol) in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 692
+   at MarginCoin.Controllers.AutoTrade3Controller.MonitorMarket() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 99
+   at lambda_method412(Closure , Object )
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.AwaitableObjectResultExecutor.Execute(IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Awaited|12_0(ControllerActionInvoker invoker, ValueTask`1 actionResultValueTask)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeInnerFilterAsync()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeNextResourceFilter>g__Awaited|25_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.Rethrow(ResourceExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.InvokeFilterPipelineAsync()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.<Invoke>g__AwaitRequestTask|6_0(Endpoint endpoint, Task requestTask, ILogger logger)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware.Invoke(HttpContext context)
+2023-01-13 21:02:32.152 +01:00 [WRN] Call Prediction on ADAUSDT down 0.58642364/0.4135764
+2023-01-13 21:02:32.392 +01:00 [WRN] Call Prediction on AVAXUSDT up 0.0001330163/0.99986696
+2023-01-13 21:02:32.606 +01:00 [WRN] Call Prediction on BCTUSDT up 0.053831186/0.94616884
+2023-01-13 21:02:32.824 +01:00 [WRN] Call Prediction on BNBUSDT down 0.7285716/0.27142838
+2023-01-13 21:02:33.047 +01:00 [WRN] Call Prediction on BTCUSDT down 0.9886712/0.011328794
+2023-01-13 21:02:33.304 +01:00 [WRN] Call Prediction on DOTUSDT (1) up 0.053831186/0.94616884
+2023-01-13 21:02:33.660 +01:00 [WRN] Call Prediction on DOTUSDT up 0.053831186/0.94616884
+2023-01-13 21:02:33.911 +01:00 [WRN] Call Prediction on ETHUSDT down 0.9324655/0.06753447
+2023-01-13 21:02:34.175 +01:00 [WRN] Call Prediction on FLUXUSDT up 0.010719866/0.98928016
+2023-01-13 21:02:34.429 +01:00 [WRN] Call Prediction on FTMUSDT up 0.00069455366/0.9993055
+2023-01-13 21:02:34.695 +01:00 [WRN] Call Prediction on LTCUSDT up 0.00485821/0.99514174
+2023-01-13 21:02:35.123 +01:00 [WRN] Call Prediction on MANAUSDT (1) up 0.06723389/0.9327661
+2023-01-13 21:02:35.429 +01:00 [WRN] Call Prediction on MANAUSDT up 0.06723389/0.9327661
+2023-01-13 21:02:35.839 +01:00 [WRN] Call Prediction on MATICUSDT (1) down 0.98585886/0.0141411815
+2023-01-13 21:02:36.187 +01:00 [WRN] Call Prediction on MATICUSDT down 0.98585886/0.0141411815
+2023-01-13 21:02:36.467 +01:00 [WRN] Call Prediction on SOLUSDT down 0.84949994/0.15050004
+2023-01-13 21:02:36.734 +01:00 [WRN] Call Prediction on TRXUSDT down 0.99901366/0.0009863663
+2023-01-13 21:02:37.046 +01:00 [WRN] Call Prediction on XRPUSDT up 0.3745976/0.62540245
+2023-01-13 21:02:37.324 +01:00 [WRN] Call Prediction on ZILUSDT up 0.20755407/0.79244596
+2023-01-13 21:03:11.846 +01:00 [WRN] MarginCoin, started!
+2023-01-13 21:03:23.450 +01:00 [WRN] Get Account OK
+2023-01-13 21:03:25.515 +01:00 [WRN] Start trading market...
+2023-01-13 21:03:36.617 +01:00 [WRN] Call SellMarket ETHUSDT BadRequest
+2023-01-13 21:03:37.630 +01:00 [WRN] Call SellMarket LTCUSDT BadRequest
+2023-01-13 21:03:38.569 +01:00 [WRN] Call SellMarket ETHUSDT BadRequest
+2023-01-13 21:03:39.589 +01:00 [WRN] Call SellMarket LTCUSDT BadRequest
+2023-01-13 21:03:40.220 +01:00 [WRN] Call SellMarket ETHUSDT BadRequest
+2023-01-13 21:03:40.766 +01:00 [WRN] Call SellMarket LTCUSDT BadRequest
+2023-01-13 21:03:41.396 +01:00 [WRN] Call SellMarket ETHUSDT BadRequest
+2023-01-13 21:03:41.941 +01:00 [WRN] Call SellMarket LTCUSDT BadRequest
+2023-01-13 21:03:42.556 +01:00 [WRN] Call SellMarket ETHUSDT BadRequest
+2023-01-13 21:03:43.100 +01:00 [WRN] Call SellMarket LTCUSDT BadRequest
+2023-01-13 21:03:43.756 +01:00 [WRN] Call SellMarket ETHUSDT BadRequest
+2023-01-13 21:03:44.336 +01:00 [WRN] Call SellMarket LTCUSDT BadRequest
+2023-01-13 21:03:44.972 +01:00 [WRN] Call SellMarket ETHUSDT BadRequest
+2023-01-13 21:03:46.025 +01:00 [WRN] Call SellMarket LTCUSDT BadRequest
+2023-01-13 21:03:46.663 +01:00 [WRN] Call SellMarket ETHUSDT BadRequest
+2023-01-13 21:03:47.190 +01:00 [WRN] Call SellMarket LTCUSDT BadRequest
+2023-01-13 21:03:47.858 +01:00 [WRN] Call SellMarket ETHUSDT BadRequest
+2023-01-13 21:03:48.543 +01:00 [WRN] Call SellMarket LTCUSDT BadRequest
+2023-01-13 21:03:49.242 +01:00 [WRN] Call SellMarket ETHUSDT BadRequest
+2023-01-13 21:03:49.777 +01:00 [WRN] Call SellMarket LTCUSDT BadRequest
+2023-01-13 21:03:50.400 +01:00 [WRN] Call SellMarket ETHUSDT BadRequest
+2023-01-13 21:03:50.986 +01:00 [WRN] Call SellMarket LTCUSDT BadRequest
+2023-01-13 21:03:51.665 +01:00 [WRN] Call SellMarket ETHUSDT BadRequest
+2023-01-13 21:03:52.216 +01:00 [WRN] Call SellMarket LTCUSDT BadRequest
+2023-01-13 21:03:52.874 +01:00 [WRN] Call SellMarket ETHUSDT BadRequest
+2023-01-13 21:03:53.401 +01:00 [WRN] Call SellMarket LTCUSDT BadRequest
+2023-01-13 21:04:31.437 +01:00 [WRN] MarginCoin, started!
+2023-01-13 21:04:41.725 +01:00 [WRN] Get Account OK
+2023-01-13 21:04:48.388 +01:00 [WRN] Start trading market...
+2023-01-13 21:05:00.590 +01:00 [WRN] Call SellMarket ETHUSDT BadRequest
+2023-01-13 21:05:01.620 +01:00 [WRN] Call SellMarket LTCUSDT BadRequest
+2023-01-13 21:05:02.637 +01:00 [WRN] Call SellMarket ETHUSDT BadRequest
+2023-01-13 21:05:03.636 +01:00 [WRN] Call SellMarket LTCUSDT BadRequest
+2023-01-13 21:05:04.275 +01:00 [WRN] Call SellMarket ETHUSDT BadRequest
+2023-01-13 21:05:04.811 +01:00 [WRN] Call SellMarket LTCUSDT BadRequest
+2023-01-13 21:05:05.449 +01:00 [WRN] Call SellMarket ETHUSDT BadRequest
+2023-01-13 21:05:05.991 +01:00 [WRN] Call SellMarket LTCUSDT BadRequest
+2023-01-13 21:05:07.111 +01:00 [WRN] Call SellMarket ETHUSDT BadRequest
+2023-01-13 21:05:07.658 +01:00 [WRN] Call SellMarket LTCUSDT BadRequest
+2023-01-13 21:05:08.792 +01:00 [WRN] Call SellMarket ETHUSDT BadRequest
+2023-01-13 21:05:09.337 +01:00 [WRN] Call SellMarket LTCUSDT BadRequest
+2023-01-13 21:05:10.036 +01:00 [WRN] Call SellMarket ETHUSDT BadRequest
+2023-01-13 21:05:10.605 +01:00 [WRN] Call SellMarket LTCUSDT BadRequest
+2023-01-13 21:05:11.250 +01:00 [WRN] Call SellMarket ETHUSDT BadRequest
+2023-01-13 21:05:11.790 +01:00 [WRN] Call SellMarket LTCUSDT BadRequest
+2023-01-13 21:05:12.452 +01:00 [WRN] Call SellMarket ETHUSDT BadRequest
+2023-01-13 21:05:12.992 +01:00 [WRN] Call SellMarket LTCUSDT BadRequest
+2023-01-13 21:05:13.634 +01:00 [WRN] Call SellMarket ETHUSDT BadRequest
+2023-01-13 21:05:14.155 +01:00 [WRN] Call SellMarket LTCUSDT BadRequest
+2023-01-13 21:05:14.789 +01:00 [WRN] Call SellMarket ETHUSDT BadRequest
+2023-01-13 21:05:15.316 +01:00 [WRN] Call SellMarket LTCUSDT BadRequest
+2023-01-13 21:05:15.985 +01:00 [WRN] Call SellMarket ETHUSDT BadRequest
+2023-01-13 21:05:16.507 +01:00 [WRN] Call SellMarket LTCUSDT BadRequest
+2023-01-13 21:05:17.617 +01:00 [WRN] Call SellMarket ETHUSDT BadRequest
+2023-01-13 21:05:17.808 +01:00 [WRN] Call Prediction on BNBUSDT down 0.7285716/0.27142838
+2023-01-13 21:05:18.033 +01:00 [WRN] Call Prediction on BTCUSDT down 0.9886712/0.011328794
+2023-01-13 21:05:18.247 +01:00 [WRN] Call Prediction on ETHUSDT down 0.9324655/0.06753447
+2023-01-13 21:05:18.482 +01:00 [WRN] Call Prediction on LTCUSDT up 0.00485821/0.99514174
+2023-01-13 21:05:18.650 +01:00 [WRN] Call SellMarket LTCUSDT BadRequest
+2023-01-13 21:05:18.731 +01:00 [WRN] Call Prediction on TRXUSDT down 0.99901366/0.0009863663
+2023-01-13 21:05:18.973 +01:00 [WRN] Call Prediction on XRPUSDT up 0.3745976/0.62540245
+2023-01-13 21:05:19.414 +01:00 [WRN] Call SellMarket ETHUSDT BadRequest
+2023-01-13 21:05:19.952 +01:00 [WRN] Call SellMarket LTCUSDT BadRequest
+2023-01-13 21:05:20.641 +01:00 [WRN] Call SellMarket ETHUSDT BadRequest
+2023-01-13 21:05:21.153 +01:00 [WRN] Call SellMarket LTCUSDT BadRequest
+2023-01-13 21:05:22.279 +01:00 [WRN] Call SellMarket ETHUSDT BadRequest
+2023-01-13 21:05:22.808 +01:00 [WRN] Call SellMarket LTCUSDT BadRequest
+2023-01-13 21:05:23.439 +01:00 [WRN] Call SellMarket ETHUSDT BadRequest
+2023-01-13 21:05:23.970 +01:00 [WRN] Call SellMarket LTCUSDT BadRequest
+2023-01-13 21:05:24.636 +01:00 [WRN] Call SellMarket ETHUSDT BadRequest
+2023-01-13 21:05:25.167 +01:00 [WRN] Call SellMarket LTCUSDT BadRequest
+2023-01-13 21:05:25.842 +01:00 [WRN] Call SellMarket ETHUSDT BadRequest
+2023-01-13 21:05:26.368 +01:00 [WRN] Call SellMarket LTCUSDT BadRequest
+2023-01-13 21:05:27.048 +01:00 [WRN] Call SellMarket ETHUSDT BadRequest
+2023-01-13 21:05:27.584 +01:00 [WRN] Call SellMarket LTCUSDT BadRequest
+2023-01-13 21:05:28.217 +01:00 [WRN] Call SellMarket ETHUSDT BadRequest
+2023-01-13 21:05:28.758 +01:00 [WRN] Call SellMarket LTCUSDT BadRequest
+2023-01-13 21:05:29.376 +01:00 [WRN] Call SellMarket ETHUSDT BadRequest
+2023-01-13 21:05:29.913 +01:00 [WRN] Call SellMarket LTCUSDT BadRequest
+2023-01-13 21:05:30.623 +01:00 [WRN] Call SellMarket ETHUSDT BadRequest
+2023-01-13 21:05:31.180 +01:00 [WRN] Call SellMarket LTCUSDT BadRequest
+2023-01-13 21:05:31.839 +01:00 [WRN] Call SellMarket ETHUSDT BadRequest
+2023-01-13 21:05:32.380 +01:00 [WRN] Call SellMarket LTCUSDT BadRequest
+2023-01-13 21:05:33.083 +01:00 [WRN] Call SellMarket ETHUSDT BadRequest
+2023-01-13 21:05:33.636 +01:00 [WRN] Call SellMarket LTCUSDT BadRequest
+2023-01-13 21:05:34.340 +01:00 [WRN] Call SellMarket ETHUSDT BadRequest
+2023-01-13 21:05:34.892 +01:00 [WRN] Call SellMarket LTCUSDT BadRequest
+2023-01-13 21:05:35.609 +01:00 [WRN] Call SellMarket ETHUSDT BadRequest
+2023-01-13 21:05:36.146 +01:00 [WRN] Call SellMarket LTCUSDT BadRequest
+2023-01-13 21:05:36.804 +01:00 [WRN] Call SellMarket ETHUSDT BadRequest
+2023-01-13 21:05:37.344 +01:00 [WRN] Call SellMarket LTCUSDT BadRequest
+2023-01-13 21:05:38.043 +01:00 [WRN] Call SellMarket ETHUSDT BadRequest
+2023-01-13 21:05:38.586 +01:00 [WRN] Call SellMarket LTCUSDT BadRequest
+2023-01-13 21:05:39.276 +01:00 [WRN] Call SellMarket ETHUSDT BadRequest
+2023-01-13 21:05:39.825 +01:00 [WRN] Call SellMarket LTCUSDT BadRequest
+2023-01-13 21:05:40.471 +01:00 [WRN] Call SellMarket ETHUSDT BadRequest
+2023-01-13 21:05:41.013 +01:00 [WRN] Call SellMarket LTCUSDT BadRequest
+2023-01-13 21:05:41.660 +01:00 [WRN] Call SellMarket ETHUSDT BadRequest
+2023-01-13 21:05:42.191 +01:00 [WRN] Call SellMarket LTCUSDT BadRequest
+2023-01-13 21:05:42.833 +01:00 [WRN] Call SellMarket ETHUSDT BadRequest
+2023-01-13 21:05:43.375 +01:00 [WRN] Call SellMarket LTCUSDT BadRequest
+2023-01-13 21:05:43.996 +01:00 [WRN] Call SellMarket ETHUSDT BadRequest
+2023-01-13 21:05:44.540 +01:00 [WRN] Call SellMarket LTCUSDT BadRequest
+2023-01-13 21:05:45.166 +01:00 [WRN] Call SellMarket ETHUSDT BadRequest
+2023-01-13 21:05:45.695 +01:00 [WRN] Call SellMarket LTCUSDT BadRequest
+2023-01-13 21:05:46.309 +01:00 [WRN] Call SellMarket ETHUSDT BadRequest
+2023-01-13 21:05:46.927 +01:00 [WRN] Call SellMarket LTCUSDT BadRequest
+2023-01-13 21:05:47.574 +01:00 [WRN] Call SellMarket ETHUSDT BadRequest
+2023-01-13 21:05:48.098 +01:00 [WRN] Call SellMarket LTCUSDT BadRequest
+2023-01-13 21:05:48.753 +01:00 [WRN] Call SellMarket ETHUSDT BadRequest
+2023-01-13 21:05:49.288 +01:00 [WRN] Call SellMarket LTCUSDT BadRequest
+2023-01-13 21:05:49.893 +01:00 [WRN] Call SellMarket ETHUSDT BadRequest
+2023-01-13 21:08:03.329 +01:00 [WRN] MarginCoin, started!
+2023-01-13 21:08:30.377 +01:00 [WRN] Get Account OK
+2023-01-13 21:08:34.299 +01:00 [WRN] Start trading market...
+2023-01-13 21:09:03.704 +01:00 [WRN] Call Prediction on BNBUSDT down 0.7285716/0.27142838
+2023-01-13 21:09:03.952 +01:00 [WRN] Call Prediction on BTCUSDT down 0.9886712/0.011328794
+2023-01-13 21:09:04.182 +01:00 [WRN] Call Prediction on ETHUSDT down 0.9324655/0.06753447
+2023-01-13 21:09:04.428 +01:00 [WRN] Call Prediction on LTCUSDT up 0.00485821/0.99514174
+2023-01-13 21:09:04.651 +01:00 [WRN] Call Prediction on TRXUSDT down 0.99901366/0.0009863663
+2023-01-13 21:09:04.898 +01:00 [WRN] Call Prediction on XRPUSDT up 0.3745976/0.62540245
+2023-01-13 21:09:07.576 +01:00 [WRN] Get Account OK
+2023-01-13 21:09:08.603 +01:00 [WRN] Get Account OK
+2023-01-13 21:10:46.761 +01:00 [WRN] MarginCoin, started!
+2023-01-13 21:10:59.310 +01:00 [WRN] Get Account OK
+2023-01-13 21:11:01.262 +01:00 [WRN] Start trading market...
+2023-01-13 21:11:34.019 +01:00 [WRN] Call Prediction on BNBUSDT down 0.7285716/0.27142838
+2023-01-13 21:11:34.242 +01:00 [WRN] Call Prediction on BTCUSDT down 0.9886712/0.011328794
+2023-01-13 21:11:34.472 +01:00 [WRN] Call Prediction on ETHUSDT down 0.9324655/0.06753447
+2023-01-13 21:11:34.675 +01:00 [WRN] Call Prediction on LTCUSDT up 0.00485821/0.99514174
+2023-01-13 21:11:34.890 +01:00 [WRN] Call Prediction on SOLUSDT down 0.84949994/0.15050004
+2023-01-13 21:11:35.107 +01:00 [WRN] Call Prediction on TRXUSDT down 0.99901366/0.0009863663
+2023-01-13 21:11:35.336 +01:00 [WRN] Call Prediction on XRPUSDT up 0.3745976/0.62540245
+2023-01-13 21:11:38.052 +01:00 [WRN] Get Account OK
+2023-01-13 21:42:02.398 +01:00 [WRN] MarginCoin, started!
+2023-01-13 21:42:28.452 +01:00 [WRN] MarginCoin, started!
+2023-01-13 21:42:56.970 +01:00 [WRN] MarginCoin, started!
+2023-01-13 21:43:54.119 +01:00 [WRN] Get Account OK
+2023-01-13 21:44:03.691 +01:00 [WRN] Start trading market...
+2023-01-13 21:45:01.305 +01:00 [WRN] MarginCoin, started!
+2023-01-13 21:45:22.308 +01:00 [WRN] Get Account OK
+2023-01-13 21:45:37.338 +01:00 [WRN] Get Account OK
+2023-01-13 21:45:37.628 +01:00 [WRN] Start trading market...
+2023-01-13 21:46:08.888 +01:00 [WRN] Get Account OK
+2023-01-13 21:46:12.573 +01:00 [WRN] Call Prediction on BNBUSDT up 0.19515806/0.8048419
+2023-01-13 21:46:12.810 +01:00 [WRN] Call Prediction on BTCUSDT down 0.98802894/0.011971055
+2023-01-13 21:46:13.058 +01:00 [WRN] Call Prediction on ETHUSDT down 0.934804/0.0651959
+2023-01-13 21:46:13.311 +01:00 [WRN] Call Prediction on LTCUSDT up 0.017253648/0.98274636
+2023-01-13 21:46:13.550 +01:00 [WRN] Call Prediction on SOLUSDT down 0.5302111/0.4697889
+2023-01-13 21:46:13.801 +01:00 [WRN] Call Prediction on TRXUSDT down 0.9935454/0.0064546713
+2023-01-13 21:46:14.041 +01:00 [WRN] Call Prediction on XRPUSDT down 0.99638176/0.003618232
+2023-01-13 21:46:15.917 +01:00 [WRN] Get Account OK
+2023-01-13 21:47:13.713 +01:00 [WRN] Call BuyMarket SOLUSDT BadRequest
+2023-01-13 21:47:13.713 +01:00 [WRN] Call BuyMarket SOLUSDT Locked
+2023-01-13 21:47:47.729 +01:00 [WRN] Get Account OK
+2023-01-13 21:48:04.532 +01:00 [WRN] Call BuyMarket SOLUSDT BadRequest
+2023-01-13 21:48:04.533 +01:00 [WRN] Call BuyMarket SOLUSDT Locked
+2023-01-13 21:48:26.100 +01:00 [WRN] Call BuyMarket SOLUSDT BadRequest
+2023-01-13 21:48:26.101 +01:00 [WRN] Call BuyMarket SOLUSDT Locked
+2023-01-13 21:50:46.141 +01:00 [ERR] HTTP GET /sockjs-node/657/dwoy1fnf/websocket responded 500 in 180338.2047 ms
+System.AggregateException: One or more errors occurred. (The remote party closed the WebSocket connection without completing the close handshake.)
+ ---> System.Net.WebSockets.WebSocketException (0x80004005): The remote party closed the WebSocket connection without completing the close handshake.
+ ---> System.IO.IOException: Unable to write data to the transport connection: An established connection was aborted by the software in your host machine..
+ ---> System.Net.Sockets.SocketException (10053): An established connection was aborted by the software in your host machine.
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.CreateException(SocketError error, Boolean forAsyncThrow)
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.SendAsyncForNetworkStream(Socket socket, CancellationToken cancellationToken)
+   at System.Net.Sockets.Socket.SendAsyncForNetworkStream(ReadOnlyMemory`1 buffer, SocketFlags socketFlags, CancellationToken cancellationToken)
+   at System.Net.Sockets.NetworkStream.WriteAsync(ReadOnlyMemory`1 buffer, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnection.WriteToStreamAsync(ReadOnlyMemory`1 source, Boolean async)
+   at System.Net.Http.HttpConnection.WriteWithoutBufferingAsync(ReadOnlyMemory`1 source, Boolean async)
+   at System.Net.Http.HttpConnection.RawConnectionStream.WriteAsync(ReadOnlyMemory`1 buffer, CancellationToken cancellationToken)
+   at System.Net.WebSockets.ManagedWebSocket.SendFrameFallbackAsync(MessageOpcode opcode, Boolean endOfMessage, Boolean disableCompression, ReadOnlyMemory`1 payloadBuffer, Task lockTask, CancellationToken cancellationToken)
+   at System.Runtime.CompilerServices.AsyncMethodBuilderCore.Start[TStateMachine](TStateMachine& stateMachine)
+   at System.Net.WebSockets.ManagedWebSocket.SendFrameFallbackAsync(MessageOpcode opcode, Boolean endOfMessage, Boolean disableCompression, ReadOnlyMemory`1 payloadBuffer, Task lockTask, CancellationToken cancellationToken)
+   at System.Net.WebSockets.ManagedWebSocket.SendFrameAsync(MessageOpcode opcode, Boolean endOfMessage, Boolean disableCompression, ReadOnlyMemory`1 payloadBuffer, CancellationToken cancellationToken)
+   at System.Net.WebSockets.ManagedWebSocket.HandleReceivedPingPongAsync(MessageHeader header, CancellationToken cancellationToken)
+   at System.Runtime.CompilerServices.AsyncMethodBuilderCore.Start[TStateMachine](TStateMachine& stateMachine)
+   at System.Net.WebSockets.ManagedWebSocket.HandleReceivedPingPongAsync(MessageHeader header, CancellationToken cancellationToken)
+   at System.Net.WebSockets.ManagedWebSocket.ReceiveAsyncPrivate[TResult](Memory`1 payloadBuffer, CancellationToken cancellationToken)
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state)
+   at System.Threading.ThreadPool.<>c.<.cctor>b__87_0(Object state)
+   at System.Threading.Tasks.Sources.ManualResetValueTaskSourceCore`1.SignalCompletion()
+   at System.Runtime.CompilerServices.PoolingAsyncValueTaskMethodBuilder.SetResult()
+   at System.Net.WebSockets.ManagedWebSocket.EnsureBufferContainsAsync(Int32 minimumRequiredBytes, CancellationToken cancellationToken, Boolean throwOnPrematureClosure)
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state)
+   at System.Runtime.CompilerServices.TaskAwaiter.<>c.<OutputWaitEtwEvents>b__12_0(Action innerContinuation, Task innerTask)
+   at System.Runtime.CompilerServices.AsyncMethodBuilderCore.ContinuationWrapper.Invoke()
+   at System.Threading.Tasks.AwaitTaskContinuation.RunOrScheduleAction(Action action, Boolean allowInlining)
+   at System.Threading.Tasks.Task.RunContinuations(Object continuationObject)
+   at System.Threading.Tasks.Task.FinishContinuations()
+   at System.Threading.Tasks.Task`1.TrySetResult(TResult result)
+   at System.Runtime.CompilerServices.AsyncTaskMethodBuilder`1.SetExistingTaskResult(Task`1 task, TResult result)
+   at System.Runtime.CompilerServices.AsyncValueTaskMethodBuilder`1.SetResult(TResult result)
+   at System.Net.Http.HttpConnection.RawConnectionStream.ReadAsync(Memory`1 buffer, CancellationToken cancellationToken)
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state)
+   at System.Runtime.CompilerServices.AsyncTaskMethodBuilder`1.AsyncStateMachineBox`1.MoveNext(Thread threadPoolThread)
+   at System.Runtime.CompilerServices.TaskAwaiter.<>c.<OutputWaitEtwEvents>b__12_0(Action innerContinuation, Task innerTask)
+   at System.Runtime.CompilerServices.AsyncMethodBuilderCore.ContinuationWrapper.Invoke()
+   at System.Threading.Tasks.AwaitTaskContinuation.RunOrScheduleAction(Action action, Boolean allowInlining)
+   at System.Threading.Tasks.Task.RunContinuations(Object continuationObject)
+   at System.Threading.Tasks.Task.FinishContinuations()
+   at System.Threading.Tasks.Task`1.TrySetResult(TResult result)
+   at System.Runtime.CompilerServices.AsyncTaskMethodBuilder`1.SetExistingTaskResult(Task`1 task, TResult result)
+   at System.Runtime.CompilerServices.AsyncValueTaskMethodBuilder`1.SetResult(TResult result)
+   at System.Net.Http.HttpConnection.ReadBufferedAsyncCore(Memory`1 destination)
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state)
+   at System.Runtime.CompilerServices.AsyncTaskMethodBuilder`1.AsyncStateMachineBox`1.MoveNext(Thread threadPoolThread)
+   at System.Threading.ThreadPool.<>c.<.cctor>b__87_0(Object state)
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.InvokeContinuation(Action`1 continuation, Object state, Boolean forceAsync, Boolean requiresExecutionContextFlow)
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.OnCompleted(SocketAsyncEventArgs _)
+   at System.Net.Sockets.SocketAsyncEventArgs.OnCompletedInternal()
+   at System.Net.Sockets.SocketAsyncEventArgs.<>c.<.cctor>b__179_0(UInt32 errorCode, UInt32 numBytes, NativeOverlapped* nativeOverlapped)
+   at System.Threading.ThreadPoolBoundHandleOverlapped.CompletionCallback(UInt32 errorCode, UInt32 numBytes, NativeOverlapped* nativeOverlapped)
+   at System.Threading._IOCompletionCallback.PerformIOCompletionCallback(UInt32 errorCode, UInt32 numBytes, NativeOverlapped* pNativeOverlapped)
+--- End of stack trace from previous location ---
+
+   --- End of inner exception stack trace ---
+   at System.Net.WebSockets.ManagedWebSocket.SendFrameFallbackAsync(MessageOpcode opcode, Boolean endOfMessage, Boolean disableCompression, ReadOnlyMemory`1 payloadBuffer, Task lockTask, CancellationToken cancellationToken)
+   at System.Net.WebSockets.ManagedWebSocket.SendFrameFallbackAsync(MessageOpcode opcode, Boolean endOfMessage, Boolean disableCompression, ReadOnlyMemory`1 payloadBuffer, Task lockTask, CancellationToken cancellationToken)
+   at System.Net.WebSockets.ManagedWebSocket.HandleReceivedPingPongAsync(MessageHeader header, CancellationToken cancellationToken)
+   at System.Net.WebSockets.ManagedWebSocket.ReceiveAsyncPrivate[TResult](Memory`1 payloadBuffer, CancellationToken cancellationToken)
+   at System.Runtime.CompilerServices.PoolingAsyncValueTaskMethodBuilder`1.StateMachineBox`1.System.Threading.Tasks.Sources.IValueTaskSource<TResult>.GetResult(Int16 token)
+   at System.Threading.Tasks.ValueTask`1.ValueTaskSourceAsTask.<>c.<.cctor>b__4_0(Object state)
+   --- End of inner exception stack trace ---
+   at Microsoft.AspNetCore.SpaServices.Extensions.Proxy.SpaProxy.PumpWebSocket(WebSocket source, WebSocket destination, Int32 bufferSize, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.SpaServices.Extensions.Proxy.SpaProxy.AcceptProxyWebSocketRequest(HttpContext context, Uri destinationUri, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.SpaServices.Extensions.Proxy.SpaProxy.PerformProxyRequest(HttpContext context, HttpClient httpClient, Task`1 baseUriTask, CancellationToken applicationStoppingToken, Boolean proxy404s)
+   at Microsoft.AspNetCore.Builder.SpaProxyingExtensions.<>c__DisplayClass2_0.<<UseProxyToSpaDevelopmentServer>b__0>d.MoveNext()
+--- End of stack trace from previous location ---
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+2023-01-13 21:50:46.212 +01:00 [ERR] An unhandled exception has occurred while executing the request.
+System.AggregateException: One or more errors occurred. (The remote party closed the WebSocket connection without completing the close handshake.)
+ ---> System.Net.WebSockets.WebSocketException (0x80004005): The remote party closed the WebSocket connection without completing the close handshake.
+ ---> System.IO.IOException: Unable to write data to the transport connection: An established connection was aborted by the software in your host machine..
+ ---> System.Net.Sockets.SocketException (10053): An established connection was aborted by the software in your host machine.
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.CreateException(SocketError error, Boolean forAsyncThrow)
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.SendAsyncForNetworkStream(Socket socket, CancellationToken cancellationToken)
+   at System.Net.Sockets.Socket.SendAsyncForNetworkStream(ReadOnlyMemory`1 buffer, SocketFlags socketFlags, CancellationToken cancellationToken)
+   at System.Net.Sockets.NetworkStream.WriteAsync(ReadOnlyMemory`1 buffer, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnection.WriteToStreamAsync(ReadOnlyMemory`1 source, Boolean async)
+   at System.Net.Http.HttpConnection.WriteWithoutBufferingAsync(ReadOnlyMemory`1 source, Boolean async)
+   at System.Net.Http.HttpConnection.RawConnectionStream.WriteAsync(ReadOnlyMemory`1 buffer, CancellationToken cancellationToken)
+   at System.Net.WebSockets.ManagedWebSocket.SendFrameFallbackAsync(MessageOpcode opcode, Boolean endOfMessage, Boolean disableCompression, ReadOnlyMemory`1 payloadBuffer, Task lockTask, CancellationToken cancellationToken)
+   at System.Runtime.CompilerServices.AsyncMethodBuilderCore.Start[TStateMachine](TStateMachine& stateMachine)
+   at System.Net.WebSockets.ManagedWebSocket.SendFrameFallbackAsync(MessageOpcode opcode, Boolean endOfMessage, Boolean disableCompression, ReadOnlyMemory`1 payloadBuffer, Task lockTask, CancellationToken cancellationToken)
+   at System.Net.WebSockets.ManagedWebSocket.SendFrameAsync(MessageOpcode opcode, Boolean endOfMessage, Boolean disableCompression, ReadOnlyMemory`1 payloadBuffer, CancellationToken cancellationToken)
+   at System.Net.WebSockets.ManagedWebSocket.HandleReceivedPingPongAsync(MessageHeader header, CancellationToken cancellationToken)
+   at System.Runtime.CompilerServices.AsyncMethodBuilderCore.Start[TStateMachine](TStateMachine& stateMachine)
+   at System.Net.WebSockets.ManagedWebSocket.HandleReceivedPingPongAsync(MessageHeader header, CancellationToken cancellationToken)
+   at System.Net.WebSockets.ManagedWebSocket.ReceiveAsyncPrivate[TResult](Memory`1 payloadBuffer, CancellationToken cancellationToken)
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state)
+   at System.Threading.ThreadPool.<>c.<.cctor>b__87_0(Object state)
+   at System.Threading.Tasks.Sources.ManualResetValueTaskSourceCore`1.SignalCompletion()
+   at System.Runtime.CompilerServices.PoolingAsyncValueTaskMethodBuilder.SetResult()
+   at System.Net.WebSockets.ManagedWebSocket.EnsureBufferContainsAsync(Int32 minimumRequiredBytes, CancellationToken cancellationToken, Boolean throwOnPrematureClosure)
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state)
+   at System.Runtime.CompilerServices.TaskAwaiter.<>c.<OutputWaitEtwEvents>b__12_0(Action innerContinuation, Task innerTask)
+   at System.Runtime.CompilerServices.AsyncMethodBuilderCore.ContinuationWrapper.Invoke()
+   at System.Threading.Tasks.AwaitTaskContinuation.RunOrScheduleAction(Action action, Boolean allowInlining)
+   at System.Threading.Tasks.Task.RunContinuations(Object continuationObject)
+   at System.Threading.Tasks.Task.FinishContinuations()
+   at System.Threading.Tasks.Task`1.TrySetResult(TResult result)
+   at System.Runtime.CompilerServices.AsyncTaskMethodBuilder`1.SetExistingTaskResult(Task`1 task, TResult result)
+   at System.Runtime.CompilerServices.AsyncValueTaskMethodBuilder`1.SetResult(TResult result)
+   at System.Net.Http.HttpConnection.RawConnectionStream.ReadAsync(Memory`1 buffer, CancellationToken cancellationToken)
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state)
+   at System.Runtime.CompilerServices.AsyncTaskMethodBuilder`1.AsyncStateMachineBox`1.MoveNext(Thread threadPoolThread)
+   at System.Runtime.CompilerServices.TaskAwaiter.<>c.<OutputWaitEtwEvents>b__12_0(Action innerContinuation, Task innerTask)
+   at System.Runtime.CompilerServices.AsyncMethodBuilderCore.ContinuationWrapper.Invoke()
+   at System.Threading.Tasks.AwaitTaskContinuation.RunOrScheduleAction(Action action, Boolean allowInlining)
+   at System.Threading.Tasks.Task.RunContinuations(Object continuationObject)
+   at System.Threading.Tasks.Task.FinishContinuations()
+   at System.Threading.Tasks.Task`1.TrySetResult(TResult result)
+   at System.Runtime.CompilerServices.AsyncTaskMethodBuilder`1.SetExistingTaskResult(Task`1 task, TResult result)
+   at System.Runtime.CompilerServices.AsyncValueTaskMethodBuilder`1.SetResult(TResult result)
+   at System.Net.Http.HttpConnection.ReadBufferedAsyncCore(Memory`1 destination)
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state)
+   at System.Runtime.CompilerServices.AsyncTaskMethodBuilder`1.AsyncStateMachineBox`1.MoveNext(Thread threadPoolThread)
+   at System.Threading.ThreadPool.<>c.<.cctor>b__87_0(Object state)
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.InvokeContinuation(Action`1 continuation, Object state, Boolean forceAsync, Boolean requiresExecutionContextFlow)
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.OnCompleted(SocketAsyncEventArgs _)
+   at System.Net.Sockets.SocketAsyncEventArgs.OnCompletedInternal()
+   at System.Net.Sockets.SocketAsyncEventArgs.<>c.<.cctor>b__179_0(UInt32 errorCode, UInt32 numBytes, NativeOverlapped* nativeOverlapped)
+   at System.Threading.ThreadPoolBoundHandleOverlapped.CompletionCallback(UInt32 errorCode, UInt32 numBytes, NativeOverlapped* nativeOverlapped)
+   at System.Threading._IOCompletionCallback.PerformIOCompletionCallback(UInt32 errorCode, UInt32 numBytes, NativeOverlapped* pNativeOverlapped)
+--- End of stack trace from previous location ---
+
+   --- End of inner exception stack trace ---
+   at System.Net.WebSockets.ManagedWebSocket.SendFrameFallbackAsync(MessageOpcode opcode, Boolean endOfMessage, Boolean disableCompression, ReadOnlyMemory`1 payloadBuffer, Task lockTask, CancellationToken cancellationToken)
+   at System.Net.WebSockets.ManagedWebSocket.SendFrameFallbackAsync(MessageOpcode opcode, Boolean endOfMessage, Boolean disableCompression, ReadOnlyMemory`1 payloadBuffer, Task lockTask, CancellationToken cancellationToken)
+   at System.Net.WebSockets.ManagedWebSocket.HandleReceivedPingPongAsync(MessageHeader header, CancellationToken cancellationToken)
+   at System.Net.WebSockets.ManagedWebSocket.ReceiveAsyncPrivate[TResult](Memory`1 payloadBuffer, CancellationToken cancellationToken)
+   at System.Runtime.CompilerServices.PoolingAsyncValueTaskMethodBuilder`1.StateMachineBox`1.System.Threading.Tasks.Sources.IValueTaskSource<TResult>.GetResult(Int16 token)
+   at System.Threading.Tasks.ValueTask`1.ValueTaskSourceAsTask.<>c.<.cctor>b__4_0(Object state)
+   --- End of inner exception stack trace ---
+   at Microsoft.AspNetCore.SpaServices.Extensions.Proxy.SpaProxy.PumpWebSocket(WebSocket source, WebSocket destination, Int32 bufferSize, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.SpaServices.Extensions.Proxy.SpaProxy.AcceptProxyWebSocketRequest(HttpContext context, Uri destinationUri, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.SpaServices.Extensions.Proxy.SpaProxy.PerformProxyRequest(HttpContext context, HttpClient httpClient, Task`1 baseUriTask, CancellationToken applicationStoppingToken, Boolean proxy404s)
+   at Microsoft.AspNetCore.Builder.SpaProxyingExtensions.<>c__DisplayClass2_0.<<UseProxyToSpaDevelopmentServer>b__0>d.MoveNext()
+--- End of stack trace from previous location ---
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware.Invoke(HttpContext context)
+2023-01-13 21:50:46.242 +01:00 [WRN] The response has already started, the error page middleware will not be executed.
+2023-01-13 21:50:46.356 +01:00 [ERR] Connection id "0HMNLKS9CIKGH", Request id "0HMNLKS9CIKGH:00000002": An unhandled exception was thrown by the application.
+System.AggregateException: One or more errors occurred. (The remote party closed the WebSocket connection without completing the close handshake.)
+ ---> System.Net.WebSockets.WebSocketException (0x80004005): The remote party closed the WebSocket connection without completing the close handshake.
+ ---> System.IO.IOException: Unable to write data to the transport connection: An established connection was aborted by the software in your host machine..
+ ---> System.Net.Sockets.SocketException (10053): An established connection was aborted by the software in your host machine.
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.CreateException(SocketError error, Boolean forAsyncThrow)
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.SendAsyncForNetworkStream(Socket socket, CancellationToken cancellationToken)
+   at System.Net.Sockets.Socket.SendAsyncForNetworkStream(ReadOnlyMemory`1 buffer, SocketFlags socketFlags, CancellationToken cancellationToken)
+   at System.Net.Sockets.NetworkStream.WriteAsync(ReadOnlyMemory`1 buffer, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnection.WriteToStreamAsync(ReadOnlyMemory`1 source, Boolean async)
+   at System.Net.Http.HttpConnection.WriteWithoutBufferingAsync(ReadOnlyMemory`1 source, Boolean async)
+   at System.Net.Http.HttpConnection.RawConnectionStream.WriteAsync(ReadOnlyMemory`1 buffer, CancellationToken cancellationToken)
+   at System.Net.WebSockets.ManagedWebSocket.SendFrameFallbackAsync(MessageOpcode opcode, Boolean endOfMessage, Boolean disableCompression, ReadOnlyMemory`1 payloadBuffer, Task lockTask, CancellationToken cancellationToken)
+   at System.Runtime.CompilerServices.AsyncMethodBuilderCore.Start[TStateMachine](TStateMachine& stateMachine)
+   at System.Net.WebSockets.ManagedWebSocket.SendFrameFallbackAsync(MessageOpcode opcode, Boolean endOfMessage, Boolean disableCompression, ReadOnlyMemory`1 payloadBuffer, Task lockTask, CancellationToken cancellationToken)
+   at System.Net.WebSockets.ManagedWebSocket.SendFrameAsync(MessageOpcode opcode, Boolean endOfMessage, Boolean disableCompression, ReadOnlyMemory`1 payloadBuffer, CancellationToken cancellationToken)
+   at System.Net.WebSockets.ManagedWebSocket.HandleReceivedPingPongAsync(MessageHeader header, CancellationToken cancellationToken)
+   at System.Runtime.CompilerServices.AsyncMethodBuilderCore.Start[TStateMachine](TStateMachine& stateMachine)
+   at System.Net.WebSockets.ManagedWebSocket.HandleReceivedPingPongAsync(MessageHeader header, CancellationToken cancellationToken)
+   at System.Net.WebSockets.ManagedWebSocket.ReceiveAsyncPrivate[TResult](Memory`1 payloadBuffer, CancellationToken cancellationToken)
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state)
+   at System.Threading.ThreadPool.<>c.<.cctor>b__87_0(Object state)
+   at System.Threading.Tasks.Sources.ManualResetValueTaskSourceCore`1.SignalCompletion()
+   at System.Runtime.CompilerServices.PoolingAsyncValueTaskMethodBuilder.SetResult()
+   at System.Net.WebSockets.ManagedWebSocket.EnsureBufferContainsAsync(Int32 minimumRequiredBytes, CancellationToken cancellationToken, Boolean throwOnPrematureClosure)
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state)
+   at System.Runtime.CompilerServices.TaskAwaiter.<>c.<OutputWaitEtwEvents>b__12_0(Action innerContinuation, Task innerTask)
+   at System.Runtime.CompilerServices.AsyncMethodBuilderCore.ContinuationWrapper.Invoke()
+   at System.Threading.Tasks.AwaitTaskContinuation.RunOrScheduleAction(Action action, Boolean allowInlining)
+   at System.Threading.Tasks.Task.RunContinuations(Object continuationObject)
+   at System.Threading.Tasks.Task.FinishContinuations()
+   at System.Threading.Tasks.Task`1.TrySetResult(TResult result)
+   at System.Runtime.CompilerServices.AsyncTaskMethodBuilder`1.SetExistingTaskResult(Task`1 task, TResult result)
+   at System.Runtime.CompilerServices.AsyncValueTaskMethodBuilder`1.SetResult(TResult result)
+   at System.Net.Http.HttpConnection.RawConnectionStream.ReadAsync(Memory`1 buffer, CancellationToken cancellationToken)
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state)
+   at System.Runtime.CompilerServices.AsyncTaskMethodBuilder`1.AsyncStateMachineBox`1.MoveNext(Thread threadPoolThread)
+   at System.Runtime.CompilerServices.TaskAwaiter.<>c.<OutputWaitEtwEvents>b__12_0(Action innerContinuation, Task innerTask)
+   at System.Runtime.CompilerServices.AsyncMethodBuilderCore.ContinuationWrapper.Invoke()
+   at System.Threading.Tasks.AwaitTaskContinuation.RunOrScheduleAction(Action action, Boolean allowInlining)
+   at System.Threading.Tasks.Task.RunContinuations(Object continuationObject)
+   at System.Threading.Tasks.Task.FinishContinuations()
+   at System.Threading.Tasks.Task`1.TrySetResult(TResult result)
+   at System.Runtime.CompilerServices.AsyncTaskMethodBuilder`1.SetExistingTaskResult(Task`1 task, TResult result)
+   at System.Runtime.CompilerServices.AsyncValueTaskMethodBuilder`1.SetResult(TResult result)
+   at System.Net.Http.HttpConnection.ReadBufferedAsyncCore(Memory`1 destination)
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state)
+   at System.Runtime.CompilerServices.AsyncTaskMethodBuilder`1.AsyncStateMachineBox`1.MoveNext(Thread threadPoolThread)
+   at System.Threading.ThreadPool.<>c.<.cctor>b__87_0(Object state)
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.InvokeContinuation(Action`1 continuation, Object state, Boolean forceAsync, Boolean requiresExecutionContextFlow)
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.OnCompleted(SocketAsyncEventArgs _)
+   at System.Net.Sockets.SocketAsyncEventArgs.OnCompletedInternal()
+   at System.Net.Sockets.SocketAsyncEventArgs.<>c.<.cctor>b__179_0(UInt32 errorCode, UInt32 numBytes, NativeOverlapped* nativeOverlapped)
+   at System.Threading.ThreadPoolBoundHandleOverlapped.CompletionCallback(UInt32 errorCode, UInt32 numBytes, NativeOverlapped* nativeOverlapped)
+   at System.Threading._IOCompletionCallback.PerformIOCompletionCallback(UInt32 errorCode, UInt32 numBytes, NativeOverlapped* pNativeOverlapped)
+--- End of stack trace from previous location ---
+
+   --- End of inner exception stack trace ---
+   at System.Net.WebSockets.ManagedWebSocket.SendFrameFallbackAsync(MessageOpcode opcode, Boolean endOfMessage, Boolean disableCompression, ReadOnlyMemory`1 payloadBuffer, Task lockTask, CancellationToken cancellationToken)
+   at System.Net.WebSockets.ManagedWebSocket.SendFrameFallbackAsync(MessageOpcode opcode, Boolean endOfMessage, Boolean disableCompression, ReadOnlyMemory`1 payloadBuffer, Task lockTask, CancellationToken cancellationToken)
+   at System.Net.WebSockets.ManagedWebSocket.HandleReceivedPingPongAsync(MessageHeader header, CancellationToken cancellationToken)
+   at System.Net.WebSockets.ManagedWebSocket.ReceiveAsyncPrivate[TResult](Memory`1 payloadBuffer, CancellationToken cancellationToken)
+   at System.Runtime.CompilerServices.PoolingAsyncValueTaskMethodBuilder`1.StateMachineBox`1.System.Threading.Tasks.Sources.IValueTaskSource<TResult>.GetResult(Int16 token)
+   at System.Threading.Tasks.ValueTask`1.ValueTaskSourceAsTask.<>c.<.cctor>b__4_0(Object state)
+   --- End of inner exception stack trace ---
+   at Microsoft.AspNetCore.SpaServices.Extensions.Proxy.SpaProxy.PumpWebSocket(WebSocket source, WebSocket destination, Int32 bufferSize, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.SpaServices.Extensions.Proxy.SpaProxy.AcceptProxyWebSocketRequest(HttpContext context, Uri destinationUri, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.SpaServices.Extensions.Proxy.SpaProxy.PerformProxyRequest(HttpContext context, HttpClient httpClient, Task`1 baseUriTask, CancellationToken applicationStoppingToken, Boolean proxy404s)
+   at Microsoft.AspNetCore.Builder.SpaProxyingExtensions.<>c__DisplayClass2_0.<<UseProxyToSpaDevelopmentServer>b__0>d.MoveNext()
+--- End of stack trace from previous location ---
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.HttpProtocol.ProcessRequests[TContext](IHttpApplication`1 application)
+2023-01-13 21:50:49.762 +01:00 [WRN] Get Account OK
+2023-01-13 21:50:50.220 +01:00 [WRN] Start trading market...
+2023-01-13 21:51:17.852 +01:00 [WRN] Call Prediction on BNBUSDT up 0.19515806/0.8048419
+2023-01-13 21:51:18.106 +01:00 [WRN] Call Prediction on BTCUSDT down 0.98802894/0.011971055
+2023-01-13 21:51:18.351 +01:00 [WRN] Call Prediction on ETHUSDT down 0.934804/0.0651959
+2023-01-13 21:51:18.611 +01:00 [WRN] Call Prediction on LTCUSDT up 0.017253648/0.98274636
+2023-01-13 21:51:18.852 +01:00 [WRN] Call Prediction on SOLUSDT down 0.5302111/0.4697889
+2023-01-13 21:51:19.090 +01:00 [WRN] Call Prediction on TRXUSDT down 0.9935454/0.0064546713
+2023-01-13 21:51:19.439 +01:00 [WRN] Call Prediction on XRPUSDT down 0.99638176/0.003618232
+2023-01-13 21:51:22.792 +01:00 [WRN] Call BuyMarket SOLUSDT BadRequest
+2023-01-13 21:51:22.792 +01:00 [WRN] Call BuyMarket SOLUSDT Locked
+2023-01-13 21:51:41.311 +01:00 [WRN] Call BuyMarket SOLUSDT BadRequest
+2023-01-13 21:51:41.312 +01:00 [WRN] Call BuyMarket SOLUSDT Locked
+2023-01-13 21:51:46.945 +01:00 [WRN] Call BuyMarket SOLUSDT BadRequest
+2023-01-13 21:51:46.945 +01:00 [WRN] Call BuyMarket SOLUSDT Locked
+2023-01-13 21:51:49.044 +01:00 [WRN] Call BuyMarket SOLUSDT BadRequest
+2023-01-13 21:51:49.045 +01:00 [WRN] Call BuyMarket SOLUSDT Locked
+2023-01-13 21:51:50.590 +01:00 [WRN] Call BuyMarket SOLUSDT BadRequest
+2023-01-13 21:51:50.590 +01:00 [WRN] Call BuyMarket SOLUSDT Locked
+2023-01-13 21:51:55.054 +01:00 [WRN] Call BuyMarket SOLUSDT BadRequest
+2023-01-13 21:51:55.054 +01:00 [WRN] Call BuyMarket SOLUSDT Locked
+2023-01-13 21:53:17.623 +01:00 [WRN] Get Account OK
+2023-01-13 21:54:24.838 +01:00 [WRN] Call BuyMarket SOLUSDT BadRequest
+2023-01-13 21:54:24.838 +01:00 [WRN] Call BuyMarket SOLUSDT Locked
+2023-01-13 21:54:30.408 +01:00 [WRN] Call BuyMarket SOLUSDT BadRequest
+2023-01-13 21:54:30.408 +01:00 [WRN] Call BuyMarket SOLUSDT Locked
+2023-01-13 21:54:31.416 +01:00 [WRN] Call BuyMarket BTCUSDT OK
+2023-01-13 21:54:32.697 +01:00 [WRN] Call SellMarket BTCUSDT OK
+2023-01-13 21:54:33.142 +01:00 [WRN] Get Account OK
+2023-01-13 21:54:39.764 +01:00 [WRN] Get Account OK
+2023-01-13 21:59:06.698 +01:00 [WRN] MarginCoin, started!
+2023-01-13 21:59:22.398 +01:00 [WRN] Get Account OK
+2023-01-13 21:59:25.493 +01:00 [WRN] Start trading market...
+2023-01-13 21:59:58.339 +01:00 [WRN] Call Prediction on BNBUSDT up 0.19515806/0.8048419
+2023-01-13 21:59:58.564 +01:00 [WRN] Call Prediction on BTCUSDT down 0.98802894/0.011971055
+2023-01-13 21:59:58.779 +01:00 [WRN] Call Prediction on ETHUSDT down 0.934804/0.0651959
+2023-01-13 21:59:58.996 +01:00 [WRN] Call Prediction on LTCUSDT up 0.017253648/0.98274636
+2023-01-13 21:59:59.208 +01:00 [WRN] Call Prediction on SOLUSDT down 0.5302111/0.4697889
+2023-01-13 21:59:59.430 +01:00 [WRN] Call Prediction on TRXUSDT down 0.9935454/0.0064546713
+2023-01-13 21:59:59.669 +01:00 [WRN] Call Prediction on XRPUSDT down 0.99638176/0.003618232
+2023-01-13 22:00:12.717 +01:00 [WRN] Get Account OK
+2023-01-13 22:00:50.874 +01:00 [WRN] Call Prediction on BNBUSDT up 0.24438779/0.7556122
+2023-01-13 22:00:51.108 +01:00 [WRN] Call Prediction on BTCUSDT down 0.9764138/0.023586273
+2023-01-13 22:00:51.344 +01:00 [WRN] Call Prediction on ETHUSDT down 0.99214464/0.007855369
+2023-01-13 22:00:51.566 +01:00 [WRN] Call Prediction on LTCUSDT up 0.07675103/0.923249
+2023-01-13 22:00:51.792 +01:00 [WRN] Call Prediction on SOLUSDT down 0.8891357/0.11086429
+2023-01-13 22:00:52.015 +01:00 [WRN] Call Prediction on TRXUSDT down 0.9685679/0.031432126
+2023-01-13 22:00:52.260 +01:00 [WRN] Call Prediction on XRPUSDT down 0.9877215/0.012278473
+2023-01-13 22:01:39.076 +01:00 [WRN] Get Account OK
+2023-01-13 22:03:04.908 +01:00 [WRN] Get Account OK
+2023-01-13 22:03:12.873 +01:00 [WRN] Get Account OK
+2023-01-13 22:03:30.677 +01:00 [WRN] MarginCoin, started!
+2023-01-13 22:03:40.204 +01:00 [WRN] Get Account OK
+2023-01-13 22:32:12.459 +01:00 [WRN] Get Account OK
+2023-01-13 22:33:26.995 +01:00 [WRN] Unauthorized
+2023-01-13 22:40:27.361 +01:00 [WRN] MarginCoin, started!
+2023-01-13 22:40:37.203 +01:00 [WRN] Get Account OK
+2023-01-13 22:41:47.646 +01:00 [WRN] MarginCoin, started!
+2023-01-13 22:41:57.902 +01:00 [WRN] Get Account OK
+2023-01-13 22:45:54.448 +01:00 [WRN] MarginCoin, started!
+2023-01-13 22:46:16.889 +01:00 [WRN] Get Account OK
+2023-01-13 22:46:22.594 +01:00 [WRN] Unauthorized
+2023-01-13 22:46:22.595 +01:00 [WRN] Call Binance Account summary : httpStatusCode
+2023-01-13 22:48:16.572 +01:00 [WRN] MarginCoin, started!
+2023-01-13 22:48:30.348 +01:00 [WRN] Get Account OK
+2023-01-13 22:48:32.302 +01:00 [WRN] Unauthorized
+2023-01-13 22:48:32.304 +01:00 [WRN] Call Binance Account summary :Unauthorized
+2023-01-13 22:49:00.139 +01:00 [WRN] Unauthorized
+2023-01-13 22:49:00.139 +01:00 [WRN] Call Binance Account summary :Unauthorized
+2023-01-13 22:49:19.595 +01:00 [WRN] Unauthorized
+2023-01-13 22:49:19.595 +01:00 [WRN] Call Binance Account summary :Unauthorized
+2023-01-13 22:50:21.755 +01:00 [WRN] Get Account OK
+2023-01-13 22:50:24.740 +01:00 [WRN] Unauthorized
+2023-01-13 22:50:24.740 +01:00 [WRN] Call Binance Account summary :Unauthorized
+2023-01-13 22:58:26.849 +01:00 [WRN] MarginCoin, started!
+2023-01-13 22:58:31.895 +01:00 [WRN] Get Account OK
+2023-01-13 22:58:35.632 +01:00 [WRN] Get Account OK
+2023-01-13 22:58:37.466 +01:00 [WRN] Unauthorized
+2023-01-13 22:58:37.467 +01:00 [WRN] Call Binance Account summary : Unauthorized
+2023-01-13 22:58:42.427 +01:00 [WRN] Get Account OK
+2023-01-13 22:59:02.804 +01:00 [WRN] Start trading market...
+2023-01-13 22:59:51.675 +01:00 [WRN] Call Prediction on ADAUSDT up 0.20652466/0.79347533
+2023-01-13 22:59:51.904 +01:00 [WRN] Call Prediction on BNBUSDT up 0.12374184/0.8762582
+2023-01-13 22:59:52.119 +01:00 [WRN] Call Prediction on BTCUSDT down 0.79283875/0.20716128
+2023-01-13 22:59:52.344 +01:00 [WRN] Call Prediction on DOTUSDT up 0.05824663/0.9417534
+2023-01-13 22:59:52.571 +01:00 [WRN] Call Prediction on ETHUSDT up 0.02262921/0.97737074
+2023-01-13 22:59:52.798 +01:00 [WRN] Call Prediction on LTCUSDT up 0.15069607/0.8493039
+2023-01-13 22:59:53.057 +01:00 [WRN] Call Prediction on MANAUSDT up 0.17736703/0.82263297
+2023-01-13 22:59:53.299 +01:00 [WRN] Call Prediction on MATICUSDT up 0.09503232/0.90496767
+2023-01-13 22:59:53.551 +01:00 [WRN] Call Prediction on SOLUSDT up 0.04493291/0.95506704
+2023-01-13 22:59:53.792 +01:00 [WRN] Call Prediction on TRXUSDT up 0.12514974/0.8748502
+2023-01-13 22:59:54.031 +01:00 [WRN] Call Prediction on XRPUSDT down 0.86580336/0.13419665
+2023-01-13 23:00:40.436 +01:00 [WRN] Call Prediction on ADAUSDT up 0.050790127/0.94920987
+2023-01-13 23:00:40.673 +01:00 [WRN] Call Prediction on BNBUSDT up 0.026446601/0.97355336
+2023-01-13 23:00:40.909 +01:00 [WRN] Call Prediction on BTCUSDT up 0.084196776/0.9158032
+2023-01-13 23:00:41.156 +01:00 [WRN] Call Prediction on DOTUSDT up 0.16961776/0.8303823
+2023-01-13 23:00:41.366 +01:00 [WRN] Call Prediction on ETHUSDT up 0.11199725/0.8880028
+2023-01-13 23:00:41.564 +01:00 [WRN] Call Prediction on LTCUSDT up 0.23136611/0.76863396
+2023-01-13 23:00:41.784 +01:00 [WRN] Call Prediction on MANAUSDT down 0.98520285/0.014797116
+2023-01-13 23:00:42.004 +01:00 [WRN] Call Prediction on MATICUSDT up 0.058752213/0.94124776
+2023-01-13 23:00:42.214 +01:00 [WRN] Call Prediction on SOLUSDT up 0.016994126/0.9830058
+2023-01-13 23:00:42.416 +01:00 [WRN] Call Prediction on TRXUSDT up 0.2816514/0.7183486
+2023-01-13 23:00:42.624 +01:00 [WRN] Call Prediction on XRPUSDT down 0.57205504/0.427945
+2023-01-13 23:06:03.661 +01:00 [WRN] MarginCoin, started!
+2023-01-13 23:06:16.626 +01:00 [WRN] Get Account OK
+2023-01-13 23:06:17.377 +01:00 [WRN] Start trading market...
+2023-01-13 23:07:06.139 +01:00 [WRN] Call Prediction on ADAUSDT up 0.050790127/0.94920987
+2023-01-13 23:07:06.394 +01:00 [WRN] Call Prediction on BNBUSDT up 0.026446601/0.97355336
+2023-01-13 23:07:06.646 +01:00 [WRN] Call Prediction on BTCUSDT up 0.084196776/0.9158032
+2023-01-13 23:07:06.908 +01:00 [WRN] Call Prediction on DOTUSDT up 0.16961776/0.8303823
+2023-01-13 23:07:07.166 +01:00 [WRN] Call Prediction on ETHUSDT up 0.11199725/0.8880028
+2023-01-13 23:07:07.389 +01:00 [WRN] Call Prediction on LTCUSDT up 0.23136611/0.76863396
+2023-01-13 23:07:07.630 +01:00 [WRN] Call Prediction on MANAUSDT down 0.98520285/0.014797116
+2023-01-13 23:07:07.857 +01:00 [WRN] Call Prediction on MATICUSDT up 0.058752213/0.94124776
+2023-01-13 23:07:08.076 +01:00 [WRN] Call Prediction on SOLUSDT up 0.016994126/0.9830058
+2023-01-13 23:07:08.301 +01:00 [WRN] Call Prediction on TRXUSDT up 0.2816514/0.7183486
+2023-01-13 23:07:08.542 +01:00 [WRN] Call Prediction on XRPUSDT down 0.57205504/0.427945
+2023-01-13 23:08:34.049 +01:00 [WRN] MarginCoin, started!
+2023-01-13 23:08:43.068 +01:00 [WRN] Get Account OK
+2023-01-13 23:09:06.808 +01:00 [WRN] Start trading market...
+2023-01-13 23:09:07.451 +01:00 [WRN] Get Account OK
+2023-01-13 23:10:21.071 +01:00 [WRN] Get Account OK
+2023-01-13 23:10:37.373 +01:00 [WRN] MarginCoin, started!
+2023-01-13 23:10:45.824 +01:00 [WRN] Get Account OK
+2023-01-13 23:10:49.713 +01:00 [WRN] Start trading market...
+2023-01-13 23:11:35.302 +01:00 [WRN] Call Prediction on ADAUSDT up 0.050790127/0.94920987
+2023-01-13 23:11:35.535 +01:00 [WRN] Call Prediction on BNBUSDT up 0.026446601/0.97355336
+2023-01-13 23:11:35.762 +01:00 [WRN] Call Prediction on BTCUSDT up 0.084196776/0.9158032
+2023-01-13 23:11:35.989 +01:00 [WRN] Call Prediction on DOTUSDT up 0.16961776/0.8303823
+2023-01-13 23:11:36.215 +01:00 [WRN] Call Prediction on ETHUSDT up 0.11199725/0.8880028
+2023-01-13 23:11:36.438 +01:00 [WRN] Call Prediction on LTCUSDT up 0.23136611/0.76863396
+2023-01-13 23:11:36.666 +01:00 [WRN] Call Prediction on MANAUSDT down 0.98520285/0.014797116
+2023-01-13 23:11:36.894 +01:00 [WRN] Call Prediction on MATICUSDT up 0.058752213/0.94124776
+2023-01-13 23:11:37.118 +01:00 [WRN] Call Prediction on SOLUSDT up 0.016994126/0.9830058
+2023-01-13 23:11:37.340 +01:00 [WRN] Call Prediction on TRXUSDT up 0.2816514/0.7183486
+2023-01-13 23:11:37.568 +01:00 [WRN] Call Prediction on XRPUSDT down 0.57205504/0.427945
+2023-01-13 23:12:46.372 +01:00 [WRN] MarginCoin, started!
+2023-01-13 23:13:01.248 +01:00 [WRN] Get Account OK
+2023-01-13 23:13:02.718 +01:00 [WRN] Start trading market...
+2023-01-13 23:13:49.535 +01:00 [WRN] Call Prediction on ADAUSDT up 0.050790127/0.94920987
+2023-01-13 23:13:49.769 +01:00 [WRN] Call Prediction on BNBUSDT up 0.026446601/0.97355336
+2023-01-13 23:13:50.005 +01:00 [WRN] Call Prediction on BTCUSDT up 0.084196776/0.9158032
+2023-01-13 23:13:50.245 +01:00 [WRN] Call Prediction on DOTUSDT up 0.16961776/0.8303823
+2023-01-13 23:13:50.479 +01:00 [WRN] Call Prediction on ETHUSDT up 0.11199725/0.8880028
+2023-01-13 23:13:50.734 +01:00 [WRN] Call Prediction on LTCUSDT up 0.23136611/0.76863396
+2023-01-13 23:13:50.978 +01:00 [WRN] Call Prediction on MANAUSDT down 0.98520285/0.014797116
+2023-01-13 23:13:51.211 +01:00 [WRN] Call Prediction on MATICUSDT up 0.058752213/0.94124776
+2023-01-13 23:13:51.473 +01:00 [WRN] Call Prediction on SOLUSDT up 0.016994126/0.9830058
+2023-01-13 23:13:51.724 +01:00 [WRN] Call Prediction on TRXUSDT up 0.2816514/0.7183486
+2023-01-13 23:13:51.965 +01:00 [WRN] Call Prediction on XRPUSDT down 0.57205504/0.427945
+2023-01-13 23:13:53.530 +01:00 [WRN] Get Account OK
+2023-01-13 23:13:54.536 +01:00 [WRN] Get Account OK
+2023-01-13 23:13:55.082 +01:00 [WRN] Get Account OK
+2023-01-13 23:15:40.402 +01:00 [WRN] Call Prediction on ADAUSDT up 0.008000027/0.992
+2023-01-13 23:15:40.678 +01:00 [WRN] Call Prediction on BNBUSDT up 0.017203664/0.9827963
+2023-01-13 23:15:40.946 +01:00 [WRN] Call Prediction on BTCUSDT (1) up 0.0030866354/0.9969133
+2023-01-13 23:15:41.224 +01:00 [WRN] Call Prediction on BTCUSDT up 0.0037223913/0.99627763
+2023-01-13 23:15:41.474 +01:00 [WRN] Call Prediction on DOTUSDT up 0.016989322/0.98301065
+2023-01-13 23:15:41.731 +01:00 [WRN] Call Prediction on LTCUSDT up 0.019911973/0.98008806
+2023-01-13 23:15:41.967 +01:00 [WRN] Call Prediction on MANAUSDT down 0.7177366/0.28226346
+2023-01-13 23:15:42.215 +01:00 [WRN] Call Prediction on MATICUSDT up 0.013468864/0.9865311
+2023-01-13 23:15:42.464 +01:00 [WRN] Call Prediction on SOLUSDT up 0.0026917655/0.99730825
+2023-01-13 23:15:42.710 +01:00 [WRN] Call Prediction on TRXUSDT up 0.00090025197/0.99909973
+2023-01-13 23:15:42.951 +01:00 [WRN] Call Prediction on XRPUSDT down 0.84491754/0.15508255
+2023-01-13 23:19:01.119 +01:00 [WRN] Get Account OK
+2023-01-13 23:19:03.459 +01:00 [WRN] Get Account OK
+2023-01-13 23:19:07.282 +01:00 [WRN] Get Account OK
