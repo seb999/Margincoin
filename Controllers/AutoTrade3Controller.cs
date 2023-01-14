@@ -281,11 +281,6 @@ namespace MarginCoin.Controllers
                 //check candle (indicators, etc, not on hold ) and invest
                 for (int i = 0; i < maxOpenTrade - activeOrderList.Count; i++)
                 {
-                    //Debug
-                    Console.WriteLine("ExecutedQty: " + (quoteOrderQty / marketStreamOnSpot[i].c).ToString());
-                    var toto = (quoteOrderQty / marketStreamOnSpot[i].c).ToString();
-                    Console.WriteLine(double.Parse(toto, new CultureInfo("en-US")));
-
                     //read symbol name
                     var symbol = marketStreamOnSpot[i].s;
 
@@ -618,9 +613,9 @@ namespace MarginCoin.Controllers
             myOrder.Volume = symbolSpot.v;
             myOrder.TakeProfit = takeProfit;
             myOrder.StopLose = CalculateAvragePrice(binanceOrder) * (1 - (stopLose / 100));
-            myOrder.Quantity = double.Parse(binanceOrder.executedQty, new CultureInfo("en-US"));
+            myOrder.Quantity = Helper.ToDouble(binanceOrder.executedQty);
             myOrder.IsClosed = 0;
-            myOrder.Fee = Globals.isProd ? binanceOrder.fills.Sum(p => double.Parse(p.commission, new CultureInfo("en-US"))) : Math.Round((CalculateAvragePrice(binanceOrder) * double.Parse(binanceOrder.executedQty, new CultureInfo("en-US"))) / 100) * 0.1;
+            myOrder.Fee = Globals.isProd ? binanceOrder.fills.Sum(p => Helper.ToDouble(p.commission)) : Math.Round((CalculateAvragePrice(binanceOrder) * Helper.ToDouble(binanceOrder.executedQty)) / 100) * 0.1;
             myOrder.Symbol = binanceOrder.symbol;
 
             myOrder.RSI = symbolCandle.Last().Rsi;
@@ -664,8 +659,8 @@ namespace MarginCoin.Controllers
 
         private double CalculateAvragePrice(BinanceOrder myOrder)
         {
-            var executedAmount = myOrder.fills.Sum(p => double.Parse(p.price, new CultureInfo("en-US")) * double.Parse(p.qty, new CultureInfo("en-US")));
-            var executedQty = myOrder.fills.Sum(p => double.Parse(p.qty, new CultureInfo("en-US")));
+            var executedAmount = myOrder.fills.Sum(p => Helper.ToDouble(p.price) * Helper.ToDouble(p.qty));
+            var executedQty = myOrder.fills.Sum(p => Helper.ToDouble(p.qty));
             return executedAmount / executedQty;
         }
 
