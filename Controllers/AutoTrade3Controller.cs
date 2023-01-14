@@ -47,7 +47,7 @@ namespace MarginCoin.Controllers
         //max trade that can be open
         int maxOpenTrade = 5;
         //Max amount to invest for each trade
-        int quoteOrderQty = 2000;
+        int quoteOrderQty = 1500;
         //Select short list of symbol or full list(on test server on 6 symbols allowed)
         bool fullSymbolList = true;
 
@@ -140,9 +140,9 @@ namespace MarginCoin.Controllers
         #endregion
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /////////////////////////////////-----------ALGORYTME----------/////////////////////////////////////////
+        //////////////////////////-----------WEB SOCKETS SUBSCRIPTION----------/////////////////////////////////
         ////////////////////////////////////////////////////////////////////////////////////////////////////////
-        #region Web Sockets - Algo
+        #region Web Sockets
 
         private async void OpenWebSocketOnSymbol(string symbol)
         {
@@ -251,18 +251,24 @@ namespace MarginCoin.Controllers
             return "";
         }
 
+        #endregion
+
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /////////////////////////////////-----------ALGORYTME----------/////////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////
+        #region Algo
+
         private void ProcessMarketMatrice()
         {
             try
             {
-                //0-Check each open order if closing is needed
+                //Get active orders
                 List<Order> activeOrderList = GetActiveOrder();
-                if (activeOrderList.Count != 0)
-                {
-                    activeOrderList.Where(p => CheckTrade(p)).ToList();
-                }
 
-                //1- Filter marketStreamOnSpot list to get only the one from mySymbolList
+                //Check keep open / close 
+                activeOrderList.Where(p => CheckTrade(p, candleMatrice)).ToList();
+
+                //Filter marketStreamOnSpot list to get only the one from mySymbolList
                 marketStreamOnSpot = marketStreamOnSpot.Where(p => mySymbolList.Any(p1 => p1 == p.s)).OrderByDescending(p => p.P).ToList();
 
                 //Send last data to frontend
@@ -270,9 +276,17 @@ namespace MarginCoin.Controllers
 
                 if (activeOrderList.Count == maxOpenTrade) return;
 
-                //2-check candle (indicators, etc, not on hold ) and invest
+               
+
+                //check candle (indicators, etc, not on hold ) and invest
                 for (int i = 0; i < maxOpenTrade - activeOrderList.Count; i++)
                 {
+                    //Debug
+                    Console.WriteLine("ExecutedQty: " + (quoteOrderQty / marketStreamOnSpot[i].c).ToString());
+                    var toto = (quoteOrderQty / marketStreamOnSpot[i].c).ToString();
+                    Console.WriteLine(double.Parse(toto, new CultureInfo("en-US")));
+
+                    //read symbol name
                     var symbol = marketStreamOnSpot[i].s;
 
                     //if there is already a pending order for this symbol we exit
@@ -282,7 +296,7 @@ namespace MarginCoin.Controllers
                     }
 
                     //Find the line that coorespond to the symbol in the Matrice
-                    List<Candle> symbolCandle = candleMatrice.Where(p => p.First().s == symbol).FirstOrDefault();
+                    List <Candle> symbolCandle = candleMatrice.Where(p => p.First().s == symbol).FirstOrDefault();
 
                     //For debugging, comment out
                     if (Globals.swallowOneOrder)
@@ -305,7 +319,7 @@ namespace MarginCoin.Controllers
                     {
                         if ((CheckCandle(numberPreviousCandle, marketStreamOnSpot[i], symbolCandle) && !Globals.onHold.FirstOrDefault(p => p.Key == symbol).Value))
                         {
-                            
+
                             if (!Globals.onHold.ContainsKey(symbol)) Globals.onHold.Add(symbol, true);  //to avoid multi buy
                             if (Globals.onAir)
                             {
@@ -372,23 +386,18 @@ namespace MarginCoin.Controllers
             }
         }
 
-        private bool CheckTrade(Order activeOrder)
+        private bool CheckTrade(Order activeOrder, List<List<Candle>> myCandleMatrice)
         {
-            double lastPrice = 0;
-            double highPrice = 0;
-            Candle lastCandle = new Candle();
-
-            //to avoid bug during iteration when the source 'candleMatrice' change from WebSocket
-            var myCandleMatrice = candleMatrice;
-
             //iteration the matrice to find the line for the symbol of the active order
             List<Candle> symbolCandle = myCandleMatrice.Where(p => p.First().s == activeOrder.Symbol).FirstOrDefault();
-            int symbolCandleIndex = myCandleMatrice.IndexOf(symbolCandle); //get the line that coorespond to the symbol]
-            lastPrice = symbolCandle.Select(p => p.c).LastOrDefault();
-            highPrice = symbolCandle.Select(p => p.h).LastOrDefault();
-            lastCandle = symbolCandle.Select(p => p).LastOrDefault();
+            
+            double lastPrice = symbolCandle.Select(p => p.c).LastOrDefault();
+            double highPrice = symbolCandle.Select(p => p.h).LastOrDefault();
+            Candle lastCandle = symbolCandle.Select(p => p).LastOrDefault();
 
             SaveHighLow(lastCandle, activeOrder);
+
+            //Check stop lose
             if (lastPrice <= (activeOrder.StopLose))
             {
                 if (Globals.onAir)
@@ -410,22 +419,31 @@ namespace MarginCoin.Controllers
                 {
                     if (Globals.onAir)
                     {
-                        Console.WriteLine("Close trade : take profit ");
+                        Console.WriteLine("Close trade : take profit");
                         Sell(activeOrder.Id, "Take profit");
                     }
                     else
                     {
-                        Console.WriteLine("Close fake trade : take profit ");
-                        SellFack(activeOrder.Id, "stop lose", lastPrice);
+                        Console.WriteLine("Close fake trade : take profit");
+                        SellFack(activeOrder.Id, "Take profit", lastPrice);
                     }
                 }
             }
 
+            //AI close
             if (_mlService.MLPredList.Where(p => p.Symbol == activeOrder.Symbol).Select(p => p.PredictedLabel).FirstOrDefault() == "down"
              && _mlService.MLPredList.Where(p => p.Symbol == activeOrder.Symbol).Select(p => p.Score[0]).FirstOrDefault() >= 0.85)
             {
-                Console.WriteLine("Close trade : AI take profit ");
-                Sell(activeOrder.Id, "AI sold");
+                if (Globals.onAir)
+                {
+                    Console.WriteLine("Close trade : AI take profit ");
+                    Sell(activeOrder.Id, "AI sold");
+                }
+                else
+                {
+                    Console.WriteLine("Close fake trade : AI take profit ");
+                    SellFack(activeOrder.Id, "AI sold", lastPrice);
+                }
             }
 
             UpdateStopLose(lastPrice, activeOrder);
@@ -512,10 +530,19 @@ namespace MarginCoin.Controllers
             System.Net.HttpStatusCode httpStatusCode = System.Net.HttpStatusCode.NoContent;
             BinanceOrder myBinanceOrder = _binanceService.BuyMarket(symbolSpot.s, quoteOrderQty, ref httpStatusCode);
 
+            //if order not executed we try divide amount by 2 and 3
             if (httpStatusCode == System.Net.HttpStatusCode.BadRequest)
             {
-                _logger.LogWarning($"Call {MyEnum.BinanceApiCall.BuyMarket} {symbolSpot.s} Locked");
-                return;
+                myBinanceOrder = _binanceService.BuyMarket(symbolSpot.s, quoteOrderQty / 2, ref httpStatusCode);
+                if (httpStatusCode == System.Net.HttpStatusCode.BadRequest)
+                {
+                    myBinanceOrder = _binanceService.BuyMarket(symbolSpot.s, quoteOrderQty / 3, ref httpStatusCode);
+                    if (httpStatusCode == System.Net.HttpStatusCode.BadRequest)
+                    {
+                        _logger.LogWarning($"Call {MyEnum.BinanceApiCall.BuyMarket} {symbolSpot.s} Locked");
+                        return;
+                    }
+                }
             }
 
             if (myBinanceOrder == null)
@@ -696,6 +723,7 @@ namespace MarginCoin.Controllers
 
         private async void BuyFack(MarketStream symbolSpot, List<Candle> symbolCandleList)
         {
+
             BinanceOrder fackBinanceOrder = new BinanceOrder();
             fackBinanceOrder.symbol = symbolSpot.s;
             fackBinanceOrder.executedQty = (quoteOrderQty / symbolSpot.c).ToString();

@@ -1,0 +1,1577 @@
+2023-01-14 10:10:07.543 +01:00 [WRN] MarginCoin, started!
+2023-01-14 10:10:18.838 +01:00 [ERR] HTTP GET /wallet responded 500 in 4800.1318 ms
+System.Net.Http.HttpRequestException: Failed to proxy the request to http://localhost:4201/wallet, because the request to the proxy target failed. Check that the proxy target server is running and accepting requests to http://localhost:4201/.
+
+The underlying exception message was 'No connection could be made because the target machine actively refused it. (localhost:4201)'.Check the InnerException for more details.
+ ---> System.Net.Http.HttpRequestException: No connection could be made because the target machine actively refused it. (localhost:4201)
+ ---> System.Net.Sockets.SocketException (10061): No connection could be made because the target machine actively refused it.
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.ThrowException(SocketError error, CancellationToken cancellationToken)
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.System.Threading.Tasks.Sources.IValueTaskSource.GetResult(Int16 token)
+   at System.Net.Sockets.Socket.<ConnectAsync>g__WaitForConnectWithCancellation|277_0(AwaitableSocketAsyncEventArgs saea, ValueTask connectTask, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.ConnectToTcpHostAsync(String host, Int32 port, HttpRequestMessage initialRequest, Boolean async, CancellationToken cancellationToken)
+   --- End of inner exception stack trace ---
+   at System.Net.Http.HttpConnectionPool.ConnectToTcpHostAsync(String host, Int32 port, HttpRequestMessage initialRequest, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.ConnectAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.CreateHttp11ConnectionAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.AddHttp11ConnectionAsync(HttpRequestMessage request)
+   at System.Threading.Tasks.TaskCompletionSourceWithCancellation`1.WaitWithCancellationAsync(CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.GetHttp11ConnectionAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.SendWithVersionDetectionAndRetryAsync(HttpRequestMessage request, Boolean async, Boolean doRequestAuth, CancellationToken cancellationToken)
+   at System.Net.Http.DiagnosticsHandler.SendAsyncCore(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpClient.<SendAsync>g__Core|83_0(HttpRequestMessage request, HttpCompletionOption completionOption, CancellationTokenSource cts, Boolean disposeCts, CancellationTokenSource pendingRequestsCts, CancellationToken originalCancellationToken)
+   at Microsoft.AspNetCore.SpaServices.Extensions.Proxy.SpaProxy.PerformProxyRequest(HttpContext context, HttpClient httpClient, Task`1 baseUriTask, CancellationToken applicationStoppingToken, Boolean proxy404s)
+   --- End of inner exception stack trace ---
+   at Microsoft.AspNetCore.SpaServices.Extensions.Proxy.SpaProxy.PerformProxyRequest(HttpContext context, HttpClient httpClient, Task`1 baseUriTask, CancellationToken applicationStoppingToken, Boolean proxy404s)
+   at Microsoft.AspNetCore.Builder.SpaProxyingExtensions.<>c__DisplayClass2_0.<<UseProxyToSpaDevelopmentServer>b__0>d.MoveNext()
+--- End of stack trace from previous location ---
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+2023-01-14 10:10:19.031 +01:00 [ERR] An unhandled exception has occurred while executing the request.
+System.Net.Http.HttpRequestException: Failed to proxy the request to http://localhost:4201/wallet, because the request to the proxy target failed. Check that the proxy target server is running and accepting requests to http://localhost:4201/.
+
+The underlying exception message was 'No connection could be made because the target machine actively refused it. (localhost:4201)'.Check the InnerException for more details.
+ ---> System.Net.Http.HttpRequestException: No connection could be made because the target machine actively refused it. (localhost:4201)
+ ---> System.Net.Sockets.SocketException (10061): No connection could be made because the target machine actively refused it.
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.ThrowException(SocketError error, CancellationToken cancellationToken)
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.System.Threading.Tasks.Sources.IValueTaskSource.GetResult(Int16 token)
+   at System.Net.Sockets.Socket.<ConnectAsync>g__WaitForConnectWithCancellation|277_0(AwaitableSocketAsyncEventArgs saea, ValueTask connectTask, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.ConnectToTcpHostAsync(String host, Int32 port, HttpRequestMessage initialRequest, Boolean async, CancellationToken cancellationToken)
+   --- End of inner exception stack trace ---
+   at System.Net.Http.HttpConnectionPool.ConnectToTcpHostAsync(String host, Int32 port, HttpRequestMessage initialRequest, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.ConnectAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.CreateHttp11ConnectionAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.AddHttp11ConnectionAsync(HttpRequestMessage request)
+   at System.Threading.Tasks.TaskCompletionSourceWithCancellation`1.WaitWithCancellationAsync(CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.GetHttp11ConnectionAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.SendWithVersionDetectionAndRetryAsync(HttpRequestMessage request, Boolean async, Boolean doRequestAuth, CancellationToken cancellationToken)
+   at System.Net.Http.DiagnosticsHandler.SendAsyncCore(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpClient.<SendAsync>g__Core|83_0(HttpRequestMessage request, HttpCompletionOption completionOption, CancellationTokenSource cts, Boolean disposeCts, CancellationTokenSource pendingRequestsCts, CancellationToken originalCancellationToken)
+   at Microsoft.AspNetCore.SpaServices.Extensions.Proxy.SpaProxy.PerformProxyRequest(HttpContext context, HttpClient httpClient, Task`1 baseUriTask, CancellationToken applicationStoppingToken, Boolean proxy404s)
+   --- End of inner exception stack trace ---
+   at Microsoft.AspNetCore.SpaServices.Extensions.Proxy.SpaProxy.PerformProxyRequest(HttpContext context, HttpClient httpClient, Task`1 baseUriTask, CancellationToken applicationStoppingToken, Boolean proxy404s)
+   at Microsoft.AspNetCore.Builder.SpaProxyingExtensions.<>c__DisplayClass2_0.<<UseProxyToSpaDevelopmentServer>b__0>d.MoveNext()
+--- End of stack trace from previous location ---
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware.Invoke(HttpContext context)
+2023-01-14 10:13:11.667 +01:00 [WRN] MarginCoin, started!
+2023-01-14 10:13:25.064 +01:00 [WRN] MarginCoin, started!
+2023-01-14 10:13:54.188 +01:00 [WRN] Get Account OK
+2023-01-14 10:13:54.795 +01:00 [WRN] Start trading market...
+2023-01-14 10:14:59.528 +01:00 [ERR]  ProcessMarketMatrice
+System.InvalidOperationException: Collection was modified; enumeration operation may not execute.
+   at System.Collections.Generic.List`1.Enumerator.MoveNext()
+   at System.Linq.Enumerable.WhereListIterator`1.MoveNext()
+   at System.Linq.Enumerable.TryGetFirst[TSource](IEnumerable`1 source, Boolean& found)
+   at System.Linq.Enumerable.FirstOrDefault[TSource](IEnumerable`1 source)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 287
+2023-01-14 10:15:00.860 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:15:17.568 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:15:23.504 +01:00 [ERR] HTTP GET /sockjs-node/342/jm5skmrh/websocket responded 500 in 96043.4513 ms
+System.AggregateException: One or more errors occurred. (The remote party closed the WebSocket connection without completing the close handshake.)
+ ---> System.Net.WebSockets.WebSocketException (0x80004005): The remote party closed the WebSocket connection without completing the close handshake.
+ ---> System.IO.IOException: Unable to read data from the transport connection: An established connection was aborted by the software in your host machine..
+ ---> System.Net.Sockets.SocketException (10053): An established connection was aborted by the software in your host machine.
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.CreateException(SocketError error, Boolean forAsyncThrow)
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.ReceiveAsync(Socket socket, CancellationToken cancellationToken)
+   at System.Net.Sockets.Socket.ReceiveAsync(Memory`1 buffer, SocketFlags socketFlags, Boolean fromNetworkStream, CancellationToken cancellationToken)
+   at System.Net.Sockets.NetworkStream.ReadAsync(Memory`1 buffer, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnection.ReadBufferedAsyncCore(Memory`1 destination)
+   at System.Runtime.CompilerServices.AsyncMethodBuilderCore.Start[TStateMachine](TStateMachine& stateMachine)
+   at System.Net.Http.HttpConnection.ReadBufferedAsyncCore(Memory`1 destination)
+   at System.Net.Http.HttpConnection.ReadBufferedAsync(Memory`1 destination)
+   at System.Net.Http.HttpConnection.RawConnectionStream.ReadAsync(Memory`1 buffer, CancellationToken cancellationToken)
+   at System.Runtime.CompilerServices.AsyncMethodBuilderCore.Start[TStateMachine](TStateMachine& stateMachine)
+   at System.Net.Http.HttpConnection.RawConnectionStream.ReadAsync(Memory`1 buffer, CancellationToken cancellationToken)
+   at System.Net.WebSockets.ManagedWebSocket.EnsureBufferContainsAsync(Int32 minimumRequiredBytes, CancellationToken cancellationToken, Boolean throwOnPrematureClosure)
+   at System.Runtime.CompilerServices.AsyncMethodBuilderCore.Start[TStateMachine](TStateMachine& stateMachine)
+   at System.Net.WebSockets.ManagedWebSocket.EnsureBufferContainsAsync(Int32 minimumRequiredBytes, CancellationToken cancellationToken, Boolean throwOnPrematureClosure)
+   at System.Net.WebSockets.ManagedWebSocket.ReceiveAsyncPrivate[TResult](Memory`1 payloadBuffer, CancellationToken cancellationToken)
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state)
+   at System.Threading.ThreadPool.<>c.<.cctor>b__87_0(Object state)
+   at System.Threading.Tasks.Sources.ManualResetValueTaskSourceCore`1.SignalCompletion()
+   at System.Runtime.CompilerServices.PoolingAsyncValueTaskMethodBuilder.SetResult()
+   at System.Net.WebSockets.ManagedWebSocket.EnsureBufferContainsAsync(Int32 minimumRequiredBytes, CancellationToken cancellationToken, Boolean throwOnPrematureClosure)
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state)
+   at System.Runtime.CompilerServices.TaskAwaiter.<>c.<OutputWaitEtwEvents>b__12_0(Action innerContinuation, Task innerTask)
+   at System.Runtime.CompilerServices.AsyncMethodBuilderCore.ContinuationWrapper.Invoke()
+   at System.Threading.Tasks.AwaitTaskContinuation.RunOrScheduleAction(Action action, Boolean allowInlining)
+   at System.Threading.Tasks.Task.RunContinuations(Object continuationObject)
+   at System.Threading.Tasks.Task.FinishContinuations()
+   at System.Threading.Tasks.Task`1.TrySetResult(TResult result)
+   at System.Runtime.CompilerServices.AsyncTaskMethodBuilder`1.SetExistingTaskResult(Task`1 task, TResult result)
+   at System.Runtime.CompilerServices.AsyncValueTaskMethodBuilder`1.SetResult(TResult result)
+   at System.Net.Http.HttpConnection.RawConnectionStream.ReadAsync(Memory`1 buffer, CancellationToken cancellationToken)
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state)
+   at System.Runtime.CompilerServices.AsyncTaskMethodBuilder`1.AsyncStateMachineBox`1.MoveNext(Thread threadPoolThread)
+   at System.Runtime.CompilerServices.TaskAwaiter.<>c.<OutputWaitEtwEvents>b__12_0(Action innerContinuation, Task innerTask)
+   at System.Runtime.CompilerServices.AsyncMethodBuilderCore.ContinuationWrapper.Invoke()
+   at System.Threading.Tasks.AwaitTaskContinuation.RunOrScheduleAction(Action action, Boolean allowInlining)
+   at System.Threading.Tasks.Task.RunContinuations(Object continuationObject)
+   at System.Threading.Tasks.Task.FinishContinuations()
+   at System.Threading.Tasks.Task`1.TrySetResult(TResult result)
+   at System.Runtime.CompilerServices.AsyncTaskMethodBuilder`1.SetExistingTaskResult(Task`1 task, TResult result)
+   at System.Runtime.CompilerServices.AsyncValueTaskMethodBuilder`1.SetResult(TResult result)
+   at System.Net.Http.HttpConnection.ReadBufferedAsyncCore(Memory`1 destination)
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state)
+   at System.Runtime.CompilerServices.AsyncTaskMethodBuilder`1.AsyncStateMachineBox`1.MoveNext(Thread threadPoolThread)
+   at System.Threading.ThreadPool.<>c.<.cctor>b__87_0(Object state)
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.InvokeContinuation(Action`1 continuation, Object state, Boolean forceAsync, Boolean requiresExecutionContextFlow)
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.OnCompleted(SocketAsyncEventArgs _)
+   at System.Net.Sockets.SocketAsyncEventArgs.OnCompletedInternal()
+   at System.Net.Sockets.SocketAsyncEventArgs.<>c.<.cctor>b__179_0(UInt32 errorCode, UInt32 numBytes, NativeOverlapped* nativeOverlapped)
+   at System.Threading.ThreadPoolBoundHandleOverlapped.CompletionCallback(UInt32 errorCode, UInt32 numBytes, NativeOverlapped* nativeOverlapped)
+   at System.Threading._IOCompletionCallback.PerformIOCompletionCallback(UInt32 errorCode, UInt32 numBytes, NativeOverlapped* pNativeOverlapped)
+--- End of stack trace from previous location ---
+
+   --- End of inner exception stack trace ---
+   at System.Net.Http.HttpConnection.ReadBufferedAsyncCore(Memory`1 destination)
+   at System.Net.Http.HttpConnection.RawConnectionStream.ReadAsync(Memory`1 buffer, CancellationToken cancellationToken)
+   at System.Net.WebSockets.ManagedWebSocket.EnsureBufferContainsAsync(Int32 minimumRequiredBytes, CancellationToken cancellationToken, Boolean throwOnPrematureClosure)
+   at System.Runtime.CompilerServices.PoolingAsyncValueTaskMethodBuilder`1.StateMachineBox`1.System.Threading.Tasks.Sources.IValueTaskSource.GetResult(Int16 token)
+   at System.Net.WebSockets.ManagedWebSocket.ReceiveAsyncPrivate[TResult](Memory`1 payloadBuffer, CancellationToken cancellationToken)
+   at System.Net.WebSockets.ManagedWebSocket.ReceiveAsyncPrivate[TResult](Memory`1 payloadBuffer, CancellationToken cancellationToken)
+   at System.Runtime.CompilerServices.PoolingAsyncValueTaskMethodBuilder`1.StateMachineBox`1.System.Threading.Tasks.Sources.IValueTaskSource<TResult>.GetResult(Int16 token)
+   at System.Threading.Tasks.ValueTask`1.ValueTaskSourceAsTask.<>c.<.cctor>b__4_0(Object state)
+   --- End of inner exception stack trace ---
+   at Microsoft.AspNetCore.SpaServices.Extensions.Proxy.SpaProxy.PumpWebSocket(WebSocket source, WebSocket destination, Int32 bufferSize, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.SpaServices.Extensions.Proxy.SpaProxy.AcceptProxyWebSocketRequest(HttpContext context, Uri destinationUri, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.SpaServices.Extensions.Proxy.SpaProxy.PerformProxyRequest(HttpContext context, HttpClient httpClient, Task`1 baseUriTask, CancellationToken applicationStoppingToken, Boolean proxy404s)
+   at Microsoft.AspNetCore.Builder.SpaProxyingExtensions.<>c__DisplayClass2_0.<<UseProxyToSpaDevelopmentServer>b__0>d.MoveNext()
+--- End of stack trace from previous location ---
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+2023-01-14 10:15:23.636 +01:00 [ERR] An unhandled exception has occurred while executing the request.
+System.AggregateException: One or more errors occurred. (The remote party closed the WebSocket connection without completing the close handshake.)
+ ---> System.Net.WebSockets.WebSocketException (0x80004005): The remote party closed the WebSocket connection without completing the close handshake.
+ ---> System.IO.IOException: Unable to read data from the transport connection: An established connection was aborted by the software in your host machine..
+ ---> System.Net.Sockets.SocketException (10053): An established connection was aborted by the software in your host machine.
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.CreateException(SocketError error, Boolean forAsyncThrow)
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.ReceiveAsync(Socket socket, CancellationToken cancellationToken)
+   at System.Net.Sockets.Socket.ReceiveAsync(Memory`1 buffer, SocketFlags socketFlags, Boolean fromNetworkStream, CancellationToken cancellationToken)
+   at System.Net.Sockets.NetworkStream.ReadAsync(Memory`1 buffer, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnection.ReadBufferedAsyncCore(Memory`1 destination)
+   at System.Runtime.CompilerServices.AsyncMethodBuilderCore.Start[TStateMachine](TStateMachine& stateMachine)
+   at System.Net.Http.HttpConnection.ReadBufferedAsyncCore(Memory`1 destination)
+   at System.Net.Http.HttpConnection.ReadBufferedAsync(Memory`1 destination)
+   at System.Net.Http.HttpConnection.RawConnectionStream.ReadAsync(Memory`1 buffer, CancellationToken cancellationToken)
+   at System.Runtime.CompilerServices.AsyncMethodBuilderCore.Start[TStateMachine](TStateMachine& stateMachine)
+   at System.Net.Http.HttpConnection.RawConnectionStream.ReadAsync(Memory`1 buffer, CancellationToken cancellationToken)
+   at System.Net.WebSockets.ManagedWebSocket.EnsureBufferContainsAsync(Int32 minimumRequiredBytes, CancellationToken cancellationToken, Boolean throwOnPrematureClosure)
+   at System.Runtime.CompilerServices.AsyncMethodBuilderCore.Start[TStateMachine](TStateMachine& stateMachine)
+   at System.Net.WebSockets.ManagedWebSocket.EnsureBufferContainsAsync(Int32 minimumRequiredBytes, CancellationToken cancellationToken, Boolean throwOnPrematureClosure)
+   at System.Net.WebSockets.ManagedWebSocket.ReceiveAsyncPrivate[TResult](Memory`1 payloadBuffer, CancellationToken cancellationToken)
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state)
+   at System.Threading.ThreadPool.<>c.<.cctor>b__87_0(Object state)
+   at System.Threading.Tasks.Sources.ManualResetValueTaskSourceCore`1.SignalCompletion()
+   at System.Runtime.CompilerServices.PoolingAsyncValueTaskMethodBuilder.SetResult()
+   at System.Net.WebSockets.ManagedWebSocket.EnsureBufferContainsAsync(Int32 minimumRequiredBytes, CancellationToken cancellationToken, Boolean throwOnPrematureClosure)
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state)
+   at System.Runtime.CompilerServices.TaskAwaiter.<>c.<OutputWaitEtwEvents>b__12_0(Action innerContinuation, Task innerTask)
+   at System.Runtime.CompilerServices.AsyncMethodBuilderCore.ContinuationWrapper.Invoke()
+   at System.Threading.Tasks.AwaitTaskContinuation.RunOrScheduleAction(Action action, Boolean allowInlining)
+   at System.Threading.Tasks.Task.RunContinuations(Object continuationObject)
+   at System.Threading.Tasks.Task.FinishContinuations()
+   at System.Threading.Tasks.Task`1.TrySetResult(TResult result)
+   at System.Runtime.CompilerServices.AsyncTaskMethodBuilder`1.SetExistingTaskResult(Task`1 task, TResult result)
+   at System.Runtime.CompilerServices.AsyncValueTaskMethodBuilder`1.SetResult(TResult result)
+   at System.Net.Http.HttpConnection.RawConnectionStream.ReadAsync(Memory`1 buffer, CancellationToken cancellationToken)
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state)
+   at System.Runtime.CompilerServices.AsyncTaskMethodBuilder`1.AsyncStateMachineBox`1.MoveNext(Thread threadPoolThread)
+   at System.Runtime.CompilerServices.TaskAwaiter.<>c.<OutputWaitEtwEvents>b__12_0(Action innerContinuation, Task innerTask)
+   at System.Runtime.CompilerServices.AsyncMethodBuilderCore.ContinuationWrapper.Invoke()
+   at System.Threading.Tasks.AwaitTaskContinuation.RunOrScheduleAction(Action action, Boolean allowInlining)
+   at System.Threading.Tasks.Task.RunContinuations(Object continuationObject)
+   at System.Threading.Tasks.Task.FinishContinuations()
+   at System.Threading.Tasks.Task`1.TrySetResult(TResult result)
+   at System.Runtime.CompilerServices.AsyncTaskMethodBuilder`1.SetExistingTaskResult(Task`1 task, TResult result)
+   at System.Runtime.CompilerServices.AsyncValueTaskMethodBuilder`1.SetResult(TResult result)
+   at System.Net.Http.HttpConnection.ReadBufferedAsyncCore(Memory`1 destination)
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state)
+   at System.Runtime.CompilerServices.AsyncTaskMethodBuilder`1.AsyncStateMachineBox`1.MoveNext(Thread threadPoolThread)
+   at System.Threading.ThreadPool.<>c.<.cctor>b__87_0(Object state)
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.InvokeContinuation(Action`1 continuation, Object state, Boolean forceAsync, Boolean requiresExecutionContextFlow)
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.OnCompleted(SocketAsyncEventArgs _)
+   at System.Net.Sockets.SocketAsyncEventArgs.OnCompletedInternal()
+   at System.Net.Sockets.SocketAsyncEventArgs.<>c.<.cctor>b__179_0(UInt32 errorCode, UInt32 numBytes, NativeOverlapped* nativeOverlapped)
+   at System.Threading.ThreadPoolBoundHandleOverlapped.CompletionCallback(UInt32 errorCode, UInt32 numBytes, NativeOverlapped* nativeOverlapped)
+   at System.Threading._IOCompletionCallback.PerformIOCompletionCallback(UInt32 errorCode, UInt32 numBytes, NativeOverlapped* pNativeOverlapped)
+--- End of stack trace from previous location ---
+
+   --- End of inner exception stack trace ---
+   at System.Net.Http.HttpConnection.ReadBufferedAsyncCore(Memory`1 destination)
+   at System.Net.Http.HttpConnection.RawConnectionStream.ReadAsync(Memory`1 buffer, CancellationToken cancellationToken)
+   at System.Net.WebSockets.ManagedWebSocket.EnsureBufferContainsAsync(Int32 minimumRequiredBytes, CancellationToken cancellationToken, Boolean throwOnPrematureClosure)
+   at System.Runtime.CompilerServices.PoolingAsyncValueTaskMethodBuilder`1.StateMachineBox`1.System.Threading.Tasks.Sources.IValueTaskSource.GetResult(Int16 token)
+   at System.Net.WebSockets.ManagedWebSocket.ReceiveAsyncPrivate[TResult](Memory`1 payloadBuffer, CancellationToken cancellationToken)
+   at System.Net.WebSockets.ManagedWebSocket.ReceiveAsyncPrivate[TResult](Memory`1 payloadBuffer, CancellationToken cancellationToken)
+   at System.Runtime.CompilerServices.PoolingAsyncValueTaskMethodBuilder`1.StateMachineBox`1.System.Threading.Tasks.Sources.IValueTaskSource<TResult>.GetResult(Int16 token)
+   at System.Threading.Tasks.ValueTask`1.ValueTaskSourceAsTask.<>c.<.cctor>b__4_0(Object state)
+   --- End of inner exception stack trace ---
+   at Microsoft.AspNetCore.SpaServices.Extensions.Proxy.SpaProxy.PumpWebSocket(WebSocket source, WebSocket destination, Int32 bufferSize, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.SpaServices.Extensions.Proxy.SpaProxy.AcceptProxyWebSocketRequest(HttpContext context, Uri destinationUri, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.SpaServices.Extensions.Proxy.SpaProxy.PerformProxyRequest(HttpContext context, HttpClient httpClient, Task`1 baseUriTask, CancellationToken applicationStoppingToken, Boolean proxy404s)
+   at Microsoft.AspNetCore.Builder.SpaProxyingExtensions.<>c__DisplayClass2_0.<<UseProxyToSpaDevelopmentServer>b__0>d.MoveNext()
+--- End of stack trace from previous location ---
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware.Invoke(HttpContext context)
+2023-01-14 10:15:23.644 +01:00 [WRN] The response has already started, the error page middleware will not be executed.
+2023-01-14 10:15:23.672 +01:00 [ERR] Connection id "0HMNM1UHTQ67E", Request id "0HMNM1UHTQ67E:00000002": An unhandled exception was thrown by the application.
+System.AggregateException: One or more errors occurred. (The remote party closed the WebSocket connection without completing the close handshake.)
+ ---> System.Net.WebSockets.WebSocketException (0x80004005): The remote party closed the WebSocket connection without completing the close handshake.
+ ---> System.IO.IOException: Unable to read data from the transport connection: An established connection was aborted by the software in your host machine..
+ ---> System.Net.Sockets.SocketException (10053): An established connection was aborted by the software in your host machine.
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.CreateException(SocketError error, Boolean forAsyncThrow)
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.ReceiveAsync(Socket socket, CancellationToken cancellationToken)
+   at System.Net.Sockets.Socket.ReceiveAsync(Memory`1 buffer, SocketFlags socketFlags, Boolean fromNetworkStream, CancellationToken cancellationToken)
+   at System.Net.Sockets.NetworkStream.ReadAsync(Memory`1 buffer, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnection.ReadBufferedAsyncCore(Memory`1 destination)
+   at System.Runtime.CompilerServices.AsyncMethodBuilderCore.Start[TStateMachine](TStateMachine& stateMachine)
+   at System.Net.Http.HttpConnection.ReadBufferedAsyncCore(Memory`1 destination)
+   at System.Net.Http.HttpConnection.ReadBufferedAsync(Memory`1 destination)
+   at System.Net.Http.HttpConnection.RawConnectionStream.ReadAsync(Memory`1 buffer, CancellationToken cancellationToken)
+   at System.Runtime.CompilerServices.AsyncMethodBuilderCore.Start[TStateMachine](TStateMachine& stateMachine)
+   at System.Net.Http.HttpConnection.RawConnectionStream.ReadAsync(Memory`1 buffer, CancellationToken cancellationToken)
+   at System.Net.WebSockets.ManagedWebSocket.EnsureBufferContainsAsync(Int32 minimumRequiredBytes, CancellationToken cancellationToken, Boolean throwOnPrematureClosure)
+   at System.Runtime.CompilerServices.AsyncMethodBuilderCore.Start[TStateMachine](TStateMachine& stateMachine)
+   at System.Net.WebSockets.ManagedWebSocket.EnsureBufferContainsAsync(Int32 minimumRequiredBytes, CancellationToken cancellationToken, Boolean throwOnPrematureClosure)
+   at System.Net.WebSockets.ManagedWebSocket.ReceiveAsyncPrivate[TResult](Memory`1 payloadBuffer, CancellationToken cancellationToken)
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state)
+   at System.Threading.ThreadPool.<>c.<.cctor>b__87_0(Object state)
+   at System.Threading.Tasks.Sources.ManualResetValueTaskSourceCore`1.SignalCompletion()
+   at System.Runtime.CompilerServices.PoolingAsyncValueTaskMethodBuilder.SetResult()
+   at System.Net.WebSockets.ManagedWebSocket.EnsureBufferContainsAsync(Int32 minimumRequiredBytes, CancellationToken cancellationToken, Boolean throwOnPrematureClosure)
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state)
+   at System.Runtime.CompilerServices.TaskAwaiter.<>c.<OutputWaitEtwEvents>b__12_0(Action innerContinuation, Task innerTask)
+   at System.Runtime.CompilerServices.AsyncMethodBuilderCore.ContinuationWrapper.Invoke()
+   at System.Threading.Tasks.AwaitTaskContinuation.RunOrScheduleAction(Action action, Boolean allowInlining)
+   at System.Threading.Tasks.Task.RunContinuations(Object continuationObject)
+   at System.Threading.Tasks.Task.FinishContinuations()
+   at System.Threading.Tasks.Task`1.TrySetResult(TResult result)
+   at System.Runtime.CompilerServices.AsyncTaskMethodBuilder`1.SetExistingTaskResult(Task`1 task, TResult result)
+   at System.Runtime.CompilerServices.AsyncValueTaskMethodBuilder`1.SetResult(TResult result)
+   at System.Net.Http.HttpConnection.RawConnectionStream.ReadAsync(Memory`1 buffer, CancellationToken cancellationToken)
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state)
+   at System.Runtime.CompilerServices.AsyncTaskMethodBuilder`1.AsyncStateMachineBox`1.MoveNext(Thread threadPoolThread)
+   at System.Runtime.CompilerServices.TaskAwaiter.<>c.<OutputWaitEtwEvents>b__12_0(Action innerContinuation, Task innerTask)
+   at System.Runtime.CompilerServices.AsyncMethodBuilderCore.ContinuationWrapper.Invoke()
+   at System.Threading.Tasks.AwaitTaskContinuation.RunOrScheduleAction(Action action, Boolean allowInlining)
+   at System.Threading.Tasks.Task.RunContinuations(Object continuationObject)
+   at System.Threading.Tasks.Task.FinishContinuations()
+   at System.Threading.Tasks.Task`1.TrySetResult(TResult result)
+   at System.Runtime.CompilerServices.AsyncTaskMethodBuilder`1.SetExistingTaskResult(Task`1 task, TResult result)
+   at System.Runtime.CompilerServices.AsyncValueTaskMethodBuilder`1.SetResult(TResult result)
+   at System.Net.Http.HttpConnection.ReadBufferedAsyncCore(Memory`1 destination)
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state)
+   at System.Runtime.CompilerServices.AsyncTaskMethodBuilder`1.AsyncStateMachineBox`1.MoveNext(Thread threadPoolThread)
+   at System.Threading.ThreadPool.<>c.<.cctor>b__87_0(Object state)
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.InvokeContinuation(Action`1 continuation, Object state, Boolean forceAsync, Boolean requiresExecutionContextFlow)
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.OnCompleted(SocketAsyncEventArgs _)
+   at System.Net.Sockets.SocketAsyncEventArgs.OnCompletedInternal()
+   at System.Net.Sockets.SocketAsyncEventArgs.<>c.<.cctor>b__179_0(UInt32 errorCode, UInt32 numBytes, NativeOverlapped* nativeOverlapped)
+   at System.Threading.ThreadPoolBoundHandleOverlapped.CompletionCallback(UInt32 errorCode, UInt32 numBytes, NativeOverlapped* nativeOverlapped)
+   at System.Threading._IOCompletionCallback.PerformIOCompletionCallback(UInt32 errorCode, UInt32 numBytes, NativeOverlapped* pNativeOverlapped)
+--- End of stack trace from previous location ---
+
+   --- End of inner exception stack trace ---
+   at System.Net.Http.HttpConnection.ReadBufferedAsyncCore(Memory`1 destination)
+   at System.Net.Http.HttpConnection.RawConnectionStream.ReadAsync(Memory`1 buffer, CancellationToken cancellationToken)
+   at System.Net.WebSockets.ManagedWebSocket.EnsureBufferContainsAsync(Int32 minimumRequiredBytes, CancellationToken cancellationToken, Boolean throwOnPrematureClosure)
+   at System.Runtime.CompilerServices.PoolingAsyncValueTaskMethodBuilder`1.StateMachineBox`1.System.Threading.Tasks.Sources.IValueTaskSource.GetResult(Int16 token)
+   at System.Net.WebSockets.ManagedWebSocket.ReceiveAsyncPrivate[TResult](Memory`1 payloadBuffer, CancellationToken cancellationToken)
+   at System.Net.WebSockets.ManagedWebSocket.ReceiveAsyncPrivate[TResult](Memory`1 payloadBuffer, CancellationToken cancellationToken)
+   at System.Runtime.CompilerServices.PoolingAsyncValueTaskMethodBuilder`1.StateMachineBox`1.System.Threading.Tasks.Sources.IValueTaskSource<TResult>.GetResult(Int16 token)
+   at System.Threading.Tasks.ValueTask`1.ValueTaskSourceAsTask.<>c.<.cctor>b__4_0(Object state)
+   --- End of inner exception stack trace ---
+   at Microsoft.AspNetCore.SpaServices.Extensions.Proxy.SpaProxy.PumpWebSocket(WebSocket source, WebSocket destination, Int32 bufferSize, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.SpaServices.Extensions.Proxy.SpaProxy.AcceptProxyWebSocketRequest(HttpContext context, Uri destinationUri, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.SpaServices.Extensions.Proxy.SpaProxy.PerformProxyRequest(HttpContext context, HttpClient httpClient, Task`1 baseUriTask, CancellationToken applicationStoppingToken, Boolean proxy404s)
+   at Microsoft.AspNetCore.Builder.SpaProxyingExtensions.<>c__DisplayClass2_0.<<UseProxyToSpaDevelopmentServer>b__0>d.MoveNext()
+--- End of stack trace from previous location ---
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.HttpProtocol.ProcessRequests[TContext](IHttpApplication`1 application)
+2023-01-14 10:15:55.756 +01:00 [WRN] Get Account OK
+2023-01-14 10:15:57.295 +01:00 [WRN] Start trading market...
+2023-01-14 10:16:00.765 +01:00 [WRN] Call Prediction on BTCUSDT up 0.25621635/0.74378365
+2023-01-14 10:16:00.851 +01:00 [ERR] MLService UpdateML fail
+System.IO.FileNotFoundException: Could not find file 'C:\Users\sdubos\Downloads\BTCUSDT.jpeg'.
+File name: 'C:\Users\sdubos\Downloads\BTCUSDT.jpeg'
+   at System.IO.FileSystem.CopyFile(String sourceFullPath, String destFullPath, Boolean overwrite)
+   at System.IO.File.Copy(String sourceFileName, String destFileName, Boolean overwrite)
+   at MarginCoin.Service.MLService.ProcessImage(String imagePath) in C:\_Git\Dotnet\MarginCoin\Service\MLService.cs:line 157
+   at MarginCoin.Service.MLService.UpdateML() in C:\_Git\Dotnet\MarginCoin\Service\MLService.cs:line 90
+2023-01-14 10:16:05.659 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:16:06.171 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:16:06.876 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:16:07.616 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:16:08.849 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:16:09.870 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:16:10.626 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:16:11.626 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:16:12.653 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:16:13.642 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:16:14.641 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:16:15.613 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:16:16.670 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:16:17.619 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:16:18.607 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:16:19.602 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:16:20.623 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:16:22.122 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:16:22.857 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:16:23.613 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:16:24.593 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:16:25.892 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:16:26.871 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:16:27.842 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:16:28.860 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:16:29.601 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:16:30.856 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:16:31.877 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:16:32.868 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:16:33.867 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:16:34.870 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:16:35.659 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:16:36.847 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:16:38.018 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:16:38.902 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:16:39.521 +01:00 [WRN] Get Account OK
+2023-01-14 10:16:39.860 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:16:40.898 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:16:41.901 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:16:42.880 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:16:43.843 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:16:44.893 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:16:46.863 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:16:47.888 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:16:48.169 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:16:49.160 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:16:50.143 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:16:51.174 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:16:52.184 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:16:53.116 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:16:54.135 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:16:55.109 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:16:56.125 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:16:57.191 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:16:58.142 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:16:59.158 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:17:00.426 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:17:01.421 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:17:02.169 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:17:03.121 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:17:04.133 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:17:05.136 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:17:06.131 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:17:07.132 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:17:08.135 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:17:09.657 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:17:10.431 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:17:11.235 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:17:12.139 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:17:13.148 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:17:14.136 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:17:15.127 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:17:16.117 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:17:17.423 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:17:18.395 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:17:19.718 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:17:20.749 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:17:21.810 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:17:22.877 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:17:23.951 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:17:24.956 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:17:25.749 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:17:26.528 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:17:27.175 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:17:28.131 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:17:28.886 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:17:30.875 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:17:31.129 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:17:32.129 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:17:32.882 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:17:33.976 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:17:36.768 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:17:36.990 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:17:37.196 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:17:37.894 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:17:38.872 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:17:39.874 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:17:40.935 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:17:42.652 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:17:43.439 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:17:44.122 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:17:45.133 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:17:45.891 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:17:46.889 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:17:48.423 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:17:49.179 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:17:50.140 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:17:51.171 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:17:52.164 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:17:53.220 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:17:54.129 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:17:55.121 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:17:56.130 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:17:57.153 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:17:58.139 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:17:59.135 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:18:00.164 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:18:01.039 +01:00 [WRN] Get Account OK
+2023-01-14 10:18:01.407 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:18:02.392 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:18:03.184 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:18:04.150 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:18:05.236 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:18:06.154 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:18:08.026 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:18:08.669 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:18:09.492 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:18:10.559 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:18:11.957 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:18:12.574 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:18:13.818 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:18:14.534 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:18:15.465 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:18:16.395 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:18:17.176 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:18:18.200 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:18:19.450 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:18:20.469 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:18:21.587 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:18:22.587 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:18:23.931 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:18:24.962 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:18:26.672 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:19:19.193 +01:00 [WRN] MarginCoin, started!
+2023-01-14 10:19:33.396 +01:00 [WRN] Get Account OK
+2023-01-14 10:27:26.801 +01:00 [WRN] Start trading market...
+2023-01-14 10:27:35.293 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:27:36.097 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:27:36.322 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:27:37.281 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:27:38.213 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:27:38.703 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:27:39.742 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:27:41.948 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:27:42.171 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:27:42.998 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:27:43.953 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:27:45.693 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:27:46.505 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:27:47.212 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:27:47.972 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:27:48.940 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:27:49.938 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:27:50.974 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:27:51.985 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:27:53.244 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:27:54.487 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:27:55.518 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:27:56.503 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:27:57.231 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:27:58.259 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:28:00.206 +01:00 [WRN] Call BuyMarket TRXUSDT BadRequest
+2023-01-14 10:28:00.206 +01:00 [WRN] Call BuyMarket TRXUSDT Locked
+2023-01-14 10:28:00.271 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:28:00.498 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:28:00.838 +01:00 [WRN] Call Prediction on BNBUSDT down 0.9916313/0.008368652
+2023-01-14 10:28:01.086 +01:00 [WRN] Call Prediction on BTCUSDT down 0.6556336/0.34436643
+2023-01-14 10:28:01.343 +01:00 [WRN] Call Prediction on ETHUSDT down 0.91048276/0.089517236
+2023-01-14 10:28:01.607 +01:00 [WRN] Call Prediction on LTCUSDT down 0.979425/0.020574972
+2023-01-14 10:28:01.638 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:28:01.962 +01:00 [WRN] Call Prediction on TRXUSDT down 0.9889922/0.011007791
+2023-01-14 10:28:02.268 +01:00 [WRN] Call Prediction on XRPUSDT down 0.62796/0.3720399
+2023-01-14 10:28:02.409 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:28:03.187 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:28:04.204 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:28:05.424 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:28:06.466 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:28:07.207 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:28:08.445 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:28:09.414 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:28:10.410 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:28:11.422 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:28:12.426 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:28:13.429 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:28:14.187 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:28:15.161 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:28:16.177 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:28:17.427 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:28:18.194 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:28:19.152 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:28:20.427 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:28:21.441 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:28:22.465 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:28:23.434 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:28:24.433 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:28:25.437 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:28:26.212 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:28:27.214 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:28:28.196 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:28:29.188 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:28:30.168 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:28:31.167 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:28:31.910 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:28:33.242 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:28:34.444 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:28:35.210 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:28:36.177 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:28:37.167 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:28:38.178 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:28:39.428 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:29:10.457 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:29:43.389 +01:00 [WRN] MarginCoin, started!
+2023-01-14 10:29:56.630 +01:00 [WRN] Get Account OK
+2023-01-14 10:30:07.708 +01:00 [WRN] Start trading market...
+2023-01-14 10:30:26.650 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:30:26.983 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:30:27.738 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:30:28.235 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:30:29.113 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:30:29.798 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:30:30.309 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:30:31.074 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:30:31.825 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:30:32.441 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:30:33.121 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:30:33.634 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:30:34.371 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:30:34.914 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:30:35.690 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:30:36.221 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:30:36.710 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:30:37.250 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:30:37.739 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:30:38.521 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:30:39.139 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:30:39.185 +01:00 [WRN] Call Prediction on BNBUSDT down 0.9997882/0.00021177769
+2023-01-14 10:30:39.423 +01:00 [WRN] Call Prediction on BTCUSDT down 0.76923853/0.23076144
+2023-01-14 10:30:39.672 +01:00 [WRN] Call Prediction on ETHUSDT down 0.97949123/0.020508716
+2023-01-14 10:30:39.697 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:30:39.933 +01:00 [WRN] Call Prediction on LTCUSDT down 0.9935128/0.0064871567
+2023-01-14 10:30:40.178 +01:00 [WRN] Call Prediction on TRXUSDT down 0.9987476/0.0012524507
+2023-01-14 10:30:40.178 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:30:40.420 +01:00 [WRN] Call Prediction on XRPUSDT down 0.98633945/0.013660503
+2023-01-14 10:30:40.533 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:30:40.953 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:30:41.921 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:30:42.912 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:30:43.935 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:30:44.923 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:30:45.945 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:30:46.936 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:30:47.943 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:30:48.937 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:30:49.948 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:30:51.435 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:30:52.168 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:30:53.181 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:30:54.168 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:30:55.183 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:30:56.180 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:30:56.930 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:30:57.974 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:30:58.945 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:30:59.936 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:31:00.964 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:31:01.962 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:31:02.943 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:31:04.941 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:31:05.449 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:31:06.184 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:31:07.182 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:31:08.186 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:31:08.936 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:31:09.930 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:31:14.031 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:31:14.798 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:31:15.559 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:31:16.093 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:31:16.598 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:31:17.333 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:31:17.848 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:31:18.380 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:31:19.199 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:31:20.176 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:31:21.207 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:31:22.200 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:31:23.174 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:31:24.184 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:31:25.689 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:31:26.470 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:31:27.254 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:31:28.167 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:31:29.186 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:31:30.180 +01:00 [ERR]  ProcessMarketMatrice
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection. (Parameter 'index')
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at MarginCoin.Controllers.AutoTrade3Controller.ProcessMarketMatrice() in C:\_Git\Dotnet\MarginCoin\Controllers\AutoTrade3Controller.cs:line 278
+2023-01-14 10:46:43.381 +01:00 [WRN] MarginCoin, started!
+2023-01-14 10:47:24.887 +01:00 [WRN] Start trading market...
+2023-01-14 10:47:25.549 +01:00 [WRN] Get Account OK
+2023-01-14 10:47:59.986 +01:00 [WRN] Call BuyMarket TRXUSDT BadRequest
+2023-01-14 10:47:59.986 +01:00 [WRN] Call BuyMarket TRXUSDT Locked
+2023-01-14 10:49:03.214 +01:00 [WRN] Call BuyMarket TRXUSDT BadRequest
+2023-01-14 10:49:03.215 +01:00 [WRN] Call BuyMarket TRXUSDT Locked
+2023-01-14 10:52:28.289 +01:00 [WRN] Call BuyMarket TRXUSDT BadRequest
+2023-01-14 10:52:28.323 +01:00 [WRN] Call BuyMarket TRXUSDT Locked
+2023-01-14 10:53:03.978 +01:00 [WRN] MarginCoin, started!
+2023-01-14 10:53:11.668 +01:00 [WRN] Start trading market...
+2023-01-14 10:53:13.983 +01:00 [WRN] Get Account OK
+2023-01-14 10:53:27.440 +01:00 [WRN] Get Account OK
+2023-01-14 10:53:56.807 +01:00 [WRN] Get Account OK
+2023-01-14 10:54:29.290 +01:00 [WRN] Call SellMarket TRXUSDT BadRequest
+2023-01-14 10:54:35.981 +01:00 [WRN] Call SellMarket TRXUSDT BadRequest
+2023-01-14 10:54:49.104 +01:00 [WRN] Get Account OK
+2023-01-14 10:54:53.406 +01:00 [WRN] Get Account OK
+2023-01-14 10:54:58.066 +01:00 [WRN] Get Account OK
+2023-01-14 10:55:06.965 +01:00 [WRN] Get Account OK
+2023-01-14 10:55:24.682 +01:00 [WRN] Call BuyMarket TRXUSDT OK
+2023-01-14 10:55:26.244 +01:00 [WRN] Get Account OK
+2023-01-14 10:55:50.431 +01:00 [WRN] Call SellMarket TRXUSDT OK
+2023-01-14 10:55:57.526 +01:00 [WRN] Get Account OK
+2023-01-14 11:00:52.572 +01:00 [WRN] Call Prediction on BNBUSDT down 0.994165/0.005835038
+2023-01-14 11:00:52.793 +01:00 [WRN] Call Prediction on BTCUSDT down 0.88295186/0.11704817
+2023-01-14 11:00:53.033 +01:00 [WRN] Call Prediction on ETHUSDT down 0.98031646/0.01968359
+2023-01-14 11:00:53.259 +01:00 [WRN] Call Prediction on LTCUSDT down 0.99581534/0.0041847113
+2023-01-14 11:00:53.484 +01:00 [WRN] Call Prediction on TRXUSDT down 0.9974573/0.002542655
+2023-01-14 11:00:53.711 +01:00 [WRN] Call Prediction on XRPUSDT down 0.9731074/0.026892664
+2023-01-14 11:02:37.605 +01:00 [WRN] MarginCoin, started!
+2023-01-14 11:02:47.879 +01:00 [WRN] Get Account OK
+2023-01-14 11:02:48.451 +01:00 [WRN] Start trading market...
+2023-01-14 11:03:03.591 +01:00 [WRN] Call BuyMarket TRXUSDT BadRequest
+2023-01-14 11:03:04.119 +01:00 [WRN] Call BuyMarket TRXUSDT BadRequest
+2023-01-14 11:03:04.119 +01:00 [WRN] Call BuyMarket TRXUSDT Locked
+2023-01-14 11:03:16.873 +01:00 [WRN] Call Prediction on BNBUSDT down 0.994165/0.005835038
+2023-01-14 11:03:17.082 +01:00 [WRN] Call Prediction on BTCUSDT down 0.88295186/0.11704817
+2023-01-14 11:03:17.296 +01:00 [WRN] Call Prediction on ETHUSDT down 0.98031646/0.01968359
+2023-01-14 11:03:17.507 +01:00 [WRN] Call Prediction on LTCUSDT down 0.99581534/0.0041847113
+2023-01-14 11:03:17.721 +01:00 [WRN] Call Prediction on TRXUSDT down 0.9974573/0.002542655
+2023-01-14 11:03:17.956 +01:00 [WRN] Call Prediction on XRPUSDT down 0.9731074/0.026892664
+2023-01-14 11:08:42.165 +01:00 [WRN] MarginCoin, started!
+2023-01-14 11:08:57.451 +01:00 [WRN] Get Account OK
+2023-01-14 11:09:00.587 +01:00 [WRN] Get Account OK
+2023-01-14 11:09:05.217 +01:00 [WRN] Start trading market...
+2023-01-14 11:09:24.621 +01:00 [WRN] Get Account OK
+2023-01-14 11:09:34.999 +01:00 [WRN] Get Account OK
+2023-01-14 11:09:36.586 +01:00 [WRN] Call Prediction on BNBUSDT down 0.994165/0.005835038
+2023-01-14 11:09:37.048 +01:00 [WRN] Call Prediction on BTCUSDT down 0.88295186/0.11704817
+2023-01-14 11:09:37.343 +01:00 [WRN] Call Prediction on ETHUSDT down 0.98031646/0.01968359
+2023-01-14 11:09:37.590 +01:00 [WRN] Call Prediction on LTCUSDT down 0.99581534/0.0041847113
+2023-01-14 11:09:37.883 +01:00 [WRN] Call Prediction on TRXUSDT down 0.9974573/0.002542655
+2023-01-14 11:09:38.143 +01:00 [WRN] Call Prediction on XRPUSDT down 0.9731074/0.026892664
+2023-01-14 11:09:40.496 +01:00 [WRN] Call BuyMarket TRXUSDT BadRequest
+2023-01-14 11:09:41.495 +01:00 [WRN] Call BuyMarket TRXUSDT BadRequest
+2023-01-14 11:09:42.567 +01:00 [WRN] Call BuyMarket TRXUSDT BadRequest
+2023-01-14 11:09:42.567 +01:00 [WRN] Call BuyMarket TRXUSDT Locked
+2023-01-14 11:10:20.151 +01:00 [WRN] MarginCoin, started!
+2023-01-14 11:10:26.480 +01:00 [WRN] Start trading market...
+2023-01-14 11:10:31.497 +01:00 [WRN] Get Account OK
+2023-01-14 11:10:42.616 +01:00 [WRN] Get Account OK
+2023-01-14 11:10:53.506 +01:00 [WRN] Get Account OK
+2023-01-14 11:10:59.969 +01:00 [WRN] Call BuyMarket TRXUSDT BadRequest
+2023-01-14 11:11:00.980 +01:00 [WRN] Call BuyMarket TRXUSDT BadRequest
+2023-01-14 11:11:01.996 +01:00 [WRN] Call BuyMarket TRXUSDT OK
+2023-01-14 11:11:02.038 +01:00 [WRN] Get Account OK
+2023-01-14 11:11:03.712 +01:00 [WRN] Get Account OK
+2023-01-14 11:11:10.381 +01:00 [WRN] Call SellMarket TRXUSDT OK
+2023-01-14 11:11:17.437 +01:00 [WRN] Get Account OK
+2023-01-14 11:27:37.834 +01:00 [WRN] MarginCoin, started!
+2023-01-14 11:27:55.217 +01:00 [WRN] Get Account OK
+2023-01-14 11:42:24.771 +01:00 [WRN] MarginCoin, started!
+2023-01-14 11:42:38.584 +01:00 [WRN] Start trading market...
+2023-01-14 11:42:42.402 +01:00 [WRN] Get Account OK
+2023-01-14 11:42:51.461 +01:00 [WRN] Get Account OK
+2023-01-14 11:47:14.534 +01:00 [WRN] Call Prediction on BTCUSDT down 0.84460914/0.15539092
+2023-01-14 12:11:53.738 +01:00 [WRN] MarginCoin, started!
+2023-01-14 12:12:09.971 +01:00 [WRN] Get Account OK
+2023-01-14 12:12:37.872 +01:00 [WRN] MarginCoin, started!
+2023-01-14 12:12:50.612 +01:00 [WRN] Get Account OK
+2023-01-14 12:12:54.448 +01:00 [WRN] Start trading market...
+2023-01-14 12:13:42.799 +01:00 [WRN] Call Prediction on ADAUSDT down 0.9996505/0.00034947073
+2023-01-14 12:13:43.045 +01:00 [WRN] Call Prediction on BNBUSDT down 0.983008/0.016991965
+2023-01-14 12:13:43.312 +01:00 [WRN] Call Prediction on BTCUSDT up 0.0733069/0.92669314
+2023-01-14 12:14:14.789 +01:00 [WRN] Call Prediction on DOTUSDT down 0.993306/0.0066939853
+2023-01-14 12:14:15.286 +01:00 [WRN] Call Prediction on ETHUSDT down 0.9133664/0.08663365
+2023-01-14 12:14:15.561 +01:00 [WRN] Call Prediction on LTCUSDT down 0.9894784/0.010521582
+2023-01-14 12:14:15.850 +01:00 [WRN] Call Prediction on MANAUSDT down 0.5327013/0.46729878
+2023-01-14 12:14:18.758 +01:00 [WRN] Call Prediction on MATICUSDT up 0.12847857/0.8715214
+2023-01-14 12:14:20.326 +01:00 [WRN] Call Prediction on SOLUSDT down 0.9099982/0.090001844
+2023-01-14 12:14:22.209 +01:00 [WRN] Call Prediction on TRXUSDT down 0.918199/0.081801
+2023-01-14 12:14:22.494 +01:00 [WRN] Call Prediction on XRPUSDT down 0.99493355/0.0050664432
+2023-01-14 12:14:26.770 +01:00 [WRN] Get Account OK
+2023-01-14 12:24:12.831 +01:00 [WRN] Call Prediction on ADAUSDT down 0.9991793/0.0008207005
+2023-01-14 12:24:13.097 +01:00 [WRN] Call Prediction on BNBUSDT down 0.96220905/0.037790883
+2023-01-14 12:24:13.351 +01:00 [WRN] Call Prediction on BTCUSDT up 0.31373677/0.6862633
+2023-01-14 12:24:13.614 +01:00 [WRN] Call Prediction on DOTUSDT down 0.99891174/0.0010882735
+2023-01-14 12:24:13.873 +01:00 [WRN] Call Prediction on ETHUSDT down 0.98571026/0.01428975
+2023-01-14 12:24:14.133 +01:00 [WRN] Call Prediction on LTCUSDT down 0.99588287/0.004117145
+2023-01-14 12:24:14.411 +01:00 [WRN] Call Prediction on MANAUSDT down 0.7961044/0.20389569
+2023-01-14 12:24:14.694 +01:00 [WRN] Call Prediction on MATICUSDT up 0.23081826/0.7691817
+2023-01-14 12:24:14.954 +01:00 [WRN] Call Prediction on SOLUSDT down 0.98520327/0.014796678
+2023-01-14 12:24:15.210 +01:00 [WRN] Call Prediction on TRXUSDT down 0.5211545/0.47884554
+2023-01-14 12:24:15.488 +01:00 [WRN] Call Prediction on XRPUSDT down 0.98397726/0.016022678
+2023-01-14 12:41:12.799 +01:00 [WRN] Call Prediction on ADAUSDT down 0.9962767/0.0037232894
+2023-01-14 12:41:13.062 +01:00 [WRN] Call Prediction on BNBUSDT up 0.46613103/0.533869
+2023-01-14 12:41:13.307 +01:00 [WRN] Call Prediction on BTCUSDT up 0.0006803001/0.9993197
+2023-01-14 12:41:13.584 +01:00 [WRN] Call Prediction on DOTUSDT up 0.3556055/0.64439446
+2023-01-14 12:41:13.864 +01:00 [WRN] Call Prediction on ETHUSDT down 0.8009821/0.19901785
+2023-01-14 12:41:14.113 +01:00 [WRN] Call Prediction on LTCUSDT down 0.8240623/0.17593773
+2023-01-14 12:41:14.360 +01:00 [WRN] Call Prediction on MANAUSDT down 0.82501626/0.17498368
+2023-01-14 12:41:14.628 +01:00 [WRN] Call Prediction on MATICUSDT up 0.009963014/0.99003696
+2023-01-14 12:41:14.869 +01:00 [WRN] Call Prediction on SOLUSDT down 0.76914674/0.2308533
+2023-01-14 12:41:15.108 +01:00 [WRN] Call Prediction on TRXUSDT down 0.8694588/0.13054119
+2023-01-14 12:41:15.356 +01:00 [WRN] Call Prediction on XRPUSDT down 0.97424024/0.02575977
+2023-01-14 12:43:14.835 +01:00 [WRN] MarginCoin, started!
+2023-01-14 12:43:31.381 +01:00 [WRN] Start trading market...
+2023-01-14 12:43:32.004 +01:00 [WRN] Get Account OK
+2023-01-14 12:43:47.881 +01:00 [WRN] Get Account OK
