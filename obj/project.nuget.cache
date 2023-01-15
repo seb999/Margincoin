@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "hgfDKlLSWj9toRLywC1350SjTZFeEeHD3zjLg1cqhu209mpYvtrtL5uEnaOWD/ikck3Zh4Q9SO8/LLTGqdU6dg==",
+  "dgSpecHash": "nm5IUudMt/6SkQyn7kZJ/llb3SJmpp84kuz7+uOM0/Kxxm8aaHfBIlnSwK5FWYCQqtbNNSVwe8L5adTjp/4K9A==",
   "success": true,
-  "projectFilePath": "C:\\_Git\\Dotnet\\Margincoin\\MarginCoin.csproj",
+  "projectFilePath": "C:\\_Git\\Dotnet\\MarginCoin\\MarginCoin.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\sdubos\\.nuget\\packages\\binance.spot\\1.4.0\\binance.spot.1.4.0.nupkg.sha512",
     "C:\\Users\\sdubos\\.nuget\\packages\\cryptowatcher.ta-lib-core\\1.0.0\\cryptowatcher.ta-lib-core.1.0.0.nupkg.sha512",

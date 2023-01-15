@@ -11,6 +11,8 @@ using static MarginCoin.Class.Prediction;
 using System.Text.Json;
 using Microsoft.Extensions.Logging;
 using MarginCoin.Service;
+using System.Linq;
+using System.Collections.Generic;
 
 namespace MarginCoin.Controllers
 {
@@ -40,13 +42,7 @@ namespace MarginCoin.Controllers
             System.Net.HttpStatusCode httpStatusCode = System.Net.HttpStatusCode.NoContent;
 
             //My asset and quantity available from Binance wallet
-            //BinanceAccount myAccount = BinanceHelper.Account(ref httpStatusCode);
-             BinanceAccount myAccount =_binanceService.Account(ref httpStatusCode);
-
-             if(httpStatusCode != System.Net.HttpStatusCode.OK)
-             {
-                 _logger.LogWarning($"Call Binance {MyEnum.BinanceApiCall.Account} summary : " + httpStatusCode);
-             }
+            BinanceAccount myAccount =_binanceService.Account(ref httpStatusCode);
 
             if (httpStatusCode == System.Net.HttpStatusCode.NotFound) _hub.Clients.All.SendAsync(MyEnum.BinanceHttpError.BinanceAccessFaulty.ToString());
             if (httpStatusCode == System.Net.HttpStatusCode.NoContent) _hub.Clients.All.SendAsync(MyEnum.BinanceHttpError.BinanceAccessFaulty.ToString());
@@ -54,6 +50,23 @@ namespace MarginCoin.Controllers
             if (httpStatusCode == System.Net.HttpStatusCode.BadRequest) _hub.Clients.All.SendAsync(MyEnum.BinanceHttpError.BinanceCheckAllowedIP.ToString());
             if (httpStatusCode == System.Net.HttpStatusCode.Unauthorized) _hub.Clients.All.SendAsync(MyEnum.BinanceHttpError.BinanceCheckAllowedIP.ToString());
             if (myAccount == null) return null;
+
+            //Get list of symbol to monitor from DB
+            List<string> dbSymbolList = Globals.fullSymbolList ? _appDbContext.Symbol.Where(p => p.IsOnProd != 0).Select(p => p.SymbolName).ToList()
+                                                                : _appDbContext.Symbol.Where(p => p.IsOnTest != 0).Select(p => p.SymbolName).ToList();
+           
+            //Remove what is not in the db list
+            myAccount.balances = myAccount.balances.Where(p => dbSymbolList.Any(p2 => p2.Replace("USDT", "") == p.asset || p.asset == "USDT")).ToList();
+
+            //Add what is not from the db list
+            foreach (var item in dbSymbolList)
+            {
+                if (myAccount.balances.Where(p => p.asset == item.Replace("USDT", "")).FirstOrDefault() == null)
+                {
+                    myAccount.balances.Add(new balances() { asset = item.Replace("USDT", ""), free = "0", locked = "0" });
+                }
+            }
+ 
             return myAccount;
         }
 

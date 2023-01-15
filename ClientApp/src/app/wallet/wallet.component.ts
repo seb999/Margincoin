@@ -125,8 +125,8 @@ export class WalletComponent {
               this.orderList[index].profit = (candle.c - order.openPrice) * order.quantity;
             }
           });
-          this.calculateTotal();
         });
+        this.calculateTotal();
         setTimeout(() => { this.showMessageInfo = false }, 700);
       }
 
@@ -222,11 +222,13 @@ export class WalletComponent {
   }
 
   calculateTotal() {
+    console.log("calcul profit");
     this.totalProfit = 0;
     if (this.orderList.length > 0) {
       this.totalProfit = this.orderList.map(a => (a.profit)).reduce(function (a, b) {
         if (a != 0) return a + b;
       });
+      console.log( this.totalProfit);
     }
   }
 

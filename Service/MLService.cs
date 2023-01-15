@@ -25,6 +25,8 @@ namespace MarginCoin.Service
         private System.Timers.Timer MLTimer = new System.Timers.Timer();
         public List<MLPrediction> MLPredList { get; set; }
 
+        private bool MLStarted = false;
+
         public MLService(ILogger<MLService> logger,
             IHubContext<SignalRHub> hub)
         {
@@ -39,12 +41,10 @@ namespace MarginCoin.Service
 
         public void ActivateML()
         {
+            MLStarted = true;
             MLTimer.Interval = 60000; //every min
             MLTimer.Elapsed += new ElapsedEventHandler(MLTimer_Elapsed);
             MLTimer.Start();
-
-            //we do a first call at startup to get data
-             _hub.Clients.All.SendAsync("exportChart");
         }
 
         public void StopML()
@@ -54,9 +54,13 @@ namespace MarginCoin.Service
 
         private void MLTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
-
-            //for debug 
-           // _hub.Clients.All.SendAsync("exportChart");
+            if(MLStarted)
+            {
+                MLStarted = false;
+                //we do a first call at startup to get data
+                _logger.LogDebug($"Initial call for ExportChart UI");
+                _hub.Clients.All.SendAsync("exportChart");
+            }
 
             //Export charts
             if (Globals.isTradingOpen
@@ -65,7 +69,7 @@ namespace MarginCoin.Service
                 || DateTime.Now.Minute == 30
                 || DateTime.Now.Minute == 45))
             {
-                //CleanImageFolder();
+                _logger.LogDebug($"New call at {DateTime.Now.Minute} for ExportChart UI");
                 _hub.Clients.All.SendAsync("exportChart");
             }
         }
@@ -115,16 +119,6 @@ namespace MarginCoin.Service
                 Image myImage = img.Clone(x=>x.Crop(new Rectangle(img.Width-200, img.Height-400, 180, 200)));
                 myImage.Save(filename);
             }
-
-            //Code that works only on Windows
-            // var myImage = Image.FromFile(filename);
-            // var myBitmap = new Bitmap(myImage).Clone(new System.Drawing.Rectangle(myImage.Width-195 ,myImage.Height-410, 180, 160), myImage.PixelFormat);
-
-            // myImage.Dispose();
-            // if (File.Exists(filename)) File.Delete(filename);
-
-            // myBitmap.Save(filename);
-            // myBitmap.Dispose();
         }
 
         private void ProcessImage(string imagePath)

@@ -11,18 +11,26 @@ namespace MarginCoin.Misc
     {
         public static T deserializeHelper<T>(string jsonStream)
         {
-            JsonSerializerOptions jsonSerializerOptions = new JsonSerializerOptions
+            try
             {
-                NumberHandling = System.Text.Json.Serialization.JsonNumberHandling.AllowReadingFromString
-            };
+                JsonSerializerOptions jsonSerializerOptions = new JsonSerializerOptions
+                {
+                    NumberHandling = System.Text.Json.Serialization.JsonNumberHandling.AllowReadingFromString
+                };
 
-            return JsonSerializer.Deserialize<T>(jsonStream, jsonSerializerOptions);
+                return JsonSerializer.Deserialize<T>(jsonStream, jsonSerializerOptions);
+            }
+            catch (System.Exception ex)
+            {
+                Console.WriteLine(ex);
+                throw;
+            }
         }
 
         public static double ToDouble(string myString)
         {
             myString = myString.Replace(",", ".");
             return double.Parse(myString, CultureInfo.InvariantCulture);
-        } 
+        }
     }
 }

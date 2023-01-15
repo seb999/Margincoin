@@ -79,7 +79,7 @@ namespace MarginCoin.Service
                 }
                 else
                 {
-                    _logger.LogWarning(httpStatusCode.ToString(), "Get " + MyEnum.BinanceApiCall.Account);
+                    _logger.LogWarning($"Get {MyEnum.BinanceApiCall.Account} {httpStatusCode.ToString()}");
                     return null;
                 }
             }

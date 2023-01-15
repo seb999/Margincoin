@@ -16,5 +16,7 @@ public static class Globals
 
     // To debug and force openeing a trade 
     public static bool swallowOneOrder = false;
+
+    public static bool fullSymbolList;
 }
 

@@ -40,16 +40,16 @@ namespace MarginCoin.Controllers
         ////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////------------SETTINGS----------/////////////////////////////////////////////
         ////////////////////////////////////////////////////////////////////////////////////////////////////////
-        string interval = "30m";   //1h seem to give better result
-        int numberPreviousCandle = 2;
-        double stopLose = 0.8;
-        double takeProfit = 1;
+        private readonly string interval = "15m";   //1h seem to give better result
+        private readonly int numberPreviousCandle = 2;
+        private readonly double stopLose = 0.8;
+        private readonly double takeProfit = 1;
         //max trade that can be open
-        int maxOpenTrade = 5;
+        private readonly int maxOpenTrade = 5;
         //Max amount to invest for each trade
-        int quoteOrderQty = 1500;
+        private readonly int quoteOrderQty = 2000;
         //Select short list of symbol or full list(on test server on 6 symbols allowed)
-        bool fullSymbolList = true;
+        private readonly bool fullSymbolList = true;
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////
         ///////////////////////////////-----------Constructor----------/////////////////////////////////////////
@@ -66,6 +66,9 @@ namespace MarginCoin.Controllers
             _appDbContext = appDbContext;
             _logger = logger;
             _mlService = mLService;
+
+            //For cross reference between controllers
+            Globals.fullSymbolList = fullSymbolList;
         }
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -80,7 +83,7 @@ namespace MarginCoin.Controllers
             _mlService.CleanImageFolder();
             _mlService.ActivateML();
 
-            //Get the list of symbol that we agree to trade from DB
+            //Get the list of symbol to trade from DB
             mySymbolList = GetSymbolList();
 
             //Get historic candles and open a webSocket for each symbol in my list
@@ -215,9 +218,10 @@ namespace MarginCoin.Controllers
             string dataResult = "";
 
             ws1.OnMessageReceived(
-                (data) =>
+                async (data) =>
             {
                 dataResult += data;
+                //Concatain until binance JSON is completed
                 if (dataResult.Contains("}]"))
                 {
                     if (dataResult.Length > (dataResult.IndexOf("]") + 1))
@@ -226,8 +230,9 @@ namespace MarginCoin.Controllers
                     }
 
                     List<MarketStream> marketStreamList = Helper.deserializeHelper<List<MarketStream>>(dataResult);
-                    marketStreamList = marketStreamList.Where(p => p.s.Contains("USDT") && !p.s.Contains("DOWNUSDT")).Select(p => p).OrderByDescending(p => p.P).ToList();
-
+                    dataResult = "";  //we clean it immediatly to avoid a bug on new data coming
+                    
+                    marketStreamList = marketStreamList.Where(p => p.s.Contains("USDT")).Select(p => p).OrderByDescending(p => p.P).ToList();
                     AutotradeHelper.BufferMarketStream(marketStreamList, ref marketStreamOnSpot);
 
                     nbrUp = marketStreamOnSpot.Where(pred => pred.P >= 0).Count();
@@ -235,12 +240,10 @@ namespace MarginCoin.Controllers
 
                     if (Globals.isTradingOpen)
                     {
-                        ProcessMarketMatrice();
+                       await ProcessMarketMatrice();
                     }
-
-                    dataResult = "";
                 }
-                return Task.CompletedTask;
+                //return Task.CompletedTask;
 
             }, CancellationToken.None);
 
@@ -258,7 +261,7 @@ namespace MarginCoin.Controllers
         ////////////////////////////////////////////////////////////////////////////////////////////////////////
         #region Algo
 
-        private void ProcessMarketMatrice()
+        private async Task<string> ProcessMarketMatrice()
         {
             try
             {
@@ -272,11 +275,9 @@ namespace MarginCoin.Controllers
                 marketStreamOnSpot = marketStreamOnSpot.Where(p => mySymbolList.Any(p1 => p1 == p.s)).OrderByDescending(p => p.P).ToList();
 
                 //Send last data to frontend
-                _hub.Clients.All.SendAsync("trading", JsonSerializer.Serialize(marketStreamOnSpot));
+                await _hub.Clients.All.SendAsync("trading", JsonSerializer.Serialize(marketStreamOnSpot));
 
-                if (activeOrderList.Count == maxOpenTrade) return;
-
-               
+                if (activeOrderList.Count == maxOpenTrade) return "";
 
                 //check candle (indicators, etc, not on hold ) and invest
                 for (int i = 0; i < maxOpenTrade - activeOrderList.Count; i++)
@@ -329,11 +330,12 @@ namespace MarginCoin.Controllers
                         }
                     }
                 }
+                return "";
             }
             catch (System.Exception e)
             {
                 _logger.LogError(e, " ProcessMarketMatrice");
-                return;
+                return ""; 
             }
         }
 
@@ -371,7 +373,7 @@ namespace MarginCoin.Controllers
 
             //4 - RSI should be lower than 72 or RSI lower 80 if we already trade the coin
             //if (symbolCandle.Last().Rsi < 56)
-            if (symbolCandle.Last().Rsi < 75)
+            if (symbolCandle.Last().Rsi > 59)
             {
                 return true;
             }
