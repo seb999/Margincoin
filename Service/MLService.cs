@@ -5,11 +5,8 @@ using System.Linq;
 using System.Timers;
 using MarginCoin.Misc;
 using MarginCoin.MLClass;
-using MarginCoin.Model;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
-
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Processing;
 
@@ -20,6 +17,7 @@ namespace MarginCoin.Service
         private readonly string downloadFolder;
         private readonly string screenShotFolder;
         private readonly string imageFolder;
+        private readonly List<int> reccurence;
         private ILogger _logger;
         private IHubContext<SignalRHub> _hub;
         private System.Timers.Timer MLTimer = new System.Timers.Timer();
@@ -37,6 +35,7 @@ namespace MarginCoin.Service
             downloadFolder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + @"/Downloads";
             screenShotFolder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + @"/Downloads/MCModel";
             imageFolder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + @"/Downloads/MCImage";
+            reccurence = new List<int> { 0, 10, 20, 30, 40, 50};
         }
 
         public void ActivateML()
@@ -54,20 +53,15 @@ namespace MarginCoin.Service
 
         private void MLTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
-            if(MLStarted)
+            if (MLStarted)
             {
                 MLStarted = false;
-                //we do a first call at startup to get data
-                _logger.LogDebug($"Initial call for ExportChart UI");
+                 _logger.LogDebug($"Initial call for ExportChart UI");
                 _hub.Clients.All.SendAsync("exportChart");
             }
 
             //Export charts
-            if (Globals.isTradingOpen
-                && (DateTime.Now.Minute == 0
-                || DateTime.Now.Minute == 15
-                || DateTime.Now.Minute == 30
-                || DateTime.Now.Minute == 45))
+            if (Globals.isTradingOpen && reccurence.Contains(DateTime.Now.Minute))
             {
                 _logger.LogDebug($"New call at {DateTime.Now.Minute} for ExportChart UI");
                 _hub.Clients.All.SendAsync("exportChart");
@@ -93,6 +87,7 @@ namespace MarginCoin.Service
                     //Test image with ML algo and store result in a list
                     ProcessImage(imagePath);
                 }
+                 _logger.LogWarning($"----------------ML Updated---------------------");
             }
             catch (System.Exception e)
             {
@@ -148,7 +143,7 @@ namespace MarginCoin.Service
                 PredictedLabel = predictionResult.PredictedLabel
             });
 
-            File.Copy(imagePath, Path.Combine(imageFolder, Path.GetFileNameWithoutExtension(imagePath) + DateTime.Now.Year + DateTime.Now.Month + DateTime.Now.Day + "-" + DateTime.Now.Hour + DateTime.Now.Minute + Path.GetExtension(imagePath)), true);
+            //File.Copy(imagePath, Path.Combine(imageFolder, Path.GetFileNameWithoutExtension(imagePath) + DateTime.Now.Year + DateTime.Now.Month + DateTime.Now.Day + "-" + DateTime.Now.Hour + DateTime.Now.Minute + Path.GetExtension(imagePath)), true);
             File.Delete(imagePath);
         }
     }

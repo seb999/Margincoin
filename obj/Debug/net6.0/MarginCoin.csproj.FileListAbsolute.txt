@@ -116,3 +116,5 @@ C:\_Git\Dotnet\MarginCoin\bin\Debug\net6.0\runtimes\osx-x64\native\libtensorflow
 C:\_Git\Dotnet\MarginCoin\bin\Debug\net6.0\runtimes\osx-x64\native\libtensorflow_framework.2.dylib
 C:\_Git\Dotnet\MarginCoin\bin\Debug\net6.0\runtimes\win-x64\native\tensorflow.dll
 C:\_Git\Dotnet\MarginCoin\bin\Debug\net6.0\SixLabors.ImageSharp.dll
+C:\_Git\Dotnet\MarginCoin\bin\Debug\net6.0\Binance.Net.dll
+C:\_Git\Dotnet\MarginCoin\bin\Debug\net6.0\CryptoExchange.Net.dll

@@ -2,6 +2,22 @@
   "version": 3,
   "targets": {
     "net6.0": {
+      "Binance.Net/8.3.0": {
+        "type": "package",
+        "dependencies": {
+          "CryptoExchange.Net": "5.3.0"
+        },
+        "compile": {
+          "lib/netstandard2.1/Binance.Net.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/netstandard2.1/Binance.Net.dll": {
+            "related": ".xml"
+          }
+        }
+      },
       "Binance.Spot/1.4.0": {
         "type": "package",
         "dependencies": {
@@ -20,6 +36,24 @@
             "related": ".xml"
           },
           "lib/netstandard2.0/Spot.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "CryptoExchange.Net/5.3.0": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "3.1.0",
+          "Microsoft.Extensions.Logging.Abstractions": "3.1.0",
+          "Newtonsoft.Json": "13.0.1"
+        },
+        "compile": {
+          "lib/netstandard2.1/CryptoExchange.Net.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/netstandard2.1/CryptoExchange.Net.dll": {
             "related": ".xml"
           }
         }
@@ -1601,6 +1635,22 @@
     }
   },
   "libraries": {
+    "Binance.Net/8.3.0": {
+      "sha512": "z4M7A0ubtNGBmcvJ0vkYggwkxXZzBm7912dkEMVkn3cTzCzUgbnXazgYBPv74pEnPONTFHWZ4KQeoPyuk0RiIg==",
+      "type": "package",
+      "path": "binance.net/8.3.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "binance.net.8.3.0.nupkg.sha512",
+        "binance.net.nuspec",
+        "icon.png",
+        "lib/netstandard2.0/Binance.Net.dll",
+        "lib/netstandard2.0/Binance.Net.xml",
+        "lib/netstandard2.1/Binance.Net.dll",
+        "lib/netstandard2.1/Binance.Net.xml"
+      ]
+    },
     "Binance.Spot/1.4.0": {
       "sha512": "aSIonJCGfuAabqn/fiHLq0R4UQ+nTaGLy86+k5MXHb+BAFP6u5c7ncA0w92WsGnKrbf0ImOA8AS8ZSsCDIuRzw==",
       "type": "package",
@@ -1618,6 +1668,21 @@
         "lib/netstandard2.0/Common.xml",
         "lib/netstandard2.0/Spot.dll",
         "lib/netstandard2.0/Spot.xml"
+      ]
+    },
+    "CryptoExchange.Net/5.3.0": {
+      "sha512": "aQI/+ImbDjPrd4Y+1ewANju9QQdUhqsg3Bk+0mF0YM7+hzxLuimI3u8Y8Ue2M75sP4DUvdAAessfCd83fjEuPw==",
+      "type": "package",
+      "path": "cryptoexchange.net/5.3.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "cryptoexchange.net.5.3.0.nupkg.sha512",
+        "cryptoexchange.net.nuspec",
+        "lib/netstandard2.0/CryptoExchange.Net.dll",
+        "lib/netstandard2.0/CryptoExchange.Net.xml",
+        "lib/netstandard2.1/CryptoExchange.Net.dll",
+        "lib/netstandard2.1/CryptoExchange.Net.xml"
       ]
     },
     "Cryptowatcher.TA-LIb-Core/1.0.0": {
@@ -3814,6 +3879,7 @@
   },
   "projectFileDependencyGroups": {
     "net6.0": [
+      "Binance.Net >= 8.3.0",
       "Binance.Spot >= 1.4.0",
       "Cryptowatcher.TA-LIb-Core >= 1.0.0",
       "Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore >= 6.0.12",
@@ -3877,6 +3943,10 @@
       "net6.0": {
         "targetAlias": "net6.0",
         "dependencies": {
+          "Binance.Net": {
+            "target": "Package",
+            "version": "[8.3.0, )"
+          },
           "Binance.Spot": {
             "target": "Package",
             "version": "[1.4.0, )"

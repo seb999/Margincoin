@@ -1,10 +1,12 @@
 {
   "version": 2,
-  "dgSpecHash": "nm5IUudMt/6SkQyn7kZJ/llb3SJmpp84kuz7+uOM0/Kxxm8aaHfBIlnSwK5FWYCQqtbNNSVwe8L5adTjp/4K9A==",
+  "dgSpecHash": "SrO77nBzHI2HvYk+xCA8zgJsyaT1BLCDZzfPBmJiA+cBfU8EjPMB6hWQGyfl5J8f8WBAWPvhU4J28Mt5XsK+ow==",
   "success": true,
-  "projectFilePath": "C:\\_Git\\Dotnet\\MarginCoin\\MarginCoin.csproj",
+  "projectFilePath": "C:\\_Git\\Dotnet\\Margincoin\\MarginCoin.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\sdubos\\.nuget\\packages\\binance.net\\8.3.0\\binance.net.8.3.0.nupkg.sha512",
     "C:\\Users\\sdubos\\.nuget\\packages\\binance.spot\\1.4.0\\binance.spot.1.4.0.nupkg.sha512",
+    "C:\\Users\\sdubos\\.nuget\\packages\\cryptoexchange.net\\5.3.0\\cryptoexchange.net.5.3.0.nupkg.sha512",
     "C:\\Users\\sdubos\\.nuget\\packages\\cryptowatcher.ta-lib-core\\1.0.0\\cryptowatcher.ta-lib-core.1.0.0.nupkg.sha512",
     "C:\\Users\\sdubos\\.nuget\\packages\\google.protobuf\\3.19.4\\google.protobuf.3.19.4.nupkg.sha512",
     "C:\\Users\\sdubos\\.nuget\\packages\\microsoft.aspnetcore.cryptography.internal\\6.0.12\\microsoft.aspnetcore.cryptography.internal.6.0.12.nupkg.sha512",

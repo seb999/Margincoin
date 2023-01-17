@@ -164,6 +164,10 @@ export class WalletComponent {
         this.exportChart();
       }
 
+      if (this.serverMsg.msgName == BackEndMessage.webSocketStopped) {
+        this.trade();
+      }
+
       if (this.serverMsg.msgName == BackEndMessage.apiAccessFaulty
         || this.serverMsg.msgName == BackEndMessage.apiTooManyRequest
         || this.serverMsg.msgName == BackEndMessage.apiCheckAllowedIP
@@ -432,7 +436,7 @@ export class WalletComponent {
   async displayHighstock() {
     let chartHeight = '';
     this.ohlc = null;
-    this.ohlc = await this.orderDetailHelper.getIntradayData(this.displaySymbol, 100, this.interval);
+    this.ohlc = await this.orderDetailHelper.getIntradayData(this.displaySymbol, 75, this.interval);
 
     let chartData = [] as any;
     let volume = [] as any;

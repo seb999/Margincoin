@@ -14,6 +14,7 @@
 
   <ItemGroup>
     <PackageReference Include="Binance.Spot" Version="1.4.0" />
+    <PackageReference Include="Binance.Net" Version="8.3.0" />
     <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="6.0.12" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.12" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.12" />
@@ -38,6 +39,10 @@
     <Content Remove="$(SpaRoot)**" />
     <None Remove="$(SpaRoot)**" />
     <None Include="$(SpaRoot)**" Exclude="$(SpaRoot)node_modules\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="logs\" />
   </ItemGroup>
 
   <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">

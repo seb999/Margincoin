@@ -65,6 +65,11 @@ export class SignalRService {
             return this.eventMessage.emit(serverMsg);
         });
 
+      this.hubConnection.on(BackEndMessage.webSocketStopped, () => {
+        let serverMsg: ServerMsg = { msgName: BackEndMessage.webSocketStopped };
+        return this.eventMessage.emit(serverMsg);
+      });
+
         this.hubConnection.on(BackEndMessage.apiTooManyRequest, () => {
             let serverMsg: ServerMsg = { msgName: BackEndMessage.apiTooManyRequest};
             return this.eventMessage.emit(serverMsg);

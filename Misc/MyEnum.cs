@@ -8,6 +8,7 @@ namespace MarginCoin.Misc
             BinanceTooManyRequest,
             BinanceCheckAllowedIP,
             BinanceSellOrderExpired,
+            WebSocketStopped,
         }
 
         public enum BinanceApiCall
