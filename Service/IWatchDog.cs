@@ -6,7 +6,7 @@ namespace MarginCoin.Service
     {
         bool IsWebsocketSpotDown { get; set; }
 
-        void CallMethod(MyMethod myMethod);
+        void InitWatchDog(MyMethod myMethod);
         void Clear();
     }
 }

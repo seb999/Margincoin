@@ -27,8 +27,7 @@ namespace MarginCoin
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-           
-        //Add here dependency injection services
+            //Add here dependency injection services
             services.AddScoped<IBinanceService, BinanceService>();
             services.AddSingleton<IMLService, MLService>();
             services.AddSingleton<IWatchDog, WatchDog>();
@@ -66,9 +65,10 @@ namespace MarginCoin
                 app.UseHsts();
             }
 
-            app.UseSerilogRequestLogging(); 
+            app.UseSerilogRequestLogging();
+
             app.UseWebSockets();
-            var webSocketOptions = new WebSocketOptions(){KeepAliveInterval = TimeSpan.FromSeconds(600)};
+            var webSocketOptions = new WebSocketOptions() { KeepAliveInterval = TimeSpan.FromSeconds(180) };
             app.UseWebSockets(webSocketOptions);
 
             app.UseHttpsRedirection();
@@ -83,7 +83,8 @@ namespace MarginCoin
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapHub<SignalRHub>("/Signalr");
-                
+
+
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller}/{action=Index}/{id?}");
@@ -102,13 +103,13 @@ namespace MarginCoin
                     spa.UseProxyToSpaDevelopmentServer("http://localhost:4201");
                 }
 
-                 if (env.IsProduction())
+                if (env.IsProduction())
                 {
-                     spa.UseProxyToSpaDevelopmentServer("http://localhost:4201");
+                    spa.UseProxyToSpaDevelopmentServer("http://localhost:4201");
                 }
             });
 
-           
+
         }
     }
 }

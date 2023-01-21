@@ -11,6 +11,47 @@ namespace MarginCoin.Misc
 {
     public static class AutotradeHelper
     {
+        /// <summary>
+        /// Return change in % from a list of candle
+        /// Taking the lower for a upper trend or Higher for down trend
+        /// </summary>
+        /// <param name="stream">The stream to get last value c</param>
+        /// <param name="candleMatrice">The list of candle</param>
+        /// <returns></returns>
+        public static double CalculPourcentChange(StreamData stream, List<Candle> candleMatrice)
+        {
+            var min = candleMatrice.Min(p => p.c);
+            var max = candleMatrice.Max(p => p.c);
+            if (stream.k.c > min)
+            {
+                return ((stream.k.c - candleMatrice.Min(p => p.c)) / stream.k.c) * 100;
+            }
+            if (stream.k.c < max)
+            {
+                return ((stream.k.c - candleMatrice.Min(p => p.c)) / stream.k.c) * 100;
+            }
+            return 0;
+        }
+
+        /// <summary>
+        /// Return how many candle back we have to go to calculate P (pourcentage change)
+        /// </summary>
+        /// <param name="tradingInterval">The interval for trading ex: 1h, 30m, 15m</param>
+        /// <param name="backTimelineHours">The number of hours back we want to use</param>
+        /// <returns></returns>
+        public static int NumberOfBackCandle(string tradingInterval, int backTimelineHours)
+        {
+            switch (tradingInterval.Substring(tradingInterval.Length - 1))
+            {
+                case "h":
+                    return int.Parse(tradingInterval.Remove(1));
+                case "m":
+                    return backTimelineHours * 60 / int.Parse(tradingInterval.Remove(tradingInterval.Length - 1));
+                default:
+                    return 0;
+            }
+        }
+
         //The stream just contain symbol that changed from t-1, we buffer it to get all symbol changed or not changed
         internal static void BufferMarketStream(List<MarketStream> marketStreamList, ref List<MarketStream> buffer)
         {

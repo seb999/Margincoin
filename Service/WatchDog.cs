@@ -15,7 +15,7 @@ namespace MarginCoin.Service
             IsWebsocketSpotDown = false;
         }
 
-        public void CallMethod(MyMethod myMethod)
+        public void InitWatchDog(MyMethod myMethod)
         {
             _myMethod = myMethod;
             _timer = new Timer(60000); // check every minutes
@@ -32,7 +32,6 @@ namespace MarginCoin.Service
         private void _timer_Elapsed(object sender, ElapsedEventArgs e)
         {
             _myMethod();
-           // _timer.Stop();
         }
     }
 }

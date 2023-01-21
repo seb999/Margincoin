@@ -226,13 +226,11 @@ export class WalletComponent {
   }
 
   calculateTotal() {
-    console.log("calcul profit");
     this.totalProfit = 0;
     if (this.orderList.length > 0) {
       this.totalProfit = this.orderList.map(a => (a.profit)).reduce(function (a, b) {
         if (a != 0) return a + b;
       });
-      console.log( this.totalProfit);
     }
   }
 
@@ -302,7 +300,6 @@ export class WalletComponent {
   }
 
   async closeTrade(orderId, lastPrice): Promise<any> {
-    console.log(orderId);
     const httpSetting: HttpSettings = {
       method: 'GET',
       url: location.origin + '/api/AutoTrade3/CloseTrade/' + orderId + "/" + lastPrice,
@@ -378,6 +375,7 @@ export class WalletComponent {
 
   async exportChart() {
     this.interval = "15m";
+    console.log(this.symbolList);
     for (var i = 0; i < this.symbolList?.length; i++) {
       await new Promise(next => {
         this.displaySymbol = this.symbolList[i];
@@ -410,7 +408,6 @@ export class WalletComponent {
   }
 
   chartCallback: Highcharts.ChartCallbackFunction = (chart) => {
-    console.log("chart callback function");
     this.chartRef = chart;
   };
 

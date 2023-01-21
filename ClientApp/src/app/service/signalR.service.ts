@@ -13,8 +13,10 @@ export class SignalRService {
 
     public startConnection = () => {
         this.hubConnection = new signalR.HubConnectionBuilder()
-            .withUrl(location.origin + '/Signalr')
-            .build();
+          .withUrl(location.origin + '/Signalr')
+          .withAutomaticReconnect()
+          .build();
+
         this.hubConnection
             .start()
             .then(() => console.log('Connection started'))

@@ -13,6 +13,7 @@ using System.Threading;
 using System.Text.Json;
 using Microsoft.Extensions.Logging;
 using MarginCoin.Service;
+using Microsoft.ML.Transforms.Text;
 
 namespace MarginCoin.Controllers
 {
@@ -24,6 +25,9 @@ namespace MarginCoin.Controllers
         ////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////------------Global varibles----------//////////////////////////////////////
         ////////////////////////////////////////////////////////////////////////////////////////////////////////
+        MarketDataWebSocket ws = new MarketDataWebSocket("to be defined");
+        MarketDataWebSocket ws1 = new MarketDataWebSocket("to be defined");
+
         private IHubContext<SignalRHub> _hub;
         private IBinanceService _binanceService;
         private IMLService _mlService;
@@ -40,11 +44,12 @@ namespace MarginCoin.Controllers
         /////////////////////////////------------SETTINGS----------/////////////////////////////////////////////
         ////////////////////////////////////////////////////////////////////////////////////////////////////////
         private readonly string interval = "30m";   //1h seem to give better result
-        private readonly int numberPreviousCandle = 1;
+        private readonly int numberPreviousCandle = 2;
         private readonly double stopLose = 2;
         private readonly double takeProfit = 1.3;
-        //max trade that can be open
         private readonly int maxOpenTrade = 3;
+        //How many hours we look back 
+        private readonly int backTimelineHours = 4;
         //Max amount to invest for each trade
         private readonly int quoteOrderQty = 3000;
         //Select short list of symbol or full list(on test server on 6 symbols allowed)
@@ -89,22 +94,25 @@ namespace MarginCoin.Controllers
             if (!_watchDog.IsWebsocketSpotDown)
             {
                 _mlService.ActivateML();
-                _watchDog.CallMethod(RestartWebSocket);
-
-                //open a webSocket for each symbol in my list
-                foreach (var symbol in mySymbolList)
-                {
-                    GetCandles(symbol);
-                    OpenWebSocketOnSymbol(symbol);
-                }
-
-                //Open websoket on Spot
-                await OpenWebSocketOnSpot();
+                _watchDog.InitWatchDog(RestartWebSocket);
             }
             else
             {
-                await OpenWebSocketOnSpot();
+                
+                await ws.DisconnectAsync(CancellationToken.None);
+                await ws1.DisconnectAsync(CancellationToken.None);
+                _logger.LogWarning($"Restart WebSockets : if any one running we stop it");
             }
+
+            //open a webSocket for each symbol in my list
+            foreach (var symbol in mySymbolList)
+            {
+                GetCandles(symbol);
+                OpenWebSocketOnSymbol(symbol);
+            }
+
+            //Open websoket on Spot
+            await OpenWebSocketOnSpot();
 
             _watchDog.Clear();
             return "";
@@ -159,58 +167,62 @@ namespace MarginCoin.Controllers
 
         public void RestartWebSocket()
         {
-            _logger.LogWarning($"Restart WebSocket on SPOT");
+            _logger.LogWarning($"Restart WebSockets : call MonitorMarket method");
             _watchDog.IsWebsocketSpotDown = true;
             _hub.Clients.All.SendAsync(MyEnum.BinanceHttpError.WebSocketStopped.ToString());
         }
 
         private async void OpenWebSocketOnSymbol(string symbol)
         {
-            MarketDataWebSocket ws = new MarketDataWebSocket($"{symbol.ToLower()}@kline_{interval}");
+            //MarketDataWebSocket ws = new MarketDataWebSocket($"{symbol.ToLower()}@kline_{interval}");
+            ws = new MarketDataWebSocket($"{symbol.ToLower()}@kline_{interval}");
             var onlyOneMessage = new TaskCompletionSource<string>();
+            var numberOfBackCandle = AutotradeHelper.NumberOfBackCandle(interval, backTimelineHours);
 
             ws.OnMessageReceived(
                 (data) =>
-            {
-                data = data.Remove(data.IndexOf("}}") + 2);
-                var stream = Helper.deserializeHelper<StreamData>(data);
-                var symbolIndex = 0;
-
-                //get corresponding line in our Matrice
-                for (int i = 0; i < candleMatrice.Count; i++)
                 {
-                    if (candleMatrice[i][0].s == stream.k.s)
+                    data = data.Remove(data.IndexOf("}}") + 2);
+                    var stream = Helper.deserializeHelper<StreamData>(data);
+                    var symbolIndex = 0;
+
+                    //get corresponding line in our Matrice
+                    for (int i = 0; i < candleMatrice.Count; i++)
                     {
-                        symbolIndex = i;
-                        break;
+                        if (candleMatrice[i][0].s == stream.k.s)
+                        {
+                            symbolIndex = i;
+                            break;
+                        }
                     }
-                }
 
-                if (!stream.k.x)
-                {
-                    if (candleMatrice[symbolIndex].Count > 0) candleMatrice[symbolIndex] = candleMatrice[symbolIndex].SkipLast(1).ToList();
-                }
-                else
-                {
-                    Console.WriteLine($"New candle save : {stream.k.s}");
-                    Globals.onHold.Remove(stream.k.s);
-                }
+                    if (!stream.k.x)
+                    {
+                        if (candleMatrice[symbolIndex].Count > 0) candleMatrice[symbolIndex] = candleMatrice[symbolIndex].SkipLast(1).ToList();
+                    }
+                    else
+                    {
+                        Console.WriteLine($"New candle save : {stream.k.s}");
+                        Globals.onHold.Remove(stream.k.s);
+                    }
 
-                Candle newCandle = new Candle()
-                {
-                    s = stream.k.s,
-                    o = stream.k.o,
-                    h = stream.k.h,
-                    l = stream.k.l,
-                    c = stream.k.c,
-                };
-                candleMatrice[symbolIndex].Add(newCandle);
-                List<Candle> candleListWithIndicators = TradeIndicator.CalculateIndicator(candleMatrice[symbolIndex]);
-                candleMatrice[symbolIndex] = candleListWithIndicators;
+                    Candle newCandle = new Candle()
+                    {
+                        s = stream.k.s,
+                        o = stream.k.o,
+                        h = stream.k.h,
+                        l = stream.k.l,
+                        c = stream.k.c,
+                        //We calculate the 
+                        P = AutotradeHelper.CalculPourcentChange(stream, candleMatrice[symbolIndex].ToList()),
+                    };
+                    candleMatrice[symbolIndex].Add(newCandle);
+                    List<Candle> candleListWithIndicators = TradeIndicator.CalculateIndicator(candleMatrice[symbolIndex]);
+                    candleMatrice[symbolIndex] = candleListWithIndicators;
 
-                return Task.CompletedTask;
+                    return Task.CompletedTask;
 
-            }, CancellationToken.None);
+                }, CancellationToken.None);
 
             try
             {
@@ -230,7 +242,8 @@ namespace MarginCoin.Controllers
 
         public async Task<string> OpenWebSocketOnSpot()
         {
-            MarketDataWebSocket ws1 = new MarketDataWebSocket("!ticker@arr");
+            //MarketDataWebSocket ws1 = new MarketDataWebSocket("!ticker@arr");
+            ws1 = new MarketDataWebSocket("!ticker@arr");
             var onlyOneMessage = new TaskCompletionSource<string>();
             string dataResult = "";
 
@@ -259,7 +272,8 @@ namespace MarginCoin.Controllers
 
                         if (Globals.isTradingOpen)
                         {
-                            await ProcessMarketMatrice();
+                            // await ProcessMarketMatrice();
+                            ProcessMarketMatrice();
                         }
                     }
                     //return Task.CompletedTask;
@@ -280,71 +294,74 @@ namespace MarginCoin.Controllers
         ////////////////////////////////////////////////////////////////////////////////////////////////////////
         #region Algo
 
-        private async Task<string> ProcessMarketMatrice()
+        // private async Task<string> ProcessMarketMatrice()
+        private string ProcessMarketMatrice()
         {
             try
             {
+                if (candleMatrice.Count < 1)
+                {
+                    _logger.LogWarning("No data received from candleMatrice");
+                    return "";
+                }
+                if (marketStreamOnSpot.Count < 1)
+                {
+                    _logger.LogWarning("No data received from marketStreamOnSpot");
+                    return "";
+                }
+
                 //Get active orders
                 List<Order> activeOrderList = GetActiveOrder();
+                int numberActiveOrder = activeOrderList.Count;
 
-                //Check keep open / close 
-                activeOrderList.Where(p => CheckTrade(p, candleMatrice)).ToList();
-
-                //Filter marketStreamOnSpot list to get only the one from mySymbolList
+                //Filter marketStreamOnSpot and candleMatrice list to get only the one from mySymbolList
                 marketStreamOnSpot = marketStreamOnSpot.Where(p => mySymbolList.Any(p1 => p1 == p.s)).OrderByDescending(p => p.P).ToList();
+                candleMatrice = candleMatrice.OrderByDescending(p => p.Last().P).ToList();
 
                 //Send last data to frontend
-                await _hub.Clients.All.SendAsync("trading", JsonSerializer.Serialize(marketStreamOnSpot));
+                _hub.Clients.All.SendAsync("trading", JsonSerializer.Serialize(marketStreamOnSpot));
 
-                if (activeOrderList.Count == maxOpenTrade) return "";
+                //Check ongoing trade
+                activeOrderList.Where(p => CheckTrade(p, candleMatrice.ToList())).ToList();
 
-                //check candle (indicators, etc, not on hold ) and invest
-                for (int i = 0; i < maxOpenTrade - activeOrderList.Count; i++)
+                //check candle (indicators,not on hold, etc...) and invest
+                // if (numberActiveOrder == maxOpenTrade) return "";
+
+                // for (int i = 0; i < maxOpenTrade - activeOrderList.Count; i++)
+                for (int i = 0; i < candleMatrice.Count; i++)
                 {
                     //read symbol name
-                    var symbol = marketStreamOnSpot[i].s;
+                    var symbol = candleMatrice[i].Last().s;
+                    //read candle list
+                    var symbolCandle = candleMatrice[i];
 
+                    if (numberActiveOrder == maxOpenTrade) break;
+                    if (symbolCandle.Last().P < 0) continue;
+                    if (marketStreamOnSpot[i].P < 0) continue;
                     //if there is already a pending order for this symbol we exit
-                    if (activeOrderList.Where(p => p.Symbol == symbol).Select(p => p).ToList().Count != 0)
-                    {
-                        continue;
-                    }
+                    if (activeOrderList.Where(p => p.Symbol == symbol).Select(p => p).ToList().Count != 0) continue;
 
+                    //Get from spot stream the corresponding line
                     //Find the line that coorespond to the symbol in the Matrice
-                    List<Candle> symbolCandle = candleMatrice.Where(p => p.First().s == symbol).FirstOrDefault();
-
-                    //For debugging, comment out
-                    if (Globals.swallowOneOrder)
-                    {
-                        Globals.swallowOneOrder = false;
-                        if (Globals.onAir)
-                        {
-                            Console.WriteLine($"Open trade on {symbol}");
-                            Buy(marketStreamOnSpot[i], symbolCandle);
-                        }
-                        else
-                        {
-                            Console.WriteLine($"Open Fack trade on {symbol}");
-                            BuyFack(marketStreamOnSpot[i], symbolCandle);
-                        }
-                    }
+                    var symbolOnSpot = marketStreamOnSpot.Where(p => p.s == symbol).FirstOrDefault();
 
                     if (_mlService.MLPredList.Where(p => p.Symbol == symbol).Select(p => p.PredictedLabel).FirstOrDefault() == "up"
                         && _mlService.MLPredList.Where(p => p.Symbol == symbol).Select(p => p.Score[1]).FirstOrDefault() >= 0.60)
                     {
-                        if ((CheckCandle(numberPreviousCandle, marketStreamOnSpot[i], symbolCandle) && !Globals.onHold.FirstOrDefault(p => p.Key == symbol).Value))
+                        if ((CheckCandle(numberPreviousCandle, symbolCandle) && !Globals.onHold.FirstOrDefault(p => p.Key == symbol).Value))
                         {
-
                             if (!Globals.onHold.ContainsKey(symbol)) Globals.onHold.Add(symbol, true);  //to avoid multi buy
                             if (Globals.onAir)
                             {
+                                numberActiveOrder++;
                                 Console.WriteLine($"Open trade on {symbol}");
-                                Buy(marketStreamOnSpot[i], symbolCandle);
+                                Buy(symbolOnSpot, symbolCandle);
                             }
                             else
                             {
+                                numberActiveOrder++;
                                 Console.WriteLine($"Open Fack trade on {symbol}");
-                                BuyFack(marketStreamOnSpot[i], symbolCandle);
+                                BuyFack(symbolOnSpot, symbolCandle);
                             }
                         }
                     }
@@ -358,14 +375,13 @@ namespace MarginCoin.Controllers
             }
         }
 
-        private bool CheckCandle(int numberCandle, MarketStream symbolSpot, List<Candle> symbolCandle)
-        {   //Question : why using the marketFirstCoin parameter as we have the last value in the last candle in the list
-
+        private bool CheckCandle(int numberCandle, List<Candle> symbolCandle)
+        {
             if (symbolCandle.Count < 2) return false;
 
             //0 - Don't trade if only 14% coins are up over the last 24h AND coin is slittly negatif
             //    If the coin is very negatif over last 24h we are in a dive and we want to trade at reversal tendance
-            if ((double)nbrUp < 30 && symbolSpot.P > -5)
+            if ((double)nbrUp < 30 && symbolCandle.Last().P > -5)
             {
                 return false;
             }
@@ -376,8 +392,7 @@ namespace MarginCoin.Controllers
                 Console.WriteLine(AutotradeHelper.CandleColor(symbolCandle[i]));
                 if ((AutotradeHelper.CandleColor(symbolCandle[i]) == "green") && symbolCandle[i].c > symbolCandle[i - 1].c)
                 {
-                    // continue;
-                    return true;
+                    continue;
                 }
                 else
                 {
@@ -392,17 +407,14 @@ namespace MarginCoin.Controllers
             // }
 
             //4 - RSI should be lower than 72 or RSI lower 80 if we already trade the coin
-            //if (symbolCandle.Last().Rsi < 56)
-            //if (symbolCandle.Last().Rsi < 70)
-            //{
-            //    return true;
-            //}
-            // if (symbolCandle.Last().Rsi > 35)
-            //{
-            //    return true;
-            //}
-           
-            return false;
+            if (symbolCandle.Last().Rsi > 40 && (symbolCandle.Last().Rsi < 82))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
 
         private bool CheckTrade(Order activeOrder, List<List<Candle>> myCandleMatrice)

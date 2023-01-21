@@ -23,7 +23,7 @@
     "@angular/platform-browser-dynamic": "12.2.2",
     "@angular/platform-server": "12.2.2",
     "@angular/router": "12.2.2",
-    "@microsoft/signalr": "^5.0.10",
+    "@microsoft/signalr": "7.0.2",
     "@ng-bootstrap/ng-bootstrap": "^10.0.0",
     "@nguniversal/module-map-ngfactory-loader": "8.1.1",
     "bootstrap": "^4.6.0",

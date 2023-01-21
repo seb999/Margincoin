@@ -41,7 +41,7 @@ namespace MarginCoin.Service
         public void ActivateML()
         {
             MLStarted = true;
-            MLTimer.Interval = 60000; //every min
+            MLTimer.Interval = 120000; //every 2 min
             MLTimer.Elapsed += new ElapsedEventHandler(MLTimer_Elapsed);
             MLTimer.Start();
         }
@@ -56,14 +56,14 @@ namespace MarginCoin.Service
             if (MLStarted)
             {
                 MLStarted = false;
-                 _logger.LogDebug($"Initial call for ExportChart UI");
+                 _logger.LogWarning($"Initial call for ExportChart UI");
                 _hub.Clients.All.SendAsync("exportChart");
             }
 
             //Export charts
             if (Globals.isTradingOpen && reccurence.Contains(DateTime.Now.Minute))
             {
-                _logger.LogDebug($"New call at {DateTime.Now.Minute} for ExportChart UI");
+                _logger.LogWarning($"New call at {DateTime.Now.Minute} for ExportChart UI");
                 _hub.Clients.All.SendAsync("exportChart");
             }
         }
@@ -143,7 +143,7 @@ namespace MarginCoin.Service
                 PredictedLabel = predictionResult.PredictedLabel
             });
 
-            //File.Copy(imagePath, Path.Combine(imageFolder, Path.GetFileNameWithoutExtension(imagePath) + DateTime.Now.Year + DateTime.Now.Month + DateTime.Now.Day + "-" + DateTime.Now.Hour + DateTime.Now.Minute + Path.GetExtension(imagePath)), true);
+            File.Copy(imagePath, Path.Combine(imageFolder, Path.GetFileNameWithoutExtension(imagePath) + DateTime.Now.Year + DateTime.Now.Month + DateTime.Now.Day + "-" + DateTime.Now.Hour + DateTime.Now.Minute + Path.GetExtension(imagePath)), true);
             File.Delete(imagePath);
         }
     }
