@@ -73,7 +73,7 @@ namespace MarginCoin.Controllers
 
                     marketStreamList = marketStreamList.Where(p => p.s.Contains("USDT") && !p.s.Contains("DOWNUSDT")).Select(p => p).OrderByDescending(p => p.P).ToList();
 
-                    AutotradeHelper.BufferMarketStream(marketStreamList, ref buffer);
+                    TradeHelper.BufferMarketStream(marketStreamList, ref buffer);
 
                     nbrUp = buffer.Where(pred => pred.P >= 0).Count();
                     nbrDown = buffer.Where(pred => pred.P < 0).Count();
@@ -102,9 +102,9 @@ namespace MarginCoin.Controllers
             MarketStream marketFirstCoin = marketStreamList[0];
             MarketStream marketSecondCoin = marketStreamList[1];
             Order activeOrder = GetActiveOrder();
-            AutotradeHelper.DisplayStatus(activeOrder, marketStreamList);
+            TradeHelper.DisplayStatus(activeOrder, marketStreamList);
 
-            if (!AutotradeHelper.DataQualityCheck(marketStreamList)) return;
+            if (!TradeHelper.DataQualityCheck(marketStreamList)) return;
 
             if (GetActiveOrder() != null)
             {
@@ -157,8 +157,8 @@ namespace MarginCoin.Controllers
             //1 - Previous candles are green
             for (int i = candleList.Count - numberCandle; i < candleList.Count; i++)
             {
-                Console.WriteLine(AutotradeHelper.CandleColor(candleList[i]));
-                if ((AutotradeHelper.CandleColor(candleList[i]) == "green") && candleList[i].c > candleList[i - 1].c)
+                Console.WriteLine(TradeHelper.CandleColor(candleList[i]));
+                if ((TradeHelper.CandleColor(candleList[i]) == "green") && candleList[i].c > candleList[i - 1].c)
                 {
                     continue;
                 }

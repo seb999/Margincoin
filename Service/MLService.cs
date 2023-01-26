@@ -23,7 +23,7 @@ namespace MarginCoin.Service
         private System.Timers.Timer MLTimer = new System.Timers.Timer();
         public List<MLPrediction> MLPredList { get; set; }
 
-        private bool MLStarted = false;
+        private bool isFirstTrigger = false;
 
         public MLService(ILogger<MLService> logger,
             IHubContext<SignalRHub> hub)
@@ -35,13 +35,12 @@ namespace MarginCoin.Service
             downloadFolder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + @"/Downloads";
             screenShotFolder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + @"/Downloads/MCModel";
             imageFolder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + @"/Downloads/MCImage";
-            reccurence = new List<int> { 0, 10, 20, 30, 40, 50};
         }
 
-        public void ActivateML()
+        public void InitML()
         {
-            MLStarted = true;
-            MLTimer.Interval = 120000; //every 2 min
+            isFirstTrigger = true;
+            MLTimer.Interval = 60000; //every 2 min
             MLTimer.Elapsed += new ElapsedEventHandler(MLTimer_Elapsed);
             MLTimer.Start();
         }
@@ -53,18 +52,20 @@ namespace MarginCoin.Service
 
         private void MLTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
-            if (MLStarted)
-            {
-                MLStarted = false;
-                 _logger.LogWarning($"Initial call for ExportChart UI");
-                _hub.Clients.All.SendAsync("exportChart");
-            }
-
-            //Export charts
-            if (Globals.isTradingOpen && reccurence.Contains(DateTime.Now.Minute))
+            if (!isFirstTrigger && Globals.isTradingOpen)
             {
                 _logger.LogWarning($"New call at {DateTime.Now.Minute} for ExportChart UI");
                 _hub.Clients.All.SendAsync("exportChart");
+            }
+            else
+            {
+                  isFirstTrigger = false;
+                 _logger.LogWarning($"Initial call for ExportChart UI");
+                _hub.Clients.All.SendAsync("exportChart");
+
+                MLTimer.Stop();
+                MLTimer.Interval = 360000; 
+                MLTimer.Start();
             }
         }
 

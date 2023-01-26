@@ -1,5 +1,4 @@
 ﻿using System.Timers;
-using static MarginCoin.Service.WatchDog;
 
 namespace MarginCoin.Service
 {

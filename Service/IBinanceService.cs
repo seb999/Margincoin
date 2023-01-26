@@ -16,10 +16,14 @@ namespace MarginCoin.Service
         public static string publicKey = "";
         public static string host = "";
 
+        string Interval { get; set; }
+        string Limit { get; set; }
+
 
         public List<BinanceAsset> Asset(ref System.Net.HttpStatusCode httpStatusCode);
 
         public BinanceAccount Account(ref System.Net.HttpStatusCode httpStatusCode);
+        public void GetCandles(string symbol, ref List<List<Candle>> candleMatrix);
 
         public BinanceOrder OrderStatus(string symbol, double orderId);
 

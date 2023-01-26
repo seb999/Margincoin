@@ -6,6 +6,7 @@ using MarginCoin.Class;
 using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
 using MarginCoin.Misc;
+using Binance.Spot.Models;
 
 namespace MarginCoin.Service
 {
@@ -15,10 +16,12 @@ namespace MarginCoin.Service
         const string testSecretKey = "ncSzN6J4Efh8Xb53e1uYkuHCw9VFAemUKjCEPdwY5WtdbMJOAEzEIuP5qMrjKewX";
         const string prodPublicKey = "gIDNZ9OsVIUbvFEuLgOhZ3XoQRnwrJ8krkp3TAR2dxQxwYErmKC6GOsMy50LYGWy";
         static string prodSecretKey = Environment.GetEnvironmentVariable("BSK");
-
         public static string secretKey = "";
         public static string publicKey = "";
         public static string host = "";
+
+        public string Interval { get; set; }
+        public string Limit { get; set; }
 
         ILogger _logger;
 
@@ -88,6 +91,16 @@ namespace MarginCoin.Service
                 _logger.LogError(e, $"Get {MyEnum.BinanceApiCall.Account}");
                 return null;
             }
+        }
+
+        public void GetCandles(string symbol, ref List<List<Candle>> candleMatrix)
+        {
+            //Get data from Binance API
+            string apiUrl = $"https://api3.binance.com/api/v3/klines?symbol={symbol}&interval={Interval}&limit=100";
+            List<List<double>> coinQuotation = HttpHelper.GetApiData<List<List<double>>>(new Uri(apiUrl));
+            List<Candle> candleList = new List<Candle>();
+            candleList = TradeHelper.CreateCandleList(coinQuotation, symbol);
+            candleMatrix.Add(candleList);
         }
 
         public BinanceOrder OrderStatus(string symbol, double orderId)

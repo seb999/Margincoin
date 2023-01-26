@@ -8,7 +8,7 @@ namespace MarginCoin.Service
     public interface IMLService
     {
         public List<MLPrediction> MLPredList { get; set; }
-        public void ActivateML();
+        public void InitML();
         public void StopML();
         public void UpdateML();
         public void CleanImageFolder();

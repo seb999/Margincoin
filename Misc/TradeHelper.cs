@@ -9,7 +9,7 @@ using MarginCoin.Model;
 
 namespace MarginCoin.Misc
 {
-    public static class AutotradeHelper
+    public static class TradeHelper
     {
         /// <summary>
         /// Return change in % from a list of candle
@@ -18,19 +18,13 @@ namespace MarginCoin.Misc
         /// <param name="stream">The stream to get last value c</param>
         /// <param name="candleMatrice">The list of candle</param>
         /// <returns></returns>
-        public static double CalculPourcentChange(StreamData stream, List<Candle> candleMatrice)
+        public static double CalculPourcentChange(StreamData stream, List<Candle> candleMatrice, string interval, int  backTimelineHours)
         {
+            var backTimeCandle = TradeHelper.NumberOfBackCandle(interval, backTimelineHours);
             var min = candleMatrice.Min(p => p.c);
             var max = candleMatrice.Max(p => p.c);
-            if (stream.k.c > min)
-            {
-                return ((stream.k.c - candleMatrice.Min(p => p.c)) / stream.k.c) * 100;
-            }
-            if (stream.k.c < max)
-            {
-                return ((stream.k.c - candleMatrice.Min(p => p.c)) / stream.k.c) * 100;
-            }
-            return 0;
+
+            return ((stream.k.c - candleMatrice[candleMatrice.Count-backTimeCandle].c) / stream.k.c) * 100;
         }
 
         /// <summary>
@@ -39,7 +33,7 @@ namespace MarginCoin.Misc
         /// <param name="tradingInterval">The interval for trading ex: 1h, 30m, 15m</param>
         /// <param name="backTimelineHours">The number of hours back we want to use</param>
         /// <returns></returns>
-        public static int NumberOfBackCandle(string tradingInterval, int backTimelineHours)
+        private static int NumberOfBackCandle(string tradingInterval, int backTimelineHours)
         {
             switch (tradingInterval.Substring(tradingInterval.Length - 1))
             {
