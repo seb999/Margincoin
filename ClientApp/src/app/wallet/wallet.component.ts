@@ -184,6 +184,10 @@ export class WalletComponent {
     this.logList = await this.getLog();
   }
 
+  async refreshOrderTable(){
+    this.orderList = await this.getAllOrder(this.model.day + "-" + this.model.month + "-" + this.model.year);
+  }
+
   openPopOver(popover, order: BinanceOrder) {
     popover.open({ order });
   }
