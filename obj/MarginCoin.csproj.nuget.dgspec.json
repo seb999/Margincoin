@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\_Git\\Dotnet\\MarginCoin\\MarginCoin.csproj": {}
+    "C:\\_Git\\Dotnet\\Margincoin\\MarginCoin.csproj": {}
   },
   "projects": {
-    "C:\\_Git\\Dotnet\\MarginCoin\\MarginCoin.csproj": {
+    "C:\\_Git\\Dotnet\\Margincoin\\MarginCoin.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\_Git\\Dotnet\\MarginCoin\\MarginCoin.csproj",
+        "projectUniqueName": "C:\\_Git\\Dotnet\\Margincoin\\MarginCoin.csproj",
         "projectName": "MarginCoin",
-        "projectPath": "C:\\_Git\\Dotnet\\MarginCoin\\MarginCoin.csproj",
+        "projectPath": "C:\\_Git\\Dotnet\\Margincoin\\MarginCoin.csproj",
         "packagesPath": "C:\\Users\\sdubos\\.nuget\\packages\\",
-        "outputPath": "C:\\_Git\\Dotnet\\MarginCoin\\obj\\",
+        "outputPath": "C:\\_Git\\Dotnet\\Margincoin\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"

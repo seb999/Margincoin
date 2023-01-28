@@ -53,8 +53,8 @@ namespace MarginCoin.Controllers
         #region Settings    
 
         private readonly string interval = "30m";   //1h seem to give better result
-        private readonly string limit = "100";
-        private readonly int numberPreviousCandle = 2;
+        private readonly string maxCandle = "100";
+        private readonly int prevCandleCount = 2;
         private readonly double stopLossPercentage = 1.5;
         private readonly double takeProfit = 1.3;
         private readonly int maxOpenTrade = 3;
@@ -94,7 +94,7 @@ namespace MarginCoin.Controllers
             mySymbolList = GetSymbolList();
 
             _binanceService.Interval = interval;
-            _binanceService.Limit = limit;
+            _binanceService.Limit = maxCandle;
         }
 
         #endregion
@@ -261,7 +261,7 @@ namespace MarginCoin.Controllers
         public async Task<string> OpenWebSocketOnSpot()
         {
             // ws1 = new MarketDataWebSocket("!ticker@arr");
-            ws1 = new MarketDataWebSocket("!ticker_4h@arr");
+            ws1 = new MarketDataWebSocket("!ticker_1h@arr");
             var onlyOneMessage = new TaskCompletionSource<string>();
             string dataResult = "";
 
@@ -344,9 +344,13 @@ namespace MarginCoin.Controllers
 
         private void SymbolSpotReview(MarketStream symbolSpot, List<List<Candle>> candleMatrix)
         {
+            
             var activeOrder = GetActiveOrder().FirstOrDefault(p => p.Symbol == symbolSpot.s);
             var symbolCandle = candleMatrix.Where(p => p.Last().s == symbolSpot.s).FirstOrDefault();
             var activeOrderCount = GetActiveOrder().Count();
+
+            //debug 
+            Console.WriteLine($"Spot : {symbolSpot.P} || CamdleMatrice {symbolCandle.Last().P}");
 
             if (activeOrder == null && activeOrderCount < maxOpenTrade)
             {
@@ -465,7 +469,7 @@ namespace MarginCoin.Controllers
             // Check if there are enough candles to perform the analysis
             if (symbolCandles.Count > 2)
             {
-                for (int i = symbolCandles.Count - numberPreviousCandle; i < symbolCandles.Count; i++)
+                for (int i = symbolCandles.Count - prevCandleCount; i < symbolCandles.Count; i++)
                 {
                     Console.WriteLine(TradeHelper.CandleColor(symbolCandles[i]));
                     if ((TradeHelper.CandleColor(symbolCandles[i]) != "green" || symbolCandles[i].c <= symbolCandles[i - 1].c))

@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "OvdPk9tY0RBsmCbU++lVFeCeeDdYWhDACYJB9u2/AVwEO9zrtxYMYyyvhf0MmbylyXDxqhrAzTbsxCYo1ufwyQ==",
+  "dgSpecHash": "eCpapCB7D7ykoq6SOD6i8Xky8iDz6uicsHxJYkZbrsCvwrfB2NCXQgJ/M4MK1NS+1PApdtPIYFvrLKaD2Auzvg==",
   "success": true,
-  "projectFilePath": "C:\\_Git\\Dotnet\\MarginCoin\\MarginCoin.csproj",
+  "projectFilePath": "C:\\_Git\\Dotnet\\Margincoin\\MarginCoin.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\sdubos\\.nuget\\packages\\binance.net\\8.3.0\\binance.net.8.3.0.nupkg.sha512",
     "C:\\Users\\sdubos\\.nuget\\packages\\binance.spot\\1.4.0\\binance.spot.1.4.0.nupkg.sha512",
