@@ -181,7 +181,8 @@
           <td><b>Total</b></td>
           <td *ngIf="totalProfit >=0" style="color: limegreen;">{{totalProfit.toFixed(4)}}</td>
           <td *ngIf="totalProfit < 0" style="color: rgb(255, 57, 57);">{{totalProfit.toFixed(4)}}</td>
-          <td></td>
+          <td *ngIf="totalBestProfit >=0" style="color: limegreen;">{{totalBestProfit.toFixed(4)}}</td>
+          <td *ngIf="totalBestProfit < 0" style="color: rgb(255, 57, 57);">{{totalBestProfit.toFixed(4)}}</td>
           <td></td>
           <td></td>
           <td></td>

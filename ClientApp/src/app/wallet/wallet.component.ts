@@ -64,6 +64,7 @@ export class WalletComponent {
   public logList: any[];
   public CandleList: any[];
   public totalProfit: number;
+  public totalBestProfit : number;
   public serverMsg: ServerMsg;
   public showMessageInfo: boolean = false;
   public showMessageError: boolean = false;
@@ -233,6 +234,13 @@ export class WalletComponent {
     this.totalProfit = 0;
     if (this.orderList.length > 0) {
       this.totalProfit = this.orderList.map(a => (a.profit)).reduce(function (a, b) {
+        if (a != 0) return a + b;
+      });
+    }
+
+    this.totalBestProfit = 0;
+    if (this.orderList.length > 0) {
+      this.totalBestProfit = this.orderList.map(a => (a.highPrice - a.openPrice) * a.quantity).reduce(function (a, b) {
         if (a != 0) return a + b;
       });
     }

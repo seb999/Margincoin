@@ -29,8 +29,8 @@ namespace MarginCoin.Controllers
         ////////////////////////////////////////////////////////////////////////////////////////////////////////
         #region Global variables
 
-        MarketDataWebSocket ws = new MarketDataWebSocket("to be defined");
-        MarketDataWebSocket ws1 = new MarketDataWebSocket("to be defined");
+        MarketDataWebSocket ws = new MarketDataWebSocket("define later in the code");
+        MarketDataWebSocket ws1 = new MarketDataWebSocket("define later in the code");
 
         private IHubContext<SignalRHub> _hub;
         private IBinanceService _binanceService;
@@ -52,12 +52,12 @@ namespace MarginCoin.Controllers
         ////////////////////////////////////////////////////////////////////////////////////////////////////////
         #region Settings    
 
-        private readonly string interval = "30m";   //1h seem to give better result
+        private readonly string interval = "1h";   //1h seem to give better result
         private readonly string maxCandle = "100";
         private readonly int prevCandleCount = 2;
-        private readonly double stopLossPercentage = 1.5;
-        private readonly double takeProfit = 1.3;
-        private readonly int maxOpenTrade = 3;
+        private readonly double stopLossPercentage = 1.2;
+        private readonly double takeProfit = 1;
+        private readonly int maxOpenTrade = 2;
         //How many hours we look back 
         private readonly int backTimeHours = 4;
         //Max amount to invest for each trade
@@ -87,7 +87,7 @@ namespace MarginCoin.Controllers
             _mlService = mLService;
             _watchDog = watchDog;
 
-            //For cross reference between controllers
+            //For futur reference between controllers
             Globals.fullSymbolList = fullSymbolList;
 
             //Get the list of symbol to trade from DB
@@ -260,8 +260,8 @@ namespace MarginCoin.Controllers
 
         public async Task<string> OpenWebSocketOnSpot()
         {
-            // ws1 = new MarketDataWebSocket("!ticker@arr");
-            ws1 = new MarketDataWebSocket("!ticker_1h@arr");
+            ws1 = new MarketDataWebSocket("!ticker@arr");
+           // ws1 = new MarketDataWebSocket("!ticker_4h@arr");
             var onlyOneMessage = new TaskCompletionSource<string>();
             string dataResult = "";
 
@@ -325,7 +325,7 @@ namespace MarginCoin.Controllers
                     //Terminate active position SHORT or LONG if needed
                     ActiveTradeReview(symbolSpot.s, candleMatrix.ToList());
 
-                    //Open new position SHORT or LONG is positive signal
+                    //Open new position SHORT or LONG if positive signal
                     SymbolSpotReview(symbolSpot, candleMatrix.ToList());
 
                     //Send last data to frontend
@@ -350,7 +350,7 @@ namespace MarginCoin.Controllers
             var activeOrderCount = GetActiveOrder().Count();
 
             //debug 
-            Console.WriteLine($"Spot : {symbolSpot.P} || CamdleMatrice {symbolCandle.Last().P}");
+            Console.WriteLine($"{symbolSpot.s} Spot24 : {symbolSpot.P} || {symbolCandle.Last().P} calculated on {this.backTimeHours}H ");
 
             if (activeOrder == null && activeOrderCount < maxOpenTrade)
             {
@@ -453,13 +453,11 @@ namespace MarginCoin.Controllers
         {
             const int MIN_CONSECUTIVE_UP_SYMBOL = 30;
             const int MAX_SPREAD = -5;
-            const double MIN_SCORE = 0.60;
+            const double MIN_SCORE = 0.70;
             const double MIN_RSI = 40;
             const double MAX_RSI = 82;
 
             bool isLong = true;
-
-            string debug = "";
 
             if (nbrUp < MIN_CONSECUTIVE_UP_SYMBOL && symbolSpot.P > MAX_SPREAD)
             {
@@ -471,10 +469,8 @@ namespace MarginCoin.Controllers
             {
                 for (int i = symbolCandles.Count - prevCandleCount; i < symbolCandles.Count; i++)
                 {
-                    Console.WriteLine(TradeHelper.CandleColor(symbolCandles[i]));
                     if ((TradeHelper.CandleColor(symbolCandles[i]) != "green" || symbolCandles[i].c <= symbolCandles[i - 1].c))
                     {
-                        debug+=";red candle";
                         isLong = false;
                         break;
                     }
@@ -484,7 +480,6 @@ namespace MarginCoin.Controllers
             var mlPrediction = _mlService.MLPredList.FirstOrDefault(p => p.Symbol == symbolSpot.s);
             if (mlPrediction == null || mlPrediction.PredictedLabel != "up" || mlPrediction.Score[1] < MIN_SCORE)
             {
-                debug+=";AI down";
                 isLong = false;
             };
 
@@ -496,11 +491,8 @@ namespace MarginCoin.Controllers
 
             if(symbolCandles.Last().Rsi < MIN_RSI || symbolCandles.Last().Rsi > MAX_RSI)
             {
-                debug+=";RSI out of range";
                 isLong = false;
             };
-
-            Console.WriteLine(debug);
             return isLong;
 
             //&& symbolCandle.Last().Macd < 100
@@ -511,84 +503,16 @@ namespace MarginCoin.Controllers
             return true; 
         }
 
-        private void UpdateTakeProfit(double lastPrice, Order activeOrder)
-        {
-            double pourcent = ((lastPrice - activeOrder.OpenPrice) / activeOrder.OpenPrice) * 100;
-
-            if (pourcent <= 0) return;
-
-            if (2 < pourcent && pourcent <= 3)
-            {
-                activeOrder.TakeProfit = takeProfit - 0.2;
-                _appDbContext.Order.Update(activeOrder);
-                _appDbContext.SaveChanges();
-            }
-
-            if (3 < pourcent && pourcent <= 4)
-            {
-                activeOrder.TakeProfit = takeProfit - 0.3;
-                _appDbContext.Order.Update(activeOrder);
-                _appDbContext.SaveChanges();
-            }
-            if (4 < pourcent && pourcent <= 5)
-            {
-                activeOrder.TakeProfit = takeProfit - 0.4;
-                _appDbContext.Order.Update(activeOrder);
-                _appDbContext.SaveChanges();
-            }
-            if (5 < pourcent)
-            {
-                activeOrder.TakeProfit = takeProfit - 0.5;
-                _appDbContext.Order.Update(activeOrder);
-                _appDbContext.SaveChanges();
-            }
-        }
-
-        private void UpdateStopLose(double lastPrice, Order activeOrder)
-        {
-            if (lastPrice >= activeOrder.OpenPrice * 1.02)
-            {
-                activeOrder.StopLose = activeOrder.OpenPrice * 1.015;
-                _appDbContext.Order.Update(activeOrder);
-                _appDbContext.SaveChanges();
-                return;
-            }
-
-            if (lastPrice >= activeOrder.OpenPrice * 1.015)
-            {
-                activeOrder.StopLose = activeOrder.OpenPrice * 1.01;
-                _appDbContext.Order.Update(activeOrder);
-                _appDbContext.SaveChanges();
-                return;
-            }
-
-            if (lastPrice >= activeOrder.OpenPrice * 1.01)
-            {
-                activeOrder.StopLose = activeOrder.OpenPrice * 1.005;
-                _appDbContext.Order.Update(activeOrder);
-                _appDbContext.SaveChanges();
-                return;
-            }
-
-            if (lastPrice >= activeOrder.OpenPrice * 1.005)
-            {
-                activeOrder.StopLose = activeOrder.OpenPrice;
-                _appDbContext.Order.Update(activeOrder);
-                _appDbContext.SaveChanges();
-                return;
-            }
-        }
-
         private void SecureProfit(List<Candle> symbolCandle, Order activeOrder)
         {
             double currentPrice = symbolCandle.Select(p => p.c).LastOrDefault();
             double trend = currentPrice - activeOrder.OpenPrice;
             double stopLoss = activeOrder.OpenPrice - (activeOrder.OpenPrice * (stopLossPercentage / 100));
-
+            
             if (trend > 0 && TradeHelper.CandleColor(symbolCandle.Last()) == "green")
             {
                 // Trend is going up, increase stop-loss to follow the trend
-                stopLoss = currentPrice - (currentPrice * (stopLossPercentage / 100));
+                stopLoss = currentPrice * (1 - ((stopLossPercentage-0.6) / 100));
                 activeOrder.StopLose = stopLoss;
                 _appDbContext.Order.Update(activeOrder);
                 _appDbContext.SaveChanges();

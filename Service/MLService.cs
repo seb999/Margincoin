@@ -64,7 +64,7 @@ namespace MarginCoin.Service
                 _hub.Clients.All.SendAsync("exportChart");
 
                 MLTimer.Stop();
-                MLTimer.Interval = 360000; 
+                MLTimer.Interval = 900000; 
                 MLTimer.Start();
             }
         }
@@ -144,7 +144,7 @@ namespace MarginCoin.Service
                 PredictedLabel = predictionResult.PredictedLabel
             });
 
-            File.Copy(imagePath, Path.Combine(imageFolder, Path.GetFileNameWithoutExtension(imagePath) + DateTime.Now.Year + DateTime.Now.Month + DateTime.Now.Day + "-" + DateTime.Now.Hour + DateTime.Now.Minute + Path.GetExtension(imagePath)), true);
+            //File.Copy(imagePath, Path.Combine(imageFolder, Path.GetFileNameWithoutExtension(imagePath) + DateTime.Now.Year + DateTime.Now.Month + DateTime.Now.Day + "-" + DateTime.Now.Hour + DateTime.Now.Minute + Path.GetExtension(imagePath)), true);
             File.Delete(imagePath);
         }
     }
