@@ -21,10 +21,15 @@ namespace MarginCoin.Misc
         public static double CalculPourcentChange(StreamData stream, List<Candle> candleMatrice, string interval, int  backTimelineHours)
         {
             var backTimeCandle = TradeHelper.NumberOfBackCandle(interval, backTimelineHours);
-            var min = candleMatrice.Min(p => p.c);
-            var max = candleMatrice.Max(p => p.c);
+            // var min = candleMatrice.Min(p => p.c);
+            // var max = candleMatrice.Max(p => p.c);
 
             return ((stream.k.c - candleMatrice[candleMatrice.Count-backTimeCandle].c) / stream.k.c) * 100;
+        }
+
+        public static double CalculPourcentChange(List<Candle> candleMatrice, int prevCandleCount)
+        {
+            return ((candleMatrice.Last().c - candleMatrice[candleMatrice.Count-prevCandleCount].c) / candleMatrice[candleMatrice.Count-prevCandleCount].c) * 100;
         }
 
         /// <summary>

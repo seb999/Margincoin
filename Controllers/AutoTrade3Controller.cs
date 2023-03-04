@@ -343,14 +343,13 @@ namespace MarginCoin.Controllers
         }
 
         private void SymbolSpotReview(MarketStream symbolSpot, List<List<Candle>> candleMatrix)
-        {
-            
+        {   
             var activeOrder = GetActiveOrder().FirstOrDefault(p => p.Symbol == symbolSpot.s);
             var symbolCandle = candleMatrix.Where(p => p.Last().s == symbolSpot.s).FirstOrDefault();
             var activeOrderCount = GetActiveOrder().Count();
 
             //debug 
-            Console.WriteLine($"{symbolSpot.s} Spot24 : {symbolSpot.P} || {symbolCandle.Last().P} calculated on {this.backTimeHours}H ");
+            Console.WriteLine($"{symbolSpot.s} Spot24 : {symbolSpot.P} || {TradeHelper.CalculPourcentChange(symbolCandle, prevCandleCount)} calculated on last 2 candles ");
 
             if (activeOrder == null && activeOrderCount < maxOpenTrade)
             {
@@ -451,12 +450,12 @@ namespace MarginCoin.Controllers
 
         private bool EnterLongPosition(MarketStream symbolSpot, List<Candle> symbolCandles)
         {
-            const int MIN_CONSECUTIVE_UP_SYMBOL = 30;
-            const int MAX_SPREAD = -5;
-            const double MIN_SCORE = 0.70;
-            const double MIN_RSI = 40;
-            const double MAX_RSI = 82;
-
+            const int MIN_CONSECUTIVE_UP_SYMBOL = 30;    //Used to stop trading if too many symbol down
+            const int MAX_SPREAD = -5;                   //Used to ignore previous condition if market in freefall
+            const double MIN_SCORE = 0.65;               //min AI score to invest
+            const double MIN_POURCENT_UP = 1;            //User to identify strong movememnt and ignore micro up mouvement
+            const double MIN_RSI = 40;                  
+            const double MAX_RSI = 80;
             bool isLong = true;
 
             if (nbrUp < MIN_CONSECUTIVE_UP_SYMBOL && symbolSpot.P > MAX_SPREAD)
@@ -467,6 +466,7 @@ namespace MarginCoin.Controllers
             // Check if there are enough candles to perform the analysis
             if (symbolCandles.Count > 2)
             {
+                //Check if previous candles are green
                 for (int i = symbolCandles.Count - prevCandleCount; i < symbolCandles.Count; i++)
                 {
                     if ((TradeHelper.CandleColor(symbolCandles[i]) != "green" || symbolCandles[i].c <= symbolCandles[i - 1].c))
@@ -475,20 +475,28 @@ namespace MarginCoin.Controllers
                         break;
                     }
                 }
+
+                //check that it is a strong movement by calculating the % increase on last candles
+                if(TradeHelper.CalculPourcentChange(symbolCandles, prevCandleCount) < MIN_POURCENT_UP)
+                {
+                     isLong = false;
+                }
             }
 
+            //Check AI prediction
             var mlPrediction = _mlService.MLPredList.FirstOrDefault(p => p.Symbol == symbolSpot.s);
             if (mlPrediction == null || mlPrediction.PredictedLabel != "up" || mlPrediction.Score[1] < MIN_SCORE)
             {
                 isLong = false;
             };
 
+            //Check the symbol is not on hold
             if (Globals.onHold.ContainsKey(symbolSpot.s) && Globals.onHold[symbolSpot.s])
             {
                 isLong = false;
             };
 
-
+            //Check the RSI
             if(symbolCandles.Last().Rsi < MIN_RSI || symbolCandles.Last().Rsi > MAX_RSI)
             {
                 isLong = false;
