@@ -31,6 +31,7 @@ namespace MarginCoin
             services.AddScoped<IBinanceService, BinanceService>();
             services.AddSingleton<IMLService, MLService>();
             services.AddSingleton<IWatchDog, WatchDog>();
+            services.AddSingleton<IWebSocket, WebSocket>();
             services.AddSignalR();
 
             services.AddControllers().AddJsonOptions(options =>

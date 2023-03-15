@@ -10,12 +10,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.WebSockets;
-using System.Reflection.Metadata;
-using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
-using Tensorflow;
 
 namespace MarginCoin.Controllers
 {
@@ -29,13 +26,11 @@ namespace MarginCoin.Controllers
         ////////////////////////////////////////////////////////////////////////////////////////////////////////
         #region Global variables
 
-        MarketDataWebSocket ws = new MarketDataWebSocket("define later in the code");
-        MarketDataWebSocket ws1 = new MarketDataWebSocket("define later in the code");
-
         private IHubContext<SignalRHub> _hub;
         private IBinanceService _binanceService;
         private IMLService _mlService;
         private IWatchDog _watchDog;
+        private IWebSocket _webSocket;
         private readonly ApplicationDbContext _appDbContext;
         private ILogger _logger;
         private List<List<Candle>> candleMatrix = new List<List<Candle>>();
@@ -52,10 +47,10 @@ namespace MarginCoin.Controllers
         ////////////////////////////////////////////////////////////////////////////////////////////////////////
         #region Settings    
 
-        private readonly string interval = "1h";   //1h seem to give better result
+        private readonly string interval = "30m";   //1h seem to give better result
         private readonly string maxCandle = "100";
         private readonly int prevCandleCount = 2;
-        private readonly double stopLossPercentage = 1.2;
+        private readonly double stopLossPercentage = 1.0;
         private readonly double takeProfit = 1;
         private readonly int maxOpenTrade = 2;
         //How many hours we look back 
@@ -78,7 +73,8 @@ namespace MarginCoin.Controllers
             ILogger<AutoTrade3Controller> logger,
             IBinanceService binanceService,
             IMLService mLService,
-            IWatchDog watchDog)
+            IWatchDog watchDog,
+            IWebSocket webSocket)
         {
             _hub = hub;
             _binanceService = binanceService;
@@ -86,6 +82,7 @@ namespace MarginCoin.Controllers
             _logger = logger;
             _mlService = mLService;
             _watchDog = watchDog;
+            _webSocket = webSocket;
 
             //For futur reference between controllers
             Globals.fullSymbolList = fullSymbolList;
@@ -118,8 +115,8 @@ namespace MarginCoin.Controllers
             else
             {
 
-                await ws.DisconnectAsync(CancellationToken.None);
-                await ws1.DisconnectAsync(CancellationToken.None);
+                await _webSocket.ws.DisconnectAsync(CancellationToken.None);
+                await _webSocket.ws1.DisconnectAsync(CancellationToken.None);
                 _logger.LogWarning($"Whatchdog kill all websock and restart it");
             }
 
@@ -193,11 +190,11 @@ namespace MarginCoin.Controllers
 
         private async void OpenWebSocketOnSymbol(string symbol)
         {
-            ws = new MarketDataWebSocket($"{symbol.ToLower()}@kline_{interval}");
+            _webSocket.ws = new MarketDataWebSocket($"{symbol.ToLower()}@kline_{interval}");
             var onlyOneMessage = new TaskCompletionSource<string>();
-            
 
-            ws.OnMessageReceived(
+
+            _webSocket.ws.OnMessageReceived(
                 (data) =>
                 {
                     data = data.Remove(data.IndexOf("}}") + 2);
@@ -235,8 +232,9 @@ namespace MarginCoin.Controllers
                         P = TradeHelper.CalculPourcentChange(stream, candleMatrix[symbolIndex].ToList(), interval, backTimeHours),
                     };
                     candleMatrix[symbolIndex].Add(newCandle);
-                    List<Candle> candleListWithIndicators = TradeIndicator.CalculateIndicator(candleMatrix[symbolIndex]);
-                    candleMatrix[symbolIndex] = candleListWithIndicators;
+
+                    List<Candle> candleListForSymbol = candleMatrix[symbolIndex];
+                    candleMatrix[symbolIndex] = TradeIndicator.CalculateIndicator(candleListForSymbol);
 
                     return Task.CompletedTask;
 
@@ -244,9 +242,9 @@ namespace MarginCoin.Controllers
 
             try
             {
-                await ws.ConnectAsync(CancellationToken.None);
+                await _webSocket.ws.ConnectAsync(CancellationToken.None);
                 string message = await onlyOneMessage.Task;
-                await ws.DisconnectAsync(CancellationToken.None);
+                await _webSocket.ws.DisconnectAsync(CancellationToken.None);
             }
             catch
             {
@@ -254,18 +252,18 @@ namespace MarginCoin.Controllers
             }
             finally
             {
-                ws = new MarketDataWebSocket($"{symbol.ToLower()}@kline_{interval}");
+                _webSocket.ws = new MarketDataWebSocket($"{symbol.ToLower()}@kline_{interval}");
             }
         }
 
         public async Task<string> OpenWebSocketOnSpot()
         {
-            ws1 = new MarketDataWebSocket("!ticker@arr");
-           // ws1 = new MarketDataWebSocket("!ticker_4h@arr");
+            _webSocket.ws1 = new MarketDataWebSocket("!ticker@arr");
+            //_webSocket.ws1 = new MarketDataWebSocket("!ticker_4h@arr");
             var onlyOneMessage = new TaskCompletionSource<string>();
             string dataResult = "";
 
-            ws1.OnMessageReceived(
+           _webSocket.ws1.OnMessageReceived(
                 async (data) =>
                 {
                     dataResult += data;
@@ -282,7 +280,7 @@ namespace MarginCoin.Controllers
                         marketStreamList = marketStreamList
                             .Where(p => p.s.Contains("USDT"))
                             .ToList();
-                        
+
                         TradeHelper.BufferMarketStream(marketStreamList, ref buffer);
 
                         nbrUp = buffer.Count(pred => pred.P >= 0);
@@ -303,9 +301,9 @@ namespace MarginCoin.Controllers
 
                 }, CancellationToken.None);
 
-            await ws1.ConnectAsync(CancellationToken.None);
+            await _webSocket.ws1.ConnectAsync(CancellationToken.None);
             string message = await onlyOneMessage.Task;
-            await ws1.DisconnectAsync(CancellationToken.None);
+            await _webSocket.ws1.DisconnectAsync(CancellationToken.None);
 
             return "";
         }
@@ -327,10 +325,10 @@ namespace MarginCoin.Controllers
 
                     //Open new position SHORT or LONG if positive signal
                     SymbolSpotReview(symbolSpot, candleMatrix.ToList());
-
-                    //Send last data to frontend
-                    _hub.Clients.All.SendAsync("trading", JsonSerializer.Serialize(marketStreamOnSpot));
                 }
+
+                //Send last data to frontend
+                _hub.Clients.All.SendAsync("trading", JsonSerializer.Serialize(marketStreamOnSpot));
             }
             catch (Exception ex)
             {
@@ -343,17 +341,18 @@ namespace MarginCoin.Controllers
         }
 
         private void SymbolSpotReview(MarketStream symbolSpot, List<List<Candle>> candleMatrix)
-        {   
+        {
             var activeOrder = GetActiveOrder().FirstOrDefault(p => p.Symbol == symbolSpot.s);
             var symbolCandle = candleMatrix.Where(p => p.Last().s == symbolSpot.s).FirstOrDefault();
             var activeOrderCount = GetActiveOrder().Count();
 
-            //debug 
-            Console.WriteLine($"{symbolSpot.s} Spot24 : {symbolSpot.P} || {TradeHelper.CalculPourcentChange(symbolCandle, prevCandleCount)} calculated on last 2 candles ");
-
+           
             if (activeOrder == null && activeOrderCount < maxOpenTrade)
             {
-                if (symbolSpot.P > 0 && EnterLongPosition(symbolSpot, symbolCandle))
+                 //debug 
+                //Console.WriteLine($"{symbolSpot.s} Spot24 : {symbolSpot.P} || {TradeHelper.CalculPourcentChange(symbolCandle, prevCandleCount)} calculated on last 2 candles ");
+
+                if (EnterLongPosition(symbolSpot, symbolCandle))
                 {
                     if (!Globals.onHold.ContainsKey(symbolSpot.s))
                     {
@@ -372,7 +371,7 @@ namespace MarginCoin.Controllers
                     }
                 }
 
-                if(symbolSpot.P < 0 && IsShort(symbolSpot, symbolCandle))
+                if (symbolSpot.P < 0 && IsShort(symbolSpot, symbolCandle))
                 {
 
                 }
@@ -389,8 +388,6 @@ namespace MarginCoin.Controllers
 
             if (activeOrder != null)
             {
-                SaveHighLow(lastCandle, activeOrder);
-
                 //Check stop lose
                 if (lastPrice <= (activeOrder.StopLose))
                 {
@@ -440,11 +437,9 @@ namespace MarginCoin.Controllers
                     }
                 }
 
-                //UpdateStopLose(lastPrice, activeOrder);
-
-                //UpdateTakeProfit(lastPrice, activeOrder);
-
                 SecureProfit(symbolCandle, activeOrder);
+
+                SaveHighLow(lastCandle, activeOrder);
             }
         }
 
@@ -452,11 +447,16 @@ namespace MarginCoin.Controllers
         {
             const int MIN_CONSECUTIVE_UP_SYMBOL = 30;    //Used to stop trading if too many symbol down
             const int MAX_SPREAD = -5;                   //Used to ignore previous condition if market in freefall
-            const double MIN_SCORE = 0.65;               //min AI score to invest
-            const double MIN_POURCENT_UP = 1;            //User to identify strong movememnt and ignore micro up mouvement
-            const double MIN_RSI = 40;                  
+            const double MIN_SCORE = 0.60;               //min AI score to invest
+            const double MIN_POURCENT_UP = 0.2;            //User to identify strong movememnt and ignore micro up mouvement
+            const double MIN_RSI = 40;
             const double MAX_RSI = 80;
             bool isLong = true;
+
+            // if(symbolSpot.P <0)
+            // {
+            //      isLong = false;
+            // }
 
             if (nbrUp < MIN_CONSECUTIVE_UP_SYMBOL && symbolSpot.P > MAX_SPREAD)
             {
@@ -477,9 +477,9 @@ namespace MarginCoin.Controllers
                 }
 
                 //check that it is a strong movement by calculating the % increase on last candles
-                if(TradeHelper.CalculPourcentChange(symbolCandles, prevCandleCount) < MIN_POURCENT_UP)
+                if (TradeHelper.CalculPourcentChange(symbolCandles, prevCandleCount) < MIN_POURCENT_UP)
                 {
-                     isLong = false;
+                    isLong = false;
                 }
             }
 
@@ -497,7 +497,7 @@ namespace MarginCoin.Controllers
             };
 
             //Check the RSI
-            if(symbolCandles.Last().Rsi < MIN_RSI || symbolCandles.Last().Rsi > MAX_RSI)
+            if (symbolCandles.Last().Rsi < MIN_RSI || symbolCandles.Last().Rsi > MAX_RSI)
             {
                 isLong = false;
             };
@@ -507,20 +507,22 @@ namespace MarginCoin.Controllers
         }
 
         private bool IsShort(MarketStream symbolSpot, List<Candle> symbolCandle)
-        { 
-            return true; 
+        {
+            return true;
         }
 
         private void SecureProfit(List<Candle> symbolCandle, Order activeOrder)
         {
             double currentPrice = symbolCandle.Select(p => p.c).LastOrDefault();
-            double trend = currentPrice - activeOrder.OpenPrice;
+            // double trend = currentPrice - activeOrder.OpenPrice;
+            double trend = currentPrice - activeOrder.ClosePrice;
             double stopLoss = activeOrder.OpenPrice - (activeOrder.OpenPrice * (stopLossPercentage / 100));
-            
-            if (trend > 0 && TradeHelper.CandleColor(symbolCandle.Last()) == "green")
+
+            // if (trend > 0 && TradeHelper.CandleColor(symbolCandle.Last()) == "green")
+            if (trend > 0)
             {
                 // Trend is going up, increase stop-loss to follow the trend
-                stopLoss = currentPrice * (1 - ((stopLossPercentage-0.6) / 100));
+                stopLoss = currentPrice * (1 - ((stopLossPercentage - 0.5) / 100));
                 activeOrder.StopLose = stopLoss;
                 _appDbContext.Order.Update(activeOrder);
                 _appDbContext.SaveChanges();
@@ -621,6 +623,7 @@ namespace MarginCoin.Controllers
             myOrder.OpenPrice = Helper.CalculateAvragePrice(binanceOrder);
             myOrder.HighPrice = Helper.CalculateAvragePrice(binanceOrder);
             myOrder.LowPrice = Helper.CalculateAvragePrice(binanceOrder);
+            myOrder.ClosePrice = Helper.CalculateAvragePrice(binanceOrder);
             myOrder.Volume = symbolSpot.v;
             myOrder.TakeProfit = takeProfit;
             myOrder.StopLose = Helper.CalculateAvragePrice(binanceOrder) * (1 - (stopLossPercentage / 100));
@@ -679,11 +682,16 @@ namespace MarginCoin.Controllers
 
         private void SaveHighLow(Candle lastCandle, Order activeOrder)
         {
+            //Save current value
+            activeOrder.ClosePrice = lastCandle.c;
+
+            //Save High
             if (lastCandle.c > activeOrder.HighPrice)
             {
                 activeOrder.HighPrice = lastCandle.c;
             }
 
+            //Save Low
             if (lastCandle.c < activeOrder.LowPrice)
             {
                 activeOrder.LowPrice = lastCandle.c;

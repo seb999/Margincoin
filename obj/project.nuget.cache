@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "l+nOTbBh58UwtZKL1sEFwQt5Q6YjlDqczc9NqJoKKH3+U3T2kGpXuUttHxFAo1cuMDcjdSKNxUBcDGdjiM/ZIQ==",
+  "dgSpecHash": "JRd2BmOFzd31r66dMzzJK641DAmJORV39ufSvSL35SJqyfeYnl3QX2Jg9/Wru+shEiqhCDgi9tfKWbYPGxTAmQ==",
   "success": true,
   "projectFilePath": "/Users/sebastien/_Git/Dotnet/Margincoin/MarginCoin.csproj",
   "expectedPackageFiles": [
@@ -90,7 +90,10 @@
     "/Users/sebastien/.nuget/packages/system.threading.channels/4.7.1/system.threading.channels.4.7.1.nupkg.sha512",
     "/Users/sebastien/.nuget/packages/system.threading.tasks/4.3.0/system.threading.tasks.4.3.0.nupkg.sha512",
     "/Users/sebastien/.nuget/packages/tensorflow.net/0.20.1/tensorflow.net.0.20.1.nupkg.sha512",
-    "/Users/sebastien/.nuget/packages/websocket.client/4.4.43/websocket.client.4.4.43.nupkg.sha512"
+    "/Users/sebastien/.nuget/packages/websocket.client/4.4.43/websocket.client.4.4.43.nupkg.sha512",
+    "/Users/sebastien/.nuget/packages/microsoft.netcore.app.ref/6.0.14/microsoft.netcore.app.ref.6.0.14.nupkg.sha512",
+    "/Users/sebastien/.nuget/packages/microsoft.aspnetcore.app.ref/6.0.14/microsoft.aspnetcore.app.ref.6.0.14.nupkg.sha512",
+    "/Users/sebastien/.nuget/packages/microsoft.netcore.app.host.osx-x64/6.0.14/microsoft.netcore.app.host.osx-x64.6.0.14.nupkg.sha512"
   ],
   "logs": []
 }
