@@ -50,8 +50,8 @@ namespace MarginCoin.Controllers
         private readonly string interval = "30m";   //1h seem to give better result
         private readonly string maxCandle = "100";
         private readonly int prevCandleCount = 2;
-        private readonly double stopLossPercentage = 0.7;
-        private readonly double takeProfit = 1;
+        private readonly double stopLossPercentage = 1.0;
+        private readonly double takeProfitPercentage = 0.7;
         private readonly int maxOpenTrade = 2;
         //How many hours we look back 
         private readonly int backTimeHours = 4;
@@ -536,59 +536,54 @@ namespace MarginCoin.Controllers
         //     }
         // }
 
-        private void UpdateStopLoss(List<Candle> symbolCandles, Order activeOrder)
+     private void UpdateStopLoss(List<Candle> symbolCandles, Order activeOrder)
         {
             // Set a buffer for the stop loss
-            double buffer = 0.02;
+            double delta = Math.Abs(activeOrder.OpenPrice - activeOrder.StopLose);
+
 
             // Calculate the current market price
-            double currentPrice = symbolCandles.Last().c;
             Candle lastCandle = symbolCandles.Select(p => p).LastOrDefault();
+
 
             // Calculate the current stop loss price based on the buffer
             double stopLossPrice = activeOrder.StopLose;
 
+
             //we update the stop loss up to 1% up
-            if (lastCandle.c < activeOrder.OpenPrice * 1.01)
+            if (lastCandle.c < activeOrder.OpenPrice * 1.003)
             {
-                stopLossPrice = Math.Max(stopLossPrice, currentPrice * (1 - buffer));
+                stopLossPrice = Math.Max(stopLossPrice, lastCandle.c - delta);
             }
-
-
-            // if (activeOrder.Type == OrderType.Buy)
-            // {
-            //     stopLossPrice = Math.Max(stopLossPrice, currentPrice * (1 - buffer));
-            // }
-            // else if (activeOrder.Type == OrderType.Sell)
-            // {
-            //     stopLossPrice = Math.Min(stopLossPrice, currentPrice * (1 + buffer));
-            // }
-
             // Update the stop loss price of the active order
             activeOrder.StopLose = stopLossPrice;
             _appDbContext.Order.Update(activeOrder);
             _appDbContext.SaveChanges();
         }
 
-
         private void UpdateTakeProfit(List<Candle> symbolCandle, Order activeOrder)
         {
+            double delta = Math.Abs(activeOrder.OpenPrice - activeOrder.TakeProfit);
+
+
             Candle lastCandle = symbolCandle.Select(p => p).LastOrDefault();
 
-            if (lastCandle.c > activeOrder.ClosePrice)
+
+            double takeProfitPrice = activeOrder.TakeProfit;
+
+
+            if (lastCandle.c > activeOrder.OpenPrice * 1.003)
             {
                 // Calculate the ATR value
                 double atr = CalculateATR(symbolCandle);
 
-                // Update the take profit level based on the ATR value
-                double takeProfitPrice = lastCandle.c - (atr / 3);
-
                 // Update the order's take profit level
-                activeOrder.TakeProfit = takeProfitPrice;
-
-                _appDbContext.Order.Update(activeOrder);
-                _appDbContext.SaveChanges();
+                takeProfitPrice = Math.Max(Math.Max(takeProfitPrice, lastCandle.c - (atr / 3)), lastCandle.c - delta);
             }
+
+            activeOrder.TakeProfit = takeProfitPrice;
+            _appDbContext.Order.Update(activeOrder);
+            _appDbContext.SaveChanges();
         }
 
         private double CalculateATR(List<Candle> symbolCandles)
@@ -715,8 +710,8 @@ namespace MarginCoin.Controllers
             myOrder.LowPrice = Helper.CalculateAvragePrice(binanceOrder);
             myOrder.ClosePrice = Helper.CalculateAvragePrice(binanceOrder);
             myOrder.Volume = symbolSpot.v;
-            myOrder.TakeProfit = Helper.CalculateAvragePrice(binanceOrder) * (1 - (stopLossPercentage / 100));
-            myOrder.StopLose = Helper.CalculateAvragePrice(binanceOrder) * (1 - (stopLossPercentage / 100));
+            myOrder.TakeProfit = Helper.CalculateAvragePrice(binanceOrder) * (1 - (takeProfitPercentage / 100));
+            myOrder.StopLose = Helper.CalculateAvragePrice(binanceOrder) * (1 - (stopLossPercentage /  100)); 
             myOrder.Quantity = Helper.ToDouble(binanceOrder.executedQty);
             myOrder.IsClosed = 0;
             myOrder.Fee = Globals.isProd ? binanceOrder.fills.Sum(p => Helper.ToDouble(p.commission)) : Math.Round((Helper.CalculateAvragePrice(binanceOrder) * Helper.ToDouble(binanceOrder.executedQty)) / 100) * 0.1;
