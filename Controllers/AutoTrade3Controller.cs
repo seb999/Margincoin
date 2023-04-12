@@ -47,12 +47,12 @@ namespace MarginCoin.Controllers
         ////////////////////////////////////////////////////////////////////////////////////////////////////////
         #region Settings    
 
-        private readonly string interval = "30m";   //1h seem to give better result
+        private readonly string interval = "15m";   //1h seem to give better result
         private readonly string maxCandle = "100";
         private readonly int prevCandleCount = 2;
-        private readonly double stopLossPercentage = 1.0;
-        private readonly double takeProfitPercentage = 0.7;
-        private readonly int maxOpenTrade = 2;
+        private readonly double stopLossPercentage = 1.5;
+        private readonly double takeProfitPercentage = 1;
+        private readonly int maxOpenTrade = 3;
         //How many hours we look back 
         private readonly int backTimeHours = 4;
         //Max amount to invest for each trade
@@ -324,8 +324,10 @@ namespace MarginCoin.Controllers
                     ReviewOpenTrade(symbolSpot.s, candleMatrix.ToList());
                 }
 
-                foreach (var symbolSpot in marketStreamOnSpot.Take(4).ToList())
+                // foreach (var symbolSpot in marketStreamOnSpot.Take(4).ToList())
+                foreach (var prediction in _mlService.MLPredList.Where(p=>p.PredictedLabel=="up").OrderByDescending(p=>p.Score[0]))
                 {
+                    var symbolSpot = marketStreamOnSpot.Where(p=>p.s==prediction.Symbol).FirstOrDefault();
                     //Open new position SHORT or LONG if positive signal
                     ReviewSpotMarket(symbolSpot, candleMatrix.ToList());
                 }
@@ -375,10 +377,10 @@ namespace MarginCoin.Controllers
                 }
 
 
-                if( Globals.swallowOneOrder ==  true && symbolSpot.s != "XRPUSDT")
+                if (Globals.swallowOneOrder == true && symbolSpot.s != "XRPUSDT")
                 {
                     Globals.swallowOneOrder = false;
-                     Console.WriteLine($"Opening trade on {symbolSpot.s}");
+                    Console.WriteLine($"Opening trade on {symbolSpot.s}");
                     Buy(symbolSpot, symbolCandle);
                 }
 
@@ -400,7 +402,6 @@ namespace MarginCoin.Controllers
             if (activeOrder != null)
             {
                 //Check stop lose
-                //if (lastPrice <= activeOrder.StopLose && lastPrice <= activeOrder.OpenPrice)
                 if (lastPrice < activeOrder.StopLose)
                 {
                     if (Globals.onAir)
@@ -415,8 +416,8 @@ namespace MarginCoin.Controllers
                     }
                 }
 
-                //if (lastPrice <= activeOrder.TakeProfit && lastPrice > activeOrder.OpenPrice)
-                if (lastPrice < activeOrder.TakeProfit)
+                //take profit
+                if (lastPrice <= activeOrder.TakeProfit && lastPrice > activeOrder.OpenPrice)
                 {
                     if (Globals.onAir)
                     {
@@ -432,7 +433,7 @@ namespace MarginCoin.Controllers
 
                 //AI close
                 if (_mlService.MLPredList.ToList().Where(p => p.Symbol == activeOrder.Symbol).Select(p => p.PredictedLabel).FirstOrDefault() == "down"
-                 && _mlService.MLPredList.ToList().Where(p => p.Symbol == activeOrder.Symbol).Select(p => p.Score[0]).FirstOrDefault() >= 0.85)
+                 && _mlService.MLPredList.ToList().Where(p => p.Symbol == activeOrder.Symbol).Select(p => p.Score[0]).FirstOrDefault() >= 0.70)
                 {
                     if (Globals.onAir)
                     {
@@ -522,70 +523,29 @@ namespace MarginCoin.Controllers
             return true;
         }
 
-        // private void UpdateStopLoose(List<Candle> symbolCandle, Order activeOrder)
-        // {
-        //     Candle lastCandle = symbolCandle.Select(p => p).LastOrDefault();
-
-        //     // if (trend > 0 && TradeHelper.CandleColor(symbolCandle.Last()) == "green")
-        //     if (lastCandle.c > activeOrder.ClosePrice && lastCandle.c > activeOrder.OpenPrice)
-        //     {
-        //         // Trend is going up, increase stop-loss to follow the trend
-        //         activeOrder.StopLose = lastCandle.c * (1 - ((stopLossPercentage - 0.5) / 100));
-        //         _appDbContext.Order.Update(activeOrder);
-        //         _appDbContext.SaveChanges();
-        //     }
-        // }
-
-     private void UpdateStopLoss(List<Candle> symbolCandles, Order activeOrder)
+        private void UpdateStopLoss(List<Candle> symbolCandles, Order activeOrder)
         {
-            // Set a buffer for the stop loss
-            double delta = Math.Abs(activeOrder.OpenPrice - activeOrder.StopLose);
-
-
             // Calculate the current market price
             Candle lastCandle = symbolCandles.Select(p => p).LastOrDefault();
 
-
-            // Calculate the current stop loss price based on the buffer
-            double stopLossPrice = activeOrder.StopLose;
-
-
-            //we update the stop loss up to 1% up
-            if (lastCandle.c < activeOrder.OpenPrice * 1.003)
+            //If price up 1% we move the stop lose to open price
+            if (lastCandle.c > activeOrder.OpenPrice * 1.01)
             {
-                stopLossPrice = Math.Max(stopLossPrice, lastCandle.c - delta);
+                // Update the stop loss price of the active order
+                activeOrder.StopLose = activeOrder.OpenPrice;
+                _appDbContext.Order.Update(activeOrder);
+                _appDbContext.SaveChanges();
             }
-            // Update the stop loss price of the active order
-            activeOrder.StopLose = stopLossPrice;
-            _appDbContext.Order.Update(activeOrder);
-            _appDbContext.SaveChanges();
         }
 
         private void UpdateTakeProfit(List<Candle> symbolCandle, Order activeOrder)
         {
-            double delta = Math.Abs(activeOrder.OpenPrice - activeOrder.TakeProfit);
-
-
-            Candle lastCandle = symbolCandle.Select(p => p).LastOrDefault();
-
-
-            double takeProfitPrice = activeOrder.TakeProfit;
-
-
-            if (lastCandle.c > activeOrder.OpenPrice * 1.003)
-            {
-                // Calculate the ATR value
-                double atr = CalculateATR(symbolCandle);
-
-                // Update the order's take profit level
-                takeProfitPrice = Math.Max(Math.Max(takeProfitPrice, lastCandle.c - (atr / 3)), lastCandle.c - delta);
-            }
-
-            activeOrder.TakeProfit = takeProfitPrice;
+            activeOrder.TakeProfit = activeOrder.HighPrice * (1 - takeProfitPercentage / 100);
             _appDbContext.Order.Update(activeOrder);
             _appDbContext.SaveChanges();
         }
 
+        ///A calcultation of the volatility. Keep it to use it if needed
         private double CalculateATR(List<Candle> symbolCandles)
         {
             // Calculate the true range values for each candle
@@ -711,7 +671,7 @@ namespace MarginCoin.Controllers
             myOrder.ClosePrice = Helper.CalculateAvragePrice(binanceOrder);
             myOrder.Volume = symbolSpot.v;
             myOrder.TakeProfit = Helper.CalculateAvragePrice(binanceOrder) * (1 - (takeProfitPercentage / 100));
-            myOrder.StopLose = Helper.CalculateAvragePrice(binanceOrder) * (1 - (stopLossPercentage /  100)); 
+            myOrder.StopLose = Helper.CalculateAvragePrice(binanceOrder) * (1 - (stopLossPercentage / 100));
             myOrder.Quantity = Helper.ToDouble(binanceOrder.executedQty);
             myOrder.IsClosed = 0;
             myOrder.Fee = Globals.isProd ? binanceOrder.fills.Sum(p => Helper.ToDouble(p.commission)) : Math.Round((Helper.CalculateAvragePrice(binanceOrder) * Helper.ToDouble(binanceOrder.executedQty)) / 100) * 0.1;
