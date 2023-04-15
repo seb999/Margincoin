@@ -23,6 +23,8 @@ namespace MarginCoin.Service
         public List<BinanceAsset> Asset(ref System.Net.HttpStatusCode httpStatusCode);
 
         public BinanceAccount Account(ref System.Net.HttpStatusCode httpStatusCode);
+
+        public List<BinancePrice> GetSymbolPrice ();
         public void GetCandles(string symbol, ref List<List<Candle>> candleMatrix);
 
         public BinanceOrder OrderStatus(string symbol, double orderId);

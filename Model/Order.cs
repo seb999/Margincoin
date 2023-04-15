@@ -43,5 +43,7 @@ namespace MarginCoin.Model
         public string MarketTrend { get; set; }
         public double OrderId { get; set; }
         public string Status { get; set; }
+        public double MLBuyScore { get; set; }
+        public double MLSellScore { get; set; }
     }
 }

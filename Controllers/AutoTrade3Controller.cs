@@ -174,6 +174,12 @@ namespace MarginCoin.Controllers
             }
         }
 
+        [HttpGet("[action]")]
+        public List<BinancePrice> GetSymbolPrice()
+        {
+           return _binanceService.GetSymbolPrice();
+        }
+
         #endregion
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -433,7 +439,7 @@ namespace MarginCoin.Controllers
 
                 //AI close
                 if (_mlService.MLPredList.ToList().Where(p => p.Symbol == activeOrder.Symbol).Select(p => p.PredictedLabel).FirstOrDefault() == "down"
-                 && _mlService.MLPredList.ToList().Where(p => p.Symbol == activeOrder.Symbol).Select(p => p.Score[0]).FirstOrDefault() >= 0.70)
+                 && _mlService.MLPredList.ToList().Where(p => p.Symbol == activeOrder.Symbol).Select(p => p.Score[0]).FirstOrDefault() >= 0.73)
                 {
                     if (Globals.onAir)
                     {
@@ -676,6 +682,7 @@ namespace MarginCoin.Controllers
             myOrder.IsClosed = 0;
             myOrder.Fee = Globals.isProd ? binanceOrder.fills.Sum(p => Helper.ToDouble(p.commission)) : Math.Round((Helper.CalculateAvragePrice(binanceOrder) * Helper.ToDouble(binanceOrder.executedQty)) / 100) * 0.1;
             myOrder.Symbol = binanceOrder.symbol;
+            myOrder.MLBuyScore = _mlService.MLPredList.ToList().Where(p => p.Symbol == binanceOrder.symbol).Select(p => p.Score[1]).FirstOrDefault();
 
             myOrder.RSI = symbolCandle.Last().Rsi;
             myOrder.RSI_1 = symbolCandle[symbolCandle.Count - 2].Rsi;
@@ -712,6 +719,7 @@ namespace MarginCoin.Controllers
             myOrder.Profit = Math.Round((myOrder.ClosePrice - myOrder.OpenPrice) * myOrder.Quantity) - myOrder.Fee;
             myOrder.IsClosed = 1;
             myOrder.Type = closeType;
+            myOrder.MLSellScore = _mlService.MLPredList.ToList().Where(p => p.Symbol == binanceOrder.symbol).Select(p => p.Score[0]).FirstOrDefault();
             myOrder.CloseDate = DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss");
             _appDbContext.SaveChanges();
         }

@@ -22,7 +22,7 @@ import HC_Data from "highcharts/modules/export-data";
 import { AppSetting } from '../app.settings';
 import { BinanceOrder } from '../class/binanceOrder';
 import { FindValueSubscriber } from 'rxjs/internal/operators/find';
-import { BinanceAccount } from '../class/binanceAccount'; 
+import { BinanceAccount } from '../class/binanceAccount';
 
 
 HC_HIGHSTOCK(Highcharts);
@@ -60,11 +60,12 @@ export class WalletComponent {
   public pendingOrderList: Order[];
   public myAccount: BinanceAccount;
   public symbolList: any[];
+  public symbolPrice: any[];
   public orderList: Order[];
   public logList: any[];
   public CandleList: any[];
   public totalProfit: number;
-  public totalBestProfit : number;
+  public totalBestProfit: number;
   public serverMsg: ServerMsg;
   public showMessageInfo: boolean = false;
   public showMessageError: boolean = false;
@@ -74,12 +75,12 @@ export class WalletComponent {
   public tradeOpen: boolean;
   public popupSymbol: string;
   public popupQty: number;
+  public balance: number;
   public isCollapsed = true;
 
   color = 'accent';
   isProd = false;
   isOnAir = false;
-
 
   displaySymbol: string;
   displayOrder: Order;
@@ -102,9 +103,11 @@ export class WalletComponent {
     this.isProd = await this.getServer();
     this.isOnAir = await this.getTradingMode();
     this.symbolList = await this.getSymbolList();
+    this.symbolPrice = await this.getSymbolPrice();
     this.logList = await this.getLog();
     this.myAccount = await this.binanceAccount();
-    this.calculateTotal();
+    this.calculateProfit();
+    this.calculateBalance();
 
     //Open listener on my API SignalR
     this.signalRService.startConnection();
@@ -116,8 +119,9 @@ export class WalletComponent {
       if (this.serverMsg.msgName == BackEndMessage.trading) {
         this.tradeOpen = true;
         this.showMessageInfo = true;
-        this.CandleList = this.serverMsg.candleList;
 
+        this.CandleList = this.serverMsg.candleList;
+        console.log(this.CandleList);
         this.orderList.forEach((order, index) => {
           this.CandleList.forEach(candle => {
 
@@ -127,7 +131,7 @@ export class WalletComponent {
             }
           });
         });
-        this.calculateTotal();
+        this.calculateProfit();
         setTimeout(() => { this.showMessageInfo = false }, 700);
       }
 
@@ -155,7 +159,7 @@ export class WalletComponent {
 
       if (this.serverMsg.msgName == BackEndMessage.newOrder) {
         this.orderList = await this.getAllOrder(this.model.day + "-" + this.model.month + "-" + this.model.year);
-        this.calculateTotal();
+        this.calculateProfit();
         this.refreshUI();
       }
 
@@ -185,7 +189,7 @@ export class WalletComponent {
     this.logList = await this.getLog();
   }
 
-  async refreshOrderTable(){
+  async refreshOrderTable() {
     this.orderList = await this.getAllOrder(this.model.day + "-" + this.model.month + "-" + this.model.year);
   }
 
@@ -217,7 +221,7 @@ export class WalletComponent {
       return;
     }
     this.orderList = await this.getAllOrder(this.model.day + "-" + this.model.month + "-" + this.model.year);
-    this.calculateTotal();
+    this.calculateProfit();
   }
 
   async changeTradeServer() {
@@ -230,12 +234,12 @@ export class WalletComponent {
     await this.setTradingMode(this.isOnAir);
   }
 
-  calculateTotal() {
+  calculateProfit() {
     this.totalProfit = 0;
     if (this.orderList.length > 0) {
-      this.totalProfit = this.orderList.map(a => (a.profit)).reduce(function (a, b) {
-        if (a != 0) return a + b;
-      });
+      for (let i = 0; i < this.orderList.length; i++) {
+        this.totalProfit += this.orderList[i].profit;
+      }
     }
 
     this.totalBestProfit = 0;
@@ -243,6 +247,23 @@ export class WalletComponent {
       this.totalBestProfit = this.orderList.map(a => (a.highPrice - a.openPrice) * a.quantity).reduce(function (a, b) {
         if (a != 0) return a + b;
       });
+    }
+  }
+
+  calculateBalance() {
+    let balance = 0;
+    for (let i = 0; i <= this.symbolList.length; i++) {
+      let index = this.symbolPrice.findIndex((crypto) => crypto.symbol === this.myAccount.balances[i].asset + "USDT");
+      console.log(index, this.myAccount.balances[i].asset, this.myAccount.balances[i].free)
+      if (index !== -1) {
+        balance += parseFloat(this.symbolPrice[index].price) * this.myAccount.balances[i].free;
+      }
+    }
+    if (!this.isOnAir) {
+      this.balance = balance + this.totalProfit;
+    }
+    else {
+      this.balance = balance;
     }
   }
 
@@ -266,7 +287,7 @@ export class WalletComponent {
     const httpSetting: HttpSettings = {
       method: 'GET',
       url: location.origin + "/api/Globals/GetServer",
-      
+
     };
     return await this.httpService.xhr(httpSetting);
   }
@@ -352,7 +373,7 @@ export class WalletComponent {
     return await this.httpService.xhr(httpSetting);
   }
 
-  binanceAccount(): Promise<any> {
+  async binanceAccount(): Promise<any> {
     const httpSetting: HttpSettings = {
       method: 'GET',
       url: location.origin + '/api/Binance/BinanceAccount',
@@ -364,6 +385,14 @@ export class WalletComponent {
     const httpSetting: HttpSettings = {
       method: 'GET',
       url: location.origin + '/api/AutoTrade3/GetSymbolList',
+    };
+    return await this.httpService.xhr(httpSetting);
+  }
+
+  async getSymbolPrice(): Promise<any[]> {
+    const httpSetting: HttpSettings = {
+      method: 'GET',
+      url: location.origin + '/api/AutoTrade3/GetSymbolPrice',
     };
     return await this.httpService.xhr(httpSetting);
   }

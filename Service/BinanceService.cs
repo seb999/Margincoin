@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
 using MarginCoin.Misc;
 using Binance.Spot.Models;
+using System.Linq;
 
 namespace MarginCoin.Service
 {
@@ -28,6 +29,15 @@ namespace MarginCoin.Service
         public BinanceService(ILogger<BinanceService> logger)
         {
             _logger = logger;
+        }
+
+        public List<BinancePrice> GetSymbolPrice ()
+        {
+            string apiUrl = $"https://api.binance.com/api/v3/ticker/price";
+            List<BinancePrice> symbolPrice = HttpHelper.GetApiData<List<BinancePrice>>(new Uri(apiUrl));
+            symbolPrice =  symbolPrice.Where(p => p.symbol.Contains("USDT")).ToList();
+            
+            return symbolPrice;
         }
 
         public List<BinanceAsset> Asset(ref System.Net.HttpStatusCode httpStatusCode)

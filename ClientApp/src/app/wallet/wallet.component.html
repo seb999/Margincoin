@@ -87,8 +87,8 @@
         <tr>
           <th scope="col" id="last" class="tableTh ">Symbol</th>
           <th scope="col" id="volume" class="tableTh">Open</th>
-          <th scope="col" id="volume" class="tableTh">High</th>
-          <th scope="col" id="volume" class="tableTh">Low</th>
+          <!-- <th scope="col" id="volume" class="tableTh">High</th>
+          <th scope="col" id="volume" class="tableTh">Low</th> -->
           <th scope="col" id="volume" class="tableTh">Close</th>
           <th scope="col" id="volume" class="tableTh">%</th>
           <th scope="col" id="volume" class="tableTh">Profit</th>
@@ -97,6 +97,8 @@
           <th scope="col" id="volume" class="tableTh">Close</th>
           <th scope="col" id="volume" class="tableTh">Type</th>
           <th scope="col" id="volume" class="tableTh">Rsi</th>
+          <th scope="col" id="volume" class="tableTh">BuyML</th>
+          <th scope="col" id="volume" class="tableTh">SellML</th>
           <!-- <th scope="col" id="volume" class="tableTh">MACD/RSI</th>
           <th scope="col" id="volume" class="tableTh">MACD/negatif</th>
           <th scope="col" id="volume" class="tableTh">RSI/cross30</th> -->
@@ -114,8 +116,8 @@
           [ngClass]="{'alert alert-warning': order.closeDate == null}">
           <td>{{order.symbol}}</td>
           <td>{{order.openPrice.toFixed(5)}}</td>
-          <td>{{order.highPrice.toFixed(5)}}</td>
-          <td>{{order.lowPrice.toFixed(5)}}</td>
+          <!-- <td>{{order.highPrice.toFixed(5)}}</td>
+          <td>{{order.lowPrice.toFixed(5)}}</td> -->
           <td>{{order.closePrice.toFixed(5)}}</td>
           <td *ngIf="order.closePrice==0">--</td>
           <td *ngIf="order.closePrice==0">--</td>
@@ -141,6 +143,8 @@
           <td>{{order.closeDate}}</td>
           <td>{{order.type}}</td>
           <td>{{order.rsi.toFixed(2)}}</td>
+          <td>{{order.mlBuyScore.toFixed(2)}}</td>
+          <td>{{order.mlSellScore.toFixed(2)}}</td>
           <!-- <td *ngIf="((order.macd > order.macdSign && order.rsi>40 ))"  style="color: limegreen;">up</td> -->
           <!-- <td *ngIf="((order.macd <= order.macdSign && order.rsi < 50 ))"  style="color: rgb(236, 44, 44);">down</td>
           <td *ngIf="((order.macdSign < 0 ))"  style="color: rgb(236, 44, 44);">MACD negatif</td>
@@ -201,6 +205,19 @@
         <option *ngFor="let item of intervalList" [value]="item.value">{{ item.value }}
         </option>
       </select>
+    </div>
+
+    <div class="row">
+      <table class="table table-sm mt-2 table-dark">
+        <tbody>
+         <tr>
+          <td>
+            <a style="color: orange" >Balance</a>
+          </td>
+          <td>{{this.balance?.toFixed(0)}}</td>
+         </tr>
+        </tbody>
+      </table>
     </div>
 
     <div class="row" *ngIf="chartOptions">
