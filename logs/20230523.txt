@@ -1,0 +1,2267 @@
+2023-05-23 09:16:05.378 +02:00 [WRN] MarginCoin, started!
+2023-05-23 09:16:16.156 +02:00 [WRN] Get Account OK
+2023-05-23 09:16:18.873 +02:00 [WRN] Start trading market...
+2023-05-23 09:16:38.581 +02:00 [WRN] SellFack on ADAUSDT
+2023-05-23 09:16:44.920 +02:00 [WRN] Get Account OK
+2023-05-23 09:17:09.734 +02:00 [ERR] ProcessMarketMatrix failled
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at MarginCoin.Controllers.AlgoTradeController.EnterLongPosition(MarketStream symbolSpot, List`1 symbolCandles) in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 569
+   at MarginCoin.Controllers.AlgoTradeController.ReviewSpotMarket(MarketStream symbolSpot, List`1 candleMatrix) in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 437
+   at MarginCoin.Controllers.AlgoTradeController.ProcessMarketMatrix() in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 409
+2023-05-23 09:17:10.656 +02:00 [ERR] ProcessMarketMatrix failled
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at MarginCoin.Controllers.AlgoTradeController.EnterLongPosition(MarketStream symbolSpot, List`1 symbolCandles) in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 569
+   at MarginCoin.Controllers.AlgoTradeController.ReviewSpotMarket(MarketStream symbolSpot, List`1 candleMatrix) in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 437
+   at MarginCoin.Controllers.AlgoTradeController.ProcessMarketMatrix() in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 409
+2023-05-23 09:17:12.658 +02:00 [ERR] ProcessMarketMatrix failled
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at MarginCoin.Controllers.AlgoTradeController.EnterLongPosition(MarketStream symbolSpot, List`1 symbolCandles) in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 569
+   at MarginCoin.Controllers.AlgoTradeController.ReviewSpotMarket(MarketStream symbolSpot, List`1 candleMatrix) in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 437
+   at MarginCoin.Controllers.AlgoTradeController.ProcessMarketMatrix() in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 409
+2023-05-23 09:17:18.876 +02:00 [WRN] Initial call for ExportChart UI
+2023-05-23 14:18:38.338 +02:00 [WRN] MarginCoin, started!
+2023-05-23 14:18:57.248 +02:00 [WRN] Get Account OK
+2023-05-23 14:24:42.912 +02:00 [ERR] THE SIGNAL CLIENT IS DISCONNECTED
+2023-05-23 14:24:45.082 +02:00 [WRN] Get Account OK
+2023-05-23 14:24:55.376 +02:00 [ERR] THE SIGNAL CLIENT IS DISCONNECTED
+2023-05-23 14:25:08.179 +02:00 [WRN] Get Account OK
+2023-05-23 14:25:49.571 +02:00 [ERR] THE SIGNAL CLIENT IS DISCONNECTED
+2023-05-23 14:25:51.813 +02:00 [WRN] Get Account OK
+2023-05-23 14:25:58.993 +02:00 [ERR] THE SIGNAL CLIENT IS DISCONNECTED
+2023-05-23 14:26:00.752 +02:00 [WRN] Get Account OK
+2023-05-23 14:26:12.679 +02:00 [ERR] THE SIGNAL CLIENT IS DISCONNECTED
+2023-05-23 14:26:14.544 +02:00 [WRN] Get Account OK
+2023-05-23 14:29:28.574 +02:00 [ERR] THE SIGNAL CLIENT IS DISCONNECTED
+2023-05-23 14:29:30.251 +02:00 [WRN] Get Account OK
+2023-05-23 14:29:52.576 +02:00 [ERR] THE SIGNAL CLIENT IS DISCONNECTED
+2023-05-23 14:29:54.089 +02:00 [WRN] Get Account OK
+2023-05-23 14:29:55.591 +02:00 [WRN] Start trading market...
+2023-05-23 14:31:01.093 +02:00 [WRN] MarginCoin, started!
+2023-05-23 14:31:16.788 +02:00 [ERR] THE SIGNAL CLIENT IS DISCONNECTED
+2023-05-23 14:31:20.198 +02:00 [WRN] Get Account OK
+2023-05-23 14:31:30.883 +02:00 [WRN] Get Account OK
+2023-05-23 14:31:41.874 +02:00 [WRN] Start trading market...
+2023-05-23 14:33:46.000 +02:00 [WRN] Initial call for ExportChart UI
+2023-05-23 14:33:46.000 +02:00 [WRN] Watchdog restart websockets
+2023-05-23 14:33:46.001 +02:00 [WRN] New call at 33 for ExportChart UI
+2023-05-23 14:33:46.024 +02:00 [ERR] THE SIGNAL CLIENT IS DISCONNECTED
+2023-05-23 14:33:46.313 +02:00 [ERR] THE SIGNAL CLIENT IS DISCONNECTED
+2023-05-23 14:33:46.981 +02:00 [ERR] HTTP GET /sockjs-node/686/5i2m2yyh/websocket responded 500 in 149929.9656 ms
+System.AggregateException: One or more errors occurred. (The remote party closed the WebSocket connection without completing the close handshake.)
+ ---> System.Net.WebSockets.WebSocketException (2): The remote party closed the WebSocket connection without completing the close handshake. ---> System.IO.IOException: Unable to write data to the transport connection: Broken pipe.
+ ---> System.Net.Sockets.SocketException (32): Broken pipe
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.CreateException(SocketError error, Boolean forAsyncThrow)
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.SendAsyncForNetworkStream(Socket socket, CancellationToken cancellationToken)
+   at System.Net.Sockets.Socket.SendAsyncForNetworkStream(ReadOnlyMemory`1 buffer, SocketFlags socketFlags, CancellationToken cancellationToken)
+   at System.Net.Sockets.NetworkStream.WriteAsync(ReadOnlyMemory`1 buffer, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnection.WriteToStreamAsync(ReadOnlyMemory`1 source, Boolean async)
+   at System.Net.Http.HttpConnection.WriteWithoutBufferingAsync(ReadOnlyMemory`1 source, Boolean async)
+   at System.Net.Http.HttpConnection.RawConnectionStream.WriteAsync(ReadOnlyMemory`1 buffer, CancellationToken cancellationToken)
+   at System.Net.WebSockets.ManagedWebSocket.SendFrameFallbackAsync(MessageOpcode opcode, Boolean endOfMessage, Boolean disableCompression, ReadOnlyMemory`1 payloadBuffer, Task lockTask, CancellationToken cancellationToken)
+   at System.Runtime.CompilerServices.AsyncMethodBuilderCore.Start[TStateMachine](TStateMachine& stateMachine)
+   at System.Net.WebSockets.ManagedWebSocket.SendFrameFallbackAsync(MessageOpcode opcode, Boolean endOfMessage, Boolean disableCompression, ReadOnlyMemory`1 payloadBuffer, Task lockTask, CancellationToken cancellationToken)
+   at System.Net.WebSockets.ManagedWebSocket.SendFrameAsync(MessageOpcode opcode, Boolean endOfMessage, Boolean disableCompression, ReadOnlyMemory`1 payloadBuffer, CancellationToken cancellationToken)
+   at System.Net.WebSockets.ManagedWebSocket.HandleReceivedPingPongAsync(MessageHeader header, CancellationToken cancellationToken)
+   at System.Runtime.CompilerServices.AsyncMethodBuilderCore.Start[TStateMachine](TStateMachine& stateMachine)
+   at System.Net.WebSockets.ManagedWebSocket.HandleReceivedPingPongAsync(MessageHeader header, CancellationToken cancellationToken)
+   at System.Net.WebSockets.ManagedWebSocket.ReceiveAsyncPrivate[TResult](Memory`1 payloadBuffer, CancellationToken cancellationToken)
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state)
+   at System.Threading.ThreadPool.<>c.<.cctor>b__86_0(Object state)
+   at System.Threading.Tasks.Sources.ManualResetValueTaskSourceCore`1.SignalCompletion()
+   at System.Runtime.CompilerServices.PoolingAsyncValueTaskMethodBuilder.SetResult()
+   at System.Net.WebSockets.ManagedWebSocket.EnsureBufferContainsAsync(Int32 minimumRequiredBytes, CancellationToken cancellationToken, Boolean throwOnPrematureClosure)
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state)
+   at System.Threading.Tasks.AwaitTaskContinuation.RunOrScheduleAction(IAsyncStateMachineBox box, Boolean allowInlining)
+   at System.Threading.Tasks.Task.RunContinuations(Object continuationObject)
+   at System.Threading.Tasks.Task.FinishContinuations()
+   at System.Threading.Tasks.Task`1.TrySetResult(TResult result)
+   at System.Runtime.CompilerServices.AsyncTaskMethodBuilder`1.SetExistingTaskResult(Task`1 task, TResult result)
+   at System.Runtime.CompilerServices.AsyncValueTaskMethodBuilder`1.SetResult(TResult result)
+   at System.Net.Http.HttpConnection.RawConnectionStream.ReadAsync(Memory`1 buffer, CancellationToken cancellationToken)
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state)
+   at System.Runtime.CompilerServices.AsyncTaskMethodBuilder`1.AsyncStateMachineBox`1.MoveNext(Thread threadPoolThread)
+   at System.Threading.Tasks.AwaitTaskContinuation.RunOrScheduleAction(IAsyncStateMachineBox box, Boolean allowInlining)
+   at System.Threading.Tasks.Task.RunContinuations(Object continuationObject)
+   at System.Threading.Tasks.Task.FinishContinuations()
+   at System.Threading.Tasks.Task`1.TrySetResult(TResult result)
+   at System.Runtime.CompilerServices.AsyncTaskMethodBuilder`1.SetExistingTaskResult(Task`1 task, TResult result)
+   at System.Runtime.CompilerServices.AsyncValueTaskMethodBuilder`1.SetResult(TResult result)
+   at System.Net.Http.HttpConnection.ReadBufferedAsyncCore(Memory`1 destination)
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state)
+   at System.Runtime.CompilerServices.AsyncTaskMethodBuilder`1.AsyncStateMachineBox`1.MoveNext(Thread threadPoolThread)
+   at System.Threading.ThreadPool.<>c.<.cctor>b__86_0(Object state)
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.InvokeContinuation(Action`1 continuation, Object state, Boolean forceAsync, Boolean requiresExecutionContextFlow)
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.OnCompleted(SocketAsyncEventArgs _)
+   at System.Net.Sockets.SocketAsyncEventArgs.OnCompletedInternal()
+   at System.Net.Sockets.SocketAsyncEventArgs.FinishOperationAsyncSuccess(Int32 bytesTransferred, SocketFlags flags)
+   at System.Net.Sockets.SocketAsyncEventArgs.CompletionCallback(Int32 bytesTransferred, SocketFlags flags, SocketError socketError)
+   at System.Net.Sockets.SocketAsyncEventArgs.TransferCompletionCallbackCore(Int32 bytesTransferred, Byte[] socketAddress, Int32 socketAddressSize, SocketFlags receivedFlags, SocketError socketError)
+   at System.Net.Sockets.SocketAsyncContext.OperationQueue`1.ProcessAsyncOperation(TOperation op)
+   at System.Net.Sockets.SocketAsyncContext.ReadOperation.System.Threading.IThreadPoolWorkItem.Execute()
+   at System.Net.Sockets.SocketAsyncContext.HandleEvents(SocketEvents events)
+   at System.Net.Sockets.SocketAsyncEngine.System.Threading.IThreadPoolWorkItem.Execute()
+   at System.Threading.ThreadPoolWorkQueue.Dispatch()
+   at System.Threading.PortableThreadPool.WorkerThread.WorkerThreadStart()
+   at System.Threading.Thread.StartCallback()
+--- End of stack trace from previous location ---
+
+   --- End of inner exception stack trace ---
+   at System.Net.WebSockets.ManagedWebSocket.SendFrameFallbackAsync(MessageOpcode opcode, Boolean endOfMessage, Boolean disableCompression, ReadOnlyMemory`1 payloadBuffer, Task lockTask, CancellationToken cancellationToken)
+   at System.Net.WebSockets.ManagedWebSocket.SendFrameFallbackAsync(MessageOpcode opcode, Boolean endOfMessage, Boolean disableCompression, ReadOnlyMemory`1 payloadBuffer, Task lockTask, CancellationToken cancellationToken)
+   at System.Net.WebSockets.ManagedWebSocket.HandleReceivedPingPongAsync(MessageHeader header, CancellationToken cancellationToken)
+   at System.Net.WebSockets.ManagedWebSocket.ReceiveAsyncPrivate[TResult](Memory`1 payloadBuffer, CancellationToken cancellationToken)
+   at System.Runtime.CompilerServices.PoolingAsyncValueTaskMethodBuilder`1.StateMachineBox`1.System.Threading.Tasks.Sources.IValueTaskSource<TResult>.GetResult(Int16 token)
+   at System.Threading.Tasks.ValueTask`1.ValueTaskSourceAsTask.<>c.<.cctor>b__4_0(Object state)
+   --- End of inner exception stack trace ---
+   at Microsoft.AspNetCore.SpaServices.Extensions.Proxy.SpaProxy.PumpWebSocket(WebSocket source, WebSocket destination, Int32 bufferSize, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.SpaServices.Extensions.Proxy.SpaProxy.AcceptProxyWebSocketRequest(HttpContext context, Uri destinationUri, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.SpaServices.Extensions.Proxy.SpaProxy.PerformProxyRequest(HttpContext context, HttpClient httpClient, Task`1 baseUriTask, CancellationToken applicationStoppingToken, Boolean proxy404s)
+   at Microsoft.AspNetCore.Builder.SpaProxyingExtensions.<>c__DisplayClass2_0.<<UseProxyToSpaDevelopmentServer>b__0>d.MoveNext()
+--- End of stack trace from previous location ---
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+2023-05-23 14:33:47.650 +02:00 [ERR] An unhandled exception has occurred while executing the request.
+System.AggregateException: One or more errors occurred. (The remote party closed the WebSocket connection without completing the close handshake.)
+ ---> System.Net.WebSockets.WebSocketException (2): The remote party closed the WebSocket connection without completing the close handshake. ---> System.IO.IOException: Unable to write data to the transport connection: Broken pipe.
+ ---> System.Net.Sockets.SocketException (32): Broken pipe
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.CreateException(SocketError error, Boolean forAsyncThrow)
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.SendAsyncForNetworkStream(Socket socket, CancellationToken cancellationToken)
+   at System.Net.Sockets.Socket.SendAsyncForNetworkStream(ReadOnlyMemory`1 buffer, SocketFlags socketFlags, CancellationToken cancellationToken)
+   at System.Net.Sockets.NetworkStream.WriteAsync(ReadOnlyMemory`1 buffer, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnection.WriteToStreamAsync(ReadOnlyMemory`1 source, Boolean async)
+   at System.Net.Http.HttpConnection.WriteWithoutBufferingAsync(ReadOnlyMemory`1 source, Boolean async)
+   at System.Net.Http.HttpConnection.RawConnectionStream.WriteAsync(ReadOnlyMemory`1 buffer, CancellationToken cancellationToken)
+   at System.Net.WebSockets.ManagedWebSocket.SendFrameFallbackAsync(MessageOpcode opcode, Boolean endOfMessage, Boolean disableCompression, ReadOnlyMemory`1 payloadBuffer, Task lockTask, CancellationToken cancellationToken)
+   at System.Runtime.CompilerServices.AsyncMethodBuilderCore.Start[TStateMachine](TStateMachine& stateMachine)
+   at System.Net.WebSockets.ManagedWebSocket.SendFrameFallbackAsync(MessageOpcode opcode, Boolean endOfMessage, Boolean disableCompression, ReadOnlyMemory`1 payloadBuffer, Task lockTask, CancellationToken cancellationToken)
+   at System.Net.WebSockets.ManagedWebSocket.SendFrameAsync(MessageOpcode opcode, Boolean endOfMessage, Boolean disableCompression, ReadOnlyMemory`1 payloadBuffer, CancellationToken cancellationToken)
+   at System.Net.WebSockets.ManagedWebSocket.HandleReceivedPingPongAsync(MessageHeader header, CancellationToken cancellationToken)
+   at System.Runtime.CompilerServices.AsyncMethodBuilderCore.Start[TStateMachine](TStateMachine& stateMachine)
+   at System.Net.WebSockets.ManagedWebSocket.HandleReceivedPingPongAsync(MessageHeader header, CancellationToken cancellationToken)
+   at System.Net.WebSockets.ManagedWebSocket.ReceiveAsyncPrivate[TResult](Memory`1 payloadBuffer, CancellationToken cancellationToken)
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state)
+   at System.Threading.ThreadPool.<>c.<.cctor>b__86_0(Object state)
+   at System.Threading.Tasks.Sources.ManualResetValueTaskSourceCore`1.SignalCompletion()
+   at System.Runtime.CompilerServices.PoolingAsyncValueTaskMethodBuilder.SetResult()
+   at System.Net.WebSockets.ManagedWebSocket.EnsureBufferContainsAsync(Int32 minimumRequiredBytes, CancellationToken cancellationToken, Boolean throwOnPrematureClosure)
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state)
+   at System.Threading.Tasks.AwaitTaskContinuation.RunOrScheduleAction(IAsyncStateMachineBox box, Boolean allowInlining)
+   at System.Threading.Tasks.Task.RunContinuations(Object continuationObject)
+   at System.Threading.Tasks.Task.FinishContinuations()
+   at System.Threading.Tasks.Task`1.TrySetResult(TResult result)
+   at System.Runtime.CompilerServices.AsyncTaskMethodBuilder`1.SetExistingTaskResult(Task`1 task, TResult result)
+   at System.Runtime.CompilerServices.AsyncValueTaskMethodBuilder`1.SetResult(TResult result)
+   at System.Net.Http.HttpConnection.RawConnectionStream.ReadAsync(Memory`1 buffer, CancellationToken cancellationToken)
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state)
+   at System.Runtime.CompilerServices.AsyncTaskMethodBuilder`1.AsyncStateMachineBox`1.MoveNext(Thread threadPoolThread)
+   at System.Threading.Tasks.AwaitTaskContinuation.RunOrScheduleAction(IAsyncStateMachineBox box, Boolean allowInlining)
+   at System.Threading.Tasks.Task.RunContinuations(Object continuationObject)
+   at System.Threading.Tasks.Task.FinishContinuations()
+   at System.Threading.Tasks.Task`1.TrySetResult(TResult result)
+   at System.Runtime.CompilerServices.AsyncTaskMethodBuilder`1.SetExistingTaskResult(Task`1 task, TResult result)
+   at System.Runtime.CompilerServices.AsyncValueTaskMethodBuilder`1.SetResult(TResult result)
+   at System.Net.Http.HttpConnection.ReadBufferedAsyncCore(Memory`1 destination)
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state)
+   at System.Runtime.CompilerServices.AsyncTaskMethodBuilder`1.AsyncStateMachineBox`1.MoveNext(Thread threadPoolThread)
+   at System.Threading.ThreadPool.<>c.<.cctor>b__86_0(Object state)
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.InvokeContinuation(Action`1 continuation, Object state, Boolean forceAsync, Boolean requiresExecutionContextFlow)
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.OnCompleted(SocketAsyncEventArgs _)
+   at System.Net.Sockets.SocketAsyncEventArgs.OnCompletedInternal()
+   at System.Net.Sockets.SocketAsyncEventArgs.FinishOperationAsyncSuccess(Int32 bytesTransferred, SocketFlags flags)
+   at System.Net.Sockets.SocketAsyncEventArgs.CompletionCallback(Int32 bytesTransferred, SocketFlags flags, SocketError socketError)
+   at System.Net.Sockets.SocketAsyncEventArgs.TransferCompletionCallbackCore(Int32 bytesTransferred, Byte[] socketAddress, Int32 socketAddressSize, SocketFlags receivedFlags, SocketError socketError)
+   at System.Net.Sockets.SocketAsyncContext.OperationQueue`1.ProcessAsyncOperation(TOperation op)
+   at System.Net.Sockets.SocketAsyncContext.ReadOperation.System.Threading.IThreadPoolWorkItem.Execute()
+   at System.Net.Sockets.SocketAsyncContext.HandleEvents(SocketEvents events)
+   at System.Net.Sockets.SocketAsyncEngine.System.Threading.IThreadPoolWorkItem.Execute()
+   at System.Threading.ThreadPoolWorkQueue.Dispatch()
+   at System.Threading.PortableThreadPool.WorkerThread.WorkerThreadStart()
+   at System.Threading.Thread.StartCallback()
+--- End of stack trace from previous location ---
+
+   --- End of inner exception stack trace ---
+   at System.Net.WebSockets.ManagedWebSocket.SendFrameFallbackAsync(MessageOpcode opcode, Boolean endOfMessage, Boolean disableCompression, ReadOnlyMemory`1 payloadBuffer, Task lockTask, CancellationToken cancellationToken)
+   at System.Net.WebSockets.ManagedWebSocket.SendFrameFallbackAsync(MessageOpcode opcode, Boolean endOfMessage, Boolean disableCompression, ReadOnlyMemory`1 payloadBuffer, Task lockTask, CancellationToken cancellationToken)
+   at System.Net.WebSockets.ManagedWebSocket.HandleReceivedPingPongAsync(MessageHeader header, CancellationToken cancellationToken)
+   at System.Net.WebSockets.ManagedWebSocket.ReceiveAsyncPrivate[TResult](Memory`1 payloadBuffer, CancellationToken cancellationToken)
+   at System.Runtime.CompilerServices.PoolingAsyncValueTaskMethodBuilder`1.StateMachineBox`1.System.Threading.Tasks.Sources.IValueTaskSource<TResult>.GetResult(Int16 token)
+   at System.Threading.Tasks.ValueTask`1.ValueTaskSourceAsTask.<>c.<.cctor>b__4_0(Object state)
+   --- End of inner exception stack trace ---
+   at Microsoft.AspNetCore.SpaServices.Extensions.Proxy.SpaProxy.PumpWebSocket(WebSocket source, WebSocket destination, Int32 bufferSize, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.SpaServices.Extensions.Proxy.SpaProxy.AcceptProxyWebSocketRequest(HttpContext context, Uri destinationUri, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.SpaServices.Extensions.Proxy.SpaProxy.PerformProxyRequest(HttpContext context, HttpClient httpClient, Task`1 baseUriTask, CancellationToken applicationStoppingToken, Boolean proxy404s)
+   at Microsoft.AspNetCore.Builder.SpaProxyingExtensions.<>c__DisplayClass2_0.<<UseProxyToSpaDevelopmentServer>b__0>d.MoveNext()
+--- End of stack trace from previous location ---
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware.Invoke(HttpContext context)
+2023-05-23 14:33:47.659 +02:00 [WRN] The response has already started, the error page middleware will not be executed.
+2023-05-23 14:33:47.779 +02:00 [ERR] Connection id "0HMQRH6AHMJJH", Request id "0HMQRH6AHMJJH:00000002": An unhandled exception was thrown by the application.
+System.AggregateException: One or more errors occurred. (The remote party closed the WebSocket connection without completing the close handshake.)
+ ---> System.Net.WebSockets.WebSocketException (2): The remote party closed the WebSocket connection without completing the close handshake. ---> System.IO.IOException: Unable to write data to the transport connection: Broken pipe.
+ ---> System.Net.Sockets.SocketException (32): Broken pipe
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.CreateException(SocketError error, Boolean forAsyncThrow)
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.SendAsyncForNetworkStream(Socket socket, CancellationToken cancellationToken)
+   at System.Net.Sockets.Socket.SendAsyncForNetworkStream(ReadOnlyMemory`1 buffer, SocketFlags socketFlags, CancellationToken cancellationToken)
+   at System.Net.Sockets.NetworkStream.WriteAsync(ReadOnlyMemory`1 buffer, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnection.WriteToStreamAsync(ReadOnlyMemory`1 source, Boolean async)
+   at System.Net.Http.HttpConnection.WriteWithoutBufferingAsync(ReadOnlyMemory`1 source, Boolean async)
+   at System.Net.Http.HttpConnection.RawConnectionStream.WriteAsync(ReadOnlyMemory`1 buffer, CancellationToken cancellationToken)
+   at System.Net.WebSockets.ManagedWebSocket.SendFrameFallbackAsync(MessageOpcode opcode, Boolean endOfMessage, Boolean disableCompression, ReadOnlyMemory`1 payloadBuffer, Task lockTask, CancellationToken cancellationToken)
+   at System.Runtime.CompilerServices.AsyncMethodBuilderCore.Start[TStateMachine](TStateMachine& stateMachine)
+   at System.Net.WebSockets.ManagedWebSocket.SendFrameFallbackAsync(MessageOpcode opcode, Boolean endOfMessage, Boolean disableCompression, ReadOnlyMemory`1 payloadBuffer, Task lockTask, CancellationToken cancellationToken)
+   at System.Net.WebSockets.ManagedWebSocket.SendFrameAsync(MessageOpcode opcode, Boolean endOfMessage, Boolean disableCompression, ReadOnlyMemory`1 payloadBuffer, CancellationToken cancellationToken)
+   at System.Net.WebSockets.ManagedWebSocket.HandleReceivedPingPongAsync(MessageHeader header, CancellationToken cancellationToken)
+   at System.Runtime.CompilerServices.AsyncMethodBuilderCore.Start[TStateMachine](TStateMachine& stateMachine)
+   at System.Net.WebSockets.ManagedWebSocket.HandleReceivedPingPongAsync(MessageHeader header, CancellationToken cancellationToken)
+   at System.Net.WebSockets.ManagedWebSocket.ReceiveAsyncPrivate[TResult](Memory`1 payloadBuffer, CancellationToken cancellationToken)
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state)
+   at System.Threading.ThreadPool.<>c.<.cctor>b__86_0(Object state)
+   at System.Threading.Tasks.Sources.ManualResetValueTaskSourceCore`1.SignalCompletion()
+   at System.Runtime.CompilerServices.PoolingAsyncValueTaskMethodBuilder.SetResult()
+   at System.Net.WebSockets.ManagedWebSocket.EnsureBufferContainsAsync(Int32 minimumRequiredBytes, CancellationToken cancellationToken, Boolean throwOnPrematureClosure)
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state)
+   at System.Threading.Tasks.AwaitTaskContinuation.RunOrScheduleAction(IAsyncStateMachineBox box, Boolean allowInlining)
+   at System.Threading.Tasks.Task.RunContinuations(Object continuationObject)
+   at System.Threading.Tasks.Task.FinishContinuations()
+   at System.Threading.Tasks.Task`1.TrySetResult(TResult result)
+   at System.Runtime.CompilerServices.AsyncTaskMethodBuilder`1.SetExistingTaskResult(Task`1 task, TResult result)
+   at System.Runtime.CompilerServices.AsyncValueTaskMethodBuilder`1.SetResult(TResult result)
+   at System.Net.Http.HttpConnection.RawConnectionStream.ReadAsync(Memory`1 buffer, CancellationToken cancellationToken)
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state)
+   at System.Runtime.CompilerServices.AsyncTaskMethodBuilder`1.AsyncStateMachineBox`1.MoveNext(Thread threadPoolThread)
+   at System.Threading.Tasks.AwaitTaskContinuation.RunOrScheduleAction(IAsyncStateMachineBox box, Boolean allowInlining)
+   at System.Threading.Tasks.Task.RunContinuations(Object continuationObject)
+   at System.Threading.Tasks.Task.FinishContinuations()
+   at System.Threading.Tasks.Task`1.TrySetResult(TResult result)
+   at System.Runtime.CompilerServices.AsyncTaskMethodBuilder`1.SetExistingTaskResult(Task`1 task, TResult result)
+   at System.Runtime.CompilerServices.AsyncValueTaskMethodBuilder`1.SetResult(TResult result)
+   at System.Net.Http.HttpConnection.ReadBufferedAsyncCore(Memory`1 destination)
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state)
+   at System.Runtime.CompilerServices.AsyncTaskMethodBuilder`1.AsyncStateMachineBox`1.MoveNext(Thread threadPoolThread)
+   at System.Threading.ThreadPool.<>c.<.cctor>b__86_0(Object state)
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.InvokeContinuation(Action`1 continuation, Object state, Boolean forceAsync, Boolean requiresExecutionContextFlow)
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.OnCompleted(SocketAsyncEventArgs _)
+   at System.Net.Sockets.SocketAsyncEventArgs.OnCompletedInternal()
+   at System.Net.Sockets.SocketAsyncEventArgs.FinishOperationAsyncSuccess(Int32 bytesTransferred, SocketFlags flags)
+   at System.Net.Sockets.SocketAsyncEventArgs.CompletionCallback(Int32 bytesTransferred, SocketFlags flags, SocketError socketError)
+   at System.Net.Sockets.SocketAsyncEventArgs.TransferCompletionCallbackCore(Int32 bytesTransferred, Byte[] socketAddress, Int32 socketAddressSize, SocketFlags receivedFlags, SocketError socketError)
+   at System.Net.Sockets.SocketAsyncContext.OperationQueue`1.ProcessAsyncOperation(TOperation op)
+   at System.Net.Sockets.SocketAsyncContext.ReadOperation.System.Threading.IThreadPoolWorkItem.Execute()
+   at System.Net.Sockets.SocketAsyncContext.HandleEvents(SocketEvents events)
+   at System.Net.Sockets.SocketAsyncEngine.System.Threading.IThreadPoolWorkItem.Execute()
+   at System.Threading.ThreadPoolWorkQueue.Dispatch()
+   at System.Threading.PortableThreadPool.WorkerThread.WorkerThreadStart()
+   at System.Threading.Thread.StartCallback()
+--- End of stack trace from previous location ---
+
+   --- End of inner exception stack trace ---
+   at System.Net.WebSockets.ManagedWebSocket.SendFrameFallbackAsync(MessageOpcode opcode, Boolean endOfMessage, Boolean disableCompression, ReadOnlyMemory`1 payloadBuffer, Task lockTask, CancellationToken cancellationToken)
+   at System.Net.WebSockets.ManagedWebSocket.SendFrameFallbackAsync(MessageOpcode opcode, Boolean endOfMessage, Boolean disableCompression, ReadOnlyMemory`1 payloadBuffer, Task lockTask, CancellationToken cancellationToken)
+   at System.Net.WebSockets.ManagedWebSocket.HandleReceivedPingPongAsync(MessageHeader header, CancellationToken cancellationToken)
+   at System.Net.WebSockets.ManagedWebSocket.ReceiveAsyncPrivate[TResult](Memory`1 payloadBuffer, CancellationToken cancellationToken)
+   at System.Runtime.CompilerServices.PoolingAsyncValueTaskMethodBuilder`1.StateMachineBox`1.System.Threading.Tasks.Sources.IValueTaskSource<TResult>.GetResult(Int16 token)
+   at System.Threading.Tasks.ValueTask`1.ValueTaskSourceAsTask.<>c.<.cctor>b__4_0(Object state)
+   --- End of inner exception stack trace ---
+   at Microsoft.AspNetCore.SpaServices.Extensions.Proxy.SpaProxy.PumpWebSocket(WebSocket source, WebSocket destination, Int32 bufferSize, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.SpaServices.Extensions.Proxy.SpaProxy.AcceptProxyWebSocketRequest(HttpContext context, Uri destinationUri, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.SpaServices.Extensions.Proxy.SpaProxy.PerformProxyRequest(HttpContext context, HttpClient httpClient, Task`1 baseUriTask, CancellationToken applicationStoppingToken, Boolean proxy404s)
+   at Microsoft.AspNetCore.Builder.SpaProxyingExtensions.<>c__DisplayClass2_0.<<UseProxyToSpaDevelopmentServer>b__0>d.MoveNext()
+--- End of stack trace from previous location ---
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.HttpProtocol.ProcessRequests[TContext](IHttpApplication`1 application)
+2023-05-23 14:33:49.984 +02:00 [WRN] Get Account OK
+2023-05-23 14:34:00.405 +02:00 [ERR] THE SIGNAL CLIENT IS DISCONNECTED
+2023-05-23 14:34:02.945 +02:00 [WRN] Get Account OK
+2023-05-23 14:34:09.642 +02:00 [ERR] THE SIGNAL CLIENT IS DISCONNECTED
+2023-05-23 14:34:12.391 +02:00 [WRN] Get Account OK
+2023-05-23 14:34:13.453 +02:00 [WRN] Get Account OK
+2023-05-23 14:34:47.647 +02:00 [WRN] Watchdog restart websockets
+2023-05-23 14:34:53.399 +02:00 [ERR] THE SIGNAL CLIENT IS DISCONNECTED
+2023-05-23 14:34:55.411 +02:00 [WRN] Get Account OK
+2023-05-23 14:35:07.658 +02:00 [WRN] Start trading market...
+2023-05-23 14:35:07.662 +02:00 [WRN] Whatchdog kill all websock and restart it
+2023-05-23 14:35:35.693 +02:00 [ERR] THE SIGNAL CLIENT IS DISCONNECTED
+2023-05-23 14:35:37.754 +02:00 [WRN] Get Account OK
+2023-05-23 14:36:12.537 +02:00 [ERR] THE SIGNAL CLIENT IS DISCONNECTED
+2023-05-23 14:36:14.599 +02:00 [WRN] Get Account OK
+2023-05-23 14:36:36.624 +02:00 [ERR] THE SIGNAL CLIENT IS DISCONNECTED
+2023-05-23 14:36:38.206 +02:00 [WRN] Get Account OK
+2023-05-23 14:36:59.492 +02:00 [ERR] THE SIGNAL CLIENT IS DISCONNECTED
+2023-05-23 14:37:01.114 +02:00 [WRN] Get Account OK
+2023-05-23 14:37:21.283 +02:00 [ERR] THE SIGNAL CLIENT IS DISCONNECTED
+2023-05-23 14:37:22.723 +02:00 [WRN] Get Account OK
+2023-05-23 14:38:59.964 +02:00 [ERR] THE SIGNAL CLIENT IS DISCONNECTED
+2023-05-23 14:39:02.428 +02:00 [WRN] Get Account OK
+2023-05-23 14:39:11.615 +02:00 [ERR] THE SIGNAL CLIENT IS DISCONNECTED
+2023-05-23 14:39:13.057 +02:00 [WRN] Get Account OK
+2023-05-23 14:39:55.308 +02:00 [ERR] THE SIGNAL CLIENT IS DISCONNECTED
+2023-05-23 14:39:56.933 +02:00 [WRN] Get Account OK
+2023-05-23 14:40:01.520 +02:00 [ERR] THE SIGNAL CLIENT IS DISCONNECTED
+2023-05-23 14:40:03.521 +02:00 [WRN] Get Account OK
+2023-05-23 14:40:11.386 +02:00 [ERR] THE SIGNAL CLIENT IS DISCONNECTED
+2023-05-23 14:40:13.222 +02:00 [WRN] Get Account OK
+2023-05-23 14:40:46.598 +02:00 [ERR] THE SIGNAL CLIENT IS DISCONNECTED
+2023-05-23 14:40:48.133 +02:00 [WRN] Get Account OK
+2023-05-23 14:41:11.062 +02:00 [ERR] THE SIGNAL CLIENT IS DISCONNECTED
+2023-05-23 14:41:12.330 +02:00 [WRN] Get Account OK
+2023-05-23 14:41:31.405 +02:00 [ERR] THE SIGNAL CLIENT IS DISCONNECTED
+2023-05-23 14:41:33.251 +02:00 [WRN] Get Account OK
+2023-05-23 14:41:41.395 +02:00 [ERR] THE SIGNAL CLIENT IS DISCONNECTED
+2023-05-23 14:41:42.713 +02:00 [WRN] Get Account OK
+2023-05-23 14:42:26.579 +02:00 [ERR] THE SIGNAL CLIENT IS DISCONNECTED
+2023-05-23 14:42:28.426 +02:00 [WRN] Get Account OK
+2023-05-23 14:42:52.224 +02:00 [ERR] THE SIGNAL CLIENT IS DISCONNECTED
+2023-05-23 14:42:54.076 +02:00 [WRN] Get Account OK
+2023-05-23 14:45:00.085 +02:00 [WRN] New candle save : ARPAUSDT
+2023-05-23 14:45:00.114 +02:00 [WRN] New candle save : CKBUSDT
+2023-05-23 14:45:00.114 +02:00 [WRN] New candle save : CFXUSDT
+2023-05-23 14:45:00.114 +02:00 [WRN] New candle save : CRVUSDT
+2023-05-23 14:45:00.114 +02:00 [WRN] New candle save : ANTUSDT
+2023-05-23 14:45:00.115 +02:00 [WRN] New candle save : CELRUSDT
+2023-05-23 14:45:00.115 +02:00 [WRN] New candle save : ANTUSDT
+2023-05-23 14:45:00.115 +02:00 [WRN] New candle save : CFXUSDT
+2023-05-23 14:45:00.142 +02:00 [WRN] New candle save : HIGHUSDT
+2023-05-23 14:45:00.116 +02:00 [WRN] New candle save : ARPAUSDT
+2023-05-23 14:45:00.143 +02:00 [WRN] New candle save : CELRUSDT
+2023-05-23 14:45:00.116 +02:00 [WRN] New candle save : INJUSDT
+2023-05-23 14:45:00.144 +02:00 [WRN] New candle save : IMXUSDT
+2023-05-23 14:45:00.147 +02:00 [WRN] New candle save : INJUSDT
+2023-05-23 14:45:00.146 +02:00 [WRN] New candle save : RNDRUSDT
+2023-05-23 14:45:00.146 +02:00 [WRN] New candle save : HIGHUSDT
+2023-05-23 14:45:00.175 +02:00 [WRN] New candle save : ACHUSDT
+2023-05-23 14:45:00.180 +02:00 [WRN] New candle save : ACHUSDT
+2023-05-23 14:45:00.184 +02:00 [WRN] New candle save : RNDRUSDT
+2023-05-23 14:45:00.211 +02:00 [WRN] New candle save : IMXUSDT
+2023-05-23 14:45:00.212 +02:00 [WRN] New candle save : CRVUSDT
+2023-05-23 14:45:00.215 +02:00 [WRN] New candle save : STGUSDT
+2023-05-23 14:45:00.216 +02:00 [WRN] New candle save : ARBUSDT
+2023-05-23 14:45:00.217 +02:00 [WRN] New candle save : ARBUSDT
+2023-05-23 14:48:46.020 +02:00 [WRN] New call at 48 for ExportChart UI
+2023-05-23 14:49:27.433 +02:00 [WRN] Call Prediction on ARPAUSDT down 0,9961314/0,0038685675
+2023-05-23 14:49:27.514 +02:00 [WRN] Call Prediction on CFXUSDT (1) down 0,9554204/0,04457967
+2023-05-23 14:49:27.592 +02:00 [WRN] Call Prediction on CRVUSDT down 0,99962795/0,00037205857
+2023-05-23 14:49:27.673 +02:00 [WRN] Call Prediction on HIGHUSDT down 0,9990252/0,00097476144
+2023-05-23 14:49:27.756 +02:00 [WRN] Call Prediction on CKBUSDT down 0,9973525/0,002647501
+2023-05-23 14:49:27.971 +02:00 [WRN] Call Prediction on ARBUSDT down 0,9976413/0,002358655
+2023-05-23 14:49:28.048 +02:00 [WRN] Call Prediction on RNDRUSDT down 0,9938472/0,006152832
+2023-05-23 14:49:28.128 +02:00 [WRN] Call Prediction on HIGHUSDT (1) down 0,9990252/0,00097476144
+2023-05-23 14:49:28.207 +02:00 [WRN] Call Prediction on ANTUSDT down 0,9986864/0,0013136339
+2023-05-23 14:49:28.286 +02:00 [WRN] Call Prediction on CELRUSDT down 0,9975413/0,0024587323
+2023-05-23 14:49:28.370 +02:00 [WRN] Call Prediction on RNDRUSDT (1) down 0,9938472/0,006152832
+2023-05-23 14:49:28.447 +02:00 [WRN] Call Prediction on ARPAUSDT (1) down 0,9961314/0,0038685675
+2023-05-23 14:49:28.532 +02:00 [WRN] Call Prediction on CFXUSDT down 0,9554204/0,04457967
+2023-05-23 14:49:28.612 +02:00 [WRN] Call Prediction on IMXUSDT (1) down 0,99740463/0,0025953082
+2023-05-23 14:49:28.690 +02:00 [WRN] Call Prediction on ACHUSDT down 0,8714858/0,1285142
+2023-05-23 14:49:28.769 +02:00 [WRN] Call Prediction on IMXUSDT down 0,99740463/0,0025953082
+2023-05-23 14:49:28.770 +02:00 [WRN] ----------------ML Updated---------------------
+2023-05-23 14:55:28.900 +02:00 [WRN] Call Prediction on CRVUSDT down 0,99962795/0,00037205857
+2023-05-23 14:55:28.975 +02:00 [WRN] Call Prediction on CKBUSDT down 0,9973525/0,002647501
+2023-05-23 14:55:29.054 +02:00 [WRN] Call Prediction on ARBUSDT down 0,9976413/0,002358655
+2023-05-23 14:55:29.132 +02:00 [WRN] Call Prediction on ANTUSDT down 0,9986864/0,0013136339
+2023-05-23 14:55:29.216 +02:00 [WRN] Call Prediction on CELRUSDT down 0,9975413/0,0024587323
+2023-05-23 14:55:29.295 +02:00 [WRN] Call Prediction on ACHUSDT down 0,8714858/0,1285142
+2023-05-23 14:55:29.295 +02:00 [WRN] ----------------ML Updated---------------------
+2023-05-23 15:00:00.118 +02:00 [WRN] New candle save : CELRUSDT
+2023-05-23 15:00:00.118 +02:00 [WRN] New candle save : ARPAUSDT
+2023-05-23 15:00:00.118 +02:00 [WRN] New candle save : CELRUSDT
+2023-05-23 15:00:00.118 +02:00 [WRN] New candle save : INJUSDT
+2023-05-23 15:00:00.118 +02:00 [WRN] New candle save : ANTUSDT
+2023-05-23 15:00:00.119 +02:00 [WRN] New candle save : CFXUSDT
+2023-05-23 15:00:00.119 +02:00 [WRN] New candle save : HIGHUSDT
+2023-05-23 15:00:00.119 +02:00 [WRN] New candle save : INJUSDT
+2023-05-23 15:00:00.119 +02:00 [WRN] New candle save : CRVUSDT
+2023-05-23 15:00:00.119 +02:00 [WRN] New candle save : ARPAUSDT
+2023-05-23 15:00:00.119 +02:00 [WRN] New candle save : CKBUSDT
+2023-05-23 15:00:00.119 +02:00 [WRN] New candle save : ANTUSDT
+2023-05-23 15:00:00.235 +02:00 [WRN] New candle save : HIGHUSDT
+2023-05-23 15:00:00.235 +02:00 [WRN] New candle save : IMXUSDT
+2023-05-23 15:00:00.235 +02:00 [WRN] New candle save : ACHUSDT
+2023-05-23 15:00:00.235 +02:00 [WRN] New candle save : RNDRUSDT
+2023-05-23 15:00:00.235 +02:00 [WRN] New candle save : CRVUSDT
+2023-05-23 15:00:00.236 +02:00 [WRN] New candle save : RNDRUSDT
+2023-05-23 15:00:00.236 +02:00 [WRN] New candle save : IMXUSDT
+2023-05-23 15:00:00.236 +02:00 [WRN] New candle save : STGUSDT
+2023-05-23 15:00:00.236 +02:00 [WRN] New candle save : ACHUSDT
+2023-05-23 15:00:00.236 +02:00 [WRN] New candle save : CFXUSDT
+2023-05-23 15:00:00.266 +02:00 [WRN] New candle save : ARBUSDT
+2023-05-23 15:00:00.266 +02:00 [WRN] New candle save : ARBUSDT
+2023-05-23 15:03:46.001 +02:00 [WRN] New call at 3 for ExportChart UI
+2023-05-23 15:04:21.994 +02:00 [WRN] Call Prediction on ACHUSDT (1) down 0,8462133/0,15378675
+2023-05-23 15:04:22.071 +02:00 [WRN] Call Prediction on ARPAUSDT down 0,9993592/0,00064077816
+2023-05-23 15:04:22.151 +02:00 [WRN] Call Prediction on CRVUSDT down 0,99998665/1,3309841E-05
+2023-05-23 15:04:22.238 +02:00 [WRN] Call Prediction on HIGHUSDT down 0,99945503/0,00054499763
+2023-05-23 15:04:22.320 +02:00 [WRN] Call Prediction on CKBUSDT down 0,9999461/5,393887E-05
+2023-05-23 15:04:22.403 +02:00 [WRN] Call Prediction on ARBUSDT down 0,9997236/0,00027633936
+2023-05-23 15:04:22.485 +02:00 [WRN] Call Prediction on RNDRUSDT down 0,98966414/0,010335841
+2023-05-23 15:04:22.584 +02:00 [WRN] Call Prediction on INJUSDT down 0,99796546/0,0020345352
+2023-05-23 15:04:22.661 +02:00 [WRN] Call Prediction on HIGHUSDT (1) down 0,99945503/0,00054499763
+2023-05-23 15:04:22.773 +02:00 [WRN] Call Prediction on ANTUSDT down 0,99990284/9,71949E-05
+2023-05-23 15:04:22.858 +02:00 [WRN] Call Prediction on RNDRUSDT (1) down 0,98966414/0,010335841
+2023-05-23 15:04:22.934 +02:00 [WRN] Call Prediction on ARPAUSDT (1) down 0,9993592/0,00064077816
+2023-05-23 15:04:23.011 +02:00 [WRN] Call Prediction on CFXUSDT down 0,8881654/0,11183453
+2023-05-23 15:04:23.083 +02:00 [WRN] Call Prediction on IMXUSDT (1) down 0,9992448/0,0007551901
+2023-05-23 15:04:23.161 +02:00 [WRN] Call Prediction on ACHUSDT down 0,8462133/0,15378675
+2023-05-23 15:04:23.233 +02:00 [WRN] Call Prediction on IMXUSDT down 0,9992448/0,0007551901
+2023-05-23 15:04:23.233 +02:00 [WRN] ----------------ML Updated---------------------
+2023-05-23 15:10:28.936 +02:00 [WRN] Call Prediction on CRVUSDT down 0,99998665/1,3309841E-05
+2023-05-23 15:10:29.004 +02:00 [WRN] Call Prediction on CKBUSDT down 0,9999461/5,393887E-05
+2023-05-23 15:10:29.073 +02:00 [WRN] Call Prediction on ARBUSDT down 0,9997236/0,00027633936
+2023-05-23 15:10:29.147 +02:00 [WRN] Call Prediction on INJUSDT down 0,99796546/0,0020345352
+2023-05-23 15:10:29.227 +02:00 [WRN] Call Prediction on ANTUSDT down 0,99990284/9,71949E-05
+2023-05-23 15:10:29.298 +02:00 [WRN] Call Prediction on CFXUSDT down 0,8881654/0,11183453
+2023-05-23 15:10:29.298 +02:00 [WRN] ----------------ML Updated---------------------
+2023-05-23 15:15:00.113 +02:00 [WRN] New candle save : ARPAUSDT
+2023-05-23 15:15:00.120 +02:00 [WRN] New candle save : ARPAUSDT
+2023-05-23 15:15:00.121 +02:00 [WRN] New candle save : CELRUSDT
+2023-05-23 15:15:00.122 +02:00 [WRN] New candle save : ANTUSDT
+2023-05-23 15:15:00.123 +02:00 [WRN] New candle save : CFXUSDT
+2023-05-23 15:15:00.123 +02:00 [WRN] New candle save : CELRUSDT
+2023-05-23 15:15:00.124 +02:00 [WRN] New candle save : ANTUSDT
+2023-05-23 15:15:00.125 +02:00 [WRN] New candle save : CRVUSDT
+2023-05-23 15:15:00.131 +02:00 [WRN] New candle save : INJUSDT
+2023-05-23 15:15:00.131 +02:00 [WRN] New candle save : IMXUSDT
+2023-05-23 15:15:00.131 +02:00 [WRN] New candle save : INJUSDT
+2023-05-23 15:15:00.131 +02:00 [WRN] New candle save : HIGHUSDT
+2023-05-23 15:15:00.131 +02:00 [WRN] New candle save : IMXUSDT
+2023-05-23 15:15:00.134 +02:00 [WRN] New candle save : CRVUSDT
+2023-05-23 15:15:00.135 +02:00 [WRN] New candle save : CFXUSDT
+2023-05-23 15:15:00.170 +02:00 [WRN] New candle save : HIGHUSDT
+2023-05-23 15:15:00.201 +02:00 [WRN] New candle save : CKBUSDT
+2023-05-23 15:15:00.203 +02:00 [WRN] New candle save : ACHUSDT
+2023-05-23 15:15:00.205 +02:00 [WRN] New candle save : STGUSDT
+2023-05-23 15:15:00.205 +02:00 [WRN] New candle save : ACHUSDT
+2023-05-23 15:15:00.205 +02:00 [WRN] New candle save : RNDRUSDT
+2023-05-23 15:15:00.206 +02:00 [WRN] New candle save : ARBUSDT
+2023-05-23 15:15:00.206 +02:00 [WRN] New candle save : RNDRUSDT
+2023-05-23 15:15:00.207 +02:00 [WRN] New candle save : ARBUSDT
+2023-05-23 15:18:46.057 +02:00 [WRN] New call at 18 for ExportChart UI
+2023-05-23 15:20:17.506 +02:00 [WRN] Call Prediction on ACHUSDT (1) down 0,7373689/0,2626311
+2023-05-23 15:20:17.629 +02:00 [WRN] Call Prediction on ARPAUSDT down 0,99819833/0,001801647
+2023-05-23 15:20:17.813 +02:00 [WRN] Call Prediction on CFXUSDT (1) down 0,9562214/0,043778587
+2023-05-23 15:20:17.907 +02:00 [WRN] Call Prediction on HIGHUSDT down 0,9997694/0,000230625
+2023-05-23 15:20:17.996 +02:00 [WRN] Call Prediction on CKBUSDT down 0,99999857/1,4246809E-06
+2023-05-23 15:20:18.085 +02:00 [WRN] Call Prediction on ARBUSDT down 0,9998216/0,00017836702
+2023-05-23 15:20:18.201 +02:00 [WRN] Call Prediction on RNDRUSDT down 0,994697/0,0053030015
+2023-05-23 15:20:18.297 +02:00 [WRN] Call Prediction on INJUSDT down 0,99991095/8,901834E-05
+2023-05-23 15:20:18.376 +02:00 [WRN] Call Prediction on HIGHUSDT (1) down 0,9997694/0,000230625
+2023-05-23 15:20:18.455 +02:00 [WRN] Call Prediction on ANTUSDT down 0,9997484/0,00025161656
+2023-05-23 15:20:18.538 +02:00 [WRN] Call Prediction on PHBUSDT down 0,99796283/0,0020372102
+2023-05-23 15:20:18.627 +02:00 [WRN] Call Prediction on RNDRUSDT (1) down 0,994697/0,0053030015
+2023-05-23 15:20:18.717 +02:00 [WRN] Call Prediction on ARPAUSDT (1) down 0,99819833/0,001801647
+2023-05-23 15:20:18.809 +02:00 [WRN] Call Prediction on CFXUSDT down 0,9562214/0,043778587
+2023-05-23 15:20:18.900 +02:00 [WRN] Call Prediction on IMXUSDT (1) down 0,99966705/0,00033300882
+2023-05-23 15:20:18.991 +02:00 [WRN] Call Prediction on ACHUSDT down 0,7373689/0,2626311
+2023-05-23 15:20:19.084 +02:00 [WRN] Call Prediction on IMXUSDT down 0,99966705/0,00033300882
+2023-05-23 15:20:19.084 +02:00 [WRN] ----------------ML Updated---------------------
+2023-05-23 15:20:40.697 +02:00 [ERR] THE SIGNAL CLIENT IS DISCONNECTED
+2023-05-23 15:20:42.541 +02:00 [WRN] Get Account OK
+2023-05-23 15:20:54.042 +02:00 [ERR] THE SIGNAL CLIENT IS DISCONNECTED
+2023-05-23 15:20:55.628 +02:00 [WRN] Get Account OK
+2023-05-23 15:21:04.069 +02:00 [ERR] THE SIGNAL CLIENT IS DISCONNECTED
+2023-05-23 15:21:06.226 +02:00 [WRN] Get Account OK
+2023-05-23 15:21:07.618 +02:00 [WRN] Get Account OK
+2023-05-23 15:21:16.333 +02:00 [ERR] THE SIGNAL CLIENT IS DISCONNECTED
+2023-05-23 15:21:18.511 +02:00 [WRN] Get Account OK
+2023-05-23 15:21:21.853 +02:00 [ERR] THE SIGNAL CLIENT IS DISCONNECTED
+2023-05-23 15:21:23.805 +02:00 [WRN] Get Account OK
+2023-05-23 15:21:32.650 +02:00 [ERR] THE SIGNAL CLIENT IS DISCONNECTED
+2023-05-23 15:21:34.498 +02:00 [WRN] Get Account OK
+2023-05-23 15:21:51.370 +02:00 [ERR] THE SIGNAL CLIENT IS DISCONNECTED
+2023-05-23 15:21:52.842 +02:00 [WRN] Get Account OK
+2023-05-23 15:21:58.681 +02:00 [ERR] THE SIGNAL CLIENT IS DISCONNECTED
+2023-05-23 15:22:00.527 +02:00 [WRN] Get Account OK
+2023-05-23 15:22:07.380 +02:00 [ERR] THE SIGNAL CLIENT IS DISCONNECTED
+2023-05-23 15:22:08.608 +02:00 [WRN] Get Account OK
+2023-05-23 15:22:15.472 +02:00 [ERR] THE SIGNAL CLIENT IS DISCONNECTED
+2023-05-23 15:22:17.064 +02:00 [WRN] Get Account OK
+2023-05-23 15:22:25.713 +02:00 [ERR] THE SIGNAL CLIENT IS DISCONNECTED
+2023-05-23 15:22:27.846 +02:00 [WRN] Get Account OK
+2023-05-23 15:22:41.844 +02:00 [ERR] THE SIGNAL CLIENT IS DISCONNECTED
+2023-05-23 15:22:43.394 +02:00 [WRN] Get Account OK
+2023-05-23 15:22:52.151 +02:00 [ERR] THE SIGNAL CLIENT IS DISCONNECTED
+2023-05-23 15:22:53.723 +02:00 [WRN] Get Account OK
+2023-05-23 15:23:01.369 +02:00 [ERR] THE SIGNAL CLIENT IS DISCONNECTED
+2023-05-23 15:23:03.713 +02:00 [WRN] Get Account OK
+2023-05-23 15:23:44.093 +02:00 [ERR] THE SIGNAL CLIENT IS DISCONNECTED
+2023-05-23 15:23:45.693 +02:00 [WRN] Get Account OK
+2023-05-23 15:24:27.673 +02:00 [ERR] THE SIGNAL CLIENT IS DISCONNECTED
+2023-05-23 15:24:29.503 +02:00 [WRN] Get Account OK
+2023-05-23 15:25:28.908 +02:00 [WRN] Call Prediction on CKBUSDT down 0,99999857/1,4246809E-06
+2023-05-23 15:25:29.103 +02:00 [WRN] Call Prediction on ARBUSDT down 0,9998216/0,00017836702
+2023-05-23 15:25:29.200 +02:00 [WRN] Call Prediction on INJUSDT down 0,99991095/8,901834E-05
+2023-05-23 15:25:29.288 +02:00 [WRN] Call Prediction on ANTUSDT down 0,9997484/0,00025161656
+2023-05-23 15:25:29.386 +02:00 [WRN] Call Prediction on PHBUSDT down 0,99796283/0,0020372102
+2023-05-23 15:25:29.386 +02:00 [WRN] ----------------ML Updated---------------------
+2023-05-23 15:30:00.118 +02:00 [WRN] New candle save : ARPAUSDT
+2023-05-23 15:30:00.123 +02:00 [WRN] New candle save : CELRUSDT
+2023-05-23 15:30:00.127 +02:00 [WRN] New candle save : ARPAUSDT
+2023-05-23 15:30:00.127 +02:00 [WRN] New candle save : CELRUSDT
+2023-05-23 15:30:00.127 +02:00 [WRN] New candle save : ANTUSDT
+2023-05-23 15:30:00.151 +02:00 [WRN] New candle save : CRVUSDT
+2023-05-23 15:30:00.152 +02:00 [WRN] New candle save : CFXUSDT
+2023-05-23 15:30:00.153 +02:00 [WRN] New candle save : INJUSDT
+2023-05-23 15:30:00.180 +02:00 [WRN] New candle save : ANTUSDT
+2023-05-23 15:30:00.184 +02:00 [WRN] New candle save : CFXUSDT
+2023-05-23 15:30:00.185 +02:00 [WRN] New candle save : HIGHUSDT
+2023-05-23 15:30:00.213 +02:00 [WRN] New candle save : CKBUSDT
+2023-05-23 15:30:00.215 +02:00 [WRN] New candle save : CRVUSDT
+2023-05-23 15:30:00.215 +02:00 [WRN] New candle save : INJUSDT
+2023-05-23 15:30:00.218 +02:00 [WRN] New candle save : RNDRUSDT
+2023-05-23 15:30:00.220 +02:00 [WRN] New candle save : HIGHUSDT
+2023-05-23 15:30:00.220 +02:00 [WRN] New candle save : RNDRUSDT
+2023-05-23 15:30:00.267 +02:00 [WRN] New candle save : ACHUSDT
+2023-05-23 15:30:00.268 +02:00 [WRN] New candle save : STGUSDT
+2023-05-23 15:30:00.269 +02:00 [WRN] New candle save : PHBUSDT
+2023-05-23 15:30:00.270 +02:00 [WRN] New candle save : ACHUSDT
+2023-05-23 15:30:00.298 +02:00 [WRN] New candle save : ARBUSDT
+2023-05-23 15:30:00.299 +02:00 [WRN] New candle save : ARBUSDT
+2023-05-23 15:30:03.262 +02:00 [WRN] New candle save : IMXUSDT
+2023-05-23 15:30:03.438 +02:00 [WRN] New candle save : IMXUSDT
+2023-05-23 15:33:46.058 +02:00 [WRN] New call at 33 for ExportChart UI
+2023-05-23 15:34:26.513 +02:00 [WRN] Call Prediction on ACHUSDT (1) down 0,8183667/0,1816333
+2023-05-23 15:34:26.599 +02:00 [WRN] Call Prediction on ARPAUSDT down 0,99778974/0,002210283
+2023-05-23 15:34:26.702 +02:00 [WRN] Call Prediction on HIGHUSDT down 0,9990865/0,0009135246
+2023-05-23 15:34:26.788 +02:00 [WRN] Call Prediction on CKBUSDT down 0,99998224/1,7728571E-05
+2023-05-23 15:34:26.869 +02:00 [WRN] Call Prediction on RNDRUSDT down 0,99602854/0,0039714645
+2023-05-23 15:34:26.954 +02:00 [WRN] Call Prediction on INJUSDT down 0,999943/5,699579E-05
+2023-05-23 15:34:27.047 +02:00 [WRN] Call Prediction on HIGHUSDT (1) down 0,9990865/0,0009135246
+2023-05-23 15:34:27.130 +02:00 [WRN] Call Prediction on ANTUSDT down 0,9997439/0,00025609578
+2023-05-23 15:34:27.216 +02:00 [WRN] Call Prediction on CELRUSDT down 0,998743/0,0012570226
+2023-05-23 15:34:27.297 +02:00 [WRN] Call Prediction on PHBUSDT down 0,98396784/0,01603221
+2023-05-23 15:34:27.382 +02:00 [WRN] Call Prediction on RNDRUSDT (1) down 0,99602854/0,0039714645
+2023-05-23 15:34:27.464 +02:00 [WRN] Call Prediction on ARPAUSDT (1) down 0,99778974/0,002210283
+2023-05-23 15:34:27.541 +02:00 [WRN] Call Prediction on CFXUSDT down 0,97016597/0,029833995
+2023-05-23 15:34:27.647 +02:00 [WRN] Call Prediction on IMXUSDT (1) down 0,9981171/0,0018829315
+2023-05-23 15:34:27.825 +02:00 [WRN] Call Prediction on ACHUSDT down 0,8183667/0,1816333
+2023-05-23 15:34:28.045 +02:00 [WRN] Call Prediction on IMXUSDT down 0,9981171/0,0018829315
+2023-05-23 15:34:28.045 +02:00 [WRN] ----------------ML Updated---------------------
+2023-05-23 15:40:11.979 +02:00 [WRN] MarginCoin, started!
+2023-05-23 15:40:18.152 +02:00 [WRN] Get Account OK
+2023-05-23 15:40:19.942 +02:00 [WRN] Get Account OK
+2023-05-23 15:41:08.793 +02:00 [ERR] THE SIGNAL CLIENT IS DISCONNECTED
+2023-05-23 15:41:10.924 +02:00 [WRN] Get Account OK
+2023-05-23 15:42:19.260 +02:00 [ERR] THE SIGNAL CLIENT IS DISCONNECTED
+2023-05-23 15:42:19.385 +02:00 [ERR] THE SIGNAL CLIENT IS DISCONNECTED
+2023-05-23 15:42:21.379 +02:00 [WRN] Get Account OK
+2023-05-23 15:42:22.650 +02:00 [WRN] Start trading market...
+2023-05-23 15:42:23.447 +02:00 [WRN] Get Account OK
+2023-05-23 15:42:44.792 +02:00 [ERR] THE SIGNAL CLIENT IS DISCONNECTED
+2023-05-23 15:42:44.862 +02:00 [ERR] THE SIGNAL CLIENT IS DISCONNECTED
+2023-05-23 15:42:46.699 +02:00 [WRN] Get Account OK
+2023-05-23 15:42:47.247 +02:00 [WRN] Get Account OK
+2023-05-23 15:42:49.595 +02:00 [ERR] THE SIGNAL CLIENT IS DISCONNECTED
+2023-05-23 15:42:49.658 +02:00 [ERR] THE SIGNAL CLIENT IS DISCONNECTED
+2023-05-23 15:42:51.362 +02:00 [WRN] Get Account OK
+2023-05-23 15:42:52.015 +02:00 [WRN] Get Account OK
+2023-05-23 15:43:11.714 +02:00 [ERR] An exception occurred while iterating over the results of a query for context type 'MarginCoin.Model.ApplicationDbContext'.
+System.InvalidOperationException: The data is NULL at ordinal 5. This method can't be called on NULL values. Check using IsDBNull before calling.
+   at Microsoft.Data.Sqlite.SqliteValueReader.GetInt64(Int32 ordinal)
+   at Microsoft.Data.Sqlite.SqliteValueReader.GetInt32(Int32 ordinal)
+   at lambda_method256(Closure , QueryContext , DbDataReader , ResultContext , SingleQueryResultCoordinator )
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.Enumerator.MoveNext()
+System.InvalidOperationException: The data is NULL at ordinal 5. This method can't be called on NULL values. Check using IsDBNull before calling.
+   at Microsoft.Data.Sqlite.SqliteValueReader.GetInt64(Int32 ordinal)
+   at Microsoft.Data.Sqlite.SqliteValueReader.GetInt32(Int32 ordinal)
+   at lambda_method256(Closure , QueryContext , DbDataReader , ResultContext , SingleQueryResultCoordinator )
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.Enumerator.MoveNext()
+2023-05-23 15:43:22.733 +02:00 [WRN] Initial call for ExportChart UI
+2023-05-23 15:43:42.759 +02:00 [ERR] An exception occurred while iterating over the results of a query for context type 'MarginCoin.Model.ApplicationDbContext'.
+System.InvalidOperationException: The data is NULL at ordinal 5. This method can't be called on NULL values. Check using IsDBNull before calling.
+   at Microsoft.Data.Sqlite.SqliteValueReader.GetInt64(Int32 ordinal)
+   at Microsoft.Data.Sqlite.SqliteValueReader.GetInt32(Int32 ordinal)
+   at lambda_method256(Closure , QueryContext , DbDataReader , ResultContext , SingleQueryResultCoordinator )
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.Enumerator.MoveNext()
+System.InvalidOperationException: The data is NULL at ordinal 5. This method can't be called on NULL values. Check using IsDBNull before calling.
+   at Microsoft.Data.Sqlite.SqliteValueReader.GetInt64(Int32 ordinal)
+   at Microsoft.Data.Sqlite.SqliteValueReader.GetInt32(Int32 ordinal)
+   at lambda_method256(Closure , QueryContext , DbDataReader , ResultContext , SingleQueryResultCoordinator )
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.Enumerator.MoveNext()
+2023-05-23 15:44:14.554 +02:00 [WRN] Call Prediction on ACHUSDT (1) down 0,82374525/0,17625472
+2023-05-23 15:44:15.200 +02:00 [WRN] Call Prediction on ARPAUSDT down 0,99777895/0,0022210483
+2023-05-23 15:44:15.382 +02:00 [WRN] Call Prediction on HIGHUSDT down 0,9990528/0,00094713474
+2023-05-23 15:44:20.599 +02:00 [WRN] Call Prediction on CKBUSDT down 0,99998224/1,7728571E-05
+2023-05-23 15:44:20.971 +02:00 [WRN] Call Prediction on ARBUSDT down 0,99935466/0,0006453789
+2023-05-23 15:44:24.982 +02:00 [WRN] Call Prediction on RNDRUSDT down 0,9958774/0,004122576
+2023-05-23 15:44:26.330 +02:00 [WRN] Call Prediction on HIGHUSDT (1) down 0,9990528/0,00094713474
+2023-05-23 15:44:27.120 +02:00 [WRN] Call Prediction on ANTUSDT down 0,9997111/0,00028888174
+2023-05-23 15:44:27.651 +02:00 [WRN] Call Prediction on CELRUSDT down 0,998743/0,0012570226
+2023-05-23 15:44:28.474 +02:00 [WRN] Call Prediction on PHBUSDT down 0,98396784/0,01603221
+2023-05-23 15:44:28.800 +02:00 [WRN] Call Prediction on RNDRUSDT (1) down 0,9958774/0,004122576
+2023-05-23 15:44:31.526 +02:00 [WRN] Call Prediction on ARPAUSDT (1) down 0,99777895/0,0022210483
+2023-05-23 15:44:32.374 +02:00 [WRN] Call Prediction on CFXUSDT down 0,96844536/0,031554587
+2023-05-23 15:44:33.025 +02:00 [WRN] Call Prediction on IMXUSDT (1) down 0,99814415/0,0018558538
+2023-05-23 15:44:33.428 +02:00 [WRN] Call Prediction on ACHUSDT down 0,82374525/0,17625472
+2023-05-23 15:44:33.913 +02:00 [WRN] Call Prediction on IMXUSDT down 0,99814415/0,0018558538
+2023-05-23 15:44:34.264 +02:00 [WRN] ----------------ML Updated---------------------
+2023-05-23 15:44:34.266 +02:00 [ERR] An exception occurred while iterating over the results of a query for context type 'MarginCoin.Model.ApplicationDbContext'.
+System.InvalidOperationException: The data is NULL at ordinal 5. This method can't be called on NULL values. Check using IsDBNull before calling.
+   at Microsoft.Data.Sqlite.SqliteValueReader.GetInt64(Int32 ordinal)
+   at Microsoft.Data.Sqlite.SqliteValueReader.GetInt32(Int32 ordinal)
+   at lambda_method256(Closure , QueryContext , DbDataReader , ResultContext , SingleQueryResultCoordinator )
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.Enumerator.MoveNext()
+System.InvalidOperationException: The data is NULL at ordinal 5. This method can't be called on NULL values. Check using IsDBNull before calling.
+   at Microsoft.Data.Sqlite.SqliteValueReader.GetInt64(Int32 ordinal)
+   at Microsoft.Data.Sqlite.SqliteValueReader.GetInt32(Int32 ordinal)
+   at lambda_method256(Closure , QueryContext , DbDataReader , ResultContext , SingleQueryResultCoordinator )
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.Enumerator.MoveNext()
+2023-05-23 15:44:50.076 +02:00 [WRN] MarginCoin, started!
+2023-05-23 15:45:01.883 +02:00 [WRN] Get Account OK
+2023-05-23 15:45:02.267 +02:00 [WRN] Get Account OK
+2023-05-23 15:45:03.018 +02:00 [WRN] Start trading market...
+2023-05-23 15:45:03.164 +02:00 [WRN] Get Account OK
+2023-05-23 15:46:03.022 +02:00 [WRN] Initial call for ExportChart UI
+2023-05-23 15:46:17.811 +02:00 [ERR] An exception occurred while iterating over the results of a query for context type 'MarginCoin.Model.ApplicationDbContext'.
+System.InvalidOperationException: The data is NULL at ordinal 5. This method can't be called on NULL values. Check using IsDBNull before calling.
+   at Microsoft.Data.Sqlite.SqliteValueReader.GetInt64(Int32 ordinal)
+   at Microsoft.Data.Sqlite.SqliteValueReader.GetInt32(Int32 ordinal)
+   at lambda_method256(Closure , QueryContext , DbDataReader , ResultContext , SingleQueryResultCoordinator )
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.Enumerator.MoveNext()
+System.InvalidOperationException: The data is NULL at ordinal 5. This method can't be called on NULL values. Check using IsDBNull before calling.
+   at Microsoft.Data.Sqlite.SqliteValueReader.GetInt64(Int32 ordinal)
+   at Microsoft.Data.Sqlite.SqliteValueReader.GetInt32(Int32 ordinal)
+   at lambda_method256(Closure , QueryContext , DbDataReader , ResultContext , SingleQueryResultCoordinator )
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.Enumerator.MoveNext()
+2023-05-23 15:46:54.949 +02:00 [WRN] Call Prediction on ACHUSDT (1) down 0,9603259/0,039674096
+2023-05-23 15:46:55.024 +02:00 [WRN] Call Prediction on ARPAUSDT down 0,99011886/0,009881095
+2023-05-23 15:46:55.104 +02:00 [WRN] Call Prediction on CRVUSDT down 0,9997625/0,000237491
+2023-05-23 15:46:55.181 +02:00 [WRN] Call Prediction on HIGHUSDT down 0,99712425/0,0028757271
+2023-05-23 15:46:55.253 +02:00 [WRN] Call Prediction on CKBUSDT down 0,9999908/9,168168E-06
+2023-05-23 15:46:55.331 +02:00 [WRN] Call Prediction on ARBUSDT down 0,99872774/0,0012722937
+2023-05-23 15:46:55.412 +02:00 [WRN] Call Prediction on RNDRUSDT down 0,99863976/0,001360268
+2023-05-23 15:46:55.486 +02:00 [WRN] Call Prediction on HIGHUSDT (1) down 0,99712425/0,0028757271
+2023-05-23 15:46:55.562 +02:00 [WRN] Call Prediction on ANTUSDT down 0,99992585/7,415773E-05
+2023-05-23 15:46:55.639 +02:00 [WRN] Call Prediction on PHBUSDT down 0,9835338/0,016466182
+2023-05-23 15:46:55.719 +02:00 [WRN] Call Prediction on RNDRUSDT (1) down 0,99863976/0,001360268
+2023-05-23 15:46:55.807 +02:00 [WRN] Call Prediction on ARPAUSDT (1) down 0,99011886/0,009881095
+2023-05-23 15:46:56.045 +02:00 [WRN] Call Prediction on ANTUSDT (1) down 0,99992585/7,415773E-05
+2023-05-23 15:46:56.221 +02:00 [WRN] Call Prediction on CFXUSDT down 0,98142827/0,018571725
+2023-05-23 15:46:56.299 +02:00 [WRN] Call Prediction on IMXUSDT (1) down 0,99889475/0,0011052819
+2023-05-23 15:46:56.373 +02:00 [WRN] Call Prediction on ACHUSDT down 0,9603259/0,039674096
+2023-05-23 15:46:56.448 +02:00 [WRN] Call Prediction on IMXUSDT down 0,99889475/0,0011052819
+2023-05-23 15:46:56.448 +02:00 [WRN] ----------------ML Updated---------------------
+2023-05-23 15:47:17.820 +02:00 [ERR] An exception occurred while iterating over the results of a query for context type 'MarginCoin.Model.ApplicationDbContext'.
+System.InvalidOperationException: The data is NULL at ordinal 5. This method can't be called on NULL values. Check using IsDBNull before calling.
+   at Microsoft.Data.Sqlite.SqliteValueReader.GetInt64(Int32 ordinal)
+   at Microsoft.Data.Sqlite.SqliteValueReader.GetInt32(Int32 ordinal)
+   at lambda_method256(Closure , QueryContext , DbDataReader , ResultContext , SingleQueryResultCoordinator )
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.Enumerator.MoveNext()
+System.InvalidOperationException: The data is NULL at ordinal 5. This method can't be called on NULL values. Check using IsDBNull before calling.
+   at Microsoft.Data.Sqlite.SqliteValueReader.GetInt64(Int32 ordinal)
+   at Microsoft.Data.Sqlite.SqliteValueReader.GetInt32(Int32 ordinal)
+   at lambda_method256(Closure , QueryContext , DbDataReader , ResultContext , SingleQueryResultCoordinator )
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.Enumerator.MoveNext()
+2023-05-23 15:48:25.015 +02:00 [ERR] An exception occurred while iterating over the results of a query for context type 'MarginCoin.Model.ApplicationDbContext'.
+System.InvalidOperationException: The data is NULL at ordinal 5. This method can't be called on NULL values. Check using IsDBNull before calling.
+   at Microsoft.Data.Sqlite.SqliteValueReader.GetInt64(Int32 ordinal)
+   at Microsoft.Data.Sqlite.SqliteValueReader.GetInt32(Int32 ordinal)
+   at lambda_method256(Closure , QueryContext , DbDataReader , ResultContext , SingleQueryResultCoordinator )
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.Enumerator.MoveNext()
+System.InvalidOperationException: The data is NULL at ordinal 5. This method can't be called on NULL values. Check using IsDBNull before calling.
+   at Microsoft.Data.Sqlite.SqliteValueReader.GetInt64(Int32 ordinal)
+   at Microsoft.Data.Sqlite.SqliteValueReader.GetInt32(Int32 ordinal)
+   at lambda_method256(Closure , QueryContext , DbDataReader , ResultContext , SingleQueryResultCoordinator )
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.Enumerator.MoveNext()
+2023-05-23 15:49:04.870 +02:00 [ERR] An exception occurred while iterating over the results of a query for context type 'MarginCoin.Model.ApplicationDbContext'.
+System.InvalidOperationException: The data is NULL at ordinal 5. This method can't be called on NULL values. Check using IsDBNull before calling.
+   at Microsoft.Data.Sqlite.SqliteValueReader.GetInt64(Int32 ordinal)
+   at Microsoft.Data.Sqlite.SqliteValueReader.GetInt32(Int32 ordinal)
+   at lambda_method256(Closure , QueryContext , DbDataReader , ResultContext , SingleQueryResultCoordinator )
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.Enumerator.MoveNext()
+System.InvalidOperationException: The data is NULL at ordinal 5. This method can't be called on NULL values. Check using IsDBNull before calling.
+   at Microsoft.Data.Sqlite.SqliteValueReader.GetInt64(Int32 ordinal)
+   at Microsoft.Data.Sqlite.SqliteValueReader.GetInt32(Int32 ordinal)
+   at lambda_method256(Closure , QueryContext , DbDataReader , ResultContext , SingleQueryResultCoordinator )
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.Enumerator.MoveNext()
+2023-05-23 15:50:40.946 +02:00 [ERR] An exception occurred while iterating over the results of a query for context type 'MarginCoin.Model.ApplicationDbContext'.
+System.InvalidOperationException: The data is NULL at ordinal 5. This method can't be called on NULL values. Check using IsDBNull before calling.
+   at Microsoft.Data.Sqlite.SqliteValueReader.GetInt64(Int32 ordinal)
+   at Microsoft.Data.Sqlite.SqliteValueReader.GetInt32(Int32 ordinal)
+   at lambda_method256(Closure , QueryContext , DbDataReader , ResultContext , SingleQueryResultCoordinator )
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.Enumerator.MoveNext()
+System.InvalidOperationException: The data is NULL at ordinal 5. This method can't be called on NULL values. Check using IsDBNull before calling.
+   at Microsoft.Data.Sqlite.SqliteValueReader.GetInt64(Int32 ordinal)
+   at Microsoft.Data.Sqlite.SqliteValueReader.GetInt32(Int32 ordinal)
+   at lambda_method256(Closure , QueryContext , DbDataReader , ResultContext , SingleQueryResultCoordinator )
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.Enumerator.MoveNext()
+2023-05-23 15:51:39.960 +02:00 [WRN] MarginCoin, started!
+2023-05-23 15:51:49.627 +02:00 [WRN] Get Account OK
+2023-05-23 15:51:50.001 +02:00 [WRN] Start trading market...
+2023-05-23 15:51:57.305 +02:00 [WRN] Get Account OK
+2023-05-23 15:52:10.081 +02:00 [ERR] An exception occurred while iterating over the results of a query for context type 'MarginCoin.Model.ApplicationDbContext'.
+System.InvalidOperationException: The data is NULL at ordinal 5. This method can't be called on NULL values. Check using IsDBNull before calling.
+   at Microsoft.Data.Sqlite.SqliteValueReader.GetInt64(Int32 ordinal)
+   at Microsoft.Data.Sqlite.SqliteValueReader.GetInt32(Int32 ordinal)
+   at lambda_method256(Closure , QueryContext , DbDataReader , ResultContext , SingleQueryResultCoordinator )
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.Enumerator.MoveNext()
+System.InvalidOperationException: The data is NULL at ordinal 5. This method can't be called on NULL values. Check using IsDBNull before calling.
+   at Microsoft.Data.Sqlite.SqliteValueReader.GetInt64(Int32 ordinal)
+   at Microsoft.Data.Sqlite.SqliteValueReader.GetInt32(Int32 ordinal)
+   at lambda_method256(Closure , QueryContext , DbDataReader , ResultContext , SingleQueryResultCoordinator )
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.Enumerator.MoveNext()
+2023-05-23 15:52:42.355 +02:00 [ERR] An exception occurred while iterating over the results of a query for context type 'MarginCoin.Model.ApplicationDbContext'.
+System.InvalidOperationException: The data is NULL at ordinal 5. This method can't be called on NULL values. Check using IsDBNull before calling.
+   at Microsoft.Data.Sqlite.SqliteValueReader.GetInt64(Int32 ordinal)
+   at Microsoft.Data.Sqlite.SqliteValueReader.GetInt32(Int32 ordinal)
+   at lambda_method256(Closure , QueryContext , DbDataReader , ResultContext , SingleQueryResultCoordinator )
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.Enumerator.MoveNext()
+System.InvalidOperationException: The data is NULL at ordinal 5. This method can't be called on NULL values. Check using IsDBNull before calling.
+   at Microsoft.Data.Sqlite.SqliteValueReader.GetInt64(Int32 ordinal)
+   at Microsoft.Data.Sqlite.SqliteValueReader.GetInt32(Int32 ordinal)
+   at lambda_method256(Closure , QueryContext , DbDataReader , ResultContext , SingleQueryResultCoordinator )
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.Enumerator.MoveNext()
+2023-05-23 15:52:50.006 +02:00 [WRN] Initial call for ExportChart UI
+2023-05-23 15:53:34.614 +02:00 [WRN] Call Prediction on STGUSDT down 0,75465465/0,2453454
+2023-05-23 15:53:34.703 +02:00 [WRN] Call Prediction on ACHUSDT (1) down 0,9603259/0,039674096
+2023-05-23 15:53:34.786 +02:00 [WRN] Call Prediction on ARPAUSDT down 0,99011886/0,009881095
+2023-05-23 15:53:34.876 +02:00 [WRN] Call Prediction on CRVUSDT down 0,9997625/0,000237491
+2023-05-23 15:53:34.961 +02:00 [WRN] Call Prediction on HIGHUSDT down 0,99712425/0,0028757271
+2023-05-23 15:53:35.041 +02:00 [WRN] Call Prediction on CKBUSDT down 0,9999908/9,168168E-06
+2023-05-23 15:53:35.154 +02:00 [WRN] Call Prediction on ARBUSDT down 0,99872774/0,0012722937
+2023-05-23 15:53:35.238 +02:00 [WRN] Call Prediction on RNDRUSDT down 0,99863976/0,001360268
+2023-05-23 15:53:35.322 +02:00 [WRN] Call Prediction on HIGHUSDT (1) down 0,99712425/0,0028757271
+2023-05-23 15:53:35.405 +02:00 [WRN] Call Prediction on ANTUSDT down 0,99992585/7,415773E-05
+2023-05-23 15:53:35.488 +02:00 [WRN] Call Prediction on PHBUSDT down 0,9835338/0,016466182
+2023-05-23 15:53:35.573 +02:00 [WRN] Call Prediction on RNDRUSDT (1) down 0,99863976/0,001360268
+2023-05-23 15:53:35.656 +02:00 [WRN] Call Prediction on ARPAUSDT (1) down 0,99011886/0,009881095
+2023-05-23 15:53:35.737 +02:00 [WRN] Call Prediction on ANTUSDT (1) down 0,99992585/7,415773E-05
+2023-05-23 15:53:35.819 +02:00 [WRN] Call Prediction on IMXUSDT (1) down 0,99889475/0,0011052819
+2023-05-23 15:53:35.902 +02:00 [WRN] Call Prediction on ACHUSDT down 0,9603259/0,039674096
+2023-05-23 15:53:35.988 +02:00 [WRN] Call Prediction on IMXUSDT down 0,99889475/0,0011052819
+2023-05-23 15:53:35.989 +02:00 [WRN] ----------------ML Updated---------------------
+2023-05-23 15:54:16.113 +02:00 [ERR] An exception occurred while iterating over the results of a query for context type 'MarginCoin.Model.ApplicationDbContext'.
+System.InvalidOperationException: The data is NULL at ordinal 5. This method can't be called on NULL values. Check using IsDBNull before calling.
+   at Microsoft.Data.Sqlite.SqliteValueReader.GetInt64(Int32 ordinal)
+   at Microsoft.Data.Sqlite.SqliteValueReader.GetInt32(Int32 ordinal)
+   at lambda_method256(Closure , QueryContext , DbDataReader , ResultContext , SingleQueryResultCoordinator )
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.Enumerator.MoveNext()
+System.InvalidOperationException: The data is NULL at ordinal 5. This method can't be called on NULL values. Check using IsDBNull before calling.
+   at Microsoft.Data.Sqlite.SqliteValueReader.GetInt64(Int32 ordinal)
+   at Microsoft.Data.Sqlite.SqliteValueReader.GetInt32(Int32 ordinal)
+   at lambda_method256(Closure , QueryContext , DbDataReader , ResultContext , SingleQueryResultCoordinator )
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.Enumerator.MoveNext()
+2023-05-23 15:54:24.109 +02:00 [ERR] An exception occurred while iterating over the results of a query for context type 'MarginCoin.Model.ApplicationDbContext'.
+System.InvalidOperationException: The data is NULL at ordinal 5. This method can't be called on NULL values. Check using IsDBNull before calling.
+   at Microsoft.Data.Sqlite.SqliteValueReader.GetInt64(Int32 ordinal)
+   at Microsoft.Data.Sqlite.SqliteValueReader.GetInt32(Int32 ordinal)
+   at lambda_method256(Closure , QueryContext , DbDataReader , ResultContext , SingleQueryResultCoordinator )
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.Enumerator.MoveNext()
+System.InvalidOperationException: The data is NULL at ordinal 5. This method can't be called on NULL values. Check using IsDBNull before calling.
+   at Microsoft.Data.Sqlite.SqliteValueReader.GetInt64(Int32 ordinal)
+   at Microsoft.Data.Sqlite.SqliteValueReader.GetInt32(Int32 ordinal)
+   at lambda_method256(Closure , QueryContext , DbDataReader , ResultContext , SingleQueryResultCoordinator )
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.Enumerator.MoveNext()
+2023-05-23 15:55:36.025 +02:00 [ERR] An exception occurred while iterating over the results of a query for context type 'MarginCoin.Model.ApplicationDbContext'.
+System.InvalidOperationException: The data is NULL at ordinal 5. This method can't be called on NULL values. Check using IsDBNull before calling.
+   at Microsoft.Data.Sqlite.SqliteValueReader.GetInt64(Int32 ordinal)
+   at Microsoft.Data.Sqlite.SqliteValueReader.GetInt32(Int32 ordinal)
+   at lambda_method256(Closure , QueryContext , DbDataReader , ResultContext , SingleQueryResultCoordinator )
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.Enumerator.MoveNext()
+System.InvalidOperationException: The data is NULL at ordinal 5. This method can't be called on NULL values. Check using IsDBNull before calling.
+   at Microsoft.Data.Sqlite.SqliteValueReader.GetInt64(Int32 ordinal)
+   at Microsoft.Data.Sqlite.SqliteValueReader.GetInt32(Int32 ordinal)
+   at lambda_method256(Closure , QueryContext , DbDataReader , ResultContext , SingleQueryResultCoordinator )
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.Enumerator.MoveNext()
+2023-05-23 15:56:11.637 +02:00 [ERR] An exception occurred while iterating over the results of a query for context type 'MarginCoin.Model.ApplicationDbContext'.
+System.InvalidOperationException: The data is NULL at ordinal 5. This method can't be called on NULL values. Check using IsDBNull before calling.
+   at Microsoft.Data.Sqlite.SqliteValueReader.GetInt64(Int32 ordinal)
+   at Microsoft.Data.Sqlite.SqliteValueReader.GetInt32(Int32 ordinal)
+   at lambda_method256(Closure , QueryContext , DbDataReader , ResultContext , SingleQueryResultCoordinator )
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.Enumerator.MoveNext()
+System.InvalidOperationException: The data is NULL at ordinal 5. This method can't be called on NULL values. Check using IsDBNull before calling.
+   at Microsoft.Data.Sqlite.SqliteValueReader.GetInt64(Int32 ordinal)
+   at Microsoft.Data.Sqlite.SqliteValueReader.GetInt32(Int32 ordinal)
+   at lambda_method256(Closure , QueryContext , DbDataReader , ResultContext , SingleQueryResultCoordinator )
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.Enumerator.MoveNext()
+2023-05-23 15:57:50.216 +02:00 [ERR] An exception occurred while iterating over the results of a query for context type 'MarginCoin.Model.ApplicationDbContext'.
+System.InvalidOperationException: The data is NULL at ordinal 5. This method can't be called on NULL values. Check using IsDBNull before calling.
+   at Microsoft.Data.Sqlite.SqliteValueReader.GetInt64(Int32 ordinal)
+   at Microsoft.Data.Sqlite.SqliteValueReader.GetInt32(Int32 ordinal)
+   at lambda_method256(Closure , QueryContext , DbDataReader , ResultContext , SingleQueryResultCoordinator )
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.Enumerator.MoveNext()
+System.InvalidOperationException: The data is NULL at ordinal 5. This method can't be called on NULL values. Check using IsDBNull before calling.
+   at Microsoft.Data.Sqlite.SqliteValueReader.GetInt64(Int32 ordinal)
+   at Microsoft.Data.Sqlite.SqliteValueReader.GetInt32(Int32 ordinal)
+   at lambda_method256(Closure , QueryContext , DbDataReader , ResultContext , SingleQueryResultCoordinator )
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.Enumerator.MoveNext()
+2023-05-23 15:57:50.266 +02:00 [WRN] Watchdog restart websockets
+2023-05-23 15:57:50.541 +02:00 [ERR] THE SIGNAL CLIENT IS DISCONNECTED
+2023-05-23 15:57:50.541 +02:00 [ERR] THE SIGNAL CLIENT IS DISCONNECTED
+2023-05-23 15:57:57.341 +02:00 [ERR] An exception occurred while iterating over the results of a query for context type 'MarginCoin.Model.ApplicationDbContext'.
+System.InvalidOperationException: The data is NULL at ordinal 5. This method can't be called on NULL values. Check using IsDBNull before calling.
+   at Microsoft.Data.Sqlite.SqliteValueReader.GetInt64(Int32 ordinal)
+   at Microsoft.Data.Sqlite.SqliteValueReader.GetInt32(Int32 ordinal)
+   at lambda_method256(Closure , QueryContext , DbDataReader , ResultContext , SingleQueryResultCoordinator )
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.Enumerator.MoveNext()
+System.InvalidOperationException: The data is NULL at ordinal 5. This method can't be called on NULL values. Check using IsDBNull before calling.
+   at Microsoft.Data.Sqlite.SqliteValueReader.GetInt64(Int32 ordinal)
+   at Microsoft.Data.Sqlite.SqliteValueReader.GetInt32(Int32 ordinal)
+   at lambda_method256(Closure , QueryContext , DbDataReader , ResultContext , SingleQueryResultCoordinator )
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.Enumerator.MoveNext()
+2023-05-23 15:59:28.865 +02:00 [WRN] Call Prediction on STGUSDT down 0,75465465/0,2453454
+2023-05-23 15:59:28.946 +02:00 [WRN] Call Prediction on CRVUSDT down 0,9997625/0,000237491
+2023-05-23 15:59:29.027 +02:00 [WRN] Call Prediction on CKBUSDT down 0,9999908/9,168168E-06
+2023-05-23 15:59:29.106 +02:00 [WRN] Call Prediction on ARBUSDT down 0,99872774/0,0012722937
+2023-05-23 15:59:29.183 +02:00 [WRN] Call Prediction on PHBUSDT down 0,9835338/0,016466182
+2023-05-23 15:59:29.183 +02:00 [WRN] ----------------ML Updated---------------------
+2023-05-23 15:59:53.466 +02:00 [WRN] MarginCoin, started!
+2023-05-23 15:59:59.529 +02:00 [WRN] Get Account OK
+2023-05-23 16:00:03.038 +02:00 [WRN] Start trading market...
+2023-05-23 16:00:03.255 +02:00 [ERR] THE SIGNAL CLIENT IS DISCONNECTED
+2023-05-23 16:00:04.886 +02:00 [WRN] Get Account OK
+2023-05-23 16:00:14.682 +02:00 [ERR] An exception occurred while iterating over the results of a query for context type 'MarginCoin.Model.ApplicationDbContext'.
+System.InvalidOperationException: The data is NULL at ordinal 5. This method can't be called on NULL values. Check using IsDBNull before calling.
+   at Microsoft.Data.Sqlite.SqliteValueReader.GetInt64(Int32 ordinal)
+   at Microsoft.Data.Sqlite.SqliteValueReader.GetInt32(Int32 ordinal)
+   at lambda_method256(Closure , QueryContext , DbDataReader , ResultContext , SingleQueryResultCoordinator )
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.Enumerator.MoveNext()
+System.InvalidOperationException: The data is NULL at ordinal 5. This method can't be called on NULL values. Check using IsDBNull before calling.
+   at Microsoft.Data.Sqlite.SqliteValueReader.GetInt64(Int32 ordinal)
+   at Microsoft.Data.Sqlite.SqliteValueReader.GetInt32(Int32 ordinal)
+   at lambda_method256(Closure , QueryContext , DbDataReader , ResultContext , SingleQueryResultCoordinator )
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.Enumerator.MoveNext()
+2023-05-23 16:01:03.042 +02:00 [WRN] Initial call for ExportChart UI
+2023-05-23 16:05:55.307 +02:00 [WRN] MarginCoin, started!
+2023-05-23 16:06:09.776 +02:00 [WRN] Start trading market...
+2023-05-23 16:06:11.819 +02:00 [WRN] Get Account OK
+2023-05-23 16:06:15.162 +02:00 [WRN] Get Account OK
+2023-05-23 16:06:54.906 +02:00 [WRN] MarginCoin, started!
+2023-05-23 16:07:00.274 +02:00 [WRN] Get Account OK
+2023-05-23 16:07:02.813 +02:00 [WRN] Get Account OK
+2023-05-23 16:07:15.508 +02:00 [ERR] THE SIGNAL CLIENT IS DISCONNECTED
+2023-05-23 16:07:17.199 +02:00 [WRN] Start trading market...
+2023-05-23 16:07:17.860 +02:00 [WRN] Get Account OK
+2023-05-23 16:08:17.206 +02:00 [WRN] Initial call for ExportChart UI
+2023-05-23 16:09:07.300 +02:00 [WRN] Call Prediction on ARPAUSDT down 0,9593568/0,040643256
+2023-05-23 16:09:07.380 +02:00 [WRN] Call Prediction on CRVUSDT down 0,9999343/6,5707245E-05
+2023-05-23 16:09:07.465 +02:00 [WRN] Call Prediction on HIGHUSDT down 0,99734616/0,0026538027
+2023-05-23 16:09:07.545 +02:00 [WRN] Call Prediction on CKBUSDT down 0,9999994/5,918909E-07
+2023-05-23 16:09:07.628 +02:00 [WRN] Call Prediction on PHBUSDT (1) down 0,9885371/0,011462917
+2023-05-23 16:09:07.715 +02:00 [WRN] Call Prediction on ARBUSDT down 0,9996903/0,00030970006
+2023-05-23 16:09:07.798 +02:00 [WRN] Call Prediction on RNDRUSDT down 0,99733514/0,0026647889
+2023-05-23 16:09:07.884 +02:00 [WRN] Call Prediction on HIGHUSDT (1) down 0,99734616/0,0026538027
+2023-05-23 16:09:07.972 +02:00 [WRN] Call Prediction on ANTUSDT down 0,99995196/4,801822E-05
+2023-05-23 16:09:08.061 +02:00 [WRN] Call Prediction on CELRUSDT down 0,9881324/0,011867578
+2023-05-23 16:09:08.146 +02:00 [WRN] Call Prediction on PHBUSDT down 0,9885371/0,011462917
+2023-05-23 16:09:08.238 +02:00 [WRN] Call Prediction on RNDRUSDT (1) down 0,99733514/0,0026647889
+2023-05-23 16:09:08.322 +02:00 [WRN] Call Prediction on ARPAUSDT (1) down 0,9593568/0,040643256
+2023-05-23 16:09:08.399 +02:00 [WRN] Call Prediction on IMXUSDT (1) down 0,9994974/0,0005025814
+2023-05-23 16:09:08.480 +02:00 [WRN] Call Prediction on ACHUSDT down 0,9574868/0,042513166
+2023-05-23 16:09:08.565 +02:00 [WRN] Call Prediction on IMXUSDT down 0,9994974/0,0005025814
+2023-05-23 16:09:08.566 +02:00 [WRN] ----------------ML Updated---------------------
+2023-05-23 16:11:06.782 +02:00 [WRN] MarginCoin, started!
+2023-05-23 16:11:13.461 +02:00 [ERR] THE SIGNAL CLIENT IS DISCONNECTED
+2023-05-23 16:11:14.245 +02:00 [WRN] Get Account OK
+2023-05-23 16:11:15.426 +02:00 [WRN] Get Account OK
+2023-05-23 16:11:56.597 +02:00 [WRN] MarginCoin, started!
+2023-05-23 16:12:04.656 +02:00 [WRN] Get Account OK
+2023-05-23 16:12:05.229 +02:00 [WRN] Get Account OK
+2023-05-23 16:12:20.756 +02:00 [ERR] THE SIGNAL CLIENT IS DISCONNECTED
+2023-05-23 16:12:22.273 +02:00 [WRN] Start trading market...
+2023-05-23 16:12:23.061 +02:00 [WRN] Get Account OK
+2023-05-23 16:14:03.769 +02:00 [WRN] MarginCoin, started!
+2023-05-23 16:14:10.125 +02:00 [WRN] Get Account OK
+2023-05-23 16:14:11.815 +02:00 [WRN] Get Account OK
+2023-05-23 16:14:32.885 +02:00 [ERR] THE SIGNAL CLIENT IS DISCONNECTED
+2023-05-23 16:14:34.245 +02:00 [WRN] Get Account OK
+2023-05-23 16:14:34.714 +02:00 [WRN] Start trading market...
+2023-05-23 16:15:08.562 +02:00 [WRN] New candle save : JOEUSDT
+2023-05-23 16:15:08.562 +02:00 [WRN] New candle save : CRVUSDT
+2023-05-23 16:15:08.562 +02:00 [WRN] New candle save : IMXUSDT
+2023-05-23 16:15:08.563 +02:00 [WRN] New candle save : CKBUSDT
+2023-05-23 16:15:08.574 +02:00 [WRN] New candle save : ANTUSDT
+2023-05-23 16:15:08.575 +02:00 [WRN] New candle save : STGUSDT
+2023-05-23 16:15:08.618 +02:00 [WRN] New candle save : NEARUSDT
+2023-05-23 16:15:08.733 +02:00 [WRN] New candle save : MATICUSDT
+2023-05-23 16:15:08.746 +02:00 [WRN] New candle save : ARBUSDT
+2023-05-23 16:15:08.765 +02:00 [WRN] New candle save : INJUSDT
+2023-05-23 16:15:08.766 +02:00 [WRN] New candle save : ACHUSDT
+2023-05-23 16:15:08.791 +02:00 [WRN] New candle save : RNDRUSDT
+2023-05-23 16:15:08.924 +02:00 [WRN] New candle save : HIGHUSDT
+2023-05-23 16:15:08.970 +02:00 [WRN] New candle save : PHBUSDT
+2023-05-23 16:15:09.183 +02:00 [WRN] New candle save : ETHUSDT
+2023-05-23 16:15:09.211 +02:00 [WRN] New candle save : ARPAUSDT
+2023-05-23 16:15:34.715 +02:00 [WRN] Initial call for ExportChart UI
+2023-05-23 16:16:16.252 +02:00 [WRN] Call Prediction on ARPAUSDT down 0,88928926/0,11071067
+2023-05-23 16:16:16.337 +02:00 [WRN] Call Prediction on CRVUSDT down 0,9959126/0,004087342
+2023-05-23 16:16:16.560 +02:00 [WRN] Call Prediction on HIGHUSDT down 0,7092335/0,29076648
+2023-05-23 16:16:16.646 +02:00 [WRN] Call Prediction on CKBUSDT down 0,999998/2,006735E-06
+2023-05-23 16:16:16.736 +02:00 [WRN] Call Prediction on PHBUSDT (1) up 0,48916033/0,51083964
+2023-05-23 16:16:16.830 +02:00 [WRN] Call Prediction on ARBUSDT down 0,9952857/0,004714381
+2023-05-23 16:16:16.917 +02:00 [WRN] Call Prediction on RNDRUSDT up 0,4492762/0,5507238
+2023-05-23 16:16:17.001 +02:00 [WRN] Call Prediction on HIGHUSDT (1) down 0,7092335/0,29076648
+2023-05-23 16:16:17.090 +02:00 [WRN] Call Prediction on ANTUSDT down 0,9993036/0,0006964015
+2023-05-23 16:16:17.183 +02:00 [WRN] Call Prediction on CELRUSDT down 0,6762868/0,32371318
+2023-05-23 16:16:17.269 +02:00 [WRN] Call Prediction on PHBUSDT up 0,48916033/0,51083964
+2023-05-23 16:16:17.456 +02:00 [WRN] Call Prediction on RNDRUSDT (1) up 0,4492762/0,5507238
+2023-05-23 16:16:17.540 +02:00 [WRN] Call Prediction on ARPAUSDT (1) down 0,88928926/0,11071067
+2023-05-23 16:16:17.662 +02:00 [WRN] Call Prediction on IMXUSDT (1) down 0,9975873/0,0024127204
+2023-05-23 16:16:17.765 +02:00 [WRN] Call Prediction on ACHUSDT down 0,9860428/0,01395726
+2023-05-23 16:16:17.845 +02:00 [WRN] Call Prediction on IMXUSDT down 0,9975873/0,0024127204
+2023-05-23 16:16:17.845 +02:00 [WRN] ----------------ML Updated---------------------
+2023-05-23 16:18:44.301 +02:00 [WRN] MarginCoin, started!
+2023-05-23 16:18:59.678 +02:00 [WRN] Start trading market...
+2023-05-23 16:19:00.718 +02:00 [WRN] Get Account OK
+2023-05-23 16:19:04.046 +02:00 [WRN] Get Account OK
+2023-05-23 16:19:59.689 +02:00 [WRN] Initial call for ExportChart UI
+2023-05-23 16:20:42.670 +02:00 [WRN] Call Prediction on ACHUSDT (1) down 0,9860428/0,01395726
+2023-05-23 16:20:42.760 +02:00 [WRN] Call Prediction on ARPAUSDT down 0,88928926/0,11071067
+2023-05-23 16:20:42.847 +02:00 [WRN] Call Prediction on CRVUSDT down 0,9959126/0,004087342
+2023-05-23 16:20:42.931 +02:00 [WRN] Call Prediction on HIGHUSDT down 0,7092335/0,29076648
+2023-05-23 16:20:43.017 +02:00 [WRN] Call Prediction on CKBUSDT down 0,999998/2,006735E-06
+2023-05-23 16:20:43.102 +02:00 [WRN] Call Prediction on PHBUSDT (1) up 0,48916033/0,51083964
+2023-05-23 16:20:43.211 +02:00 [WRN] Call Prediction on ARBUSDT down 0,9952857/0,004714381
+2023-05-23 16:20:43.308 +02:00 [WRN] Call Prediction on RNDRUSDT up 0,4492762/0,5507238
+2023-05-23 16:20:43.394 +02:00 [WRN] Call Prediction on HIGHUSDT (1) down 0,7092335/0,29076648
+2023-05-23 16:20:43.483 +02:00 [WRN] Call Prediction on ANTUSDT down 0,9993036/0,0006964015
+2023-05-23 16:20:43.570 +02:00 [WRN] Call Prediction on CELRUSDT down 0,6762868/0,32371318
+2023-05-23 16:20:43.654 +02:00 [WRN] Call Prediction on PHBUSDT up 0,48916033/0,51083964
+2023-05-23 16:20:43.746 +02:00 [WRN] Call Prediction on RNDRUSDT (1) up 0,4492762/0,5507238
+2023-05-23 16:20:43.832 +02:00 [WRN] Call Prediction on ARPAUSDT (1) down 0,88928926/0,11071067
+2023-05-23 16:20:43.919 +02:00 [WRN] Call Prediction on IMXUSDT (1) down 0,9975873/0,0024127204
+2023-05-23 16:20:44.005 +02:00 [WRN] Call Prediction on ACHUSDT down 0,9860428/0,01395726
+2023-05-23 16:20:44.085 +02:00 [WRN] Call Prediction on IMXUSDT down 0,9975873/0,0024127204
+2023-05-23 16:20:44.085 +02:00 [WRN] ----------------ML Updated---------------------
+2023-05-23 16:21:41.766 +02:00 [WRN] MarginCoin, started!
+2023-05-23 16:21:48.106 +02:00 [ERR] THE SIGNAL CLIENT IS DISCONNECTED
+2023-05-23 16:21:48.566 +02:00 [WRN] Get Account OK
+2023-05-23 16:21:50.644 +02:00 [WRN] Get Account OK
+2023-05-23 16:22:34.018 +02:00 [WRN] Start trading market...
+2023-05-23 16:23:34.047 +02:00 [WRN] Initial call for ExportChart UI
+2023-05-23 16:24:22.496 +02:00 [WRN] Call Prediction on ARPAUSDT down 0,88928926/0,11071067
+2023-05-23 16:24:22.629 +02:00 [WRN] Call Prediction on CRVUSDT down 0,9959126/0,004087342
+2023-05-23 16:24:23.045 +02:00 [WRN] Call Prediction on HIGHUSDT down 0,7092335/0,29076648
+2023-05-23 16:24:23.311 +02:00 [WRN] Call Prediction on CKBUSDT down 0,999998/2,006735E-06
+2023-05-23 16:24:23.390 +02:00 [WRN] Call Prediction on PHBUSDT (1) up 0,48916033/0,51083964
+2023-05-23 16:24:23.474 +02:00 [WRN] Call Prediction on ARBUSDT down 0,9952857/0,004714381
+2023-05-23 16:24:23.553 +02:00 [WRN] Call Prediction on RNDRUSDT up 0,4492762/0,5507238
+2023-05-23 16:24:23.634 +02:00 [WRN] Call Prediction on HIGHUSDT (1) down 0,7092335/0,29076648
+2023-05-23 16:24:23.718 +02:00 [WRN] Call Prediction on ANTUSDT down 0,9993036/0,0006964015
+2023-05-23 16:24:23.811 +02:00 [WRN] Call Prediction on CELRUSDT down 0,6762868/0,32371318
+2023-05-23 16:24:23.897 +02:00 [WRN] Call Prediction on PHBUSDT up 0,48916033/0,51083964
+2023-05-23 16:24:23.979 +02:00 [WRN] Call Prediction on RNDRUSDT (1) up 0,4492762/0,5507238
+2023-05-23 16:24:24.064 +02:00 [WRN] Call Prediction on ARPAUSDT (1) down 0,88928926/0,11071067
+2023-05-23 16:24:24.153 +02:00 [WRN] Call Prediction on IMXUSDT (1) down 0,9975873/0,0024127204
+2023-05-23 16:24:24.237 +02:00 [WRN] Call Prediction on ACHUSDT down 0,9860428/0,01395726
+2023-05-23 16:24:24.363 +02:00 [WRN] Call Prediction on IMXUSDT down 0,9975873/0,0024127204
+2023-05-23 16:24:24.364 +02:00 [WRN] ----------------ML Updated---------------------
+2023-05-23 16:25:36.956 +02:00 [ERR] THE SIGNAL CLIENT IS DISCONNECTED
+2023-05-23 16:25:37.081 +02:00 [ERR] THE SIGNAL CLIENT IS DISCONNECTED
+2023-05-23 16:26:33.205 +02:00 [WRN] MarginCoin, started!
+2023-05-23 16:26:39.623 +02:00 [WRN] Get Account OK
+2023-05-23 16:26:40.946 +02:00 [WRN] Get Account OK
+2023-05-23 16:26:42.228 +02:00 [WRN] Get Account OK
+2023-05-23 16:26:42.686 +02:00 [WRN] Start trading market...
+2023-05-23 16:28:00.240 +02:00 [WRN] MarginCoin, started!
+2023-05-23 16:28:07.029 +02:00 [WRN] Get Account OK
+2023-05-23 16:28:08.087 +02:00 [WRN] Get Account OK
+2023-05-23 16:28:27.854 +02:00 [ERR] THE SIGNAL CLIENT IS DISCONNECTED
+2023-05-23 16:28:29.753 +02:00 [WRN] Get Account OK
+2023-05-23 16:28:30.014 +02:00 [WRN] Start trading market...
+2023-05-23 16:31:28.590 +02:00 [WRN] New candle save : CKBUSDT
+2023-05-23 16:31:28.652 +02:00 [WRN] New candle save : ASTRUSDT
+2023-05-23 16:31:28.946 +02:00 [WRN] New candle save : IMXUSDT
+2023-05-23 16:31:28.951 +02:00 [WRN] New candle save : STGUSDT
+2023-05-23 16:31:29.140 +02:00 [WRN] New candle save : INJUSDT
+2023-05-23 16:31:29.164 +02:00 [WRN] Initial call for ExportChart UI
+2023-05-23 16:31:29.165 +02:00 [ERR] THE SIGNAL CLIENT IS DISCONNECTED
+2023-05-23 16:31:31.354 +02:00 [WRN] Watchdog restart websockets
+2023-05-23 16:31:31.386 +02:00 [WRN] New candle save : ACHUSDT
+2023-05-23 16:31:31.564 +02:00 [WRN] New candle save : RNDRUSDT
+2023-05-23 16:31:31.693 +02:00 [ERR] THE SIGNAL CLIENT IS DISCONNECTED
+2023-05-23 16:31:31.738 +02:00 [WRN] New candle save : GALAUSDT
+2023-05-23 16:31:31.858 +02:00 [WRN] New candle save : CTKUSDT
+2023-05-23 16:31:32.012 +02:00 [WRN] New candle save : NEARUSDT
+2023-05-23 16:31:32.012 +02:00 [WRN] New candle save : FTMUSDT
+2023-05-23 16:31:32.247 +02:00 [WRN] New candle save : ARBUSDT
+2023-05-23 16:31:32.248 +02:00 [WRN] New candle save : HIGHUSDT
+2023-05-23 16:31:32.255 +02:00 [WRN] New candle save : MATICUSDT
+2023-05-23 16:31:32.349 +02:00 [WRN] New candle save : ETHUSDT
+2023-05-23 16:32:36.015 +02:00 [WRN] Watchdog restart websockets
+2023-05-23 16:32:56.033 +02:00 [WRN] Start trading market...
+2023-05-23 16:32:56.033 +02:00 [WRN] Start trading market...
+2023-05-23 16:32:56.036 +02:00 [WRN] Whatchdog kill all websock and restart it
+2023-05-23 16:32:56.125 +02:00 [ERR] HTTP GET /api/AlgoTrade/MonitorMarket responded 500 in 92.4395 ms
+System.Net.WebSockets.WebSocketException (0x80004005): The WebSocket is in an invalid state ('Aborted') for this operation. Valid states are: 'Open, CloseReceived'
+   at System.Net.WebSockets.WebSocketValidate.ThrowIfInvalidState(WebSocketState currentState, Boolean isDisposed, WebSocketState[] validStates)
+   at System.Net.WebSockets.ManagedWebSocket.CloseOutputAsyncCore(WebSocketCloseStatus closeStatus, String statusDescription, CancellationToken cancellationToken)
+   at Binance.Common.BinanceWebSocketHandler.CloseOutputAsync(WebSocketCloseStatus closeStatus, String statusDescription, CancellationToken cancellationToken)
+   at Binance.Common.BinanceWebSocket.DisconnectAsync(CancellationToken cancellationToken)
+   at MarginCoin.Controllers.AlgoTradeController.MonitorMarket() in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 145
+   at lambda_method247(Closure , Object )
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.AwaitableObjectResultExecutor.Execute(IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Awaited|12_0(ControllerActionInvoker invoker, ValueTask`1 actionResultValueTask)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeInnerFilterAsync()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeNextResourceFilter>g__Awaited|25_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.Rethrow(ResourceExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.InvokeFilterPipelineAsync()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.<Invoke>g__AwaitRequestTask|6_0(Endpoint endpoint, Task requestTask, ILogger logger)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+2023-05-23 16:32:56.156 +02:00 [ERR] An unhandled exception has occurred while executing the request.
+System.Net.WebSockets.WebSocketException (0x80004005): The WebSocket is in an invalid state ('Aborted') for this operation. Valid states are: 'Open, CloseReceived'
+   at System.Net.WebSockets.WebSocketValidate.ThrowIfInvalidState(WebSocketState currentState, Boolean isDisposed, WebSocketState[] validStates)
+   at System.Net.WebSockets.ManagedWebSocket.CloseOutputAsyncCore(WebSocketCloseStatus closeStatus, String statusDescription, CancellationToken cancellationToken)
+   at Binance.Common.BinanceWebSocketHandler.CloseOutputAsync(WebSocketCloseStatus closeStatus, String statusDescription, CancellationToken cancellationToken)
+   at Binance.Common.BinanceWebSocket.DisconnectAsync(CancellationToken cancellationToken)
+   at MarginCoin.Controllers.AlgoTradeController.MonitorMarket() in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 145
+   at lambda_method247(Closure , Object )
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.AwaitableObjectResultExecutor.Execute(IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Awaited|12_0(ControllerActionInvoker invoker, ValueTask`1 actionResultValueTask)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeInnerFilterAsync()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeNextResourceFilter>g__Awaited|25_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.Rethrow(ResourceExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.InvokeFilterPipelineAsync()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.<Invoke>g__AwaitRequestTask|6_0(Endpoint endpoint, Task requestTask, ILogger logger)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware.Invoke(HttpContext context)
+2023-05-23 16:38:28.515 +02:00 [WRN] MarginCoin, started!
+2023-05-23 16:38:33.454 +02:00 [ERR] THE SIGNAL CLIENT IS DISCONNECTED
+2023-05-23 16:38:35.452 +02:00 [WRN] Get Account OK
+2023-05-23 16:38:36.670 +02:00 [WRN] Get Account OK
+2023-05-23 16:38:56.427 +02:00 [ERR] THE SIGNAL CLIENT IS DISCONNECTED
+2023-05-23 16:38:57.882 +02:00 [WRN] Start trading market...
+2023-05-23 16:38:57.933 +02:00 [WRN] Get Account OK
+2023-05-23 16:39:56.786 +02:00 [ERR] THE SIGNAL CLIENT IS DISCONNECTED
+2023-05-23 16:39:57.889 +02:00 [WRN] Initial call for ExportChart UI
+2023-05-23 16:40:10.549 +02:00 [WRN] Call Prediction on HIGHUSDT down 0,5609032/0,43909684
+2023-05-23 16:40:10.628 +02:00 [WRN] Call Prediction on HIGHUSDT (1) down 0,5609032/0,43909684
+2023-05-23 16:40:10.629 +02:00 [WRN] ----------------ML Updated---------------------
+2023-05-23 16:40:10.631 +02:00 [WRN] ----------------ML Updated---------------------
+2023-05-23 16:40:56.919 +02:00 [WRN] MarginCoin, started!
+2023-05-23 16:41:02.498 +02:00 [ERR] THE SIGNAL CLIENT IS DISCONNECTED
+2023-05-23 16:41:03.167 +02:00 [WRN] Get Account OK
+2023-05-23 16:41:04.715 +02:00 [WRN] Get Account OK
+2023-05-23 16:41:11.141 +02:00 [ERR] THE SIGNAL CLIENT IS DISCONNECTED
+2023-05-23 16:41:12.847 +02:00 [WRN] Start trading market...
+2023-05-23 16:41:13.524 +02:00 [WRN] Get Account OK
+2023-05-23 16:42:13.004 +02:00 [WRN] Initial call for ExportChart UI
+2023-05-23 16:43:33.787 +02:00 [WRN] Call Prediction on ARPAUSDT down 0,59517443/0,40482557
+2023-05-23 16:43:33.869 +02:00 [WRN] Call Prediction on CRVUSDT down 0,9948/0,0051999833
+2023-05-23 16:43:34.071 +02:00 [WRN] Call Prediction on HIGHUSDT down 0,5609032/0,43909684
+2023-05-23 16:43:34.149 +02:00 [WRN] Call Prediction on CKBUSDT down 0,9999927/7,244392E-06
+2023-05-23 16:43:34.224 +02:00 [WRN] Call Prediction on PHBUSDT (1) up 0,37443998/0,62556
+2023-05-23 16:43:34.306 +02:00 [WRN] Call Prediction on ARBUSDT down 0,9992162/0,000783826
+2023-05-23 16:43:34.386 +02:00 [WRN] Call Prediction on RNDRUSDT up 0,24751708/0,7524829
+2023-05-23 16:43:34.467 +02:00 [WRN] Call Prediction on INJUSDT down 0,99789435/0,002105626
+2023-05-23 16:43:34.551 +02:00 [WRN] Call Prediction on HIGHUSDT (1) down 0,5609032/0,43909684
+2023-05-23 16:43:34.630 +02:00 [WRN] Call Prediction on CELRUSDT up 0,33473924/0,66526073
+2023-05-23 16:43:34.709 +02:00 [WRN] Call Prediction on PHBUSDT up 0,37443998/0,62556
+2023-05-23 16:43:34.790 +02:00 [WRN] Call Prediction on RNDRUSDT (1) up 0,24751708/0,7524829
+2023-05-23 16:43:34.869 +02:00 [WRN] Call Prediction on ARPAUSDT (1) down 0,59517443/0,40482557
+2023-05-23 16:43:35.043 +02:00 [WRN] Call Prediction on IMXUSDT (1) down 0,98064774/0,019352261
+2023-05-23 16:43:35.123 +02:00 [WRN] Call Prediction on ACHUSDT down 0,9973115/0,002688544
+2023-05-23 16:43:35.205 +02:00 [WRN] Call Prediction on IMXUSDT down 0,98064774/0,019352261
+2023-05-23 16:43:35.206 +02:00 [WRN] ----------------ML Updated---------------------
+2023-05-23 16:45:00.137 +02:00 [WRN] New candle save : CELRUSDT
+2023-05-23 16:45:00.137 +02:00 [WRN] New candle save : ANTUSDT
+2023-05-23 16:45:00.137 +02:00 [WRN] New candle save : CRVUSDT
+2023-05-23 16:45:00.138 +02:00 [WRN] New candle save : ARPAUSDT
+2023-05-23 16:45:00.144 +02:00 [WRN] New candle save : RNDRUSDT
+2023-05-23 16:45:00.144 +02:00 [WRN] New candle save : CKBUSDT
+2023-05-23 16:45:00.149 +02:00 [WRN] New candle save : ACHUSDT
+2023-05-23 16:45:00.149 +02:00 [WRN] New candle save : ARBUSDT
+2023-05-23 16:45:00.151 +02:00 [WRN] New candle save : INJUSDT
+2023-05-23 16:45:00.152 +02:00 [WRN] New candle save : PHBUSDT
+2023-05-23 16:45:00.180 +02:00 [WRN] New candle save : IMXUSDT
+2023-05-23 16:45:00.181 +02:00 [WRN] New candle save : HIGHUSDT
+2023-05-23 16:45:05.030 +02:00 [WRN] BuyFack on RNDRUSDT
+2023-05-23 16:45:06.819 +02:00 [WRN] Get Account OK
+2023-05-23 16:45:07.875 +02:00 [WRN] Get Account OK
+2023-05-23 16:45:49.756 +02:00 [WRN] MarginCoin, started!
+2023-05-23 16:46:03.058 +02:00 [WRN] MarginCoin, started!
+2023-05-23 16:46:14.061 +02:00 [WRN] Get Account OK
+2023-05-23 16:46:14.957 +02:00 [ERR] THE SIGNAL CLIENT IS DISCONNECTED
+2023-05-23 16:46:15.733 +02:00 [WRN] Start trading market...
+2023-05-23 16:46:17.141 +02:00 [WRN] Get Account OK
+2023-05-23 16:46:51.682 +02:00 [ERR] An exception occurred while iterating over the results of a query for context type 'MarginCoin.Model.ApplicationDbContext'.
+System.InvalidOperationException: The data is NULL at ordinal 1. This method can't be called on NULL values. Check using IsDBNull before calling.
+   at Microsoft.Data.Sqlite.SqliteValueReader.GetDouble(Int32 ordinal)
+   at lambda_method398(Closure , QueryContext , DbDataReader , ResultContext , SingleQueryResultCoordinator )
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.Enumerator.MoveNext()
+System.InvalidOperationException: The data is NULL at ordinal 1. This method can't be called on NULL values. Check using IsDBNull before calling.
+   at Microsoft.Data.Sqlite.SqliteValueReader.GetDouble(Int32 ordinal)
+   at lambda_method398(Closure , QueryContext , DbDataReader , ResultContext , SingleQueryResultCoordinator )
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.Enumerator.MoveNext()
+2023-05-23 16:46:53.280 +02:00 [ERR] THE SIGNAL CLIENT IS DISCONNECTED
+2023-05-23 16:46:54.988 +02:00 [WRN] Get Account OK
+2023-05-23 16:47:15.738 +02:00 [WRN] Initial call for ExportChart UI
+2023-05-23 16:47:56.799 +02:00 [ERR] An exception occurred while iterating over the results of a query for context type 'MarginCoin.Model.ApplicationDbContext'.
+System.InvalidOperationException: The data is NULL at ordinal 1. This method can't be called on NULL values. Check using IsDBNull before calling.
+   at Microsoft.Data.Sqlite.SqliteValueReader.GetDouble(Int32 ordinal)
+   at lambda_method398(Closure , QueryContext , DbDataReader , ResultContext , SingleQueryResultCoordinator )
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.Enumerator.MoveNext()
+System.InvalidOperationException: The data is NULL at ordinal 1. This method can't be called on NULL values. Check using IsDBNull before calling.
+   at Microsoft.Data.Sqlite.SqliteValueReader.GetDouble(Int32 ordinal)
+   at lambda_method398(Closure , QueryContext , DbDataReader , ResultContext , SingleQueryResultCoordinator )
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.Enumerator.MoveNext()
+2023-05-23 16:47:56.892 +02:00 [WRN] Call Prediction on ARPAUSDT down 0,9057622/0,094237775
+2023-05-23 16:47:57.015 +02:00 [WRN] Call Prediction on CRVUSDT down 0,98198146/0,018018506
+2023-05-23 16:47:57.117 +02:00 [WRN] Call Prediction on HIGHUSDT up 0,3992292/0,60077083
+2023-05-23 16:47:57.199 +02:00 [WRN] Call Prediction on PHBUSDT (1) down 0,5423323/0,45766777
+2023-05-23 16:47:57.306 +02:00 [WRN] Call Prediction on ARBUSDT down 0,9650907/0,034909345
+2023-05-23 16:47:57.392 +02:00 [WRN] Call Prediction on RNDRUSDT up 0,05945037/0,9405496
+2023-05-23 16:47:57.466 +02:00 [WRN] Call Prediction on INJUSDT down 0,99901366/0,0009863502
+2023-05-23 16:47:57.541 +02:00 [WRN] Call Prediction on HIGHUSDT (1) up 0,3992292/0,60077083
+2023-05-23 16:47:57.623 +02:00 [WRN] Call Prediction on CELRUSDT up 0,03095657/0,96904343
+2023-05-23 16:47:57.708 +02:00 [WRN] Call Prediction on PHBUSDT down 0,5423323/0,45766777
+2023-05-23 16:47:57.794 +02:00 [WRN] Call Prediction on RNDRUSDT (1) up 0,05945037/0,9405496
+2023-05-23 16:47:57.875 +02:00 [WRN] Call Prediction on ARPAUSDT (1) down 0,9057622/0,094237775
+2023-05-23 16:47:57.955 +02:00 [WRN] Call Prediction on IMXUSDT (1) down 0,897497/0,10250307
+2023-05-23 16:47:58.036 +02:00 [WRN] Call Prediction on ACHUSDT down 0,99938035/0,00061967154
+2023-05-23 16:47:58.118 +02:00 [WRN] Call Prediction on IMXUSDT down 0,897497/0,10250307
+2023-05-23 16:47:58.118 +02:00 [WRN] ----------------ML Updated---------------------
+2023-05-23 16:49:17.704 +02:00 [ERR] An exception occurred while iterating over the results of a query for context type 'MarginCoin.Model.ApplicationDbContext'.
+System.InvalidOperationException: The data is NULL at ordinal 1. This method can't be called on NULL values. Check using IsDBNull before calling.
+   at Microsoft.Data.Sqlite.SqliteValueReader.GetDouble(Int32 ordinal)
+   at lambda_method398(Closure , QueryContext , DbDataReader , ResultContext , SingleQueryResultCoordinator )
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.Enumerator.MoveNext()
+System.InvalidOperationException: The data is NULL at ordinal 1. This method can't be called on NULL values. Check using IsDBNull before calling.
+   at Microsoft.Data.Sqlite.SqliteValueReader.GetDouble(Int32 ordinal)
+   at lambda_method398(Closure , QueryContext , DbDataReader , ResultContext , SingleQueryResultCoordinator )
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.Enumerator.MoveNext()
+2023-05-23 16:50:00.940 +02:00 [ERR] An exception occurred while iterating over the results of a query for context type 'MarginCoin.Model.ApplicationDbContext'.
+System.InvalidOperationException: The data is NULL at ordinal 1. This method can't be called on NULL values. Check using IsDBNull before calling.
+   at Microsoft.Data.Sqlite.SqliteValueReader.GetDouble(Int32 ordinal)
+   at lambda_method398(Closure , QueryContext , DbDataReader , ResultContext , SingleQueryResultCoordinator )
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.Enumerator.MoveNext()
+System.InvalidOperationException: The data is NULL at ordinal 1. This method can't be called on NULL values. Check using IsDBNull before calling.
+   at Microsoft.Data.Sqlite.SqliteValueReader.GetDouble(Int32 ordinal)
+   at lambda_method398(Closure , QueryContext , DbDataReader , ResultContext , SingleQueryResultCoordinator )
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.Enumerator.MoveNext()
+2023-05-23 16:53:28.925 +02:00 [WRN] Call Prediction on CRVUSDT down 0,98198146/0,018018506
+2023-05-23 16:53:28.999 +02:00 [WRN] Call Prediction on ARBUSDT down 0,9650907/0,034909345
+2023-05-23 16:53:29.115 +02:00 [WRN] Call Prediction on INJUSDT down 0,99901366/0,0009863502
+2023-05-23 16:53:29.219 +02:00 [WRN] Call Prediction on CELRUSDT up 0,03095657/0,96904343
+2023-05-23 16:53:29.294 +02:00 [WRN] Call Prediction on ACHUSDT down 0,99938035/0,00061967154
+2023-05-23 16:53:29.294 +02:00 [WRN] ----------------ML Updated---------------------
+2023-05-23 16:55:48.972 +02:00 [WRN] MarginCoin, started!
+2023-05-23 16:55:57.144 +02:00 [WRN] Get Account OK
+2023-05-23 16:55:57.733 +02:00 [WRN] Get Account OK
+2023-05-23 16:56:06.988 +02:00 [ERR] THE SIGNAL CLIENT IS DISCONNECTED
+2023-05-23 16:56:09.069 +02:00 [WRN] Start trading market...
+2023-05-23 16:56:09.208 +02:00 [WRN] Get Account OK
+2023-05-23 16:56:23.223 +02:00 [ERR] An exception occurred while iterating over the results of a query for context type 'MarginCoin.Model.ApplicationDbContext'.
+System.InvalidOperationException: The data is NULL at ordinal 1. This method can't be called on NULL values. Check using IsDBNull before calling.
+   at Microsoft.Data.Sqlite.SqliteValueReader.GetDouble(Int32 ordinal)
+   at lambda_method398(Closure , QueryContext , DbDataReader , ResultContext , SingleQueryResultCoordinator )
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.Enumerator.MoveNext()
+System.InvalidOperationException: The data is NULL at ordinal 1. This method can't be called on NULL values. Check using IsDBNull before calling.
+   at Microsoft.Data.Sqlite.SqliteValueReader.GetDouble(Int32 ordinal)
+   at lambda_method398(Closure , QueryContext , DbDataReader , ResultContext , SingleQueryResultCoordinator )
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.Enumerator.MoveNext()
+2023-05-23 16:57:09.074 +02:00 [WRN] Initial call for ExportChart UI
+2023-05-23 16:57:56.284 +02:00 [WRN] Call Prediction on ARPAUSDT down 0,90498674/0,095013306
+2023-05-23 16:57:56.373 +02:00 [WRN] Call Prediction on CRVUSDT down 0,9819933/0,018006744
+2023-05-23 16:57:56.469 +02:00 [WRN] Call Prediction on HIGHUSDT up 0,3899774/0,61002254
+2023-05-23 16:57:56.567 +02:00 [WRN] Call Prediction on CKBUSDT down 0,99953437/0,00046564944
+2023-05-23 16:57:56.653 +02:00 [WRN] Call Prediction on PHBUSDT (1) down 0,5568384/0,4431616
+2023-05-23 16:57:56.746 +02:00 [WRN] Call Prediction on ARBUSDT down 0,96654844/0,033451606
+2023-05-23 16:57:56.837 +02:00 [WRN] Call Prediction on RNDRUSDT up 0,058455445/0,94154453
+2023-05-23 16:57:56.923 +02:00 [WRN] Call Prediction on HIGHUSDT (1) up 0,3899774/0,61002254
+2023-05-23 16:57:57.251 +02:00 [WRN] Call Prediction on ANTUSDT down 0,999493/0,0005070299
+2023-05-23 16:57:57.337 +02:00 [WRN] Call Prediction on PHBUSDT down 0,5568384/0,4431616
+2023-05-23 16:57:57.466 +02:00 [WRN] Call Prediction on RNDRUSDT (1) up 0,058455445/0,94154453
+2023-05-23 16:57:57.551 +02:00 [WRN] Call Prediction on ARPAUSDT (1) down 0,90498674/0,095013306
+2023-05-23 16:57:57.636 +02:00 [WRN] Call Prediction on IMXUSDT (1) down 0,90264213/0,09735792
+2023-05-23 16:57:57.727 +02:00 [WRN] Call Prediction on ACHUSDT down 0,9994777/0,00052239635
+2023-05-23 16:57:57.814 +02:00 [WRN] Call Prediction on IMXUSDT down 0,90264213/0,09735792
+2023-05-23 16:57:57.814 +02:00 [WRN] ----------------ML Updated---------------------
+2023-05-23 16:58:24.315 +02:00 [WRN] MarginCoin, started!
+2023-05-23 16:58:30.526 +02:00 [WRN] Start trading market...
+2023-05-23 16:58:31.812 +02:00 [WRN] Get Account OK
+2023-05-23 16:58:32.386 +02:00 [WRN] Get Account OK
+2023-05-23 16:58:51.617 +02:00 [ERR] An exception occurred while iterating over the results of a query for context type 'MarginCoin.Model.ApplicationDbContext'.
+System.InvalidOperationException: The data is NULL at ordinal 1. This method can't be called on NULL values. Check using IsDBNull before calling.
+   at Microsoft.Data.Sqlite.SqliteValueReader.GetDouble(Int32 ordinal)
+   at lambda_method398(Closure , QueryContext , DbDataReader , ResultContext , SingleQueryResultCoordinator )
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.Enumerator.MoveNext()
+System.InvalidOperationException: The data is NULL at ordinal 1. This method can't be called on NULL values. Check using IsDBNull before calling.
+   at Microsoft.Data.Sqlite.SqliteValueReader.GetDouble(Int32 ordinal)
+   at lambda_method398(Closure , QueryContext , DbDataReader , ResultContext , SingleQueryResultCoordinator )
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.Enumerator.MoveNext()
+2023-05-23 17:00:11.231 +02:00 [WRN] MarginCoin, started!
+2023-05-23 17:00:34.536 +02:00 [WRN] MarginCoin, started!
+2023-05-23 17:00:39.944 +02:00 [WRN] Start trading market...
+2023-05-23 17:00:41.966 +02:00 [WRN] Get Account OK
+2023-05-23 17:01:01.560 +02:00 [ERR] An exception occurred while iterating over the results of a query for context type 'MarginCoin.Model.ApplicationDbContext'.
+System.InvalidOperationException: The data is NULL at ordinal 1. This method can't be called on NULL values. Check using IsDBNull before calling.
+   at Microsoft.Data.Sqlite.SqliteValueReader.GetDouble(Int32 ordinal)
+   at lambda_method398(Closure , QueryContext , DbDataReader , ResultContext , SingleQueryResultCoordinator )
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.Enumerator.MoveNext()
+System.InvalidOperationException: The data is NULL at ordinal 1. This method can't be called on NULL values. Check using IsDBNull before calling.
+   at Microsoft.Data.Sqlite.SqliteValueReader.GetDouble(Int32 ordinal)
+   at lambda_method398(Closure , QueryContext , DbDataReader , ResultContext , SingleQueryResultCoordinator )
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.Enumerator.MoveNext()
+2023-05-23 17:01:39.953 +02:00 [WRN] Initial call for ExportChart UI
+2023-05-23 17:01:53.310 +02:00 [WRN] Get Account OK
+2023-05-23 17:02:11.158 +02:00 [WRN] MarginCoin, started!
+2023-05-23 17:02:22.135 +02:00 [WRN] Get Account OK
+2023-05-23 17:02:22.222 +02:00 [WRN] Start trading market...
+2023-05-23 17:02:23.209 +02:00 [WRN] Get Account OK
+2023-05-23 17:03:14.787 +02:00 [ERR] An exception occurred while iterating over the results of a query for context type 'MarginCoin.Model.ApplicationDbContext'.
+System.InvalidOperationException: The data is NULL at ordinal 1. This method can't be called on NULL values. Check using IsDBNull before calling.
+   at Microsoft.Data.Sqlite.SqliteValueReader.GetDouble(Int32 ordinal)
+   at lambda_method398(Closure , QueryContext , DbDataReader , ResultContext , SingleQueryResultCoordinator )
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.Enumerator.MoveNext()
+System.InvalidOperationException: The data is NULL at ordinal 1. This method can't be called on NULL values. Check using IsDBNull before calling.
+   at Microsoft.Data.Sqlite.SqliteValueReader.GetDouble(Int32 ordinal)
+   at lambda_method398(Closure , QueryContext , DbDataReader , ResultContext , SingleQueryResultCoordinator )
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.Enumerator.MoveNext()
+2023-05-23 17:03:22.231 +02:00 [WRN] Initial call for ExportChart UI
+2023-05-23 17:03:24.971 +02:00 [WRN] ----------------ML Updated---------------------
+2023-05-23 17:03:24.985 +02:00 [WRN] ----------------ML Updated---------------------
+2023-05-23 17:04:42.359 +02:00 [ERR] THE SIGNAL CLIENT IS DISCONNECTED
+2023-05-23 17:04:42.361 +02:00 [ERR] THE SIGNAL CLIENT IS DISCONNECTED
+2023-05-23 17:04:44.024 +02:00 [ERR] THE SIGNAL CLIENT IS DISCONNECTED
+2023-05-23 17:04:44.094 +02:00 [ERR] THE SIGNAL CLIENT IS DISCONNECTED
+2023-05-23 17:04:45.992 +02:00 [WRN] Get Account OK
+2023-05-23 17:04:46.677 +02:00 [WRN] Get Account OK
+2023-05-23 17:53:29.886 +02:00 [WRN] Watchdog restart websockets
+2023-05-23 17:53:29.930 +02:00 [WRN] Start trading market...
+2023-05-23 17:53:29.933 +02:00 [WRN] Whatchdog kill all websock and restart it
+2023-05-23 17:53:41.297 +02:00 [WRN] SellFack on RNDRUSDT
+2023-05-23 17:53:49.058 +02:00 [WRN] Get Account OK
+2023-05-23 17:53:49.908 +02:00 [WRN] Start trading market...
+2023-05-23 17:53:50.165 +02:00 [WRN] Get Account OK
+2023-05-23 17:53:54.083 +02:00 [WRN] Whatchdog kill all websock and restart it
+2023-05-23 18:35:22.320 +02:00 [WRN] Watchdog restart websockets
+2023-05-23 18:35:39.124 +02:00 [WRN] MarginCoin, started!
+2023-05-23 18:35:55.407 +02:00 [WRN] Get Account OK
+2023-05-23 18:35:55.994 +02:00 [WRN] Get Account OK
+2023-05-23 18:39:23.430 +02:00 [ERR] THE SIGNAL CLIENT IS DISCONNECTED
+2023-05-23 18:39:25.620 +02:00 [WRN] Start trading market...
+2023-05-23 18:39:29.305 +02:00 [WRN] Get Account OK
+2023-05-23 18:40:09.893 +02:00 [WRN] MarginCoin, started!
+2023-05-23 18:40:17.372 +02:00 [WRN] Get Account OK
+2023-05-23 18:40:17.940 +02:00 [WRN] Get Account OK
+2023-05-23 18:40:25.521 +02:00 [ERR] THE SIGNAL CLIENT IS DISCONNECTED
+2023-05-23 18:40:26.952 +02:00 [WRN] Get Account OK
+2023-05-23 18:40:31.342 +02:00 [WRN] Start trading market...
+2023-05-23 18:41:16.056 +02:00 [ERR] An exception occurred while iterating over the results of a query for context type 'MarginCoin.Model.ApplicationDbContext'.
+System.InvalidOperationException: The data is NULL at ordinal 1. This method can't be called on NULL values. Check using IsDBNull before calling.
+   at Microsoft.Data.Sqlite.SqliteValueReader.GetDouble(Int32 ordinal)
+   at lambda_method316(Closure , QueryContext , DbDataReader , ResultContext , SingleQueryResultCoordinator )
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.Enumerator.MoveNext()
+System.InvalidOperationException: The data is NULL at ordinal 1. This method can't be called on NULL values. Check using IsDBNull before calling.
+   at Microsoft.Data.Sqlite.SqliteValueReader.GetDouble(Int32 ordinal)
+   at lambda_method316(Closure , QueryContext , DbDataReader , ResultContext , SingleQueryResultCoordinator )
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.Enumerator.MoveNext()
+2023-05-23 18:41:31.344 +02:00 [WRN] Initial call for ExportChart UI
+2023-05-23 18:42:12.644 +02:00 [WRN] Call Prediction on ARPAUSDT down 0,999411/0,00058896426
+2023-05-23 18:42:12.718 +02:00 [WRN] Call Prediction on CRVUSDT down 0,76086104/0,23913895
+2023-05-23 18:42:12.796 +02:00 [WRN] Call Prediction on HIGHUSDT down 0,9920359/0,00796415
+2023-05-23 18:42:12.876 +02:00 [WRN] Call Prediction on ARBUSDT (1) down 0,96069366/0,03930637
+2023-05-23 18:42:12.961 +02:00 [WRN] Call Prediction on CKBUSDT down 0,99864954/0,0013504582
+2023-05-23 18:42:13.052 +02:00 [WRN] Call Prediction on APTUSDT up 0,16934808/0,8306519
+2023-05-23 18:42:13.132 +02:00 [WRN] Call Prediction on PHBUSDT (1) down 0,9990546/0,0009454272
+2023-05-23 18:42:13.342 +02:00 [WRN] Call Prediction on ARBUSDT down 0,96069366/0,03930637
+2023-05-23 18:42:13.417 +02:00 [WRN] Call Prediction on RNDRUSDT down 0,99998546/1,4591881E-05
+2023-05-23 18:42:13.493 +02:00 [WRN] Call Prediction on HIGHUSDT (1) down 0,9920359/0,00796415
+2023-05-23 18:42:13.573 +02:00 [WRN] Call Prediction on ANTUSDT down 0,88734853/0,1126515
+2023-05-23 18:42:13.655 +02:00 [WRN] Call Prediction on PHBUSDT down 0,9990546/0,0009454272
+2023-05-23 18:42:13.731 +02:00 [WRN] Call Prediction on RNDRUSDT (1) down 0,99998546/1,4591881E-05
+2023-05-23 18:42:13.812 +02:00 [WRN] Call Prediction on ARPAUSDT (1) down 0,999411/0,00058896426
+2023-05-23 18:42:13.888 +02:00 [WRN] Call Prediction on LQTYUSDT down 0,992184/0,007816006
+2023-05-23 18:42:13.964 +02:00 [WRN] Call Prediction on IMXUSDT (1) down 0,9341017/0,06589825
+2023-05-23 18:42:14.051 +02:00 [WRN] Call Prediction on IMXUSDT down 0,9341017/0,06589825
+2023-05-23 18:42:14.051 +02:00 [WRN] ----------------ML Updated---------------------
+2023-05-23 18:45:00.189 +02:00 [WRN] New candle save : SOLUSDT
+2023-05-23 18:45:00.195 +02:00 [WRN] New candle save : MATICUSDT
+2023-05-23 18:45:00.195 +02:00 [WRN] New candle save : CKBUSDT
+2023-05-23 18:45:00.196 +02:00 [WRN] New candle save : ARBUSDT
+2023-05-23 18:45:00.195 +02:00 [WRN] New candle save : ARPAUSDT
+2023-05-23 18:45:00.196 +02:00 [WRN] New candle save : TVKUSDT
+2023-05-23 18:45:00.196 +02:00 [WRN] New candle save : DEXEUSDT
+2023-05-23 18:45:00.196 +02:00 [WRN] New candle save : CRVUSDT
+2023-05-23 18:45:00.196 +02:00 [WRN] New candle save : INJUSDT
+2023-05-23 18:45:00.247 +02:00 [WRN] New candle save : ANTUSDT
+2023-05-23 18:45:00.268 +02:00 [WRN] New candle save : GALAUSDT
+2023-05-23 18:45:00.294 +02:00 [WRN] New candle save : RNDRUSDT
+2023-05-23 18:45:00.301 +02:00 [WRN] New candle save : IMXUSDT
+2023-05-23 18:45:00.301 +02:00 [WRN] New candle save : STGUSDT
+2023-05-23 18:45:00.301 +02:00 [WRN] New candle save : LQTYUSDT
+2023-05-23 18:45:00.302 +02:00 [WRN] New candle save : HIGHUSDT
+2023-05-23 18:45:00.302 +02:00 [WRN] New candle save : APTUSDT
+2023-05-23 18:45:00.301 +02:00 [WRN] New candle save : PHBUSDT
+2023-05-23 18:45:21.382 +02:00 [WRN] MarginCoin, started!
+2023-05-23 18:45:30.354 +02:00 [WRN] Get Account OK
+2023-05-23 18:45:31.013 +02:00 [WRN] Get Account OK
+2023-05-23 18:45:40.694 +02:00 [WRN] Start trading market...
+2023-05-23 18:46:40.702 +02:00 [WRN] Initial call for ExportChart UI
+2023-05-23 18:47:20.747 +02:00 [WRN] Call Prediction on ARPAUSDT down 0,9983437/0,0016562293
+2023-05-23 18:47:20.818 +02:00 [WRN] Call Prediction on CRVUSDT down 0,98458093/0,015418997
+2023-05-23 18:47:20.895 +02:00 [WRN] Call Prediction on HIGHUSDT down 0,9917067/0,008293317
+2023-05-23 18:47:20.970 +02:00 [WRN] Call Prediction on CKBUSDT down 0,9990502/0,0009497336
+2023-05-23 18:47:21.048 +02:00 [WRN] Call Prediction on PHBUSDT (1) down 0,99985635/0,00014365259
+2023-05-23 18:47:21.121 +02:00 [WRN] Call Prediction on ARBUSDT down 0,986797/0,013203014
+2023-05-23 18:47:21.190 +02:00 [WRN] Call Prediction on RNDRUSDT down 0,992459/0,0075409357
+2023-05-23 18:47:21.261 +02:00 [WRN] Call Prediction on INJUSDT down 0,9273901/0,07260986
+2023-05-23 18:47:21.357 +02:00 [WRN] Call Prediction on HIGHUSDT (1) down 0,9917067/0,008293317
+2023-05-23 18:47:21.445 +02:00 [WRN] Call Prediction on ANTUSDT down 0,92720836/0,07279161
+2023-05-23 18:47:21.522 +02:00 [WRN] Call Prediction on PHBUSDT down 0,99985635/0,00014365259
+2023-05-23 18:47:21.591 +02:00 [WRN] Call Prediction on RNDRUSDT (1) down 0,992459/0,0075409357
+2023-05-23 18:47:21.659 +02:00 [WRN] Call Prediction on ARPAUSDT (1) down 0,9983437/0,0016562293
+2023-05-23 18:47:21.732 +02:00 [WRN] Call Prediction on LQTYUSDT down 0,9900125/0,009987502
+2023-05-23 18:47:21.803 +02:00 [WRN] Call Prediction on IMXUSDT (1) down 0,92856985/0,07143014
+2023-05-23 18:47:21.878 +02:00 [WRN] Call Prediction on IMXUSDT down 0,92856985/0,07143014
+2023-05-23 18:47:21.878 +02:00 [WRN] ----------------ML Updated---------------------
+2023-05-23 18:54:01.469 +02:00 [WRN] Call Prediction on CRVUSDT down 0,98458093/0,015418997
+2023-05-23 18:54:01.540 +02:00 [WRN] Call Prediction on CKBUSDT down 0,99843866/0,001561359
+2023-05-23 18:54:01.611 +02:00 [WRN] Call Prediction on ARBUSDT down 0,986797/0,013203014
+2023-05-23 18:54:01.695 +02:00 [WRN] Call Prediction on INJUSDT down 0,9273901/0,07260986
+2023-05-23 18:54:01.770 +02:00 [WRN] Call Prediction on ANTUSDT down 0,92720836/0,07279161
+2023-05-23 18:54:01.841 +02:00 [WRN] Call Prediction on LQTYUSDT down 0,9900125/0,009987502
+2023-05-23 18:54:01.841 +02:00 [WRN] ----------------ML Updated---------------------
+2023-05-23 19:00:00.101 +02:00 [WRN] New candle save : ETHUSDT
+2023-05-23 19:00:00.107 +02:00 [WRN] New candle save : MATICUSDT
+2023-05-23 19:00:00.113 +02:00 [WRN] New candle save : ARPAUSDT
+2023-05-23 19:00:00.113 +02:00 [WRN] New candle save : ANTUSDT
+2023-05-23 19:00:00.117 +02:00 [WRN] New candle save : AAVEUSDT
+2023-05-23 19:00:00.121 +02:00 [WRN] New candle save : CKBUSDT
+2023-05-23 19:00:00.121 +02:00 [WRN] New candle save : CRVUSDT
+2023-05-23 19:00:00.124 +02:00 [WRN] New candle save : INJUSDT
+2023-05-23 19:00:00.126 +02:00 [WRN] New candle save : PHBUSDT
+2023-05-23 19:00:00.126 +02:00 [WRN] New candle save : RNDRUSDT
+2023-05-23 19:00:00.127 +02:00 [WRN] New candle save : HIGHUSDT
+2023-05-23 19:00:00.192 +02:00 [WRN] New candle save : LQTYUSDT
+2023-05-23 19:00:00.193 +02:00 [WRN] New candle save : ARBUSDT
+2023-05-23 19:00:00.223 +02:00 [WRN] New candle save : IMXUSDT
+2023-05-23 19:00:00.227 +02:00 [WRN] New candle save : APTUSDT
+2023-05-23 19:00:00.228 +02:00 [WRN] New candle save : STGUSDT
+2023-05-23 19:01:40.704 +02:00 [WRN] New call at 1 for ExportChart UI
+2023-05-23 19:09:01.280 +02:00 [WRN] Call Prediction on ARPAUSDT down 0,9839459/0,016054152
+2023-05-23 19:09:01.348 +02:00 [WRN] Call Prediction on LQTYUSDT (1) down 0,9324399/0,067560054
+2023-05-23 19:09:01.454 +02:00 [WRN] Call Prediction on CRVUSDT down 0,9986375/0,001362544
+2023-05-23 19:09:01.524 +02:00 [WRN] Call Prediction on APTUSDT (1) down 0,8533634/0,14663659
+2023-05-23 19:09:01.602 +02:00 [WRN] Call Prediction on HIGHUSDT down 0,97708946/0,02291057
+2023-05-23 19:09:01.748 +02:00 [WRN] Call Prediction on ARBUSDT (1) down 0,9991159/0,00088412093
+2023-05-23 19:09:01.820 +02:00 [WRN] Call Prediction on CKBUSDT down 0,9972697/0,002730302
+2023-05-23 19:09:01.895 +02:00 [WRN] Call Prediction on APTUSDT down 0,8533634/0,14663659
+2023-05-23 19:09:01.965 +02:00 [WRN] Call Prediction on PHBUSDT (1) down 0,9988502/0,00114979
+2023-05-23 19:09:02.036 +02:00 [WRN] Call Prediction on ARBUSDT down 0,9991159/0,00088412093
+2023-05-23 19:09:02.107 +02:00 [WRN] Call Prediction on RNDRUSDT down 0,9723866/0,027613424
+2023-05-23 19:09:02.181 +02:00 [WRN] Call Prediction on HIGHUSDT (1) down 0,97708946/0,02291057
+2023-05-23 19:09:02.258 +02:00 [WRN] Call Prediction on CRVUSDT (1) down 0,9986375/0,001362544
+2023-05-23 19:09:02.331 +02:00 [WRN] Call Prediction on ANTUSDT down 0,9719669/0,02803308
+2023-05-23 19:09:02.405 +02:00 [WRN] Call Prediction on CKBUSDT (1) down 0,9972697/0,002730302
+2023-05-23 19:09:02.475 +02:00 [WRN] Call Prediction on PHBUSDT down 0,9988502/0,00114979
+2023-05-23 19:09:02.546 +02:00 [WRN] Call Prediction on RNDRUSDT (1) down 0,9723866/0,027613424
+2023-05-23 19:09:02.619 +02:00 [WRN] Call Prediction on ARPAUSDT (1) down 0,9839459/0,016054152
+2023-05-23 19:09:02.689 +02:00 [WRN] Call Prediction on ANTUSDT (1) down 0,9719669/0,02803308
+2023-05-23 19:09:02.759 +02:00 [WRN] Call Prediction on LQTYUSDT down 0,9324399/0,067560054
+2023-05-23 19:09:02.831 +02:00 [WRN] Call Prediction on IMXUSDT (1) down 0,78564477/0,21435526
+2023-05-23 19:09:02.906 +02:00 [WRN] Call Prediction on IMXUSDT down 0,78564477/0,21435526
+2023-05-23 19:09:02.907 +02:00 [WRN] ----------------ML Updated---------------------
+2023-05-23 19:09:02.909 +02:00 [WRN] ----------------ML Updated---------------------
+2023-05-23 19:15:00.092 +02:00 [WRN] New candle save : ETHUSDT
+2023-05-23 19:15:00.097 +02:00 [WRN] New candle save : MATICUSDT
+2023-05-23 19:15:00.101 +02:00 [WRN] New candle save : ANTUSDT
+2023-05-23 19:15:00.104 +02:00 [WRN] New candle save : ARPAUSDT
+2023-05-23 19:15:00.104 +02:00 [WRN] New candle save : AAVEUSDT
+2023-05-23 19:15:00.137 +02:00 [WRN] New candle save : PHBUSDT
+2023-05-23 19:15:00.142 +02:00 [WRN] New candle save : CRVUSDT
+2023-05-23 19:15:00.142 +02:00 [WRN] New candle save : RNDRUSDT
+2023-05-23 19:15:00.142 +02:00 [WRN] New candle save : IMXUSDT
+2023-05-23 19:15:00.143 +02:00 [WRN] New candle save : STGUSDT
+2023-05-23 19:15:00.143 +02:00 [WRN] New candle save : HIGHUSDT
+2023-05-23 19:15:00.143 +02:00 [WRN] New candle save : GALAUSDT
+2023-05-23 19:15:00.142 +02:00 [WRN] New candle save : APEUSDT
+2023-05-23 19:15:00.143 +02:00 [WRN] New candle save : APTUSDT
+2023-05-23 19:15:00.143 +02:00 [WRN] New candle save : INJUSDT
+2023-05-23 19:15:00.143 +02:00 [WRN] New candle save : ARBUSDT
+2023-05-23 19:15:00.143 +02:00 [WRN] New candle save : LQTYUSDT
+2023-05-23 19:15:00.142 +02:00 [WRN] New candle save : CKBUSDT
+2023-05-23 19:16:40.721 +02:00 [WRN] New call at 16 for ExportChart UI
+2023-05-23 19:24:01.492 +02:00 [WRN] Call Prediction on ARPAUSDT down 0,9820223/0,017977731
+2023-05-23 19:24:01.561 +02:00 [WRN] Call Prediction on LQTYUSDT (1) down 0,9256766/0,07432341
+2023-05-23 19:24:01.729 +02:00 [WRN] Call Prediction on CRVUSDT down 0,9958252/0,004174867
+2023-05-23 19:24:01.804 +02:00 [WRN] Call Prediction on APTUSDT (1) up 0,13060623/0,8693937
+2023-05-23 19:24:01.875 +02:00 [WRN] Call Prediction on HIGHUSDT up 0,20729227/0,7927077
+2023-05-23 19:24:01.947 +02:00 [WRN] Call Prediction on ARBUSDT (1) down 0,9962333/0,0037666785
+2023-05-23 19:24:02.021 +02:00 [WRN] Call Prediction on CKBUSDT down 0,94632256/0,05367746
+2023-05-23 19:24:02.096 +02:00 [WRN] Call Prediction on APTUSDT up 0,13060623/0,8693937
+2023-05-23 19:24:02.169 +02:00 [WRN] Call Prediction on PHBUSDT (1) down 0,99574643/0,0042535444
+2023-05-23 19:24:02.246 +02:00 [WRN] Call Prediction on ARBUSDT down 0,9962333/0,0037666785
+2023-05-23 19:24:02.320 +02:00 [WRN] Call Prediction on RNDRUSDT down 0,9981692/0,0018307465
+2023-05-23 19:24:02.396 +02:00 [WRN] Call Prediction on HIGHUSDT (1) up 0,20729227/0,7927077
+2023-05-23 19:24:02.465 +02:00 [WRN] Call Prediction on CRVUSDT (1) down 0,9958252/0,004174867
+2023-05-23 19:24:02.636 +02:00 [WRN] BuyFack on APTUSDT
+2023-05-23 19:24:02.683 +02:00 [WRN] Call Prediction on ANTUSDT down 0,7766311/0,22336888
+2023-05-23 19:24:02.764 +02:00 [WRN] Call Prediction on CKBUSDT (1) down 0,94632256/0,05367746
+2023-05-23 19:24:02.851 +02:00 [WRN] Call Prediction on PHBUSDT down 0,99574643/0,0042535444
+2023-05-23 19:24:02.927 +02:00 [WRN] Call Prediction on RNDRUSDT (1) down 0,9981692/0,0018307465
+2023-05-23 19:24:02.999 +02:00 [WRN] Call Prediction on ARPAUSDT (1) down 0,9820223/0,017977731
+2023-05-23 19:24:03.071 +02:00 [WRN] Call Prediction on ANTUSDT (1) down 0,7766311/0,22336888
+2023-05-23 19:24:03.145 +02:00 [WRN] Call Prediction on LQTYUSDT down 0,9256766/0,07432341
+2023-05-23 19:24:03.218 +02:00 [WRN] Call Prediction on IMXUSDT (1) down 0,6422497/0,35775033
+2023-05-23 19:24:03.294 +02:00 [WRN] Call Prediction on IMXUSDT down 0,6422497/0,35775033
+2023-05-23 19:24:03.294 +02:00 [WRN] ----------------ML Updated---------------------
+2023-05-23 19:24:03.297 +02:00 [WRN] ----------------ML Updated---------------------
+2023-05-23 19:24:03.948 +02:00 [WRN] Get Account OK
+2023-05-23 19:24:04.591 +02:00 [WRN] Get Account OK
+2023-05-23 19:30:00.107 +02:00 [WRN] New candle save : ETHUSDT
+2023-05-23 19:30:00.111 +02:00 [WRN] New candle save : MATICUSDT
+2023-05-23 19:30:00.117 +02:00 [WRN] New candle save : ARPAUSDT
+2023-05-23 19:30:00.117 +02:00 [WRN] New candle save : ANTUSDT
+2023-05-23 19:30:00.121 +02:00 [WRN] New candle save : AAVEUSDT
+2023-05-23 19:30:00.123 +02:00 [WRN] New candle save : PHBUSDT
+2023-05-23 19:30:00.123 +02:00 [WRN] New candle save : CRVUSDT
+2023-05-23 19:30:00.155 +02:00 [WRN] New candle save : INJUSDT
+2023-05-23 19:30:00.189 +02:00 [WRN] New candle save : RNDRUSDT
+2023-05-23 19:30:00.193 +02:00 [WRN] New candle save : LQTYUSDT
+2023-05-23 19:30:00.193 +02:00 [WRN] New candle save : APEUSDT
+2023-05-23 19:30:00.193 +02:00 [WRN] New candle save : CKBUSDT
+2023-05-23 19:30:00.194 +02:00 [WRN] New candle save : HIGHUSDT
+2023-05-23 19:30:00.195 +02:00 [WRN] New candle save : IMXUSDT
+2023-05-23 19:30:00.194 +02:00 [WRN] New candle save : GALAUSDT
+2023-05-23 19:30:00.194 +02:00 [WRN] New candle save : ARBUSDT
+2023-05-23 19:30:00.194 +02:00 [WRN] New candle save : STGUSDT
+2023-05-23 19:30:00.195 +02:00 [WRN] New candle save : APTUSDT
+2023-05-23 19:31:40.713 +02:00 [WRN] New call at 31 for ExportChart UI
+2023-05-23 19:39:01.425 +02:00 [WRN] Call Prediction on ARPAUSDT down 0,9924827/0,007517302
+2023-05-23 19:39:01.499 +02:00 [WRN] Call Prediction on LQTYUSDT (1) down 0,995054/0,0049460167
+2023-05-23 19:39:01.573 +02:00 [WRN] Call Prediction on CRVUSDT down 0,99681574/0,003184304
+2023-05-23 19:39:01.652 +02:00 [WRN] Call Prediction on APTUSDT (1) up 0,42496255/0,5750374
+2023-05-23 19:39:01.725 +02:00 [WRN] Call Prediction on HIGHUSDT down 0,9121208/0,08787917
+2023-05-23 19:39:01.797 +02:00 [WRN] Call Prediction on ARBUSDT (1) down 0,99728215/0,0027177974
+2023-05-23 19:39:01.875 +02:00 [WRN] Call Prediction on CKBUSDT down 0,98290676/0,017093182
+2023-05-23 19:39:01.948 +02:00 [WRN] Call Prediction on APTUSDT up 0,42496255/0,5750374
+2023-05-23 19:39:02.023 +02:00 [WRN] Call Prediction on PHBUSDT (1) down 0,9928022/0,0071978113
+2023-05-23 19:39:02.094 +02:00 [WRN] Call Prediction on ARBUSDT down 0,99728215/0,0027177974
+2023-05-23 19:39:02.161 +02:00 [WRN] Call Prediction on RNDRUSDT down 0,9794632/0,020536752
+2023-05-23 19:39:02.236 +02:00 [WRN] Call Prediction on HIGHUSDT (1) down 0,9121208/0,08787917
+2023-05-23 19:39:02.309 +02:00 [WRN] Call Prediction on CRVUSDT (1) down 0,99681574/0,003184304
+2023-05-23 19:39:02.384 +02:00 [WRN] Call Prediction on ANTUSDT down 0,9230463/0,076953724
+2023-05-23 19:39:02.455 +02:00 [WRN] Call Prediction on CKBUSDT (1) down 0,98290676/0,017093182
+2023-05-23 19:39:02.526 +02:00 [WRN] Call Prediction on PHBUSDT down 0,9928022/0,0071978113
+2023-05-23 19:39:02.606 +02:00 [WRN] Call Prediction on RNDRUSDT (1) down 0,9794632/0,020536752
+2023-05-23 19:39:02.679 +02:00 [WRN] Call Prediction on ARPAUSDT (1) down 0,9924827/0,007517302
+2023-05-23 19:39:02.751 +02:00 [WRN] Call Prediction on ANTUSDT (1) down 0,9230463/0,076953724
+2023-05-23 19:39:02.823 +02:00 [WRN] Call Prediction on LQTYUSDT down 0,995054/0,0049460167
+2023-05-23 19:39:02.897 +02:00 [WRN] Call Prediction on IMXUSDT (1) up 0,13607205/0,8639279
+2023-05-23 19:39:02.967 +02:00 [WRN] Call Prediction on IMXUSDT up 0,13607205/0,8639279
+2023-05-23 19:39:02.967 +02:00 [WRN] ----------------ML Updated---------------------
+2023-05-23 19:39:02.970 +02:00 [WRN] ----------------ML Updated---------------------
+2023-05-23 19:45:00.101 +02:00 [WRN] New candle save : ETHUSDT
+2023-05-23 19:45:00.105 +02:00 [WRN] New candle save : MATICUSDT
+2023-05-23 19:45:00.109 +02:00 [WRN] New candle save : ANTUSDT
+2023-05-23 19:45:00.112 +02:00 [WRN] New candle save : ARPAUSDT
+2023-05-23 19:45:00.114 +02:00 [WRN] New candle save : PHBUSDT
+2023-05-23 19:45:00.114 +02:00 [WRN] New candle save : AAVEUSDT
+2023-05-23 19:45:00.117 +02:00 [WRN] New candle save : CRVUSDT
+2023-05-23 19:45:00.119 +02:00 [WRN] New candle save : INJUSDT
+2023-05-23 19:45:00.121 +02:00 [WRN] New candle save : RNDRUSDT
+2023-05-23 19:45:00.121 +02:00 [WRN] New candle save : APEUSDT
+2023-05-23 19:45:00.121 +02:00 [WRN] New candle save : STGUSDT
+2023-05-23 19:45:00.122 +02:00 [WRN] New candle save : IMXUSDT
+2023-05-23 19:45:00.122 +02:00 [WRN] New candle save : CKBUSDT
+2023-05-23 19:45:00.123 +02:00 [WRN] New candle save : HIGHUSDT
+2023-05-23 19:45:00.154 +02:00 [WRN] New candle save : LQTYUSDT
+2023-05-23 19:45:00.155 +02:00 [WRN] New candle save : ARBUSDT
+2023-05-23 19:45:00.158 +02:00 [WRN] New candle save : GALAUSDT
+2023-05-23 19:45:00.158 +02:00 [WRN] New candle save : APTUSDT
+2023-05-23 19:46:40.704 +02:00 [WRN] New call at 46 for ExportChart UI
+2023-05-23 19:53:01.494 +02:00 [WRN] Call Prediction on LQTYUSDT (1) down 0,9985051/0,0014949335
+2023-05-23 19:53:01.570 +02:00 [WRN] Call Prediction on CRVUSDT down 0,998223/0,0017769666
+2023-05-23 19:53:01.875 +02:00 [WRN] Call Prediction on APTUSDT (1) down 0,99116325/0,008836715
+2023-05-23 19:53:01.952 +02:00 [WRN] Call Prediction on HIGHUSDT down 0,99240595/0,007594019
+2023-05-23 19:53:02.023 +02:00 [WRN] Call Prediction on ARBUSDT (1) down 0,99965656/0,00034340014
+2023-05-23 19:53:02.094 +02:00 [WRN] Call Prediction on CKBUSDT down 0,97866863/0,021331448
+2023-05-23 19:53:02.168 +02:00 [WRN] Call Prediction on APTUSDT down 0,99116325/0,008836715
+2023-05-23 19:53:02.244 +02:00 [WRN] Call Prediction on PHBUSDT (1) down 0,9967847/0,0032153379
+2023-05-23 19:53:02.319 +02:00 [WRN] Call Prediction on ARBUSDT down 0,99965656/0,00034340014
+2023-05-23 19:53:02.396 +02:00 [WRN] Call Prediction on RNDRUSDT down 0,7320784/0,26792163
+2023-05-23 19:53:02.461 +02:00 [WRN] SellFack on APTUSDT
+2023-05-23 19:53:02.474 +02:00 [WRN] Call Prediction on HIGHUSDT (1) down 0,99240595/0,007594019
+2023-05-23 19:53:02.589 +02:00 [WRN] Call Prediction on CRVUSDT (1) down 0,998223/0,0017769666
+2023-05-23 19:53:02.661 +02:00 [WRN] Call Prediction on ANTUSDT down 0,9114758/0,08852421
+2023-05-23 19:53:02.733 +02:00 [WRN] Call Prediction on CKBUSDT (1) down 0,97866863/0,021331448
+2023-05-23 19:53:02.804 +02:00 [WRN] Call Prediction on PHBUSDT down 0,9967847/0,0032153379
+2023-05-23 19:53:02.882 +02:00 [WRN] Call Prediction on RNDRUSDT (1) down 0,7320784/0,26792163
+2023-05-23 19:53:02.964 +02:00 [WRN] Call Prediction on ANTUSDT (1) down 0,9114758/0,08852421
+2023-05-23 19:53:03.048 +02:00 [WRN] Call Prediction on LQTYUSDT down 0,9985051/0,0014949335
+2023-05-23 19:53:03.121 +02:00 [WRN] Call Prediction on IMXUSDT (1) up 0,47709647/0,5229035
+2023-05-23 19:53:03.193 +02:00 [WRN] Call Prediction on IMXUSDT up 0,47709647/0,5229035
+2023-05-23 19:53:03.194 +02:00 [WRN] ----------------ML Updated---------------------
+2023-05-23 19:53:03.196 +02:00 [WRN] ----------------ML Updated---------------------
+2023-05-23 19:53:09.658 +02:00 [WRN] Get Account OK
+2023-05-23 19:53:10.233 +02:00 [WRN] Get Account OK
+2023-05-23 20:00:00.111 +02:00 [WRN] New candle save : ETHUSDT
+2023-05-23 20:00:00.115 +02:00 [WRN] New candle save : MATICUSDT
+2023-05-23 20:00:00.124 +02:00 [WRN] New candle save : ARPAUSDT
+2023-05-23 20:00:00.125 +02:00 [WRN] New candle save : ANTUSDT
+2023-05-23 20:00:00.128 +02:00 [WRN] New candle save : AAVEUSDT
+2023-05-23 20:00:00.131 +02:00 [WRN] New candle save : CRVUSDT
+2023-05-23 20:00:00.132 +02:00 [WRN] New candle save : CKBUSDT
+2023-05-23 20:00:00.133 +02:00 [WRN] New candle save : PHBUSDT
+2023-05-23 20:00:00.136 +02:00 [WRN] New candle save : INJUSDT
+2023-05-23 20:00:00.137 +02:00 [WRN] New candle save : RNDRUSDT
+2023-05-23 20:00:00.137 +02:00 [WRN] New candle save : GALAUSDT
+2023-05-23 20:00:00.138 +02:00 [WRN] New candle save : LQTYUSDT
+2023-05-23 20:00:00.174 +02:00 [WRN] New candle save : APEUSDT
+2023-05-23 20:00:00.174 +02:00 [WRN] New candle save : IMXUSDT
+2023-05-23 20:00:00.175 +02:00 [WRN] New candle save : STGUSDT
+2023-05-23 20:00:00.174 +02:00 [WRN] New candle save : HIGHUSDT
+2023-05-23 20:00:00.175 +02:00 [WRN] New candle save : ARBUSDT
+2023-05-23 20:00:00.175 +02:00 [WRN] New candle save : APTUSDT
+2023-05-23 20:01:40.723 +02:00 [WRN] New call at 1 for ExportChart UI
+2023-05-23 20:09:01.973 +02:00 [WRN] Call Prediction on ARPAUSDT down 0,9942198/0,0057801832
+2023-05-23 20:09:02.052 +02:00 [WRN] Call Prediction on LQTYUSDT (1) down 0,99978393/0,00021604661
+2023-05-23 20:09:02.131 +02:00 [WRN] Call Prediction on CRVUSDT down 0,9961026/0,0038974467
+2023-05-23 20:09:02.205 +02:00 [WRN] Call Prediction on APTUSDT (1) down 0,9868889/0,013111087
+2023-05-23 20:09:02.279 +02:00 [WRN] Call Prediction on HIGHUSDT down 0,9860692/0,013930831
+2023-05-23 20:09:02.356 +02:00 [WRN] Call Prediction on ARBUSDT (1) down 0,9997234/0,00027656445
+2023-05-23 20:09:02.434 +02:00 [WRN] Call Prediction on CKBUSDT down 0,9977969/0,002203133
+2023-05-23 20:09:02.625 +02:00 [WRN] Call Prediction on APTUSDT down 0,9868889/0,013111087
+2023-05-23 20:09:02.761 +02:00 [WRN] Call Prediction on PHBUSDT (1) down 0,9992968/0,00070318393
+2023-05-23 20:09:02.839 +02:00 [WRN] Call Prediction on ARBUSDT down 0,9997234/0,00027656445
+2023-05-23 20:09:02.918 +02:00 [WRN] Call Prediction on RNDRUSDT down 0,972693/0,027306959
+2023-05-23 20:09:03.000 +02:00 [WRN] Call Prediction on HIGHUSDT (1) down 0,9860692/0,013930831
+2023-05-23 20:09:03.077 +02:00 [WRN] Call Prediction on CRVUSDT (1) down 0,9961026/0,0038974467
+2023-05-23 20:09:03.154 +02:00 [WRN] Call Prediction on ANTUSDT down 0,9582978/0,04170219
+2023-05-23 20:09:03.228 +02:00 [WRN] Call Prediction on CKBUSDT (1) down 0,9977969/0,002203133
+2023-05-23 20:09:03.306 +02:00 [WRN] Call Prediction on PHBUSDT down 0,9992968/0,00070318393
+2023-05-23 20:09:03.382 +02:00 [WRN] Call Prediction on RNDRUSDT (1) down 0,972693/0,027306959
+2023-05-23 20:09:03.461 +02:00 [WRN] Call Prediction on ARPAUSDT (1) down 0,9942198/0,0057801832
+2023-05-23 20:09:03.545 +02:00 [WRN] Call Prediction on ANTUSDT (1) down 0,9582978/0,04170219
+2023-05-23 20:09:04.070 +02:00 [WRN] Call Prediction on LQTYUSDT down 0,99978393/0,00021604661
+2023-05-23 20:09:04.289 +02:00 [WRN] Call Prediction on IMXUSDT (1) down 0,52040267/0,4795973
+2023-05-23 20:09:04.368 +02:00 [WRN] Call Prediction on IMXUSDT down 0,52040267/0,4795973
+2023-05-23 20:09:04.368 +02:00 [WRN] ----------------ML Updated---------------------
+2023-05-23 20:09:04.371 +02:00 [WRN] ----------------ML Updated---------------------
+2023-05-23 20:15:00.105 +02:00 [WRN] New candle save : ETHUSDT
+2023-05-23 20:15:00.107 +02:00 [WRN] New candle save : MATICUSDT
+2023-05-23 20:15:00.111 +02:00 [WRN] New candle save : ANTUSDT
+2023-05-23 20:15:00.112 +02:00 [WRN] New candle save : ARPAUSDT
+2023-05-23 20:15:00.141 +02:00 [WRN] New candle save : CKBUSDT
+2023-05-23 20:15:00.141 +02:00 [WRN] New candle save : LQTYUSDT
+2023-05-23 20:15:00.141 +02:00 [WRN] New candle save : PHBUSDT
+2023-05-23 20:15:00.141 +02:00 [WRN] New candle save : AAVEUSDT
+2023-05-23 20:15:00.141 +02:00 [WRN] New candle save : STGUSDT
+2023-05-23 20:15:00.141 +02:00 [WRN] New candle save : HIGHUSDT
+2023-05-23 20:15:00.141 +02:00 [WRN] New candle save : CRVUSDT
+2023-05-23 20:15:00.141 +02:00 [WRN] New candle save : INJUSDT
+2023-05-23 20:15:00.172 +02:00 [WRN] New candle save : RNDRUSDT
+2023-05-23 20:15:00.172 +02:00 [WRN] New candle save : ARBUSDT
+2023-05-23 20:15:00.172 +02:00 [WRN] New candle save : TVKUSDT
+2023-05-23 20:15:00.201 +02:00 [WRN] New candle save : IMXUSDT
+2023-05-23 20:15:00.246 +02:00 [WRN] New candle save : GALAUSDT
+2023-05-23 20:15:00.246 +02:00 [WRN] New candle save : APEUSDT
+2023-05-23 20:15:00.246 +02:00 [WRN] New candle save : APTUSDT
+2023-05-23 20:16:40.715 +02:00 [WRN] New call at 16 for ExportChart UI
+2023-05-23 20:24:01.506 +02:00 [WRN] Call Prediction on ARPAUSDT down 0,9977889/0,0022110846
+2023-05-23 20:24:01.580 +02:00 [WRN] Call Prediction on LQTYUSDT (1) down 0,9999926/7,431295E-06
+2023-05-23 20:24:01.656 +02:00 [WRN] Call Prediction on CRVUSDT down 0,99889296/0,0011070289
+2023-05-23 20:24:01.724 +02:00 [WRN] Call Prediction on APTUSDT (1) down 0,9996927/0,00030739504
+2023-05-23 20:24:01.800 +02:00 [WRN] Call Prediction on HIGHUSDT down 0,99479324/0,0052067814
+2023-05-23 20:24:01.880 +02:00 [WRN] Call Prediction on ARBUSDT (1) down 0,99949884/0,0005011315
+2023-05-23 20:24:01.952 +02:00 [WRN] Call Prediction on APTUSDT down 0,9996927/0,00030739504
+2023-05-23 20:24:02.155 +02:00 [WRN] Call Prediction on PHBUSDT (1) down 0,9953186/0,0046813735
+2023-05-23 20:24:02.237 +02:00 [WRN] Call Prediction on ARBUSDT down 0,99949884/0,0005011315
+2023-05-23 20:24:02.389 +02:00 [WRN] Call Prediction on GALAUSDT (1) down 0,9731015/0,026898516
+2023-05-23 20:24:02.993 +02:00 [WRN] Call Prediction on RNDRUSDT down 0,99416983/0,0058302437
+2023-05-23 20:24:03.072 +02:00 [WRN] Call Prediction on HIGHUSDT (1) down 0,99479324/0,0052067814
+2023-05-23 20:24:03.148 +02:00 [WRN] Call Prediction on CRVUSDT (1) down 0,99889296/0,0011070289
+2023-05-23 20:24:03.227 +02:00 [WRN] Call Prediction on ANTUSDT down 0,9951998/0,004800178
+2023-05-23 20:24:03.310 +02:00 [WRN] Call Prediction on PHBUSDT down 0,9953186/0,0046813735
+2023-05-23 20:24:03.389 +02:00 [WRN] Call Prediction on RNDRUSDT (1) down 0,99416983/0,0058302437
+2023-05-23 20:24:03.589 +02:00 [WRN] Call Prediction on ARPAUSDT (1) down 0,9977889/0,0022110846
+2023-05-23 20:24:03.768 +02:00 [WRN] Call Prediction on ANTUSDT (1) down 0,9951998/0,004800178
+2023-05-23 20:24:03.846 +02:00 [WRN] Call Prediction on LQTYUSDT down 0,9999926/7,431295E-06
+2023-05-23 20:24:03.915 +02:00 [WRN] Call Prediction on GALAUSDT down 0,9731015/0,026898516
+2023-05-23 20:24:03.993 +02:00 [WRN] Call Prediction on IMXUSDT (1) down 0,99992085/7,91391E-05
+2023-05-23 20:24:04.317 +02:00 [WRN] Call Prediction on IMXUSDT down 0,99992085/7,91391E-05
+2023-05-23 20:24:04.317 +02:00 [WRN] ----------------ML Updated---------------------
+2023-05-23 20:24:04.320 +02:00 [WRN] ----------------ML Updated---------------------
+2023-05-23 20:30:00.110 +02:00 [WRN] New candle save : ETHUSDT
+2023-05-23 20:30:00.114 +02:00 [WRN] New candle save : MATICUSDT
+2023-05-23 20:30:00.121 +02:00 [WRN] New candle save : ARPAUSDT
+2023-05-23 20:30:00.121 +02:00 [WRN] New candle save : ANTUSDT
+2023-05-23 20:30:00.122 +02:00 [WRN] New candle save : AAVEUSDT
+2023-05-23 20:30:00.157 +02:00 [WRN] New candle save : PHBUSDT
+2023-05-23 20:30:00.157 +02:00 [WRN] New candle save : CKBUSDT
+2023-05-23 20:30:00.157 +02:00 [WRN] New candle save : CRVUSDT
+2023-05-23 20:30:00.160 +02:00 [WRN] New candle save : INJUSDT
+2023-05-23 20:30:00.161 +02:00 [WRN] New candle save : TVKUSDT
+2023-05-23 20:30:00.160 +02:00 [WRN] New candle save : IMXUSDT
+2023-05-23 20:30:00.161 +02:00 [WRN] New candle save : HIGHUSDT
+2023-05-23 20:30:00.162 +02:00 [WRN] New candle save : LQTYUSDT
+2023-05-23 20:30:00.162 +02:00 [WRN] New candle save : APEUSDT
+2023-05-23 20:30:00.160 +02:00 [WRN] New candle save : RNDRUSDT
+2023-05-23 20:30:00.163 +02:00 [WRN] New candle save : ARBUSDT
+2023-05-23 20:30:00.163 +02:00 [WRN] New candle save : STGUSDT
+2023-05-23 20:30:00.204 +02:00 [WRN] New candle save : GALAUSDT
+2023-05-23 20:30:00.204 +02:00 [WRN] New candle save : APTUSDT
+2023-05-23 20:31:40.720 +02:00 [WRN] New call at 31 for ExportChart UI
+2023-05-23 20:39:01.478 +02:00 [WRN] Call Prediction on ARPAUSDT down 0,9844595/0,015540503
+2023-05-23 20:39:01.553 +02:00 [WRN] Call Prediction on LQTYUSDT (1) down 0,99999285/7,1332897E-06
+2023-05-23 20:39:01.629 +02:00 [WRN] Call Prediction on CRVUSDT down 0,99904066/0,0009593493
+2023-05-23 20:39:01.704 +02:00 [WRN] Call Prediction on APTUSDT (1) down 0,9999814/1,8542938E-05
+2023-05-23 20:39:01.778 +02:00 [WRN] Call Prediction on HIGHUSDT down 0,99528056/0,0047194264
+2023-05-23 20:39:01.849 +02:00 [WRN] Call Prediction on ARBUSDT (1) down 0,99876225/0,0012377742
+2023-05-23 20:39:01.921 +02:00 [WRN] Call Prediction on CKBUSDT down 0,9980755/0,0019245471
+2023-05-23 20:39:01.994 +02:00 [WRN] Call Prediction on APTUSDT down 0,9999814/1,8542938E-05
+2023-05-23 20:39:02.071 +02:00 [WRN] Call Prediction on PHBUSDT (1) down 0,9996928/0,0003072198
+2023-05-23 20:39:02.148 +02:00 [WRN] Call Prediction on ARBUSDT down 0,99876225/0,0012377742
+2023-05-23 20:39:02.223 +02:00 [WRN] Call Prediction on RNDRUSDT down 0,9997873/0,0002126889
+2023-05-23 20:39:02.302 +02:00 [WRN] Call Prediction on HIGHUSDT (1) down 0,99528056/0,0047194264
+2023-05-23 20:39:02.375 +02:00 [WRN] Call Prediction on CRVUSDT (1) down 0,99904066/0,0009593493
+2023-05-23 20:39:02.450 +02:00 [WRN] Call Prediction on ANTUSDT down 0,9986492/0,0013508494
+2023-05-23 20:39:02.522 +02:00 [WRN] Call Prediction on CKBUSDT (1) down 0,9980755/0,0019245471
+2023-05-23 20:39:02.596 +02:00 [WRN] Call Prediction on PHBUSDT down 0,9996928/0,0003072198
+2023-05-23 20:39:02.671 +02:00 [WRN] Call Prediction on RNDRUSDT (1) down 0,9997873/0,0002126889
+2023-05-23 20:39:02.747 +02:00 [WRN] Call Prediction on ARPAUSDT (1) down 0,9844595/0,015540503
+2023-05-23 20:39:02.826 +02:00 [WRN] Call Prediction on ANTUSDT (1) down 0,9986492/0,0013508494
+2023-05-23 20:39:02.898 +02:00 [WRN] Call Prediction on LQTYUSDT down 0,99999285/7,1332897E-06
+2023-05-23 20:39:02.977 +02:00 [WRN] Call Prediction on IMXUSDT (1) down 0,99932337/0,00067663717
+2023-05-23 20:39:03.053 +02:00 [WRN] Call Prediction on IMXUSDT down 0,99932337/0,00067663717
+2023-05-23 20:39:03.054 +02:00 [WRN] ----------------ML Updated---------------------
+2023-05-23 20:39:03.056 +02:00 [WRN] ----------------ML Updated---------------------
+2023-05-23 20:45:00.104 +02:00 [WRN] New candle save : ETHUSDT
+2023-05-23 20:45:00.107 +02:00 [WRN] New candle save : MATICUSDT
+2023-05-23 20:45:00.144 +02:00 [WRN] New candle save : ARPAUSDT
+2023-05-23 20:45:00.144 +02:00 [WRN] New candle save : IMXUSDT
+2023-05-23 20:45:00.145 +02:00 [WRN] New candle save : HIGHUSDT
+2023-05-23 20:45:00.145 +02:00 [WRN] New candle save : CRVUSDT
+2023-05-23 20:45:00.146 +02:00 [WRN] New candle save : GALAUSDT
+2023-05-23 20:45:00.146 +02:00 [WRN] New candle save : CKBUSDT
+2023-05-23 20:45:00.147 +02:00 [WRN] New candle save : LQTYUSDT
+2023-05-23 20:45:00.147 +02:00 [WRN] New candle save : AAVEUSDT
+2023-05-23 20:45:00.147 +02:00 [WRN] New candle save : INJUSDT
+2023-05-23 20:45:00.148 +02:00 [WRN] New candle save : RNDRUSDT
+2023-05-23 20:45:00.148 +02:00 [WRN] New candle save : TVKUSDT
+2023-05-23 20:45:00.149 +02:00 [WRN] New candle save : STGUSDT
+2023-05-23 20:45:00.148 +02:00 [WRN] New candle save : ARBUSDT
+2023-05-23 20:45:00.147 +02:00 [WRN] New candle save : ANTUSDT
+2023-05-23 20:45:00.148 +02:00 [WRN] New candle save : PHBUSDT
+2023-05-23 20:45:00.156 +02:00 [WRN] New candle save : APEUSDT
+2023-05-23 20:45:00.157 +02:00 [WRN] New candle save : APTUSDT
+2023-05-23 20:46:40.716 +02:00 [WRN] New call at 46 for ExportChart UI
+2023-05-23 20:47:56.001 +02:00 [WRN] Call Prediction on ARPAUSDT down 0,9737289/0,026271142
+2023-05-23 20:47:56.082 +02:00 [WRN] Call Prediction on CRVUSDT down 0,9995747/0,00042532367
+2023-05-23 20:47:56.163 +02:00 [WRN] Call Prediction on HIGHUSDT down 0,9980944/0,001905594
+2023-05-23 20:47:56.244 +02:00 [WRN] Call Prediction on ARBUSDT (1) down 0,9959337/0,004066297
+2023-05-23 20:47:56.326 +02:00 [WRN] Call Prediction on CKBUSDT down 0,9974362/0,0025638323
+2023-05-23 20:47:56.416 +02:00 [WRN] Call Prediction on APTUSDT down 0,999754/0,00024599678
+2023-05-23 20:47:56.511 +02:00 [WRN] Call Prediction on ARBUSDT down 0,9959337/0,004066297
+2023-05-23 20:47:56.619 +02:00 [WRN] Call Prediction on RNDRUSDT down 0,999912/8,793412E-05
+2023-05-23 20:47:56.722 +02:00 [WRN] Call Prediction on HIGHUSDT (1) down 0,9980944/0,001905594
+2023-05-23 20:47:56.827 +02:00 [WRN] Call Prediction on ANTUSDT down 0,9988644/0,0011355781
+2023-05-23 20:47:56.942 +02:00 [WRN] Call Prediction on PHBUSDT down 0,99979526/0,0002047713
+2023-05-23 20:47:57.057 +02:00 [WRN] Call Prediction on RNDRUSDT (1) down 0,999912/8,793412E-05
+2023-05-23 20:47:57.144 +02:00 [WRN] Call Prediction on ARPAUSDT (1) down 0,9737289/0,026271142
+2023-05-23 20:47:57.246 +02:00 [WRN] Call Prediction on LQTYUSDT down 0,9999999/1,1550088E-07
+2023-05-23 20:47:57.344 +02:00 [WRN] Call Prediction on IMXUSDT (1) down 0,99991167/8,83741E-05
+2023-05-23 20:47:57.434 +02:00 [WRN] Call Prediction on IMXUSDT down 0,99991167/8,83741E-05
+2023-05-23 20:47:57.434 +02:00 [WRN] ----------------ML Updated---------------------
+2023-05-23 20:54:01.611 +02:00 [WRN] Call Prediction on CRVUSDT down 0,9995747/0,00042532367
+2023-05-23 20:54:01.692 +02:00 [WRN] Call Prediction on CKBUSDT down 0,9974362/0,0025638323
+2023-05-23 20:54:01.774 +02:00 [WRN] Call Prediction on APTUSDT down 0,999754/0,00024599678
+2023-05-23 20:54:01.855 +02:00 [WRN] Call Prediction on ANTUSDT down 0,9988644/0,0011355781
+2023-05-23 20:54:01.933 +02:00 [WRN] Call Prediction on PHBUSDT down 0,99979526/0,0002047713
+2023-05-23 20:54:02.015 +02:00 [WRN] Call Prediction on LQTYUSDT down 0,9999999/1,1550088E-07
+2023-05-23 20:54:02.016 +02:00 [WRN] ----------------ML Updated---------------------
+2023-05-23 21:00:00.103 +02:00 [WRN] New candle save : ETHUSDT
+2023-05-23 21:00:00.114 +02:00 [WRN] New candle save : MATICUSDT
+2023-05-23 21:00:00.116 +02:00 [WRN] New candle save : ANTUSDT
+2023-05-23 21:00:00.119 +02:00 [WRN] New candle save : ARPAUSDT
+2023-05-23 21:00:00.146 +02:00 [WRN] New candle save : AAVEUSDT
+2023-05-23 21:00:00.151 +02:00 [WRN] New candle save : CRVUSDT
+2023-05-23 21:00:00.151 +02:00 [WRN] New candle save : TVKUSDT
+2023-05-23 21:00:00.152 +02:00 [WRN] New candle save : CKBUSDT
+2023-05-23 21:00:00.152 +02:00 [WRN] New candle save : LQTYUSDT
+2023-05-23 21:00:00.153 +02:00 [WRN] New candle save : STGUSDT
+2023-05-23 21:00:00.153 +02:00 [WRN] New candle save : RNDRUSDT
+2023-05-23 21:00:00.154 +02:00 [WRN] New candle save : APEUSDT
+2023-05-23 21:00:00.154 +02:00 [WRN] New candle save : PHBUSDT
+2023-05-23 21:00:00.154 +02:00 [WRN] New candle save : GALAUSDT
+2023-05-23 21:00:00.154 +02:00 [WRN] New candle save : IMXUSDT
+2023-05-23 21:00:00.154 +02:00 [WRN] New candle save : HIGHUSDT
+2023-05-23 21:00:00.154 +02:00 [WRN] New candle save : INJUSDT
+2023-05-23 21:00:00.185 +02:00 [WRN] New candle save : APTUSDT
+2023-05-23 21:00:00.185 +02:00 [WRN] New candle save : ARBUSDT
+2023-05-23 21:01:40.723 +02:00 [WRN] New call at 1 for ExportChart UI
+2023-05-23 21:02:17.632 +02:00 [WRN] Call Prediction on ARPAUSDT down 0,99729675/0,0027032515
+2023-05-23 21:02:17.716 +02:00 [WRN] Call Prediction on CRVUSDT down 0,9999825/1,7503442E-05
+2023-05-23 21:02:17.799 +02:00 [WRN] Call Prediction on HIGHUSDT down 0,999884/0,00011595051
+2023-05-23 21:02:18.103 +02:00 [WRN] Call Prediction on ARBUSDT (1) down 0,89443594/0,10556403
+2023-05-23 21:02:18.192 +02:00 [WRN] Call Prediction on CKBUSDT down 0,9985625/0,0014374589
+2023-05-23 21:02:18.279 +02:00 [WRN] Call Prediction on APTUSDT down 0,9996824/0,0003175448
+2023-05-23 21:02:18.362 +02:00 [WRN] Call Prediction on ARBUSDT down 0,89443594/0,10556403
+2023-05-23 21:02:18.448 +02:00 [WRN] Call Prediction on RNDRUSDT down 0,9999262/7,380041E-05
+2023-05-23 21:02:18.534 +02:00 [WRN] Call Prediction on HIGHUSDT (1) down 0,999884/0,00011595051
+2023-05-23 21:02:18.619 +02:00 [WRN] Call Prediction on ANTUSDT down 0,99984/0,00015990384
+2023-05-23 21:02:18.701 +02:00 [WRN] Call Prediction on PHBUSDT down 0,999967/3,296063E-05
+2023-05-23 21:02:18.784 +02:00 [WRN] Call Prediction on RNDRUSDT (1) down 0,9999262/7,380041E-05
+2023-05-23 21:02:18.867 +02:00 [WRN] Call Prediction on ARPAUSDT (1) down 0,99729675/0,0027032515
+2023-05-23 21:02:18.948 +02:00 [WRN] Call Prediction on APEUSDT down 0,999856/0,00014394094
+2023-05-23 21:02:19.037 +02:00 [WRN] Call Prediction on IMXUSDT (1) down 0,9999969/3,0497872E-06
+2023-05-23 21:02:19.138 +02:00 [WRN] Call Prediction on IMXUSDT down 0,9999969/3,0497872E-06
+2023-05-23 21:02:19.139 +02:00 [WRN] ----------------ML Updated---------------------
+2023-05-23 21:09:01.585 +02:00 [WRN] Call Prediction on CRVUSDT down 0,9999825/1,7503442E-05
+2023-05-23 21:09:01.667 +02:00 [WRN] Call Prediction on CKBUSDT down 0,9985625/0,0014374589
+2023-05-23 21:09:01.749 +02:00 [WRN] Call Prediction on APTUSDT down 0,9996824/0,0003175448
+2023-05-23 21:09:01.829 +02:00 [WRN] Call Prediction on ANTUSDT down 0,99984/0,00015990384
+2023-05-23 21:09:02.059 +02:00 [WRN] Call Prediction on PHBUSDT down 0,999967/3,296063E-05
+2023-05-23 21:09:02.137 +02:00 [WRN] Call Prediction on APEUSDT down 0,999856/0,00014394094
+2023-05-23 21:09:02.138 +02:00 [WRN] ----------------ML Updated---------------------
+2023-05-23 21:15:00.077 +02:00 [WRN] New candle save : ETHUSDT
+2023-05-23 21:15:00.082 +02:00 [WRN] New candle save : MATICUSDT
+2023-05-23 21:15:00.088 +02:00 [WRN] New candle save : ARPAUSDT
+2023-05-23 21:15:00.088 +02:00 [WRN] New candle save : ANTUSDT
+2023-05-23 21:15:00.093 +02:00 [WRN] New candle save : PHBUSDT
+2023-05-23 21:15:00.093 +02:00 [WRN] New candle save : AAVEUSDT
+2023-05-23 21:15:00.095 +02:00 [WRN] New candle save : CKBUSDT
+2023-05-23 21:15:00.095 +02:00 [WRN] New candle save : CRVUSDT
+2023-05-23 21:15:00.099 +02:00 [WRN] New candle save : TVKUSDT
+2023-05-23 21:15:00.100 +02:00 [WRN] New candle save : RNDRUSDT
+2023-05-23 21:15:00.100 +02:00 [WRN] New candle save : ARBUSDT
+2023-05-23 21:15:00.100 +02:00 [WRN] New candle save : INJUSDT
+2023-05-23 21:15:00.100 +02:00 [WRN] New candle save : HIGHUSDT
+2023-05-23 21:15:00.100 +02:00 [WRN] New candle save : LQTYUSDT
+2023-05-23 21:15:00.101 +02:00 [WRN] New candle save : IMXUSDT
+2023-05-23 21:15:00.101 +02:00 [WRN] New candle save : STGUSDT
+2023-05-23 21:15:00.101 +02:00 [WRN] New candle save : GALAUSDT
+2023-05-23 21:15:00.126 +02:00 [WRN] New candle save : APEUSDT
+2023-05-23 21:15:00.163 +02:00 [WRN] New candle save : APTUSDT
+2023-05-23 21:16:40.703 +02:00 [WRN] New call at 16 for ExportChart UI
+2023-05-23 21:17:17.630 +02:00 [WRN] Call Prediction on ARPAUSDT down 0,99199873/0,008001322
+2023-05-23 21:17:17.711 +02:00 [WRN] Call Prediction on CRVUSDT down 0,9999027/9,721028E-05
+2023-05-23 21:17:17.794 +02:00 [WRN] Call Prediction on HIGHUSDT down 0,99998355/1,6508597E-05
+2023-05-23 21:17:17.877 +02:00 [WRN] Call Prediction on ARBUSDT (1) down 0,79935426/0,20064577
+2023-05-23 21:17:17.957 +02:00 [WRN] Call Prediction on CKBUSDT down 0,99747473/0,0025253056
+2023-05-23 21:17:18.042 +02:00 [WRN] Call Prediction on APTUSDT down 0,99980956/0,00019045782
+2023-05-23 21:17:18.171 +02:00 [WRN] Call Prediction on ARBUSDT down 0,79935426/0,20064577
+2023-05-23 21:17:18.249 +02:00 [WRN] Call Prediction on RNDRUSDT down 0,9999598/4,016514E-05
+2023-05-23 21:17:18.330 +02:00 [WRN] Call Prediction on HIGHUSDT (1) down 0,99998355/1,6508597E-05
+2023-05-23 21:17:18.408 +02:00 [WRN] Call Prediction on ANTUSDT down 0,9999144/8,5607986E-05
+2023-05-23 21:17:18.487 +02:00 [WRN] Call Prediction on PHBUSDT down 0,99985003/0,00014995832
+2023-05-23 21:17:18.568 +02:00 [WRN] Call Prediction on RNDRUSDT (1) down 0,9999598/4,016514E-05
+2023-05-23 21:17:18.648 +02:00 [WRN] Call Prediction on ARPAUSDT (1) down 0,99199873/0,008001322
+2023-05-23 21:17:18.727 +02:00 [WRN] Call Prediction on LQTYUSDT down 0,99999857/1,4611421E-06
+2023-05-23 21:17:18.913 +02:00 [WRN] Call Prediction on IMXUSDT (1) down 0,9999956/4,4391863E-06
+2023-05-23 21:17:18.995 +02:00 [WRN] Call Prediction on IMXUSDT down 0,9999956/4,4391863E-06
+2023-05-23 21:17:18.995 +02:00 [WRN] ----------------ML Updated---------------------
+2023-05-23 21:24:01.473 +02:00 [WRN] Call Prediction on CRVUSDT down 0,9999027/9,721028E-05
+2023-05-23 21:24:01.554 +02:00 [WRN] Call Prediction on CKBUSDT down 0,99747473/0,0025253056
+2023-05-23 21:24:01.637 +02:00 [WRN] Call Prediction on APTUSDT down 0,99980956/0,00019045782
+2023-05-23 21:24:01.868 +02:00 [WRN] Call Prediction on ANTUSDT down 0,9999144/8,5607986E-05
+2023-05-23 21:24:02.075 +02:00 [WRN] Call Prediction on PHBUSDT down 0,99985003/0,00014995832
+2023-05-23 21:24:02.154 +02:00 [WRN] Call Prediction on LQTYUSDT down 0,99999857/1,4611421E-06
+2023-05-23 21:24:02.155 +02:00 [WRN] ----------------ML Updated---------------------
+2023-05-23 21:30:00.066 +02:00 [WRN] New candle save : ETHUSDT
+2023-05-23 21:30:00.071 +02:00 [WRN] New candle save : MATICUSDT
+2023-05-23 21:30:00.076 +02:00 [WRN] New candle save : ANTUSDT
+2023-05-23 21:30:00.077 +02:00 [WRN] New candle save : AAVEUSDT
+2023-05-23 21:30:00.077 +02:00 [WRN] New candle save : ARPAUSDT
+2023-05-23 21:30:00.081 +02:00 [WRN] New candle save : CRVUSDT
+2023-05-23 21:30:00.081 +02:00 [WRN] New candle save : INJUSDT
+2023-05-23 21:30:00.083 +02:00 [WRN] New candle save : PHBUSDT
+2023-05-23 21:30:00.084 +02:00 [WRN] New candle save : CKBUSDT
+2023-05-23 21:30:00.089 +02:00 [WRN] New candle save : TVKUSDT
+2023-05-23 21:30:00.089 +02:00 [WRN] New candle save : RNDRUSDT
+2023-05-23 21:30:00.090 +02:00 [WRN] New candle save : HIGHUSDT
+2023-05-23 21:30:00.090 +02:00 [WRN] New candle save : IMXUSDT
+2023-05-23 21:30:00.091 +02:00 [WRN] New candle save : STGUSDT
+2023-05-23 21:30:00.091 +02:00 [WRN] New candle save : APEUSDT
+2023-05-23 21:30:00.091 +02:00 [WRN] New candle save : GALAUSDT
+2023-05-23 21:30:00.150 +02:00 [WRN] New candle save : ARBUSDT
+2023-05-23 21:30:00.152 +02:00 [WRN] New candle save : APTUSDT
+2023-05-23 21:30:00.152 +02:00 [WRN] New candle save : LQTYUSDT
+2023-05-23 21:31:40.691 +02:00 [WRN] New call at 31 for ExportChart UI
+2023-05-23 21:32:17.710 +02:00 [ERR] Failed executing DbCommand (4ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT "s"."SymbolName"
+FROM "Symbol" AS "s"
+WHERE (("s"."IsOnProd" <> 0) AND ("s"."Capitalisation" > 40.0)) AND ("s"."MarginType" > 0)
+2023-05-23 21:32:17.764 +02:00 [ERR] An exception occurred while iterating over the results of a query for context type 'MarginCoin.Model.ApplicationDbContext'.
+Microsoft.Data.Sqlite.SqliteException (0x80004005): SQLite Error 1: 'no such column: s.MarginType'.
+   at Microsoft.Data.Sqlite.SqliteException.ThrowExceptionForRC(Int32 rc, sqlite3 db)
+   at Microsoft.Data.Sqlite.SqliteCommand.PrepareAndEnumerateStatements(Stopwatch timer)+MoveNext()
+   at Microsoft.Data.Sqlite.SqliteCommand.GetStatements(Stopwatch timer)+MoveNext()
+   at Microsoft.Data.Sqlite.SqliteDataReader.NextResult()
+   at Microsoft.Data.Sqlite.SqliteCommand.ExecuteReader(CommandBehavior behavior)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReader(RelationalCommandParameterObject parameterObject)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.Enumerator.InitializeReader(Enumerator enumerator)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.Enumerator.MoveNext()
+Microsoft.Data.Sqlite.SqliteException (0x80004005): SQLite Error 1: 'no such column: s.MarginType'.
+   at Microsoft.Data.Sqlite.SqliteException.ThrowExceptionForRC(Int32 rc, sqlite3 db)
+   at Microsoft.Data.Sqlite.SqliteCommand.PrepareAndEnumerateStatements(Stopwatch timer)+MoveNext()
+   at Microsoft.Data.Sqlite.SqliteCommand.GetStatements(Stopwatch timer)+MoveNext()
+   at Microsoft.Data.Sqlite.SqliteDataReader.NextResult()
+   at Microsoft.Data.Sqlite.SqliteCommand.ExecuteReader(CommandBehavior behavior)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReader(RelationalCommandParameterObject parameterObject)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.Enumerator.InitializeReader(Enumerator enumerator)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.Enumerator.MoveNext()
+2023-05-23 21:35:36.534 +02:00 [WRN] MarginCoin, started!
+2023-05-23 21:36:14.508 +02:00 [WRN] MarginCoin, started!
+2023-05-23 21:36:31.927 +02:00 [WRN] Get Account OK
+2023-05-23 21:36:32.077 +02:00 [WRN] Start trading market...
+2023-05-23 21:37:02.928 +02:00 [WRN] Get Account OK
+2023-05-23 21:37:32.085 +02:00 [WRN] Initial call for ExportChart UI
+2023-05-23 21:38:13.142 +02:00 [WRN] Call Prediction on QTUMUSDT down 0,9144089/0,08559113
+2023-05-23 21:38:13.229 +02:00 [WRN] Call Prediction on LPTUSDT down 0,99962676/0,0003732275
+2023-05-23 21:38:13.306 +02:00 [WRN] Call Prediction on OCEANUSDT down 0,99891067/0,0010892987
+2023-05-23 21:38:13.388 +02:00 [WRN] Call Prediction on RNDRUSDT down 0,99825317/0,0017468409
+2023-05-23 21:38:13.466 +02:00 [WRN] Call Prediction on KAVAUSDT (1) down 0,98433334/0,015666664
+2023-05-23 21:38:13.547 +02:00 [WRN] Call Prediction on KAVAUSDT down 0,98433334/0,015666664
+2023-05-23 21:38:13.624 +02:00 [WRN] Call Prediction on TOMOUSDT (1) down 0,99888736/0,0011126805
+2023-05-23 21:38:13.710 +02:00 [WRN] Call Prediction on TOMOUSDT down 0,99888736/0,0011126805
+2023-05-23 21:38:13.788 +02:00 [WRN] Call Prediction on WAVESUSDT (1) down 0,99861634/0,0013835955
+2023-05-23 21:38:13.867 +02:00 [WRN] Call Prediction on RNDRUSDT (1) down 0,99825317/0,0017468409
+2023-05-23 21:38:13.956 +02:00 [WRN] Call Prediction on MAGICUSDT down 0,9978727/0,0021272516
+2023-05-23 21:38:14.151 +02:00 [WRN] Call Prediction on WAVESUSDT down 0,99861634/0,0013835955
+2023-05-23 21:38:14.229 +02:00 [WRN] Call Prediction on PYRUSDT down 0,9998505/0,00014950673
+2023-05-23 21:38:14.307 +02:00 [WRN] Call Prediction on PYRUSDT (1) down 0,9998505/0,00014950673
+2023-05-23 21:38:14.385 +02:00 [WRN] Call Prediction on IMXUSDT (1) down 0,99988985/0,000110103734
+2023-05-23 21:38:14.464 +02:00 [WRN] Call Prediction on IMXUSDT down 0,99988985/0,000110103734
+2023-05-23 21:38:14.544 +02:00 [WRN] Call Prediction on NEOUSDT down 0,9964527/0,0035472768
+2023-05-23 21:38:14.545 +02:00 [WRN] ----------------ML Updated---------------------
+2023-05-23 21:44:01.436 +02:00 [WRN] Call Prediction on QTUMUSDT down 0,9144089/0,08559113
+2023-05-23 21:44:01.503 +02:00 [WRN] Call Prediction on LPTUSDT down 0,99962676/0,0003732275
+2023-05-23 21:44:01.571 +02:00 [WRN] Call Prediction on OCEANUSDT down 0,99891067/0,0010892987
+2023-05-23 21:44:01.640 +02:00 [WRN] Call Prediction on MAGICUSDT down 0,9978727/0,0021272516
+2023-05-23 21:44:01.711 +02:00 [WRN] Call Prediction on NEOUSDT down 0,9964527/0,0035472768
+2023-05-23 21:44:01.711 +02:00 [WRN] ----------------ML Updated---------------------
+2023-05-23 21:45:00.059 +02:00 [WRN] New candle save : NEOUSDT
+2023-05-23 21:45:00.059 +02:00 [WRN] New candle save : WAVESUSDT
+2023-05-23 21:45:00.062 +02:00 [WRN] New candle save : QTUMUSDT
+2023-05-23 21:45:00.065 +02:00 [WRN] New candle save : KAVAUSDT
+2023-05-23 21:45:00.065 +02:00 [WRN] New candle save : TOMOUSDT
+2023-05-23 21:45:00.065 +02:00 [WRN] New candle save : KNCUSDT
+2023-05-23 21:45:00.095 +02:00 [WRN] New candle save : OCEANUSDT
+2023-05-23 21:45:00.095 +02:00 [WRN] New candle save : LPTUSDT
+2023-05-23 21:45:00.100 +02:00 [WRN] New candle save : CRVUSDT
+2023-05-23 21:45:00.100 +02:00 [WRN] New candle save : PYRUSDT
+2023-05-23 21:45:00.103 +02:00 [WRN] New candle save : GRTUSDT
+2023-05-23 21:45:00.103 +02:00 [WRN] New candle save : DYDXUSDT
+2023-05-23 21:45:00.103 +02:00 [WRN] New candle save : RPLUSDT
+2023-05-23 21:45:00.103 +02:00 [WRN] New candle save : GALAUSDT
+2023-05-23 21:45:00.104 +02:00 [WRN] New candle save : RNDRUSDT
+2023-05-23 21:45:00.105 +02:00 [WRN] New candle save : KLAYUSDT
+2023-05-23 21:45:00.105 +02:00 [WRN] New candle save : IMXUSDT
+2023-05-23 21:45:00.133 +02:00 [WRN] New candle save : MAGICUSDT
+2023-05-23 21:45:00.136 +02:00 [WRN] New candle save : MINAUSDT
+2023-05-23 21:45:00.136 +02:00 [WRN] New candle save : APTUSDT
+2023-05-23 21:45:00.140 +02:00 [WRN] New candle save : LUNCUSDT
+2023-05-23 21:45:00.142 +02:00 [WRN] New candle save : OPUSDT
+2023-05-23 21:52:32.145 +02:00 [WRN] New call at 52 for ExportChart UI
+2023-05-23 21:59:01.746 +02:00 [WRN] Call Prediction on QTUMUSDT down 0,5495449/0,45045513
+2023-05-23 21:59:01.829 +02:00 [WRN] Call Prediction on LPTUSDT down 0,99009705/0,009903019
+2023-05-23 21:59:01.908 +02:00 [WRN] Call Prediction on LPTUSDT (1) down 0,99009705/0,009903019
+2023-05-23 21:59:01.987 +02:00 [WRN] Call Prediction on OCEANUSDT down 0,99314404/0,0068560173
+2023-05-23 21:59:02.065 +02:00 [WRN] Call Prediction on RNDRUSDT down 0,99136317/0,008636867
+2023-05-23 21:59:02.433 +02:00 [WRN] Call Prediction on KAVAUSDT (1) down 0,98523694/0,014762988
+2023-05-23 21:59:02.510 +02:00 [WRN] Call Prediction on KAVAUSDT down 0,98523694/0,014762988
+2023-05-23 21:59:02.593 +02:00 [WRN] Call Prediction on TOMOUSDT (1) down 0,9752896/0,024710454
+2023-05-23 21:59:02.673 +02:00 [WRN] Call Prediction on MAGICUSDT (1) down 0,9215469/0,07845311
+2023-05-23 21:59:02.752 +02:00 [WRN] Call Prediction on OCEANUSDT (1) down 0,99314404/0,0068560173
+2023-05-23 21:59:02.829 +02:00 [WRN] Call Prediction on TOMOUSDT down 0,9752896/0,024710454
+2023-05-23 21:59:02.908 +02:00 [WRN] Call Prediction on WAVESUSDT (1) down 0,9958555/0,00414446
+2023-05-23 21:59:02.991 +02:00 [WRN] Call Prediction on RNDRUSDT (1) down 0,99136317/0,008636867
+2023-05-23 21:59:03.076 +02:00 [WRN] Call Prediction on MAGICUSDT down 0,9215469/0,07845311
+2023-05-23 21:59:03.158 +02:00 [WRN] Call Prediction on WAVESUSDT down 0,9958555/0,00414446
+2023-05-23 21:59:03.234 +02:00 [WRN] Call Prediction on PYRUSDT down 0,99997663/2,339866E-05
+2023-05-23 21:59:03.314 +02:00 [WRN] Call Prediction on PYRUSDT (1) down 0,99997663/2,339866E-05
+2023-05-23 21:59:03.391 +02:00 [WRN] Call Prediction on QTUMUSDT (1) down 0,5495449/0,45045513
+2023-05-23 21:59:03.531 +02:00 [WRN] Call Prediction on IMXUSDT (1) down 0,99995005/4,9915147E-05
+2023-05-23 21:59:03.610 +02:00 [WRN] Call Prediction on NEOUSDT (1) down 0,9911351/0,008864909
+2023-05-23 21:59:03.686 +02:00 [WRN] Call Prediction on IMXUSDT down 0,99995005/4,9915147E-05
+2023-05-23 21:59:03.763 +02:00 [WRN] Call Prediction on NEOUSDT down 0,9911351/0,008864909
+2023-05-23 21:59:03.763 +02:00 [WRN] ----------------ML Updated---------------------
+2023-05-23 21:59:03.766 +02:00 [WRN] ----------------ML Updated---------------------
+2023-05-23 22:00:00.129 +02:00 [WRN] New candle save : QTUMUSDT
+2023-05-23 22:00:00.133 +02:00 [WRN] New candle save : TOMOUSDT
+2023-05-23 22:00:00.133 +02:00 [WRN] New candle save : WAVESUSDT
+2023-05-23 22:00:00.133 +02:00 [WRN] New candle save : NEOUSDT
+2023-05-23 22:00:00.162 +02:00 [WRN] New candle save : OCEANUSDT
+2023-05-23 22:00:00.162 +02:00 [WRN] New candle save : GALAUSDT
+2023-05-23 22:00:00.162 +02:00 [WRN] New candle save : CRVUSDT
+2023-05-23 22:00:00.162 +02:00 [WRN] New candle save : PYRUSDT
+2023-05-23 22:00:00.163 +02:00 [WRN] New candle save : MINAUSDT
+2023-05-23 22:00:00.163 +02:00 [WRN] New candle save : DYDXUSDT
+2023-05-23 22:00:00.162 +02:00 [WRN] New candle save : GRTUSDT
+2023-05-23 22:00:00.162 +02:00 [WRN] New candle save : RNDRUSDT
+2023-05-23 22:00:00.163 +02:00 [WRN] New candle save : KLAYUSDT
+2023-05-23 22:00:00.163 +02:00 [WRN] New candle save : KNCUSDT
+2023-05-23 22:00:00.163 +02:00 [WRN] New candle save : LPTUSDT
+2023-05-23 22:00:00.163 +02:00 [WRN] New candle save : KAVAUSDT
+2023-05-23 22:00:00.172 +02:00 [WRN] New candle save : APTUSDT
+2023-05-23 22:00:00.172 +02:00 [WRN] New candle save : IMXUSDT
+2023-05-23 22:00:00.172 +02:00 [WRN] New candle save : RPLUSDT
+2023-05-23 22:00:00.172 +02:00 [WRN] New candle save : LUNCUSDT
+2023-05-23 22:00:00.172 +02:00 [WRN] New candle save : MAGICUSDT
+2023-05-23 22:00:00.172 +02:00 [WRN] New candle save : OPUSDT
+2023-05-23 22:07:32.166 +02:00 [WRN] New call at 7 for ExportChart UI
+2023-05-23 22:12:44.221 +02:00 [WRN] Call Prediction on APTUSDT down 0,97724926/0,022750763
+2023-05-23 22:12:44.308 +02:00 [WRN] Call Prediction on LPTUSDT down 0,95821893/0,041781098
+2023-05-23 22:12:44.393 +02:00 [WRN] Call Prediction on LPTUSDT (1) down 0,95821893/0,041781098
+2023-05-23 22:12:44.480 +02:00 [WRN] Call Prediction on OCEANUSDT down 0,9641236/0,035876375
+2023-05-23 22:12:44.581 +02:00 [WRN] Call Prediction on RNDRUSDT down 0,98929906/0,010700918
+2023-05-23 22:12:44.666 +02:00 [WRN] Call Prediction on KAVAUSDT (1) down 0,9768679/0,023132099
+2023-05-23 22:12:44.752 +02:00 [WRN] Call Prediction on KAVAUSDT down 0,9768679/0,023132099
+2023-05-23 22:12:44.830 +02:00 [WRN] Call Prediction on TOMOUSDT (1) down 0,98908067/0,010919293
+2023-05-23 22:12:44.902 +02:00 [WRN] Call Prediction on MAGICUSDT (1) down 0,84647256/0,15352747
+2023-05-23 22:12:44.978 +02:00 [WRN] Call Prediction on OCEANUSDT (1) down 0,9641236/0,035876375
+2023-05-23 22:12:45.053 +02:00 [WRN] Call Prediction on TOMOUSDT down 0,98908067/0,010919293
+2023-05-23 22:12:45.135 +02:00 [WRN] Call Prediction on WAVESUSDT (1) down 0,99191296/0,008087068
+2023-05-23 22:12:45.205 +02:00 [WRN] Call Prediction on RNDRUSDT (1) down 0,98929906/0,010700918
+2023-05-23 22:12:45.281 +02:00 [WRN] Call Prediction on MAGICUSDT down 0,84647256/0,15352747
+2023-05-23 22:12:45.353 +02:00 [WRN] Call Prediction on WAVESUSDT down 0,99191296/0,008087068
+2023-05-23 22:12:45.426 +02:00 [WRN] Call Prediction on PYRUSDT down 0,99979705/0,00020296665
+2023-05-23 22:12:45.499 +02:00 [WRN] Call Prediction on PYRUSDT (1) down 0,99979705/0,00020296665
+2023-05-23 22:12:45.720 +02:00 [WRN] Call Prediction on IMXUSDT (1) down 0,9993185/0,00068158086
+2023-05-23 22:12:45.792 +02:00 [WRN] Call Prediction on NEOUSDT (1) down 0,996228/0,0037720597
+2023-05-23 22:12:45.863 +02:00 [WRN] Call Prediction on IMXUSDT down 0,9993185/0,00068158086
+2023-05-23 22:12:45.937 +02:00 [WRN] Call Prediction on NEOUSDT down 0,996228/0,0037720597
+2023-05-23 22:12:45.937 +02:00 [WRN] ----------------ML Updated---------------------
+2023-05-23 22:14:01.586 +02:00 [WRN] Call Prediction on APTUSDT down 0,97724926/0,022750763
+2023-05-23 22:14:01.588 +02:00 [WRN] ----------------ML Updated---------------------
+2023-05-23 22:15:00.139 +02:00 [WRN] New candle save : NEOUSDT
+2023-05-23 22:15:00.139 +02:00 [WRN] New candle save : WAVESUSDT
+2023-05-23 22:15:00.139 +02:00 [WRN] New candle save : QTUMUSDT
+2023-05-23 22:15:00.168 +02:00 [WRN] New candle save : LPTUSDT
+2023-05-23 22:15:00.168 +02:00 [WRN] New candle save : TOMOUSDT
+2023-05-23 22:15:00.169 +02:00 [WRN] New candle save : OCEANUSDT
+2023-05-23 22:15:00.169 +02:00 [WRN] New candle save : KNCUSDT
+2023-05-23 22:15:00.169 +02:00 [WRN] New candle save : KAVAUSDT
+2023-05-23 22:15:00.169 +02:00 [WRN] New candle save : PYRUSDT
+2023-05-23 22:15:00.169 +02:00 [WRN] New candle save : MINAUSDT
+2023-05-23 22:15:00.170 +02:00 [WRN] New candle save : RNDRUSDT
+2023-05-23 22:15:00.171 +02:00 [WRN] New candle save : MAGICUSDT
+2023-05-23 22:15:00.171 +02:00 [WRN] New candle save : GRTUSDT
+2023-05-23 22:15:00.171 +02:00 [WRN] New candle save : CRVUSDT
+2023-05-23 22:15:00.171 +02:00 [WRN] New candle save : IMXUSDT
+2023-05-23 22:15:00.172 +02:00 [WRN] New candle save : RPLUSDT
+2023-05-23 22:15:00.196 +02:00 [WRN] New candle save : KLAYUSDT
+2023-05-23 22:15:00.232 +02:00 [WRN] New candle save : DYDXUSDT
+2023-05-23 22:15:00.233 +02:00 [WRN] New candle save : GALAUSDT
+2023-05-23 22:15:00.233 +02:00 [WRN] New candle save : APTUSDT
+2023-05-23 22:15:00.233 +02:00 [WRN] New candle save : OPUSDT
+2023-05-23 22:15:00.233 +02:00 [WRN] New candle save : LUNCUSDT
+2023-05-23 22:22:32.174 +02:00 [WRN] New call at 22 for ExportChart UI
+2023-05-23 22:22:53.023 +02:00 [WRN] Call Prediction on RNDRUSDT down 0,9628699/0,03713012
+2023-05-23 22:22:53.109 +02:00 [WRN] Call Prediction on KAVAUSDT (1) up 0,34306157/0,6569384
+2023-05-23 22:22:53.212 +02:00 [WRN] Call Prediction on KAVAUSDT up 0,34306157/0,6569384
+2023-05-23 22:22:53.327 +02:00 [WRN] Call Prediction on TOMOUSDT (1) down 0,941761/0,058239006
+2023-05-23 22:22:53.433 +02:00 [WRN] Call Prediction on TOMOUSDT down 0,941761/0,058239006
+2023-05-23 22:22:53.522 +02:00 [WRN] Call Prediction on WAVESUSDT (1) down 0,73211926/0,26788077
+2023-05-23 22:22:53.617 +02:00 [WRN] Call Prediction on RNDRUSDT (1) down 0,9628699/0,03713012
+2023-05-23 22:22:53.694 +02:00 [WRN] Call Prediction on MAGICUSDT down 0,52365905/0,47634095
+2023-05-23 22:22:53.768 +02:00 [WRN] Call Prediction on WAVESUSDT down 0,73211926/0,26788077
+2023-05-23 22:22:53.843 +02:00 [WRN] Call Prediction on PYRUSDT down 0,9998623/0,0001376625
+2023-05-23 22:22:53.926 +02:00 [WRN] Call Prediction on PYRUSDT (1) down 0,9998623/0,0001376625
+2023-05-23 22:22:53.927 +02:00 [WRN] ----------------ML Updated---------------------
+2023-05-23 22:24:01.391 +02:00 [WRN] Call Prediction on MAGICUSDT down 0,52365905/0,47634095
+2023-05-23 22:24:01.391 +02:00 [WRN] ----------------ML Updated---------------------
+2023-05-23 22:30:00.110 +02:00 [WRN] New candle save : QTUMUSDT
+2023-05-23 22:30:00.111 +02:00 [WRN] New candle save : WAVESUSDT
+2023-05-23 22:30:00.111 +02:00 [WRN] New candle save : NEOUSDT
+2023-05-23 22:30:00.115 +02:00 [WRN] New candle save : TOMOUSDT
+2023-05-23 22:30:00.118 +02:00 [WRN] New candle save : KNCUSDT
+2023-05-23 22:30:00.120 +02:00 [WRN] New candle save : RNDRUSDT
+2023-05-23 22:30:00.120 +02:00 [WRN] New candle save : CRVUSDT
+2023-05-23 22:30:00.120 +02:00 [WRN] New candle save : KAVAUSDT
+2023-05-23 22:30:00.121 +02:00 [WRN] New candle save : IMXUSDT
+2023-05-23 22:30:00.120 +02:00 [WRN] New candle save : LPTUSDT
+2023-05-23 22:30:00.121 +02:00 [WRN] New candle save : OCEANUSDT
+2023-05-23 22:30:00.127 +02:00 [WRN] New candle save : RPLUSDT
+2023-05-23 22:30:00.127 +02:00 [WRN] New candle save : KLAYUSDT
+2023-05-23 22:30:00.128 +02:00 [WRN] New candle save : PYRUSDT
+2023-05-23 22:30:00.128 +02:00 [WRN] New candle save : GRTUSDT
+2023-05-23 22:30:00.129 +02:00 [WRN] New candle save : MINAUSDT
+2023-05-23 22:30:00.130 +02:00 [WRN] New candle save : LUNCUSDT
+2023-05-23 22:30:00.130 +02:00 [WRN] New candle save : DYDXUSDT
+2023-05-23 22:30:00.130 +02:00 [WRN] New candle save : MAGICUSDT
+2023-05-23 22:30:00.186 +02:00 [WRN] New candle save : APTUSDT
+2023-05-23 22:30:00.186 +02:00 [WRN] New candle save : OPUSDT
+2023-05-23 22:30:00.595 +02:00 [WRN] New candle save : GALAUSDT
+2023-05-23 22:31:19.042 +02:00 [WRN] BuyFack on KAVAUSDT
+2023-05-23 22:31:20.763 +02:00 [WRN] Get Account OK
+2023-05-23 22:31:21.425 +02:00 [WRN] Get Account OK
+2023-05-23 22:37:32.140 +02:00 [WRN] New call at 37 for ExportChart UI
+2023-05-23 22:38:13.430 +02:00 [WRN] Call Prediction on LPTUSDT down 0,6063371/0,39366296
+2023-05-23 22:38:13.510 +02:00 [WRN] Call Prediction on OCEANUSDT up 0,15237041/0,8476296
+2023-05-23 22:38:13.588 +02:00 [WRN] Call Prediction on RNDRUSDT down 0,97762966/0,022370376
+2023-05-23 22:38:13.668 +02:00 [WRN] Call Prediction on KAVAUSDT (1) up 0,36549634/0,63450366
+2023-05-23 22:38:13.746 +02:00 [WRN] Call Prediction on KAVAUSDT up 0,36549634/0,63450366
+2023-05-23 22:38:13.827 +02:00 [WRN] Call Prediction on TOMOUSDT (1) down 0,8629053/0,13709468
+2023-05-23 22:38:13.907 +02:00 [WRN] Call Prediction on TOMOUSDT down 0,8629053/0,13709468
+2023-05-23 22:38:13.985 +02:00 [WRN] Call Prediction on WAVESUSDT (1) up 0,4195034/0,5804966
+2023-05-23 22:38:14.066 +02:00 [WRN] Call Prediction on RNDRUSDT (1) down 0,97762966/0,022370376
+2023-05-23 22:38:14.139 +02:00 [WRN] Call Prediction on MAGICUSDT up 0,20152824/0,7984717
+2023-05-23 22:38:14.214 +02:00 [WRN] Call Prediction on WAVESUSDT up 0,4195034/0,5804966
+2023-05-23 22:38:14.289 +02:00 [WRN] Call Prediction on PYRUSDT down 0,9997261/0,00027392246
+2023-05-23 22:38:14.382 +02:00 [WRN] Call Prediction on PYRUSDT (1) down 0,9997261/0,00027392246
+2023-05-23 22:38:14.461 +02:00 [WRN] Call Prediction on IMXUSDT (1) down 0,9646458/0,03535421
+2023-05-23 22:38:14.683 +02:00 [WRN] Call Prediction on IMXUSDT down 0,9646458/0,03535421
+2023-05-23 22:38:14.763 +02:00 [WRN] Call Prediction on NEOUSDT down 0,9679355/0,032064486
+2023-05-23 22:38:14.763 +02:00 [WRN] ----------------ML Updated---------------------
+2023-05-23 22:40:56.556 +02:00 [WRN] BuyFack on MAGICUSDT
+2023-05-23 22:40:58.771 +02:00 [WRN] Get Account OK
+2023-05-23 22:40:59.333 +02:00 [WRN] Get Account OK
+2023-05-23 22:43:01.438 +02:00 [WRN] Call Prediction on LPTUSDT down 0,6063371/0,39366296
+2023-05-23 22:43:01.510 +02:00 [WRN] Call Prediction on OCEANUSDT up 0,15237041/0,8476296
+2023-05-23 22:43:01.584 +02:00 [WRN] Call Prediction on MAGICUSDT up 0,20152824/0,7984717
+2023-05-23 22:43:01.656 +02:00 [WRN] Call Prediction on NEOUSDT down 0,9679355/0,032064486
+2023-05-23 22:43:01.657 +02:00 [WRN] ----------------ML Updated---------------------
+2023-05-23 22:44:21.861 +02:00 [WRN] BuyFack on OCEANUSDT
+2023-05-23 22:44:23.554 +02:00 [WRN] Get Account OK
+2023-05-23 22:44:25.079 +02:00 [WRN] Get Account OK
+2023-05-23 22:45:00.443 +02:00 [WRN] New candle save : RNDRUSDT
+2023-05-23 22:45:00.444 +02:00 [WRN] New candle save : IMXUSDT
+2023-05-23 22:45:00.445 +02:00 [WRN] New candle save : CRVUSDT
+2023-05-23 22:45:00.445 +02:00 [WRN] New candle save : WAVESUSDT
+2023-05-23 22:45:00.445 +02:00 [WRN] New candle save : TOMOUSDT
+2023-05-23 22:45:00.446 +02:00 [WRN] New candle save : NEOUSDT
+2023-05-23 22:45:00.446 +02:00 [WRN] New candle save : QTUMUSDT
+2023-05-23 22:45:00.446 +02:00 [WRN] New candle save : OCEANUSDT
+2023-05-23 22:45:00.446 +02:00 [WRN] New candle save : LPTUSDT
+2023-05-23 22:45:00.447 +02:00 [WRN] New candle save : KAVAUSDT
+2023-05-23 22:45:00.447 +02:00 [WRN] New candle save : KLAYUSDT
+2023-05-23 22:45:00.449 +02:00 [WRN] New candle save : KNCUSDT
+2023-05-23 22:45:00.524 +02:00 [WRN] New candle save : PYRUSDT
+2023-05-23 22:45:00.525 +02:00 [WRN] New candle save : APTUSDT
+2023-05-23 22:45:00.526 +02:00 [WRN] New candle save : DYDXUSDT
+2023-05-23 22:45:00.526 +02:00 [WRN] New candle save : MAGICUSDT
+2023-05-23 22:45:00.527 +02:00 [WRN] New candle save : GALAUSDT
+2023-05-23 22:45:00.526 +02:00 [WRN] New candle save : RPLUSDT
+2023-05-23 22:45:00.528 +02:00 [WRN] New candle save : MINAUSDT
+2023-05-23 22:45:00.528 +02:00 [WRN] New candle save : GRTUSDT
+2023-05-23 22:45:00.528 +02:00 [WRN] New candle save : LUNCUSDT
+2023-05-23 22:45:00.529 +02:00 [WRN] New candle save : OPUSDT
+2023-05-23 22:45:13.910 +02:00 [WRN] SellFack on KAVAUSDT
+2023-05-23 22:45:20.477 +02:00 [WRN] Get Account OK
+2023-05-23 22:45:21.040 +02:00 [WRN] Get Account OK
+2023-05-23 22:52:32.127 +02:00 [WRN] New call at 52 for ExportChart UI
+2023-05-23 22:53:05.647 +02:00 [WRN] Call Prediction on LPTUSDT down 0,8072572/0,19274284
+2023-05-23 22:53:05.775 +02:00 [WRN] Call Prediction on OCEANUSDT down 0,8865343/0,11346572
+2023-05-23 22:53:05.903 +02:00 [WRN] Call Prediction on RNDRUSDT down 0,95292586/0,047074225
+2023-05-23 22:53:06.044 +02:00 [WRN] Call Prediction on KAVAUSDT (1) up 0,21546374/0,7845363
+2023-05-23 22:53:06.168 +02:00 [WRN] Call Prediction on KAVAUSDT down 0,9977393/0,0022607336
+2023-05-23 22:53:06.281 +02:00 [WRN] Call Prediction on TOMOUSDT (1) down 0,9544785/0,04552151
+2023-05-23 22:53:06.396 +02:00 [WRN] Call Prediction on MAGICUSDT (1) up 0,06722628/0,93277377
+2023-05-23 22:53:06.505 +02:00 [WRN] Call Prediction on OCEANUSDT (1) up 0,18690172/0,81309825
+2023-05-23 22:53:06.522 +02:00 [WRN] SellFack on OCEANUSDT
+2023-05-23 22:53:06.616 +02:00 [WRN] Call Prediction on TOMOUSDT down 0,9987847/0,0012153226
+2023-05-23 22:53:06.723 +02:00 [WRN] Call Prediction on WAVESUSDT (1) up 0,19990866/0,8000913
+2023-05-23 22:53:06.832 +02:00 [WRN] Call Prediction on RNDRUSDT (1) down 0,98637414/0,013625853
+2023-05-23 22:53:06.944 +02:00 [WRN] Call Prediction on MAGICUSDT down 0,6786013/0,32139865
+2023-05-23 22:53:07.068 +02:00 [WRN] Call Prediction on WAVESUSDT down 0,9663804/0,033619642
+2023-05-23 22:53:07.238 +02:00 [WRN] Call Prediction on PYRUSDT down 0,9999534/4,664832E-05
+2023-05-23 22:53:07.355 +02:00 [WRN] Call Prediction on IMXUSDT down 0,9991437/0,0008562179
+2023-05-23 22:53:07.578 +02:00 [WRN] Call Prediction on NEOUSDT down 0,99494815/0,005051884
+2023-05-23 22:53:07.579 +02:00 [WRN] ----------------ML Updated---------------------
+2023-05-23 22:53:13.191 +02:00 [WRN] Get Account OK
+2023-05-23 22:53:14.888 +02:00 [WRN] Get Account OK
+2023-05-23 22:58:01.471 +02:00 [WRN] Call Prediction on LPTUSDT up 0,29261214/0,70738786
+2023-05-23 22:58:01.571 +02:00 [WRN] Call Prediction on PYRUSDT down 0,9999169/8,303638E-05
+2023-05-23 22:58:01.663 +02:00 [WRN] Call Prediction on IMXUSDT down 0,7886652/0,21133484
+2023-05-23 22:58:01.755 +02:00 [WRN] Call Prediction on NEOUSDT down 0,97019964/0,029800331
+2023-05-23 22:58:01.756 +02:00 [WRN] ----------------ML Updated---------------------
+2023-05-23 23:00:00.184 +02:00 [WRN] New candle save : NEOUSDT
+2023-05-23 23:00:00.184 +02:00 [WRN] New candle save : EDUUSDT
+2023-05-23 23:00:00.184 +02:00 [WRN] New candle save : KAVAUSDT
+2023-05-23 23:00:00.185 +02:00 [WRN] New candle save : LPTUSDT
+2023-05-23 23:00:00.185 +02:00 [WRN] New candle save : WAVESUSDT
+2023-05-23 23:00:00.186 +02:00 [WRN] New candle save : IMXUSDT
+2023-05-23 23:00:00.186 +02:00 [WRN] New candle save : TOMOUSDT
+2023-05-23 23:00:00.186 +02:00 [WRN] New candle save : GALAUSDT
+2023-05-23 23:00:00.187 +02:00 [WRN] New candle save : QTUMUSDT
+2023-05-23 23:00:00.187 +02:00 [WRN] New candle save : OCEANUSDT
+2023-05-23 23:00:00.188 +02:00 [WRN] New candle save : PYRUSDT
+2023-05-23 23:00:00.185 +02:00 [WRN] New candle save : CRVUSDT
+2023-05-23 23:00:00.188 +02:00 [WRN] New candle save : KLAYUSDT
+2023-05-23 23:00:00.188 +02:00 [WRN] New candle save : RNDRUSDT
+2023-05-23 23:00:00.186 +02:00 [WRN] New candle save : KNCUSDT
+2023-05-23 23:00:00.251 +02:00 [WRN] New candle save : GRTUSDT
+2023-05-23 23:00:00.251 +02:00 [WRN] New candle save : MAGICUSDT
+2023-05-23 23:00:00.251 +02:00 [WRN] New candle save : RPLUSDT
+2023-05-23 23:00:00.252 +02:00 [WRN] New candle save : APTUSDT
+2023-05-23 23:00:00.251 +02:00 [WRN] New candle save : OPUSDT
+2023-05-23 23:00:00.251 +02:00 [WRN] New candle save : DYDXUSDT
+2023-05-23 23:00:00.252 +02:00 [WRN] New candle save : LUNCUSDT
+2023-05-23 23:00:00.252 +02:00 [WRN] New candle save : MINAUSDT
+2023-05-23 23:07:32.158 +02:00 [WRN] New call at 7 for ExportChart UI
+2023-05-23 23:08:05.485 +02:00 [WRN] Call Prediction on LPTUSDT down 0,7559962/0,24400382
+2023-05-23 23:08:05.569 +02:00 [WRN] Call Prediction on OCEANUSDT up 0,2460267/0,7539733
+2023-05-23 23:08:05.728 +02:00 [WRN] Call Prediction on RNDRUSDT down 0,9520389/0,047961086
+2023-05-23 23:08:05.814 +02:00 [WRN] Call Prediction on KAVAUSDT (1) down 0,9867561/0,013243848
+2023-05-23 23:08:05.902 +02:00 [WRN] Call Prediction on KAVAUSDT down 0,9901536/0,009846401
+2023-05-23 23:08:05.987 +02:00 [WRN] Call Prediction on TOMOUSDT (1) down 0,9189339/0,081066035
+2023-05-23 23:08:06.072 +02:00 [WRN] Call Prediction on MAGICUSDT (1) up 0,2584554/0,74154454
+2023-05-23 23:08:06.146 +02:00 [WRN] Call Prediction on TOMOUSDT down 0,9986431/0,0013569284
+2023-05-23 23:08:06.222 +02:00 [WRN] Call Prediction on WAVESUSDT (1) up 0,1478393/0,85216075
+2023-05-23 23:08:06.301 +02:00 [WRN] Call Prediction on RNDRUSDT (1) down 0,9334224/0,066577636
+2023-05-23 23:08:06.382 +02:00 [WRN] Call Prediction on MAGICUSDT down 0,69719744/0,3028025
+2023-05-23 23:08:06.460 +02:00 [WRN] Call Prediction on WAVESUSDT down 0,9948656/0,005134435
+2023-05-23 23:08:06.533 +02:00 [WRN] Call Prediction on PYRUSDT down 0,9999548/4,515504E-05
+2023-05-23 23:08:06.612 +02:00 [WRN] Call Prediction on PYRUSDT (1) down 0,99971956/0,0002804344
+2023-05-23 23:08:06.694 +02:00 [WRN] Call Prediction on IMXUSDT down 0,9996377/0,00036221347
+2023-05-23 23:08:06.768 +02:00 [WRN] Call Prediction on NEOUSDT down 0,9993006/0,0006994138
+2023-05-23 23:08:06.768 +02:00 [WRN] ----------------ML Updated---------------------
+2023-05-23 23:13:01.824 +02:00 [WRN] Call Prediction on LPTUSDT up 0,44504964/0,5549504
+2023-05-23 23:13:01.911 +02:00 [WRN] Call Prediction on OCEANUSDT up 0,4784369/0,5215631
+2023-05-23 23:13:01.991 +02:00 [WRN] Call Prediction on IMXUSDT down 0,96433306/0,035666954
+2023-05-23 23:13:02.070 +02:00 [WRN] Call Prediction on NEOUSDT down 0,9979431/0,0020569104
+2023-05-23 23:13:02.071 +02:00 [WRN] ----------------ML Updated---------------------
+2023-05-23 23:15:00.169 +02:00 [WRN] New candle save : OCEANUSDT
+2023-05-23 23:15:00.169 +02:00 [WRN] New candle save : RNDRUSDT
+2023-05-23 23:15:00.169 +02:00 [WRN] New candle save : WAVESUSDT
+2023-05-23 23:15:00.169 +02:00 [WRN] New candle save : KNCUSDT
+2023-05-23 23:15:00.170 +02:00 [WRN] New candle save : QTUMUSDT
+2023-05-23 23:15:00.170 +02:00 [WRN] New candle save : IMXUSDT
+2023-05-23 23:15:00.170 +02:00 [WRN] New candle save : DYDXUSDT
+2023-05-23 23:15:00.170 +02:00 [WRN] New candle save : EDUUSDT
+2023-05-23 23:15:00.170 +02:00 [WRN] New candle save : LPTUSDT
+2023-05-23 23:15:00.170 +02:00 [WRN] New candle save : PYRUSDT
+2023-05-23 23:15:00.170 +02:00 [WRN] New candle save : NEOUSDT
+2023-05-23 23:15:00.170 +02:00 [WRN] New candle save : KAVAUSDT
+2023-05-23 23:15:00.170 +02:00 [WRN] New candle save : CRVUSDT
+2023-05-23 23:15:00.195 +02:00 [WRN] New candle save : TOMOUSDT
+2023-05-23 23:15:00.262 +02:00 [WRN] New candle save : KLAYUSDT
+2023-05-23 23:15:00.263 +02:00 [WRN] New candle save : GRTUSDT
+2023-05-23 23:15:00.263 +02:00 [WRN] New candle save : APTUSDT
+2023-05-23 23:15:00.264 +02:00 [WRN] New candle save : RPLUSDT
+2023-05-23 23:15:00.264 +02:00 [WRN] New candle save : LUNCUSDT
+2023-05-23 23:15:00.286 +02:00 [WRN] New candle save : OPUSDT
+2023-05-23 23:15:00.286 +02:00 [WRN] New candle save : MINAUSDT
+2023-05-23 23:15:00.288 +02:00 [WRN] New candle save : MAGICUSDT
+2023-05-23 23:15:00.288 +02:00 [WRN] New candle save : GALAUSDT
+2023-05-23 23:22:32.160 +02:00 [WRN] New call at 22 for ExportChart UI
+2023-05-23 23:23:05.592 +02:00 [WRN] Call Prediction on APTUSDT down 0,95177704/0,04822297
+2023-05-23 23:23:05.678 +02:00 [WRN] Call Prediction on LPTUSDT down 0,9742769/0,025723068
+2023-05-23 23:23:05.765 +02:00 [WRN] Call Prediction on OCEANUSDT down 0,9307077/0,06929232
+2023-05-23 23:23:05.853 +02:00 [WRN] Call Prediction on RNDRUSDT down 0,99607325/0,003926813
+2023-05-23 23:23:05.939 +02:00 [WRN] Call Prediction on KAVAUSDT (1) down 0,99813557/0,001864375
+2023-05-23 23:23:06.028 +02:00 [WRN] Call Prediction on KAVAUSDT down 0,98932195/0,01067803
+2023-05-23 23:23:06.116 +02:00 [WRN] Call Prediction on TOMOUSDT (1) down 0,988831/0,011169075
+2023-05-23 23:23:06.197 +02:00 [WRN] Call Prediction on MAGICUSDT (1) down 0,9184862/0,08151379
+2023-05-23 23:23:06.272 +02:00 [WRN] Call Prediction on TOMOUSDT down 0,9996351/0,00036487362
+2023-05-23 23:23:06.347 +02:00 [WRN] Call Prediction on WAVESUSDT (1) down 0,63639003/0,36360994
+2023-05-23 23:23:06.418 +02:00 [WRN] Call Prediction on RNDRUSDT (1) down 0,99484444/0,0051555075
+2023-05-23 23:23:06.489 +02:00 [WRN] Call Prediction on MAGICUSDT down 0,9318153/0,06818465
+2023-05-23 23:23:06.557 +02:00 [WRN] Call Prediction on WAVESUSDT down 0,99776864/0,0022313953
+2023-05-23 23:23:06.628 +02:00 [WRN] Call Prediction on PYRUSDT down 0,9959586/0,004041381
+2023-05-23 23:23:06.704 +02:00 [WRN] Call Prediction on PYRUSDT (1) down 0,97740865/0,022591375
+2023-05-23 23:23:06.780 +02:00 [WRN] Call Prediction on IMXUSDT down 0,9994997/0,0005003306
+2023-05-23 23:23:06.780 +02:00 [WRN] ----------------ML Updated---------------------
+2023-05-23 23:23:06.951 +02:00 [WRN] SellFack on MAGICUSDT
+2023-05-23 23:23:13.093 +02:00 [WRN] Get Account OK
+2023-05-23 23:23:13.874 +02:00 [WRN] Get Account OK
+2023-05-23 23:28:01.657 +02:00 [WRN] Call Prediction on APTUSDT down 0,995233/0,0047670444
+2023-05-23 23:28:01.729 +02:00 [WRN] Call Prediction on LPTUSDT down 0,8735822/0,12641783
+2023-05-23 23:28:01.805 +02:00 [WRN] Call Prediction on OCEANUSDT down 0,9868685/0,013131575
+2023-05-23 23:28:01.876 +02:00 [WRN] Call Prediction on IMXUSDT down 0,99812704/0,0018730005
+2023-05-23 23:28:01.877 +02:00 [WRN] ----------------ML Updated---------------------
+2023-05-23 23:30:00.149 +02:00 [WRN] New candle save : OCEANUSDT
+2023-05-23 23:30:00.149 +02:00 [WRN] New candle save : EDUUSDT
+2023-05-23 23:30:00.150 +02:00 [WRN] New candle save : QTUMUSDT
+2023-05-23 23:30:00.150 +02:00 [WRN] New candle save : LPTUSDT
+2023-05-23 23:30:00.151 +02:00 [WRN] New candle save : IMXUSDT
+2023-05-23 23:30:00.151 +02:00 [WRN] New candle save : KNCUSDT
+2023-05-23 23:30:00.151 +02:00 [WRN] New candle save : NEOUSDT
+2023-05-23 23:30:00.152 +02:00 [WRN] New candle save : CRVUSDT
+2023-05-23 23:30:00.150 +02:00 [WRN] New candle save : WAVESUSDT
+2023-05-23 23:30:00.151 +02:00 [WRN] New candle save : TOMOUSDT
+2023-05-23 23:30:00.152 +02:00 [WRN] New candle save : KAVAUSDT
+2023-05-23 23:30:00.149 +02:00 [WRN] New candle save : RNDRUSDT
+2023-05-23 23:30:00.279 +02:00 [WRN] New candle save : KLAYUSDT
+2023-05-23 23:30:00.279 +02:00 [WRN] New candle save : PYRUSDT
+2023-05-23 23:30:00.279 +02:00 [WRN] New candle save : RPLUSDT
+2023-05-23 23:30:00.280 +02:00 [WRN] New candle save : GRTUSDT
+2023-05-23 23:30:00.281 +02:00 [WRN] New candle save : DYDXUSDT
+2023-05-23 23:30:00.281 +02:00 [WRN] New candle save : APTUSDT
+2023-05-23 23:30:00.282 +02:00 [WRN] New candle save : LUNCUSDT
+2023-05-23 23:30:00.282 +02:00 [WRN] New candle save : MAGICUSDT
+2023-05-23 23:30:00.282 +02:00 [WRN] New candle save : MINAUSDT
+2023-05-23 23:30:00.282 +02:00 [WRN] New candle save : GALAUSDT
+2023-05-23 23:30:00.284 +02:00 [WRN] New candle save : OPUSDT
+2023-05-23 23:37:32.165 +02:00 [WRN] New call at 37 for ExportChart UI
+2023-05-23 23:38:08.789 +02:00 [WRN] Call Prediction on APTUSDT down 0,93404126/0,06595867
+2023-05-23 23:38:08.875 +02:00 [WRN] Call Prediction on LPTUSDT down 0,98109037/0,018909657
+2023-05-23 23:38:08.962 +02:00 [WRN] Call Prediction on OCEANUSDT down 0,9672716/0,032728408
+2023-05-23 23:38:09.049 +02:00 [WRN] Call Prediction on RNDRUSDT down 0,9970362/0,0029637953
+2023-05-23 23:38:09.134 +02:00 [WRN] Call Prediction on KAVAUSDT (1) down 0,9959084/0,0040916186
+2023-05-23 23:38:09.221 +02:00 [WRN] Call Prediction on KAVAUSDT down 0,99591225/0,004087718
+2023-05-23 23:38:09.308 +02:00 [WRN] Call Prediction on TOMOUSDT (1) down 0,9999778/2,2131493E-05
+2023-05-23 23:38:09.387 +02:00 [WRN] Call Prediction on TOMOUSDT down 0,9998715/0,00012852691
+2023-05-23 23:38:09.461 +02:00 [WRN] Call Prediction on EDUUSDT down 0,9976548/0,0023451785
+2023-05-23 23:38:09.540 +02:00 [WRN] Call Prediction on WAVESUSDT (1) down 0,89974576/0,10025426
+2023-05-23 23:38:09.617 +02:00 [WRN] Call Prediction on RNDRUSDT (1) down 0,9991536/0,0008464318
+2023-05-23 23:38:09.870 +02:00 [WRN] Call Prediction on MAGICUSDT down 0,9893111/0,010688947
+2023-05-23 23:38:09.947 +02:00 [WRN] Call Prediction on WAVESUSDT down 0,99732816/0,0026718192
+2023-05-23 23:38:10.021 +02:00 [WRN] Call Prediction on PYRUSDT down 0,99771714/0,002282889
+2023-05-23 23:38:10.096 +02:00 [WRN] Call Prediction on PYRUSDT (1) down 0,9964574/0,0035425758
+2023-05-23 23:38:10.169 +02:00 [WRN] Call Prediction on IMXUSDT (1) down 0,99517363/0,0048264116
+2023-05-23 23:38:10.241 +02:00 [WRN] Call Prediction on IMXUSDT down 0,999074/0,00092600496
+2023-05-23 23:38:10.241 +02:00 [WRN] ----------------ML Updated---------------------
+2023-05-23 23:44:01.821 +02:00 [WRN] Call Prediction on APTUSDT down 0,9781375/0,021862475
+2023-05-23 23:44:01.898 +02:00 [WRN] Call Prediction on LPTUSDT down 0,9822207/0,017779214
+2023-05-23 23:44:01.972 +02:00 [WRN] Call Prediction on OCEANUSDT down 0,9954868/0,004513131
+2023-05-23 23:44:02.054 +02:00 [WRN] Call Prediction on EDUUSDT down 0,99869955/0,0013004824
+2023-05-23 23:44:02.283 +02:00 [WRN] Call Prediction on MAGICUSDT down 0,98069555/0,019304393
+2023-05-23 23:44:02.283 +02:00 [WRN] ----------------ML Updated---------------------
+2023-05-23 23:45:00.116 +02:00 [WRN] New candle save : NEOUSDT
+2023-05-23 23:45:00.118 +02:00 [WRN] New candle save : QTUMUSDT
+2023-05-23 23:45:00.199 +02:00 [WRN] New candle save : WAVESUSDT
+2023-05-23 23:45:00.203 +02:00 [WRN] New candle save : TOMOUSDT
+2023-05-23 23:45:00.204 +02:00 [WRN] New candle save : KAVAUSDT
+2023-05-23 23:45:00.204 +02:00 [WRN] New candle save : IMXUSDT
+2023-05-23 23:45:00.206 +02:00 [WRN] New candle save : CRVUSDT
+2023-05-23 23:45:00.207 +02:00 [WRN] New candle save : OCEANUSDT
+2023-05-23 23:45:00.209 +02:00 [WRN] New candle save : LPTUSDT
+2023-05-23 23:45:00.209 +02:00 [WRN] New candle save : KNCUSDT
+2023-05-23 23:45:00.209 +02:00 [WRN] New candle save : RNDRUSDT
+2023-05-23 23:45:00.210 +02:00 [WRN] New candle save : RPLUSDT
+2023-05-23 23:45:00.209 +02:00 [WRN] New candle save : EDUUSDT
+2023-05-23 23:45:00.210 +02:00 [WRN] New candle save : GALAUSDT
+2023-05-23 23:45:00.210 +02:00 [WRN] New candle save : PYRUSDT
+2023-05-23 23:45:00.232 +02:00 [WRN] New candle save : KLAYUSDT
+2023-05-23 23:45:00.233 +02:00 [WRN] New candle save : GRTUSDT
+2023-05-23 23:45:00.243 +02:00 [WRN] New candle save : MINAUSDT
+2023-05-23 23:45:00.297 +02:00 [WRN] New candle save : DYDXUSDT
+2023-05-23 23:45:00.298 +02:00 [WRN] New candle save : MAGICUSDT
+2023-05-23 23:45:00.298 +02:00 [WRN] New candle save : LUNCUSDT
+2023-05-23 23:45:00.298 +02:00 [WRN] New candle save : OPUSDT
+2023-05-23 23:45:00.300 +02:00 [WRN] New candle save : APTUSDT
+2023-05-23 23:52:32.164 +02:00 [WRN] New call at 52 for ExportChart UI
+2023-05-23 23:53:08.885 +02:00 [WRN] Call Prediction on APTUSDT down 0,9975057/0,0024942849
+2023-05-23 23:53:09.068 +02:00 [WRN] Call Prediction on LPTUSDT down 0,9807164/0,019283624
+2023-05-23 23:53:09.152 +02:00 [WRN] Call Prediction on OCEANUSDT down 0,93149406/0,06850596
+2023-05-23 23:53:09.237 +02:00 [WRN] Call Prediction on RNDRUSDT down 0,9974809/0,0025190723
+2023-05-23 23:53:09.339 +02:00 [WRN] Call Prediction on KAVAUSDT (1) down 0,9873468/0,0126532335
+2023-05-23 23:53:09.427 +02:00 [WRN] Call Prediction on KAVAUSDT down 0,9616937/0,038306337
+2023-05-23 23:53:09.501 +02:00 [WRN] Call Prediction on TOMOUSDT (1) down 0,9982868/0,001713231
+2023-05-23 23:53:09.574 +02:00 [WRN] Call Prediction on TOMOUSDT down 0,9910417/0,008958338
+2023-05-23 23:53:09.653 +02:00 [WRN] Call Prediction on EDUUSDT down 0,9974498/0,002550131
+2023-05-23 23:53:09.731 +02:00 [WRN] Call Prediction on WAVESUSDT (1) down 0,98001593/0,019984111
+2023-05-23 23:53:09.807 +02:00 [WRN] Call Prediction on RNDRUSDT (1) down 0,99929214/0,000707793
+2023-05-23 23:53:09.886 +02:00 [WRN] Call Prediction on MAGICUSDT down 0,98396295/0,016037092
+2023-05-23 23:53:10.237 +02:00 [WRN] Call Prediction on WAVESUSDT down 0,97896725/0,021032777
+2023-05-23 23:53:10.317 +02:00 [WRN] Call Prediction on PYRUSDT up 0,36083996/0,6391601
+2023-05-23 23:53:10.391 +02:00 [WRN] Call Prediction on PYRUSDT (1) down 0,76990986/0,23009017
+2023-05-23 23:53:10.464 +02:00 [WRN] Call Prediction on IMXUSDT (1) down 0,99957687/0,00042316652
+2023-05-23 23:53:10.536 +02:00 [WRN] Call Prediction on IMXUSDT down 0,9951787/0,0048212903
+2023-05-23 23:53:10.536 +02:00 [WRN] ----------------ML Updated---------------------
+2023-05-23 23:59:01.637 +02:00 [WRN] Call Prediction on APTUSDT down 0,99994624/5,373377E-05
+2023-05-23 23:59:01.711 +02:00 [WRN] Call Prediction on LPTUSDT down 0,99772185/0,002278089
+2023-05-23 23:59:01.780 +02:00 [WRN] Call Prediction on OCEANUSDT down 0,99883956/0,0011605015
+2023-05-23 23:59:01.851 +02:00 [WRN] Call Prediction on EDUUSDT down 0,99973387/0,00026608436
+2023-05-23 23:59:01.926 +02:00 [WRN] Call Prediction on MAGICUSDT down 0,9974675/0,0025324912
+2023-05-23 23:59:01.926 +02:00 [WRN] ----------------ML Updated---------------------

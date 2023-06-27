@@ -3,7 +3,6 @@
   <div class="col-9">
     <div class="row">
       <div class="col-3">
-        <!-- <button class="btn btn-secondary btn-sm mr-1" (click)="trade()">Start</button> -->
         <button *ngIf="!tradeOpen" class="btn" (click)="trade()">
           <span style="color: green">
             <i class="fa-solid fa-play fa-xl"></i>
@@ -20,29 +19,38 @@
             <i class="fa-solid fa-pause fa-xl"></i>
           </span>
         </button>
-
-        <button class="btn btn-outline-warning btn-sm pl-20" (click)="debugBuy()">Test Order</button>
-      </div>
-
-      <div class="input-group col-3" style="max-width: 200px !important">
-        <input class="form-control sm" placeholder="yyyy-mm-dd" name="dp" [(ngModel)]="model" ngbDatepicker
-          #d="ngbDatepicker" (dateSelect)="filterOrderList()">
-        <button class="btn btn-outline-secondary calendar btn-sm mr-1 " (click)="d.toggle();filterOrderList();"
-          type="button"> <span style="color: orange"><i class="fa-solid fa-calendar-days"></i></span></button>
-        <button class="btn btn-secondary btn-sm mr-1" (click)="model = today();filterOrderList()">Today</button>
       </div>
 
       <div class="col-1">
         <div *ngIf="showMessageInfo" class="alert alert-warning"
-          style="height: 30px;padding-top: 3px;margin-bottom: 0px;width: 100px;" role="alert"> Trading
+          style="height: 38px;padding-top: 7px;margin-bottom: 0px;width: 100px;" role="alert"> Trading
         </div>
       </div>
 
-      <div class="col-2">
+      <div class="col-3">
         <div *ngIf="showMessageError" class="alert alert-danger"
-          style="height: 30px;padding-top: 3px;margin-bottom: 0px;width: 200px;" role="alert"> {{messageError}}
+          style="height: 38px;padding-top: 7px;margin-bottom: 0px;width: 190px;" role="alert"> {{messageError}}
         </div>
       </div>
+
+      <div class="input-group col-5" >
+        <input class="form-control sm" placeholder="yyyy-mm-dd" name="dp" [(ngModel)]="model" ngbDatepicker
+          #d="ngbDatepicker" (dateSelect)="filterOrderList()">
+        <button class="btn btn-outline-secondary calendar btn-sm mr-1 " (click)="d.toggle();filterOrderList();"
+          type="button"> <span style="color: orange"><i class="fa-solid fa-calendar-days"></i></span></button>
+        <button class="btn btn-outline-warning btn-sm" (click)="model = today();filterOrderList()">Today</button>
+     
+     
+        <button *ngIf="tradeOpen" class="btn btn-outline-warning btn-sm" (click)="debugBuy()">Test Order</button>
+        <button *ngIf="tradeOpen" class="btn btn-outline-warning btn-sm" (click)="syncBinanceSymbol()">Binance sync</button>
+
+        <button *ngIf="!tradeOpen" class="btn btn-outline-warning btn-sm" disabled>Test Order</button>
+        <button *ngIf="!tradeOpen" class="btn btn-outline-warning btn-sm" disabled>Binance sync</button>
+      </div>
+
+      <!-- <div class="btn-group col-3" role="group" aria-label="Basic example">
+       
+      </div> -->
 
     </div>
 
@@ -179,14 +187,16 @@
           <td></td>
           <td></td>
           <td></td>
-          <td></td>
-          <td></td>
+          
 
           <td><b>Total</b></td>
           <td *ngIf="totalProfit >=0" style="color: limegreen;">{{totalProfit.toFixed(4)}}</td>
           <td *ngIf="totalProfit < 0" style="color: rgb(255, 57, 57);">{{totalProfit.toFixed(4)}}</td>
           <td *ngIf="totalBestProfit >=0" style="color: limegreen;">{{totalBestProfit.toFixed(4)}}</td>
           <td *ngIf="totalBestProfit < 0" style="color: rgb(255, 57, 57);">{{totalBestProfit.toFixed(4)}}</td>
+          
+          <td></td>
+          <td></td>
           <td></td>
           <td></td>
           <td></td>
@@ -215,7 +225,21 @@
             <a style="color: orange" >Balance</a>
           </td>
           <td>{{this.balance?.toFixed(0)}}</td>
+          <td>
+            <a style="color: orange" >{{this.displaySymbol}}</a>
+          </td>
          </tr>
+
+         <tr>
+          <td>
+            <a style="color: orange" >Slope</a>
+          </td>
+          <td>{{this.slope?.slope.toFixed(2)}}</td>
+          <td>
+            <a style="color: orange" >{{this.displaySymbol}}</a>
+          </td>
+         </tr>
+
         </tbody>
       </table>
     </div>

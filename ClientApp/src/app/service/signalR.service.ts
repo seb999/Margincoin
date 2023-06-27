@@ -87,8 +87,9 @@ export class SignalRService {
             return this.eventMessage.emit(serverMsg);
         });
 
-        this.hubConnection.on(BackEndMessage.exportChart, () => {
-            let serverMsg: ServerMsg = { msgName: BackEndMessage.exportChart };
+        this.hubConnection.on(BackEndMessage.exportChart, (data) => {
+            let serverMsg: ServerMsg = { msgName: BackEndMessage.exportChart,
+                tradeSymbolList: JSON.parse(data) };
             return this.eventMessage.emit(serverMsg);
         });
     }

@@ -27,11 +27,15 @@ namespace MarginCoin
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            //Add here dependency injection services
+            //AA new instance of the class for each call
             services.AddScoped<IBinanceService, BinanceService>();
+            services.AddScoped<IRepositoryService, RepositoryService>();
+
+            //Same instance of the class during lifetime
             services.AddSingleton<IMLService, MLService>();
             services.AddSingleton<IWatchDog, WatchDog>();
             services.AddSingleton<IWebSocket, WebSocket>();
+            
             services.AddSignalR();
 
             services.AddControllers().AddJsonOptions(options =>

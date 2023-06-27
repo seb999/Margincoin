@@ -15,10 +15,8 @@ namespace MarginCoin.Service
         public static string secretKey = "";
         public static string publicKey = "";
         public static string host = "";
-
         string Interval { get; set; }
-        string Limit { get; set; }
-
+        string Limit { get; set; } 
 
         public List<BinanceAsset> Asset(ref System.Net.HttpStatusCode httpStatusCode);
 
@@ -36,5 +34,6 @@ namespace MarginCoin.Service
         public BinanceOrder BuyLimit(string symbol, double qty, MyEnum.TimeInForce timeInForce);
 
         public BinanceOrder SellLimit(string symbol, double qty, MyEnum.TimeInForce timeInForce, ref System.Net.HttpStatusCode httpStatusCode);
+
     }
 }

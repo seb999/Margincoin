@@ -60,6 +60,7 @@ export class WalletComponent {
   public pendingOrderList: Order[];
   public myAccount: BinanceAccount;
   public symbolList: any[];
+  public tradeSymbolList: any[];
   public symbolPrice: any[];
   public orderList: Order[];
   public logList: any[];
@@ -70,20 +71,21 @@ export class WalletComponent {
   public showMessageInfo: boolean = false;
   public showMessageError: boolean = false;
   public messageError: string;
-  public interval: string;
+  public interval: any;
   public intervalList = [] as any;
   public tradeOpen: boolean;
   public popupSymbol: string;
   public popupQty: number;
   public balance: number;
   public isCollapsed = true;
+  public slope: any;
 
   color = 'accent';
   isProd = false;
   isOnAir = false;
 
   displaySymbol: string;
-  displayOrder: Order;
+  myOrder: Order;
 
   constructor(
     public modalService: NgbModal,
@@ -93,19 +95,24 @@ export class WalletComponent {
     private appSetting: AppSetting,
   ) {
     this.intervalList = this.appSetting.intervalList;
-    this.interval = "15m";
+    //this.interval = "30m";
   }
 
   async ngOnInit() {
     this.tradeOpen = false;
+   
     this.model = this.today();
     this.orderList = await this.getAllOrder(this.model.day + "-" + this.model.month + "-" + this.model.year);
     this.isProd = await this.getServer();
     this.isOnAir = await this.getTradingMode();
+
     this.symbolList = await this.getSymbolList();
     this.symbolPrice = await this.getSymbolPrice();
     this.logList = await this.getLog();
     this.myAccount = await this.binanceAccount();
+    this.interval = await this.getInterval();
+    console.log( this.interval);
+   
     this.calculateProfit();
     this.calculateBalance();
 
@@ -119,12 +126,9 @@ export class WalletComponent {
       if (this.serverMsg.msgName == BackEndMessage.trading) {
         this.tradeOpen = true;
         this.showMessageInfo = true;
-
         this.CandleList = this.serverMsg.candleList;
-        console.log(this.CandleList);
         this.orderList.forEach((order, index) => {
           this.CandleList.forEach(candle => {
-
             if (order.symbol === candle.s && !order.isClosed) {
               this.orderList[index].closePrice = candle.c;
               this.orderList[index].profit = (candle.c - order.openPrice) * order.quantity;
@@ -166,6 +170,8 @@ export class WalletComponent {
       if (this.serverMsg.msgName == BackEndMessage.exportChart) {
         this.showMessageError = true;
         this.messageError = "Exporting charts...";
+        this.symbolList = this.serverMsg.tradeSymbolList;
+        console.log(this.symbolList);
         this.exportChart();
       }
 
@@ -254,7 +260,6 @@ export class WalletComponent {
     let balance = 0;
     for (let i = 0; i <= this.symbolList.length; i++) {
       let index = this.symbolPrice.findIndex((crypto) => crypto.symbol === this.myAccount.balances[i].asset + "USDT");
-      console.log(index, this.myAccount.balances[i].asset, this.myAccount.balances[i].free)
       if (index !== -1) {
         balance += parseFloat(this.symbolPrice[index].price) * this.myAccount.balances[i].free;
       }
@@ -287,7 +292,14 @@ export class WalletComponent {
     const httpSetting: HttpSettings = {
       method: 'GET',
       url: location.origin + "/api/Globals/GetServer",
+    };
+    return await this.httpService.xhr(httpSetting);
+  }
 
+  async getInterval(): Promise<any> {
+    const httpSetting: HttpSettings = {
+      method: 'GET',
+      url: location.origin + "/api/Globals/GetInterval",
     };
     return await this.httpService.xhr(httpSetting);
   }
@@ -335,7 +347,7 @@ export class WalletComponent {
   async closeTrade(orderId, lastPrice): Promise<any> {
     const httpSetting: HttpSettings = {
       method: 'GET',
-      url: location.origin + '/api/AutoTrade3/CloseTrade/' + orderId + "/" + lastPrice,
+      url: location.origin + '/api/AlgoTrade/CloseTrade/' + orderId + "/" + lastPrice,
     };
     return await this.httpService.xhr(httpSetting);
   }
@@ -349,13 +361,31 @@ export class WalletComponent {
     return await this.httpService.xhr(httpSetting);
   }
 
-  async debugBuy(): Promise<any> {
+  async getSymbolMacdSlope(symbol): Promise<any[]> {
     const httpSetting: HttpSettings = {
       method: 'GET',
-      url: location.origin + '/api/AutoTrade3/TestBinanceBuy/',
+      url: location.origin + '/api/Action/MacdSlope/' + symbol,
     };
     return await this.httpService.xhr(httpSetting);
   }
+
+  async debugBuy(): Promise<any> {
+    const httpSetting: HttpSettings = {
+      method: 'GET',
+      url: location.origin + '/api/AlgoTrade/TestBinanceBuy/',
+    };
+    return await this.httpService.xhr(httpSetting);
+  }
+
+  async syncBinanceSymbol(): Promise<any> {
+    const httpSetting: HttpSettings = {
+      method: 'GET',
+      url: location.origin + '/api/AlgoTrade/SyncBinanceSymbol/',
+    };
+    return await this.httpService.xhr(httpSetting);
+  }
+
+  
 
   async getLog(): Promise<any> {
     const httpSetting: HttpSettings = {
@@ -368,7 +398,7 @@ export class WalletComponent {
   async mlUpdate(): Promise<any> {
     const httpSetting: HttpSettings = {
       method: 'GET',
-      url: location.origin + '/api/AutoTrade3/UpdateML',
+      url: location.origin + '/api/AlgoTrade/UpdateML',
     };
     return await this.httpService.xhr(httpSetting);
   }
@@ -384,7 +414,7 @@ export class WalletComponent {
   async getSymbolList(): Promise<any[]> {
     const httpSetting: HttpSettings = {
       method: 'GET',
-      url: location.origin + '/api/AutoTrade3/GetSymbolList',
+      url: location.origin + '/api/Action/GetSymbolList',
     };
     return await this.httpService.xhr(httpSetting);
   }
@@ -392,7 +422,7 @@ export class WalletComponent {
   async getSymbolPrice(): Promise<any[]> {
     const httpSetting: HttpSettings = {
       method: 'GET',
-      url: location.origin + '/api/AutoTrade3/GetSymbolPrice',
+      url: location.origin + '/api/AlgoTrade/GetSymbolPrice',
     };
     return await this.httpService.xhr(httpSetting);
   }
@@ -405,7 +435,7 @@ export class WalletComponent {
     //We start trading
     const httpSetting: HttpSettings = {
       method: 'GET',
-      url: location.origin + '/api/AutoTrade3/MonitorMarket',
+      url: location.origin + '/api/AlgoTrade/MonitorMarket',
     };
     return await this.httpService.xhr(httpSetting);
   }
@@ -415,8 +445,6 @@ export class WalletComponent {
   /////////////////////////////////////////////////////////////
 
   async exportChart() {
-    this.interval = "15m";
-    console.log(this.symbolList);
     for (var i = 0; i < this.symbolList?.length; i++) {
       await new Promise(next => {
         this.displaySymbol = this.symbolList[i];
@@ -439,12 +467,14 @@ export class WalletComponent {
   async showChart(symbol, orderId) {
     if (orderId != null) {
       this.displaySymbol = symbol;
-      this.displayOrder = await this.orderDetailHelper.getOrder(orderId);
+      this.myOrder = await this.orderDetailHelper.getOrder(orderId);
     }
     else {
       this.displaySymbol = symbol + "USDT";
-      this.displayOrder = null;
+      this.myOrder = null;
     }
+
+    this.slope = await this.getSymbolMacdSlope(this.displaySymbol);
     this.displayHighstock();
   }
 
@@ -493,8 +523,14 @@ export class WalletComponent {
         ])
     });
 
+    // var macdSlopeP1 = [this.slope.p1.x, this.slope.p1.y ];
+    // var macdSlopeP2 =  [this.slope.p2.x, this.slope.p2.y ];
+
+    console.log(this.ohlc);
+
     this.chartOptions = {
       plotOptions: {
+
         //   macd: {   there is a bug here, second drowing not working
         //     zones: [{
         //         value: 0,
@@ -507,7 +543,7 @@ export class WalletComponent {
           upColor: '#41c9ad',
           color: '#cb585f',
           upLineColor: '#41c9ad',
-          lineColor: '#cb585f'
+          lineColor: '#cb585f',
         },
       },
       xAxis: {
@@ -516,12 +552,12 @@ export class WalletComponent {
         plotLines: [{
           color: 'green',
           width: 1,
-          value: this.getOpenDateTimeSpam(this.displayOrder?.openDate),  //display openeing date
+          value: this.getOpenDateTimeSpam(this.myOrder?.openDate),  //display openeing date
         },
         {
           color: 'green',
           width: 1,
-          value: this.getOpenDateTimeSpam(this.displayOrder?.closeDate),  //display openeing date
+          value: this.getOpenDateTimeSpam(this.myOrder?.closeDate),  //display openeing date
         }]
       },
       yAxis:
@@ -536,11 +572,11 @@ export class WalletComponent {
             opposite: true,
             plotLines: [
               {
-                color: '#5CE25C', width: 1, value: this.displayOrder?.openPrice,
+                color: '#5CE25C', width: 1, value: this.myOrder?.openPrice,
                 label: { text: "Open            ", align: 'right' }
               },
               {
-                color: '#FF8901', width: 1, value: this.displayOrder?.closePrice,
+                color: '#FF8901', width: 1, value: this.myOrder?.closePrice,
                 label: { text: "close", align: 'left' }
               },
             ],
@@ -583,4 +619,5 @@ export class WalletComponent {
         }
       ]
   }
+
 }

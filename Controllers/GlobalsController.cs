@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 
 
@@ -15,35 +17,40 @@ namespace MarginCoin.Controllers
         [HttpGet("[action]")]
         public bool GetServer()
         {
-            return Globals.isProd;
+            return Global.isProd;
         }
 
         [HttpGet("[action]/{isProd}")]
         public void SetServer(bool isProd)
         {
-            Globals.isProd = isProd;
+            Global.isProd = isProd;
         }
 
         // When server is production, execute real order or not
         [HttpGet("[action]")]
         public bool GetTradingMode()
         {
-            return Globals.onAir;
+            return Global.onAir;
         }
 
         [HttpGet("[action]/{onAir}")]
         public void SetTradingMode(bool onAir)
         {
-            Globals.onAir = onAir;
+            Global.onAir = onAir;
         }
 
         // START and STOP the trading
         [HttpGet("[action]/{isOpen}")]
         public void SetTradeParameter(bool isOpen)
         {
-            Globals.isTradingOpen = isOpen;
+            Global.isTradingOpen = isOpen;
         }
 
+        [HttpGet("[action]")]
+        public string GetInterval()
+        {
+            return JsonSerializer.Serialize(Global.interval);
+        }
     }
 }
 

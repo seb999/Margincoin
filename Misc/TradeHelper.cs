@@ -11,41 +11,66 @@ namespace MarginCoin.Misc
 {
     public static class TradeHelper
     {
+
+        public static MacdSlope CalculateMacdSlope(List<Candle> symbolCandles, string tradingInterval)
+        {
+            //We calculate how many candle for 1Hours
+            var interval = TradeHelper.NumberCandleInInterval(tradingInterval, 1);
+
+            //Calculate the slope for 4 differente point
+            var coefficient1 = (symbolCandles[symbolCandles.Count - 1].MacdHist - symbolCandles[symbolCandles.Count - (1 + interval)].MacdHist) / interval;
+            var coefficient2 = (symbolCandles[symbolCandles.Count - 2].MacdHist - symbolCandles[symbolCandles.Count - (2 + interval)].MacdHist) / interval;
+            var coefficient3 = (symbolCandles[symbolCandles.Count - 3].MacdHist - symbolCandles[symbolCandles.Count - (3 + interval)].MacdHist) / interval;
+            var coefficient4 = (symbolCandles[symbolCandles.Count - 4].MacdHist - symbolCandles[symbolCandles.Count - (4 + interval)].MacdHist) / interval;
+
+
+            MacdSlope mySlope = new MacdSlope();
+            mySlope.Slope = (coefficient1 + coefficient2 + coefficient3 + coefficient4) / 4;
+            mySlope.P2 = new Point() { x = symbolCandles[symbolCandles.Count - 1].t, y = symbolCandles[symbolCandles.Count - 1].MacdHist };
+            mySlope.P1 = new Point() { x = symbolCandles[symbolCandles.Count - 5].t, y = symbolCandles[symbolCandles.Count - 5].MacdHist };
+
+            return mySlope;
+        }
+
         /// <summary>
         /// Return change in % from a list of candle
         /// Taking the lower for a upper trend or Higher for down trend
         /// </summary>
-        /// <param name="stream">The stream to get last value c</param>
+        /// <param name="last">The last value c</param>
         /// <param name="candleMatrice">The list of candle</param>
         /// <returns></returns>
-        public static double CalculPourcentChange(StreamData stream, List<Candle> candleMatrice, string interval, int  backTimelineHours)
+        public static double CalculPourcentChange(double last, List<Candle> candleMatrice, string tradingInterval, int backTimelineHours)
         {
-            var backTimeCandle = TradeHelper.NumberOfBackCandle(interval, backTimelineHours);
-            // var min = candleMatrice.Min(p => p.c);
-            // var max = candleMatrice.Max(p => p.c);
-
-            return ((stream.k.c - candleMatrice[candleMatrice.Count-backTimeCandle].c) / stream.k.c) * 100;
+            try
+            {
+                var backTimeCandle = TradeHelper.NumberCandleInInterval(tradingInterval, backTimelineHours);
+                return ((last - candleMatrice[candleMatrice.Count - backTimeCandle].c) / last) * 100;
+            }
+            catch (System.Exception ex)
+            {
+                return 0;
+            }
         }
 
         public static double CalculPourcentChange(List<Candle> candleMatrice, int prevCandleCount)
         {
-            return ((candleMatrice.Last().c - candleMatrice[candleMatrice.Count-prevCandleCount].c) / candleMatrice[candleMatrice.Count-prevCandleCount].c) * 100;
+            return ((candleMatrice.Last().c - candleMatrice[candleMatrice.Count - prevCandleCount].c) / candleMatrice[candleMatrice.Count - prevCandleCount].c) * 100;
         }
 
         /// <summary>
         /// Return how many candle back we have to go to calculate P (pourcentage change)
         /// </summary>
         /// <param name="tradingInterval">The interval for trading ex: 1h, 30m, 15m</param>
-        /// <param name="backTimelineHours">The number of hours back we want to use</param>
+        /// <param name="interval">The number of hours back we want to use</param>
         /// <returns></returns>
-        private static int NumberOfBackCandle(string tradingInterval, int backTimelineHours)
+        private static int NumberCandleInInterval(string tradingInterval, int interval)
         {
             switch (tradingInterval.Substring(tradingInterval.Length - 1))
             {
                 case "h":
                     return int.Parse(tradingInterval.Remove(1));
                 case "m":
-                    return backTimelineHours * 60 / int.Parse(tradingInterval.Remove(tradingInterval.Length - 1));
+                    return interval * 60 / int.Parse(tradingInterval.Remove(tradingInterval.Length - 1));
                 default:
                     return 0;
             }
@@ -112,7 +137,7 @@ namespace MarginCoin.Misc
             TradeIndicator.CalculateIndicator(ref candleList);
             return candleList;
         }
-        
+
         internal static void DisplayStatus(Order activeOrder, List<MarketStream> marketStreamList)
         {
             if (activeOrder != null)
@@ -144,5 +169,7 @@ namespace MarginCoin.Misc
             if (candle.c < candle.o) return "red";
             return "";
         }
+
+
     }
 }

@@ -45,5 +45,6 @@ namespace MarginCoin.Model
         public string Status { get; set; }
         public double MLBuyScore { get; set; }
         public double MLSellScore { get; set; }
+        public double ATR { get; set; }
     }
 }

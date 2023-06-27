@@ -14,8 +14,7 @@ namespace MarginCoin.Misc
              CalculateIndicator(ref quotationList);
 
              return quotationList;
-        }
-        
+        }      
         
         public static void CalculateIndicator<T>(ref List<T> quotationList) where T : Candle
         {
@@ -111,6 +110,35 @@ namespace MarginCoin.Misc
             {
 
             }
+        }
+
+        //A calcultation of the volatility(Average True Range)
+        public static double CalculateATR(List<Candle> symbolCandles)
+        {
+            // Calculate the true range values for each candle
+            List<double> trueRanges = new List<double>();
+            foreach (Candle candle in symbolCandles)
+            {
+                double trueRange = Math.Max(
+                    candle.h - candle.l,
+                    Math.Max(
+                        Math.Abs(candle.h - candle.c),
+                        Math.Abs(candle.l - candle.c)
+                    )
+                );
+                trueRanges.Add(trueRange);
+            }
+
+            // Calculate the average true range using the last 14 candles
+            int period = 14;
+            double sum = 0;
+            for (int i = symbolCandles.Count - period; i < symbolCandles.Count; i++)
+            {
+                sum += trueRanges[i];
+            }
+            double atr = sum / period;
+
+            return atr;
         }
 
         public static void CalculateIndicatorOld<T>(ref List<T> quotationList) where T : Candle

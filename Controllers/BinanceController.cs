@@ -27,7 +27,7 @@ namespace MarginCoin.Controllers
 
         public BinanceController(IHubContext<SignalRHub> hub, 
             [FromServices] ApplicationDbContext appDbContext,
-            ILogger<AutoTrade3Controller> logger,
+            ILogger<AlgoTradeController> logger,
             IBinanceService binanceService)
         {
             _hub = hub;
@@ -52,7 +52,7 @@ namespace MarginCoin.Controllers
             if (myAccount == null) return null;
 
             //Get list of symbol to monitor from DB
-            List<string> dbSymbolList = Globals.fullSymbolList ? _appDbContext.Symbol.Where(p => p.IsOnProd != 0).Select(p => p.SymbolName).ToList()
+            List<string> dbSymbolList = Global.fullSymbolList ? _appDbContext.Symbol.Where(p => p.IsOnProd != 0).Select(p => p.SymbolName).ToList()
                                                                 : _appDbContext.Symbol.Where(p => p.IsOnTest != 0).Select(p => p.SymbolName).ToList();
            
             //Remove what is not in the db list

@@ -1,0 +1,758 @@
+2023-05-16 16:23:57.496 +02:00 [WRN] MarginCoin, started!
+2023-05-16 17:40:29.736 +02:00 [WRN] MarginCoin, started!
+2023-05-16 17:41:21.660 +02:00 [ERR] HTTP GET /api/AlgoTrade/GetSymbolList responded 500 in 6.2025 ms
+System.InvalidOperationException: Unable to resolve service for type 'MarginCoin.Service.IRepositoryService' while attempting to activate 'MarginCoin.Controllers.AlgoTradeController'.
+   at Microsoft.Extensions.DependencyInjection.ActivatorUtilities.GetService(IServiceProvider sp, Type type, Type requiredBy, Boolean isDefaultParameterRequired)
+   at lambda_method225(Closure , IServiceProvider , Object[] )
+   at Microsoft.AspNetCore.Mvc.Controllers.ControllerActivatorProvider.<>c__DisplayClass7_0.<CreateActivator>b__0(ControllerContext controllerContext)
+   at Microsoft.AspNetCore.Mvc.Controllers.ControllerFactoryProvider.<>c__DisplayClass6_0.<CreateControllerFactory>g__CreateController|0(ControllerContext controllerContext)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeInnerFilterAsync()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeNextResourceFilter>g__Awaited|25_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.Rethrow(ResourceExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.InvokeFilterPipelineAsync()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.<Invoke>g__AwaitRequestTask|6_0(Endpoint endpoint, Task requestTask, ILogger logger)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+2023-05-16 17:41:21.705 +02:00 [ERR] An unhandled exception has occurred while executing the request.
+System.InvalidOperationException: Unable to resolve service for type 'MarginCoin.Service.IRepositoryService' while attempting to activate 'MarginCoin.Controllers.AlgoTradeController'.
+   at Microsoft.Extensions.DependencyInjection.ActivatorUtilities.GetService(IServiceProvider sp, Type type, Type requiredBy, Boolean isDefaultParameterRequired)
+   at lambda_method225(Closure , IServiceProvider , Object[] )
+   at Microsoft.AspNetCore.Mvc.Controllers.ControllerActivatorProvider.<>c__DisplayClass7_0.<CreateActivator>b__0(ControllerContext controllerContext)
+   at Microsoft.AspNetCore.Mvc.Controllers.ControllerFactoryProvider.<>c__DisplayClass6_0.<CreateControllerFactory>g__CreateController|0(ControllerContext controllerContext)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeInnerFilterAsync()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeNextResourceFilter>g__Awaited|25_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.Rethrow(ResourceExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.InvokeFilterPipelineAsync()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.<Invoke>g__AwaitRequestTask|6_0(Endpoint endpoint, Task requestTask, ILogger logger)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware.Invoke(HttpContext context)
+2023-05-16 17:42:46.986 +02:00 [WRN] MarginCoin, started!
+2023-05-16 17:42:52.216 +02:00 [ERR] HTTP GET /api/AlgoTrade/GetSymbolList responded 500 in 4.1491 ms
+System.InvalidOperationException: Unable to resolve service for type 'MarginCoin.Service.IRepositoryService' while attempting to activate 'MarginCoin.Controllers.AlgoTradeController'.
+   at Microsoft.Extensions.DependencyInjection.ActivatorUtilities.GetService(IServiceProvider sp, Type type, Type requiredBy, Boolean isDefaultParameterRequired)
+   at lambda_method225(Closure , IServiceProvider , Object[] )
+   at Microsoft.AspNetCore.Mvc.Controllers.ControllerActivatorProvider.<>c__DisplayClass7_0.<CreateActivator>b__0(ControllerContext controllerContext)
+   at Microsoft.AspNetCore.Mvc.Controllers.ControllerFactoryProvider.<>c__DisplayClass6_0.<CreateControllerFactory>g__CreateController|0(ControllerContext controllerContext)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeInnerFilterAsync()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeNextResourceFilter>g__Awaited|25_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.Rethrow(ResourceExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.InvokeFilterPipelineAsync()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.<Invoke>g__AwaitRequestTask|6_0(Endpoint endpoint, Task requestTask, ILogger logger)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+2023-05-16 17:42:52.253 +02:00 [ERR] An unhandled exception has occurred while executing the request.
+System.InvalidOperationException: Unable to resolve service for type 'MarginCoin.Service.IRepositoryService' while attempting to activate 'MarginCoin.Controllers.AlgoTradeController'.
+   at Microsoft.Extensions.DependencyInjection.ActivatorUtilities.GetService(IServiceProvider sp, Type type, Type requiredBy, Boolean isDefaultParameterRequired)
+   at lambda_method225(Closure , IServiceProvider , Object[] )
+   at Microsoft.AspNetCore.Mvc.Controllers.ControllerActivatorProvider.<>c__DisplayClass7_0.<CreateActivator>b__0(ControllerContext controllerContext)
+   at Microsoft.AspNetCore.Mvc.Controllers.ControllerFactoryProvider.<>c__DisplayClass6_0.<CreateControllerFactory>g__CreateController|0(ControllerContext controllerContext)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeInnerFilterAsync()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeNextResourceFilter>g__Awaited|25_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.Rethrow(ResourceExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.InvokeFilterPipelineAsync()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.<Invoke>g__AwaitRequestTask|6_0(Endpoint endpoint, Task requestTask, ILogger logger)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware.Invoke(HttpContext context)
+2023-05-16 18:20:07.478 +02:00 [WRN] MarginCoin, started!
+2023-05-16 18:20:15.054 +02:00 [WRN] Get Account OK
+2023-05-16 18:20:21.270 +02:00 [ERR] THE SIGNAL CLIENT IS DISCONNECTED
+2023-05-16 18:20:23.039 +02:00 [WRN] Get Account OK
+2023-05-16 18:20:28.348 +02:00 [WRN] Start trading market...
+2023-05-16 18:21:30.445 +02:00 [WRN] Initial call for ExportChart UI
+2023-05-16 18:22:08.467 +02:00 [WRN] Call Prediction on ICXUSDT down 0,89647895/0,103521034
+2023-05-16 18:22:08.545 +02:00 [WRN] Call Prediction on RNDRUSDT down 0,95162123/0,048378747
+2023-05-16 18:22:08.628 +02:00 [WRN] Call Prediction on DODOUSDT down 0,9999901/9,888822E-06
+2023-05-16 18:22:08.801 +02:00 [WRN] Call Prediction on LTCUSDT down 0,80882156/0,19117846
+2023-05-16 18:22:08.880 +02:00 [WRN] Call Prediction on TRXUSDT down 0,99651873/0,0034812712
+2023-05-16 18:22:08.986 +02:00 [WRN] Call Prediction on FXSUSDT down 0,9998715/0,00012844702
+2023-05-16 18:22:09.063 +02:00 [WRN] Call Prediction on LQTYUSDT down 0,9999993/7,0163935E-07
+2023-05-16 18:22:09.140 +02:00 [WRN] Call Prediction on CFXUSDT down 0,99231917/0,007680775
+2023-05-16 18:22:09.237 +02:00 [WRN] Call Prediction on ACHUSDT down 0,9991715/0,00082847924
+2023-05-16 18:22:09.315 +02:00 [WRN] Call Prediction on LDOUSDT down 0,99987614/0,00012384984
+2023-05-16 18:22:09.315 +02:00 [WRN] ----------------ML Updated---------------------
+2023-05-16 18:30:00.124 +02:00 [WRN] New candle save : CELRUSDT
+2023-05-16 18:30:00.124 +02:00 [WRN] New candle save : ICXUSDT
+2023-05-16 18:30:00.124 +02:00 [WRN] New candle save : ETHUSDT
+2023-05-16 18:30:00.124 +02:00 [WRN] New candle save : LTCUSDT
+2023-05-16 18:30:00.124 +02:00 [WRN] New candle save : ALGOUSDT
+2023-05-16 18:30:00.162 +02:00 [WRN] New candle save : CFXUSDT
+2023-05-16 18:30:00.162 +02:00 [WRN] New candle save : RNDRUSDT
+2023-05-16 18:30:00.163 +02:00 [WRN] New candle save : ACHUSDT
+2023-05-16 18:30:00.163 +02:00 [WRN] New candle save : CRVUSDT
+2023-05-16 18:30:00.163 +02:00 [WRN] New candle save : TRUUSDT
+2023-05-16 18:30:00.163 +02:00 [WRN] New candle save : DODOUSDT
+2023-05-16 18:30:00.163 +02:00 [WRN] New candle save : TRXUSDT
+2023-05-16 18:30:00.210 +02:00 [WRN] New candle save : LDOUSDT
+2023-05-16 18:30:00.211 +02:00 [WRN] New candle save : LQTYUSDT
+2023-05-16 18:30:00.210 +02:00 [WRN] New candle save : GTCUSDT
+2023-05-16 18:30:00.212 +02:00 [WRN] New candle save : FXSUSDT
+2023-05-16 18:30:00.212 +02:00 [WRN] New candle save : JOEUSDT
+2023-05-16 18:36:30.445 +02:00 [WRN] New call at 36 for ExportChart UI
+2023-05-16 18:37:06.234 +02:00 [WRN] Call Prediction on ICXUSDT down 0,9918533/0,008146703
+2023-05-16 18:37:06.317 +02:00 [WRN] Call Prediction on RNDRUSDT down 0,9789412/0,021058775
+2023-05-16 18:37:06.402 +02:00 [WRN] Call Prediction on DODOUSDT down 0,9996178/0,00038218824
+2023-05-16 18:37:06.489 +02:00 [WRN] Call Prediction on LTCUSDT down 0,7020032/0,29799685
+2023-05-16 18:37:06.577 +02:00 [WRN] Call Prediction on ALGOUSDT down 0,9700731/0,029926946
+2023-05-16 18:37:06.661 +02:00 [WRN] Call Prediction on FXSUSDT down 0,99993896/6,108553E-05
+2023-05-16 18:37:06.746 +02:00 [WRN] Call Prediction on LQTYUSDT down 0,9999951/4,8994148E-06
+2023-05-16 18:37:06.853 +02:00 [WRN] Call Prediction on CFXUSDT down 0,9913884/0,008611598
+2023-05-16 18:37:06.935 +02:00 [WRN] Call Prediction on ACHUSDT down 0,9994611/0,00053890015
+2023-05-16 18:37:07.016 +02:00 [WRN] Call Prediction on LDOUSDT down 0,9617444/0,038255587
+2023-05-16 18:37:07.017 +02:00 [WRN] ----------------ML Updated---------------------
+2023-05-16 18:45:00.075 +02:00 [WRN] New candle save : ALGOUSDT
+2023-05-16 18:45:00.075 +02:00 [WRN] New candle save : CELRUSDT
+2023-05-16 18:45:00.075 +02:00 [WRN] New candle save : ICXUSDT
+2023-05-16 18:45:00.075 +02:00 [WRN] New candle save : TRXUSDT
+2023-05-16 18:45:00.178 +02:00 [WRN] New candle save : TRUUSDT
+2023-05-16 18:45:00.180 +02:00 [WRN] New candle save : ETHUSDT
+2023-05-16 18:45:00.207 +02:00 [WRN] New candle save : LTCUSDT
+2023-05-16 18:45:00.207 +02:00 [WRN] New candle save : RNDRUSDT
+2023-05-16 18:45:00.210 +02:00 [WRN] New candle save : ACHUSDT
+2023-05-16 18:45:00.210 +02:00 [WRN] New candle save : LDOUSDT
+2023-05-16 18:45:00.211 +02:00 [WRN] New candle save : CFXUSDT
+2023-05-16 18:45:00.211 +02:00 [WRN] New candle save : GTCUSDT
+2023-05-16 18:45:00.210 +02:00 [WRN] New candle save : DODOUSDT
+2023-05-16 18:45:00.210 +02:00 [WRN] New candle save : CRVUSDT
+2023-05-16 18:45:00.279 +02:00 [WRN] New candle save : JOEUSDT
+2023-05-16 18:45:00.280 +02:00 [WRN] New candle save : LQTYUSDT
+2023-05-16 18:45:00.280 +02:00 [WRN] New candle save : FXSUSDT
+2023-05-16 18:45:00.281 +02:00 [WRN] New candle save : GNSUSDT
+2023-05-16 18:51:30.424 +02:00 [WRN] New call at 51 for ExportChart UI
+2023-05-16 18:53:05.001 +02:00 [WRN] Call Prediction on ICXUSDT down 0,9834938/0,016506162
+2023-05-16 18:53:05.085 +02:00 [WRN] Call Prediction on CRVUSDT up 0,22996311/0,7700369
+2023-05-16 18:53:05.171 +02:00 [WRN] Call Prediction on RNDRUSDT down 0,97134084/0,02865916
+2023-05-16 18:53:05.258 +02:00 [WRN] Call Prediction on DODOUSDT down 0,9989371/0,0010628813
+2023-05-16 18:53:05.349 +02:00 [WRN] Call Prediction on LTCUSDT down 0,63907087/0,3609291
+2023-05-16 18:53:05.441 +02:00 [WRN] Call Prediction on FXSUSDT down 0,999718/0,00028195232
+2023-05-16 18:53:05.534 +02:00 [WRN] Call Prediction on LQTYUSDT down 0,99990165/9,827861E-05
+2023-05-16 18:53:05.613 +02:00 [WRN] Call Prediction on CFXUSDT down 0,97743726/0,02256277
+2023-05-16 18:53:05.691 +02:00 [WRN] Call Prediction on ACHUSDT down 0,99677175/0,0032281778
+2023-05-16 18:53:05.773 +02:00 [WRN] Call Prediction on LDOUSDT down 0,99276865/0,0072313533
+2023-05-16 18:53:05.773 +02:00 [WRN] ----------------ML Updated---------------------
+2023-05-16 18:54:03.780 +02:00 [WRN] BuyFack on CRVUSDT
+2023-05-16 18:54:05.184 +02:00 [WRN] Get Account OK
+2023-05-16 19:00:00.081 +02:00 [WRN] New candle save : LTCUSDT
+2023-05-16 19:00:00.081 +02:00 [WRN] New candle save : ICXUSDT
+2023-05-16 19:00:00.082 +02:00 [WRN] New candle save : TRXUSDT
+2023-05-16 19:00:00.086 +02:00 [WRN] New candle save : ETHUSDT
+2023-05-16 19:00:00.088 +02:00 [WRN] New candle save : CRVUSDT
+2023-05-16 19:00:00.088 +02:00 [WRN] New candle save : TRUUSDT
+2023-05-16 19:00:00.112 +02:00 [WRN] New candle save : RNDRUSDT
+2023-05-16 19:00:00.118 +02:00 [WRN] New candle save : DODOUSDT
+2023-05-16 19:00:00.118 +02:00 [WRN] New candle save : GTCUSDT
+2023-05-16 19:00:00.119 +02:00 [WRN] New candle save : FXSUSDT
+2023-05-16 19:00:00.120 +02:00 [WRN] New candle save : JOEUSDT
+2023-05-16 19:00:00.119 +02:00 [WRN] New candle save : CFXUSDT
+2023-05-16 19:00:00.119 +02:00 [WRN] New candle save : ACHUSDT
+2023-05-16 19:00:00.120 +02:00 [WRN] New candle save : LDOUSDT
+2023-05-16 19:00:00.121 +02:00 [WRN] New candle save : GNSUSDT
+2023-05-16 19:00:00.121 +02:00 [WRN] New candle save : LQTYUSDT
+2023-05-16 19:00:00.592 +02:00 [WRN] New candle save : CELRUSDT
+2023-05-16 19:00:00.618 +02:00 [WRN] New candle save : ALGOUSDT
+2023-05-16 19:01:56.848 +02:00 [WRN] MarginCoin, started!
+2023-05-16 19:02:04.082 +02:00 [WRN] Get Account OK
+2023-05-16 19:02:45.521 +02:00 [WRN] MarginCoin, started!
+2023-05-16 19:02:56.317 +02:00 [WRN] Get Account OK
+2023-05-16 19:03:12.385 +02:00 [ERR] THE SIGNAL CLIENT IS DISCONNECTED
+2023-05-16 19:03:14.330 +02:00 [WRN] Get Account OK
+2023-05-16 19:03:15.346 +02:00 [WRN] Start trading market...
+2023-05-16 19:04:15.350 +02:00 [WRN] Initial call for ExportChart UI
+2023-05-16 19:04:53.116 +02:00 [WRN] Call Prediction on ICXUSDT down 0,9994012/0,0005987281
+2023-05-16 19:04:53.210 +02:00 [WRN] Call Prediction on CRVUSDT up 0,46664023/0,5333597
+2023-05-16 19:04:53.292 +02:00 [WRN] Call Prediction on RNDRUSDT down 0,9709504/0,029049573
+2023-05-16 19:04:53.380 +02:00 [WRN] Call Prediction on DODOUSDT down 0,9990602/0,0009398383
+2023-05-16 19:04:53.471 +02:00 [WRN] Call Prediction on LTCUSDT down 0,8895455/0,11045452
+2023-05-16 19:04:53.562 +02:00 [WRN] Call Prediction on FXSUSDT down 0,99992263/7,7392804E-05
+2023-05-16 19:04:53.649 +02:00 [WRN] Call Prediction on LQTYUSDT down 0,99887115/0,0011288126
+2023-05-16 19:04:53.738 +02:00 [WRN] Call Prediction on CFXUSDT down 0,9982533/0,0017467462
+2023-05-16 19:04:53.825 +02:00 [WRN] Call Prediction on ACHUSDT down 0,9995017/0,00049828785
+2023-05-16 19:04:53.945 +02:00 [WRN] Call Prediction on LDOUSDT down 0,99120307/0,008796995
+2023-05-16 19:04:53.946 +02:00 [WRN] ----------------ML Updated---------------------
+2023-05-16 19:15:00.061 +02:00 [WRN] New candle save : LTCUSDT
+2023-05-16 19:15:00.067 +02:00 [WRN] New candle save : ICXUSDT
+2023-05-16 19:15:00.067 +02:00 [WRN] New candle save : CRVUSDT
+2023-05-16 19:15:00.071 +02:00 [WRN] New candle save : CRVUSDT
+2023-05-16 19:15:00.072 +02:00 [WRN] New candle save : DODOUSDT
+2023-05-16 19:15:00.072 +02:00 [WRN] New candle save : CFXUSDT
+2023-05-16 19:15:00.132 +02:00 [WRN] New candle save : ACHUSDT
+2023-05-16 19:15:00.134 +02:00 [WRN] New candle save : FXSUSDT
+2023-05-16 19:15:00.136 +02:00 [WRN] New candle save : RNDRUSDT
+2023-05-16 19:15:00.137 +02:00 [WRN] New candle save : LQTYUSDT
+2023-05-16 19:15:00.137 +02:00 [WRN] New candle save : LDOUSDT
+2023-05-16 19:15:46.131 +02:00 [WRN] MarginCoin, started!
+2023-05-16 19:15:56.701 +02:00 [WRN] Get Account OK
+2023-05-16 19:15:57.186 +02:00 [WRN] Start trading market...
+2023-05-16 19:16:57.190 +02:00 [WRN] Initial call for ExportChart UI
+2023-05-16 19:17:34.528 +02:00 [WRN] Call Prediction on ICXUSDT down 0,9613236/0,038676362
+2023-05-16 19:17:34.610 +02:00 [WRN] Call Prediction on RNDRUSDT down 0,98433506/0,015664965
+2023-05-16 19:17:34.692 +02:00 [WRN] Call Prediction on DODOUSDT down 0,94800115/0,051998813
+2023-05-16 19:17:34.894 +02:00 [WRN] Call Prediction on LTCUSDT down 0,99880254/0,0011974255
+2023-05-16 19:17:34.974 +02:00 [WRN] Call Prediction on CELRUSDT down 0,8152468/0,18475313
+2023-05-16 19:17:35.066 +02:00 [WRN] Call Prediction on FXSUSDT down 0,99868613/0,0013138258
+2023-05-16 19:17:35.158 +02:00 [WRN] Call Prediction on LQTYUSDT down 0,99685293/0,0031470892
+2023-05-16 19:17:35.239 +02:00 [WRN] Call Prediction on CFXUSDT down 0,98846966/0,0115303565
+2023-05-16 19:17:35.322 +02:00 [WRN] Call Prediction on ACHUSDT down 0,99790907/0,002090943
+2023-05-16 19:17:35.409 +02:00 [WRN] Call Prediction on LDOUSDT down 0,78115976/0,21884027
+2023-05-16 19:17:35.409 +02:00 [WRN] ----------------ML Updated---------------------
+2023-05-16 19:30:00.177 +02:00 [WRN] New candle save : LTCUSDT
+2023-05-16 19:30:00.177 +02:00 [WRN] New candle save : XRPUSDT
+2023-05-16 19:30:00.177 +02:00 [WRN] New candle save : ETHUSDT
+2023-05-16 19:30:00.177 +02:00 [WRN] New candle save : CELRUSDT
+2023-05-16 19:30:00.177 +02:00 [WRN] New candle save : ICXUSDT
+2023-05-16 19:30:00.177 +02:00 [WRN] New candle save : CFXUSDT
+2023-05-16 19:30:00.177 +02:00 [WRN] New candle save : 1INCHUSDT
+2023-05-16 19:30:00.179 +02:00 [WRN] New candle save : LDOUSDT
+2023-05-16 19:30:00.177 +02:00 [WRN] New candle save : MANAUSDT
+2023-05-16 19:30:00.177 +02:00 [WRN] New candle save : DODOUSDT
+2023-05-16 19:30:00.177 +02:00 [WRN] New candle save : TRXUSDT
+2023-05-16 19:30:00.177 +02:00 [WRN] New candle save : CRVUSDT
+2023-05-16 19:30:00.178 +02:00 [WRN] New candle save : ACHUSDT
+2023-05-16 19:30:00.177 +02:00 [WRN] New candle save : RNDRUSDT
+2023-05-16 19:30:00.187 +02:00 [WRN] New candle save : FXSUSDT
+2023-05-16 19:30:00.187 +02:00 [WRN] New candle save : LQTYUSDT
+2023-05-16 19:30:00.187 +02:00 [WRN] New candle save : WOOUSDT
+2023-05-16 19:31:57.189 +02:00 [WRN] New call at 31 for ExportChart UI
+2023-05-16 19:32:30.057 +02:00 [WRN] Call Prediction on ICXUSDT down 0,99951947/0,00048056632
+2023-05-16 19:32:30.137 +02:00 [WRN] Call Prediction on RNDRUSDT down 0,98890173/0,011098313
+2023-05-16 19:32:30.217 +02:00 [WRN] Call Prediction on DODOUSDT down 0,98941725/0,010582759
+2023-05-16 19:32:30.300 +02:00 [WRN] Call Prediction on LTCUSDT down 0,9999362/6,378539E-05
+2023-05-16 19:32:30.385 +02:00 [WRN] Call Prediction on CELRUSDT down 0,9588909/0,04110905
+2023-05-16 19:32:30.465 +02:00 [WRN] Call Prediction on FXSUSDT down 0,9999311/6,8937785E-05
+2023-05-16 19:32:30.546 +02:00 [WRN] Call Prediction on LQTYUSDT down 0,99892277/0,0010772254
+2023-05-16 19:32:30.644 +02:00 [WRN] Call Prediction on CFXUSDT down 0,91512007/0,08487993
+2023-05-16 19:32:30.724 +02:00 [WRN] Call Prediction on ACHUSDT down 0,9437357/0,05626425
+2023-05-16 19:32:30.795 +02:00 [WRN] Call Prediction on LDOUSDT down 0,7626825/0,23731753
+2023-05-16 19:32:30.796 +02:00 [WRN] ----------------ML Updated---------------------
+2023-05-16 19:45:00.050 +02:00 [WRN] New candle save : LTCUSDT
+2023-05-16 19:45:00.050 +02:00 [WRN] New candle save : ETHUSDT
+2023-05-16 19:45:00.053 +02:00 [WRN] New candle save : ICXUSDT
+2023-05-16 19:45:00.053 +02:00 [WRN] New candle save : XRPUSDT
+2023-05-16 19:45:00.152 +02:00 [WRN] New candle save : TRXUSDT
+2023-05-16 19:45:00.152 +02:00 [WRN] New candle save : 1INCHUSDT
+2023-05-16 19:45:00.154 +02:00 [WRN] New candle save : DODOUSDT
+2023-05-16 19:45:00.156 +02:00 [WRN] New candle save : FXSUSDT
+2023-05-16 19:45:00.156 +02:00 [WRN] New candle save : CELRUSDT
+2023-05-16 19:45:00.156 +02:00 [WRN] New candle save : CRVUSDT
+2023-05-16 19:45:00.156 +02:00 [WRN] New candle save : CFXUSDT
+2023-05-16 19:45:00.158 +02:00 [WRN] New candle save : MANAUSDT
+2023-05-16 19:45:00.159 +02:00 [WRN] New candle save : WOOUSDT
+2023-05-16 19:45:00.160 +02:00 [WRN] New candle save : LQTYUSDT
+2023-05-16 19:45:00.160 +02:00 [WRN] New candle save : ACHUSDT
+2023-05-16 19:45:00.160 +02:00 [WRN] New candle save : LDOUSDT
+2023-05-16 19:45:00.160 +02:00 [WRN] New candle save : RNDRUSDT
+2023-05-16 19:46:57.191 +02:00 [WRN] New call at 46 for ExportChart UI
+2023-05-16 19:47:30.140 +02:00 [WRN] Call Prediction on ICXUSDT down 0,9908922/0,009107786
+2023-05-16 19:47:30.219 +02:00 [WRN] Call Prediction on RNDRUSDT down 0,87552387/0,12447616
+2023-05-16 19:47:30.314 +02:00 [WRN] Call Prediction on DODOUSDT down 0,9866781/0,01332185
+2023-05-16 19:47:30.670 +02:00 [WRN] Call Prediction on LTCUSDT down 0,9999994/6,432934E-07
+2023-05-16 19:47:30.746 +02:00 [WRN] Call Prediction on CELRUSDT down 0,89743686/0,102563106
+2023-05-16 19:47:30.822 +02:00 [WRN] Call Prediction on FXSUSDT down 0,9997985/0,00020148483
+2023-05-16 19:47:30.896 +02:00 [WRN] Call Prediction on LQTYUSDT down 0,98720443/0,012795481
+2023-05-16 19:47:30.971 +02:00 [WRN] Call Prediction on CFXUSDT down 0,8114507/0,18854928
+2023-05-16 19:47:31.052 +02:00 [WRN] Call Prediction on ACHUSDT down 0,62541527/0,37458473
+2023-05-16 19:47:31.123 +02:00 [WRN] Call Prediction on LDOUSDT down 0,66940856/0,33059144
+2023-05-16 19:47:31.124 +02:00 [WRN] ----------------ML Updated---------------------
+2023-05-16 20:00:00.048 +02:00 [WRN] New candle save : ICXUSDT
+2023-05-16 20:00:00.050 +02:00 [WRN] New candle save : LTCUSDT
+2023-05-16 20:00:00.050 +02:00 [WRN] New candle save : ETHUSDT
+2023-05-16 20:00:00.054 +02:00 [WRN] New candle save : TRXUSDT
+2023-05-16 20:00:00.055 +02:00 [WRN] New candle save : XRPUSDT
+2023-05-16 20:00:00.059 +02:00 [WRN] New candle save : CELRUSDT
+2023-05-16 20:00:00.060 +02:00 [WRN] New candle save : DODOUSDT
+2023-05-16 20:00:00.060 +02:00 [WRN] New candle save : 1INCHUSDT
+2023-05-16 20:00:00.191 +02:00 [WRN] New candle save : CFXUSDT
+2023-05-16 20:00:00.193 +02:00 [WRN] New candle save : ACHUSDT
+2023-05-16 20:00:00.193 +02:00 [WRN] New candle save : CRVUSDT
+2023-05-16 20:00:00.194 +02:00 [WRN] New candle save : WOOUSDT
+2023-05-16 20:00:00.194 +02:00 [WRN] New candle save : LDOUSDT
+2023-05-16 20:00:00.194 +02:00 [WRN] New candle save : FXSUSDT
+2023-05-16 20:00:00.195 +02:00 [WRN] New candle save : MANAUSDT
+2023-05-16 20:00:00.194 +02:00 [WRN] New candle save : RNDRUSDT
+2023-05-16 20:00:00.195 +02:00 [WRN] New candle save : LQTYUSDT
+2023-05-16 20:01:57.196 +02:00 [WRN] New call at 1 for ExportChart UI
+2023-05-16 20:02:30.325 +02:00 [WRN] Call Prediction on ICXUSDT down 0,9914812/0,008518815
+2023-05-16 20:02:30.409 +02:00 [WRN] Call Prediction on RNDRUSDT down 0,6928026/0,30719733
+2023-05-16 20:02:30.490 +02:00 [WRN] Call Prediction on DODOUSDT down 0,9812506/0,01874946
+2023-05-16 20:02:30.570 +02:00 [WRN] Call Prediction on LTCUSDT down 0,9999964/3,6219865E-06
+2023-05-16 20:02:30.652 +02:00 [WRN] Call Prediction on CELRUSDT down 0,9352395/0,06476052
+2023-05-16 20:02:30.736 +02:00 [WRN] Call Prediction on FXSUSDT down 0,99912804/0,00087191333
+2023-05-16 20:02:30.813 +02:00 [WRN] Call Prediction on LQTYUSDT down 0,7941442/0,20585577
+2023-05-16 20:02:30.885 +02:00 [WRN] Call Prediction on CFXUSDT down 0,93368655/0,06631344
+2023-05-16 20:02:30.958 +02:00 [WRN] Call Prediction on ACHUSDT down 0,7321943/0,26780576
+2023-05-16 20:02:31.031 +02:00 [WRN] Call Prediction on LDOUSDT down 0,8848819/0,11511812
+2023-05-16 20:02:31.031 +02:00 [WRN] ----------------ML Updated---------------------
+2023-05-16 20:15:00.093 +02:00 [WRN] New candle save : LTCUSDT
+2023-05-16 20:15:00.093 +02:00 [WRN] New candle save : ICXUSDT
+2023-05-16 20:15:00.093 +02:00 [WRN] New candle save : ETHUSDT
+2023-05-16 20:15:00.099 +02:00 [WRN] New candle save : 1INCHUSDT
+2023-05-16 20:15:00.099 +02:00 [WRN] New candle save : XRPUSDT
+2023-05-16 20:15:00.099 +02:00 [WRN] New candle save : DODOUSDT
+2023-05-16 20:15:00.126 +02:00 [WRN] New candle save : CFXUSDT
+2023-05-16 20:15:00.171 +02:00 [WRN] New candle save : MANAUSDT
+2023-05-16 20:15:00.171 +02:00 [WRN] New candle save : RNDRUSDT
+2023-05-16 20:15:00.172 +02:00 [WRN] New candle save : LQTYUSDT
+2023-05-16 20:15:00.172 +02:00 [WRN] New candle save : CRVUSDT
+2023-05-16 20:15:00.173 +02:00 [WRN] New candle save : FXSUSDT
+2023-05-16 20:15:00.174 +02:00 [WRN] New candle save : LDOUSDT
+2023-05-16 20:15:00.175 +02:00 [WRN] New candle save : GNSUSDT
+2023-05-16 20:15:00.174 +02:00 [WRN] New candle save : WOOUSDT
+2023-05-16 20:15:00.317 +02:00 [WRN] New candle save : CELRUSDT
+2023-05-16 20:15:02.979 +02:00 [WRN] New candle save : TRXUSDT
+2023-05-16 20:15:13.081 +02:00 [WRN] New candle save : ACHUSDT
+2023-05-16 20:16:57.245 +02:00 [WRN] New call at 16 for ExportChart UI
+2023-05-16 20:17:30.375 +02:00 [WRN] Call Prediction on ICXUSDT down 0,99917656/0,0008233574
+2023-05-16 20:17:30.455 +02:00 [WRN] Call Prediction on RNDRUSDT down 0,9752226/0,0247774
+2023-05-16 20:17:30.534 +02:00 [WRN] Call Prediction on DODOUSDT down 0,99304503/0,006954934
+2023-05-16 20:17:30.617 +02:00 [WRN] Call Prediction on LTCUSDT down 0,9999974/2,5782408E-06
+2023-05-16 20:17:30.698 +02:00 [WRN] Call Prediction on FXSUSDT down 0,9999912/8,816028E-06
+2023-05-16 20:17:30.780 +02:00 [WRN] Call Prediction on LQTYUSDT down 0,98709923/0,0129007725
+2023-05-16 20:17:30.863 +02:00 [WRN] Call Prediction on CFXUSDT down 0,98848045/0,011519523
+2023-05-16 20:17:30.945 +02:00 [WRN] Call Prediction on GNSUSDT down 0,8869792/0,11302079
+2023-05-16 20:17:31.147 +02:00 [WRN] Call Prediction on ACHUSDT up 0,26497853/0,7350215
+2023-05-16 20:17:31.221 +02:00 [WRN] Call Prediction on LDOUSDT down 0,9895466/0,010453379
+2023-05-16 20:17:31.221 +02:00 [WRN] ----------------ML Updated---------------------
+2023-05-16 20:17:31.954 +02:00 [WRN] BuyFack on ACHUSDT
+2023-05-16 20:17:33.343 +02:00 [WRN] Get Account OK
+2023-05-16 20:18:23.200 +02:00 [ERR] THE SIGNAL CLIENT IS DISCONNECTED
+2023-05-16 20:18:24.643 +02:00 [WRN] Get Account OK
+2023-05-16 20:30:00.108 +02:00 [WRN] New candle save : ICXUSDT
+2023-05-16 20:30:00.110 +02:00 [WRN] New candle save : LTCUSDT
+2023-05-16 20:30:00.110 +02:00 [WRN] New candle save : ETHUSDT
+2023-05-16 20:30:00.114 +02:00 [WRN] New candle save : TRXUSDT
+2023-05-16 20:30:00.114 +02:00 [WRN] New candle save : XRPUSDT
+2023-05-16 20:30:00.115 +02:00 [WRN] New candle save : DODOUSDT
+2023-05-16 20:30:00.116 +02:00 [WRN] New candle save : 1INCHUSDT
+2023-05-16 20:30:00.117 +02:00 [WRN] New candle save : CELRUSDT
+2023-05-16 20:30:00.121 +02:00 [WRN] New candle save : CRVUSDT
+2023-05-16 20:30:00.121 +02:00 [WRN] New candle save : CFXUSDT
+2023-05-16 20:30:00.123 +02:00 [WRN] New candle save : MANAUSDT
+2023-05-16 20:30:00.178 +02:00 [WRN] New candle save : FXSUSDT
+2023-05-16 20:30:00.180 +02:00 [WRN] New candle save : GNSUSDT
+2023-05-16 20:30:00.180 +02:00 [WRN] New candle save : WOOUSDT
+2023-05-16 20:30:00.180 +02:00 [WRN] New candle save : LDOUSDT
+2023-05-16 20:30:00.181 +02:00 [WRN] New candle save : RNDRUSDT
+2023-05-16 20:30:00.203 +02:00 [WRN] New candle save : ACHUSDT
+2023-05-16 20:30:00.203 +02:00 [WRN] New candle save : LQTYUSDT
+2023-05-16 20:31:57.264 +02:00 [WRN] New call at 31 for ExportChart UI
+2023-05-16 20:32:28.313 +02:00 [WRN] Call Prediction on ICXUSDT down 0,9857685/0,014231535
+2023-05-16 20:32:28.403 +02:00 [WRN] Call Prediction on RNDRUSDT down 0,61922586/0,3807742
+2023-05-16 20:32:28.492 +02:00 [WRN] Call Prediction on LTCUSDT down 0,9999963/3,7039101E-06
+2023-05-16 20:32:28.585 +02:00 [WRN] Call Prediction on FXSUSDT down 0,999448/0,000552051
+2023-05-16 20:32:28.783 +02:00 [WRN] Call Prediction on LQTYUSDT down 0,9903058/0,009694183
+2023-05-16 20:32:28.872 +02:00 [WRN] Call Prediction on CFXUSDT down 0,99838674/0,0016132356
+2023-05-16 20:32:28.951 +02:00 [WRN] Call Prediction on GNSUSDT down 0,9267354/0,07326457
+2023-05-16 20:32:29.035 +02:00 [WRN] Call Prediction on ACHUSDT down 0,7412652/0,25873482
+2023-05-16 20:32:29.120 +02:00 [WRN] Call Prediction on LDOUSDT down 0,990393/0,0096069975
+2023-05-16 20:32:29.120 +02:00 [WRN] ----------------ML Updated---------------------
+2023-05-16 20:32:29.936 +02:00 [WRN] SellFack on ACHUSDT
+2023-05-16 20:32:36.594 +02:00 [WRN] Get Account OK
+2023-05-16 20:45:00.203 +02:00 [WRN] New candle save : ETHUSDT
+2023-05-16 20:45:00.206 +02:00 [WRN] New candle save : ICXUSDT
+2023-05-16 20:45:00.206 +02:00 [WRN] New candle save : 1INCHUSDT
+2023-05-16 20:45:00.206 +02:00 [WRN] New candle save : CFXUSDT
+2023-05-16 20:45:00.206 +02:00 [WRN] New candle save : CELRUSDT
+2023-05-16 20:45:00.206 +02:00 [WRN] New candle save : TRXUSDT
+2023-05-16 20:45:00.207 +02:00 [WRN] New candle save : ALICEUSDT
+2023-05-16 20:45:00.207 +02:00 [WRN] New candle save : MANAUSDT
+2023-05-16 20:45:00.208 +02:00 [WRN] New candle save : CRVUSDT
+2023-05-16 20:45:00.209 +02:00 [WRN] New candle save : DODOUSDT
+2023-05-16 20:45:00.209 +02:00 [WRN] New candle save : XRPUSDT
+2023-05-16 20:45:00.208 +02:00 [WRN] New candle save : LTCUSDT
+2023-05-16 20:45:00.240 +02:00 [WRN] New candle save : FXSUSDT
+2023-05-16 20:45:00.240 +02:00 [WRN] New candle save : ACHUSDT
+2023-05-16 20:45:00.240 +02:00 [WRN] New candle save : LDOUSDT
+2023-05-16 20:45:00.241 +02:00 [WRN] New candle save : GNSUSDT
+2023-05-16 20:45:00.242 +02:00 [WRN] New candle save : WOOUSDT
+2023-05-16 20:45:00.242 +02:00 [WRN] New candle save : LQTYUSDT
+2023-05-16 20:45:00.264 +02:00 [WRN] New candle save : RNDRUSDT
+2023-05-16 20:46:57.283 +02:00 [WRN] New call at 46 for ExportChart UI
+2023-05-16 20:47:30.167 +02:00 [WRN] Call Prediction on ICXUSDT down 0,9984072/0,0015928419
+2023-05-16 20:47:30.252 +02:00 [WRN] Call Prediction on RNDRUSDT down 0,9126082/0,08739183
+2023-05-16 20:47:30.339 +02:00 [WRN] Call Prediction on LTCUSDT down 0,9999964/3,5842163E-06
+2023-05-16 20:47:30.423 +02:00 [WRN] Call Prediction on CELRUSDT down 0,998944/0,0010560227
+2023-05-16 20:47:30.506 +02:00 [WRN] Call Prediction on FXSUSDT down 0,99770844/0,002291485
+2023-05-16 20:47:30.589 +02:00 [WRN] Call Prediction on LQTYUSDT down 0,9987618/0,0012381915
+2023-05-16 20:47:30.703 +02:00 [WRN] Call Prediction on CFXUSDT down 0,9978467/0,0021532623
+2023-05-16 20:47:30.903 +02:00 [WRN] Call Prediction on GNSUSDT down 0,9845532/0,015446814
+2023-05-16 20:47:31.059 +02:00 [WRN] Call Prediction on ACHUSDT down 0,9868464/0,013153623
+2023-05-16 20:47:31.137 +02:00 [WRN] Call Prediction on LDOUSDT down 0,9993375/0,0006625111
+2023-05-16 20:47:31.138 +02:00 [WRN] ----------------ML Updated---------------------
+2023-05-16 21:00:00.135 +02:00 [WRN] New candle save : ICXUSDT
+2023-05-16 21:00:00.135 +02:00 [WRN] New candle save : LTCUSDT
+2023-05-16 21:00:00.135 +02:00 [WRN] New candle save : ETHUSDT
+2023-05-16 21:00:00.188 +02:00 [WRN] New candle save : XRPUSDT
+2023-05-16 21:00:00.232 +02:00 [WRN] New candle save : DODOUSDT
+2023-05-16 21:00:00.259 +02:00 [WRN] New candle save : MANAUSDT
+2023-05-16 21:00:00.261 +02:00 [WRN] New candle save : TRXUSDT
+2023-05-16 21:00:00.262 +02:00 [WRN] New candle save : 1INCHUSDT
+2023-05-16 21:00:00.262 +02:00 [WRN] New candle save : ALICEUSDT
+2023-05-16 21:00:00.263 +02:00 [WRN] New candle save : CELRUSDT
+2023-05-16 21:00:00.265 +02:00 [WRN] New candle save : FXSUSDT
+2023-05-16 21:00:00.265 +02:00 [WRN] New candle save : CRVUSDT
+2023-05-16 21:00:00.265 +02:00 [WRN] New candle save : RNDRUSDT
+2023-05-16 21:00:00.266 +02:00 [WRN] New candle save : ACHUSDT
+2023-05-16 21:00:00.266 +02:00 [WRN] New candle save : WOOUSDT
+2023-05-16 21:00:00.266 +02:00 [WRN] New candle save : LDOUSDT
+2023-05-16 21:00:00.288 +02:00 [WRN] New candle save : GNSUSDT
+2023-05-16 21:00:00.289 +02:00 [WRN] New candle save : LQTYUSDT
+2023-05-16 21:00:00.289 +02:00 [WRN] New candle save : CFXUSDT
+2023-05-16 21:01:57.299 +02:00 [WRN] New call at 1 for ExportChart UI
+2023-05-16 21:02:30.230 +02:00 [WRN] Call Prediction on ICXUSDT down 0,99408793/0,005912038
+2023-05-16 21:02:30.314 +02:00 [WRN] Call Prediction on RNDRUSDT down 0,9854798/0,01452024
+2023-05-16 21:02:30.399 +02:00 [WRN] Call Prediction on DODOUSDT down 0,9972332/0,0027667745
+2023-05-16 21:02:30.486 +02:00 [WRN] Call Prediction on LTCUSDT down 0,9999964/3,5378132E-06
+2023-05-16 21:02:30.569 +02:00 [WRN] Call Prediction on CELRUSDT down 0,9808631/0,019136863
+2023-05-16 21:02:30.660 +02:00 [WRN] Call Prediction on FXSUSDT down 0,9979668/0,0020331908
+2023-05-16 21:02:30.742 +02:00 [WRN] Call Prediction on LQTYUSDT down 0,99870634/0,001293668
+2023-05-16 21:02:30.843 +02:00 [WRN] Call Prediction on CFXUSDT down 0,9972589/0,0027410223
+2023-05-16 21:02:30.927 +02:00 [WRN] Call Prediction on ACHUSDT down 0,9989422/0,0010578069
+2023-05-16 21:02:31.011 +02:00 [WRN] Call Prediction on LDOUSDT down 0,9993747/0,0006253303
+2023-05-16 21:02:31.011 +02:00 [WRN] ----------------ML Updated---------------------
+2023-05-16 21:15:00.196 +02:00 [WRN] New candle save : ICXUSDT
+2023-05-16 21:15:00.197 +02:00 [WRN] New candle save : CFXUSDT
+2023-05-16 21:15:00.198 +02:00 [WRN] New candle save : ALICEUSDT
+2023-05-16 21:15:00.198 +02:00 [WRN] New candle save : ACHUSDT
+2023-05-16 21:15:00.198 +02:00 [WRN] New candle save : XRPUSDT
+2023-05-16 21:15:00.198 +02:00 [WRN] New candle save : TRXUSDT
+2023-05-16 21:15:00.198 +02:00 [WRN] New candle save : 1INCHUSDT
+2023-05-16 21:15:00.198 +02:00 [WRN] New candle save : DODOUSDT
+2023-05-16 21:15:00.198 +02:00 [WRN] New candle save : CELRUSDT
+2023-05-16 21:15:00.199 +02:00 [WRN] New candle save : ETHUSDT
+2023-05-16 21:15:00.199 +02:00 [WRN] New candle save : LTCUSDT
+2023-05-16 21:15:00.249 +02:00 [WRN] New candle save : MANAUSDT
+2023-05-16 21:15:00.369 +02:00 [WRN] New candle save : RNDRUSDT
+2023-05-16 21:15:00.369 +02:00 [WRN] New candle save : LDOUSDT
+2023-05-16 21:15:00.373 +02:00 [WRN] New candle save : FXSUSDT
+2023-05-16 21:15:00.422 +02:00 [WRN] New candle save : WOOUSDT
+2023-05-16 21:15:00.443 +02:00 [WRN] New candle save : LQTYUSDT
+2023-05-16 21:15:00.518 +02:00 [WRN] New candle save : GNSUSDT
+2023-05-16 21:15:00.544 +02:00 [WRN] New candle save : CRVUSDT
+2023-05-16 21:16:57.294 +02:00 [WRN] New call at 16 for ExportChart UI
+2023-05-16 21:22:09.363 +02:00 [WRN] Call Prediction on ICXUSDT down 0,9931613/0,006838642
+2023-05-16 21:22:09.443 +02:00 [WRN] Call Prediction on RNDRUSDT down 0,9777529/0,022247048
+2023-05-16 21:22:09.520 +02:00 [WRN] Call Prediction on LTCUSDT down 0,999509/0,0004909687
+2023-05-16 21:22:09.599 +02:00 [WRN] Call Prediction on CELRUSDT down 0,9963117/0,003688284
+2023-05-16 21:22:09.682 +02:00 [WRN] Call Prediction on FXSUSDT down 0,9055422/0,09445784
+2023-05-16 21:22:09.767 +02:00 [WRN] Call Prediction on LQTYUSDT down 0,99943215/0,0005678445
+2023-05-16 21:22:09.852 +02:00 [WRN] Call Prediction on CFXUSDT down 0,9991009/0,00089906855
+2023-05-16 21:22:09.960 +02:00 [WRN] Call Prediction on GNSUSDT down 0,9898705/0,010129508
+2023-05-16 21:22:10.043 +02:00 [WRN] Call Prediction on ACHUSDT down 0,999833/0,00016700162
+2023-05-16 21:22:10.120 +02:00 [WRN] Call Prediction on LDOUSDT down 0,99955434/0,00044567275
+2023-05-16 21:22:10.120 +02:00 [WRN] ----------------ML Updated---------------------
+2023-05-16 21:30:00.214 +02:00 [WRN] New candle save : XRPUSDT
+2023-05-16 21:30:00.214 +02:00 [WRN] New candle save : DODOUSDT
+2023-05-16 21:30:00.216 +02:00 [WRN] New candle save : ICXUSDT
+2023-05-16 21:30:00.216 +02:00 [WRN] New candle save : ACHUSDT
+2023-05-16 21:30:00.215 +02:00 [WRN] New candle save : 1INCHUSDT
+2023-05-16 21:30:00.216 +02:00 [WRN] New candle save : LTCUSDT
+2023-05-16 21:30:00.216 +02:00 [WRN] New candle save : LDOUSDT
+2023-05-16 21:30:00.216 +02:00 [WRN] New candle save : TRXUSDT
+2023-05-16 21:30:00.238 +02:00 [WRN] New candle save : CELRUSDT
+2023-05-16 21:30:00.217 +02:00 [WRN] New candle save : CRVUSDT
+2023-05-16 21:30:00.238 +02:00 [WRN] New candle save : CFXUSDT
+2023-05-16 21:30:00.239 +02:00 [WRN] New candle save : MANAUSDT
+2023-05-16 21:30:00.217 +02:00 [WRN] New candle save : ALICEUSDT
+2023-05-16 21:30:00.240 +02:00 [WRN] New candle save : RNDRUSDT
+2023-05-16 21:30:00.240 +02:00 [WRN] New candle save : FXSUSDT
+2023-05-16 21:30:00.366 +02:00 [WRN] New candle save : ETHUSDT
+2023-05-16 21:30:00.367 +02:00 [WRN] New candle save : GNSUSDT
+2023-05-16 21:30:00.391 +02:00 [WRN] New candle save : WOOUSDT
+2023-05-16 21:30:00.392 +02:00 [WRN] New candle save : LQTYUSDT
+2023-05-16 21:31:57.306 +02:00 [WRN] New call at 31 for ExportChart UI
+2023-05-16 21:32:30.652 +02:00 [WRN] Call Prediction on ICXUSDT down 0,987456/0,012544
+2023-05-16 21:32:30.737 +02:00 [WRN] Call Prediction on RNDRUSDT down 0,981094/0,01890596
+2023-05-16 21:32:30.823 +02:00 [WRN] Call Prediction on LTCUSDT down 0,99165946/0,008340549
+2023-05-16 21:32:30.931 +02:00 [WRN] Call Prediction on CELRUSDT down 0,995411/0,004588984
+2023-05-16 21:32:31.019 +02:00 [WRN] Call Prediction on FXSUSDT down 0,9764246/0,023575392
+2023-05-16 21:32:31.100 +02:00 [WRN] Call Prediction on LQTYUSDT down 0,9987998/0,0012002193
+2023-05-16 21:32:31.182 +02:00 [WRN] Call Prediction on CFXUSDT down 0,98564494/0,014355033
+2023-05-16 21:32:31.263 +02:00 [WRN] Call Prediction on GNSUSDT down 0,99771404/0,0022859832
+2023-05-16 21:32:31.341 +02:00 [WRN] Call Prediction on ACHUSDT down 0,99991524/8,472697E-05
+2023-05-16 21:32:31.427 +02:00 [WRN] Call Prediction on LDOUSDT down 0,96812695/0,03187303
+2023-05-16 21:32:31.427 +02:00 [WRN] ----------------ML Updated---------------------
+2023-05-16 21:45:00.116 +02:00 [WRN] New candle save : ICXUSDT
+2023-05-16 21:45:00.119 +02:00 [WRN] New candle save : LTCUSDT
+2023-05-16 21:45:00.121 +02:00 [WRN] New candle save : ETHUSDT
+2023-05-16 21:45:00.124 +02:00 [WRN] New candle save : XRPUSDT
+2023-05-16 21:45:00.125 +02:00 [WRN] New candle save : DODOUSDT
+2023-05-16 21:45:00.126 +02:00 [WRN] New candle save : 1INCHUSDT
+2023-05-16 21:45:00.126 +02:00 [WRN] New candle save : ALGOUSDT
+2023-05-16 21:45:00.128 +02:00 [WRN] New candle save : TRXUSDT
+2023-05-16 21:45:00.157 +02:00 [WRN] New candle save : CFXUSDT
+2023-05-16 21:45:00.159 +02:00 [WRN] New candle save : CRVUSDT
+2023-05-16 21:45:00.159 +02:00 [WRN] New candle save : MANAUSDT
+2023-05-16 21:45:00.159 +02:00 [WRN] New candle save : ALICEUSDT
+2023-05-16 21:45:00.160 +02:00 [WRN] New candle save : FXSUSDT
+2023-05-16 21:45:00.159 +02:00 [WRN] New candle save : CELRUSDT
+2023-05-16 21:45:00.161 +02:00 [WRN] New candle save : GNSUSDT
+2023-05-16 21:45:00.161 +02:00 [WRN] New candle save : WOOUSDT
+2023-05-16 21:45:00.189 +02:00 [WRN] New candle save : LQTYUSDT
+2023-05-16 21:45:00.189 +02:00 [WRN] New candle save : ACHUSDT
+2023-05-16 21:45:00.189 +02:00 [WRN] New candle save : RNDRUSDT
+2023-05-16 21:45:00.190 +02:00 [WRN] New candle save : LDOUSDT
+2023-05-16 21:46:57.301 +02:00 [WRN] New call at 46 for ExportChart UI
+2023-05-16 21:47:30.652 +02:00 [WRN] Call Prediction on ICXUSDT down 0,991803/0,008196996
+2023-05-16 21:47:30.740 +02:00 [WRN] Call Prediction on RNDRUSDT down 0,99949944/0,00050055434
+2023-05-16 21:47:30.850 +02:00 [WRN] Call Prediction on LTCUSDT down 0,9593943/0,040605735
+2023-05-16 21:47:31.141 +02:00 [WRN] Call Prediction on ALGOUSDT down 0,9656226/0,034377344
+2023-05-16 21:47:31.230 +02:00 [WRN] Call Prediction on CELRUSDT down 0,991791/0,008209041
+2023-05-16 21:47:31.314 +02:00 [WRN] Call Prediction on FXSUSDT down 0,9797196/0,020280393
+2023-05-16 21:47:31.425 +02:00 [WRN] Call Prediction on LQTYUSDT down 0,9998611/0,00013891098
+2023-05-16 21:47:31.586 +02:00 [WRN] Call Prediction on CFXUSDT down 0,99381375/0,00618622
+2023-05-16 21:47:31.670 +02:00 [WRN] Call Prediction on ACHUSDT down 0,99999213/7,919294E-06
+2023-05-16 21:47:31.780 +02:00 [WRN] Call Prediction on LDOUSDT down 0,9859153/0,014084681
+2023-05-16 21:47:31.780 +02:00 [WRN] ----------------ML Updated---------------------
+2023-05-16 22:00:00.149 +02:00 [WRN] New candle save : ICXUSDT
+2023-05-16 22:00:00.150 +02:00 [WRN] New candle save : LTCUSDT
+2023-05-16 22:00:00.150 +02:00 [WRN] New candle save : CELRUSDT
+2023-05-16 22:00:00.150 +02:00 [WRN] New candle save : TRUUSDT
+2023-05-16 22:00:00.150 +02:00 [WRN] New candle save : DODOUSDT
+2023-05-16 22:00:00.149 +02:00 [WRN] New candle save : TRXUSDT
+2023-05-16 22:00:00.150 +02:00 [WRN] New candle save : ALGOUSDT
+2023-05-16 22:00:00.150 +02:00 [WRN] New candle save : XRPUSDT
+2023-05-16 22:00:00.150 +02:00 [WRN] New candle save : CRVUSDT
+2023-05-16 22:00:00.150 +02:00 [WRN] New candle save : 1INCHUSDT
+2023-05-16 22:00:00.191 +02:00 [WRN] New candle save : ETHUSDT
+2023-05-16 22:00:00.194 +02:00 [WRN] New candle save : MANAUSDT
+2023-05-16 22:00:00.202 +02:00 [WRN] New candle save : FXSUSDT
+2023-05-16 22:00:00.202 +02:00 [WRN] New candle save : ALICEUSDT
+2023-05-16 22:00:00.229 +02:00 [WRN] New candle save : CFXUSDT
+2023-05-16 22:00:00.263 +02:00 [WRN] New candle save : WOOUSDT
+2023-05-16 22:00:00.263 +02:00 [WRN] New candle save : GNSUSDT
+2023-05-16 22:00:00.263 +02:00 [WRN] New candle save : ACHUSDT
+2023-05-16 22:00:00.264 +02:00 [WRN] New candle save : LDOUSDT
+2023-05-16 22:00:00.264 +02:00 [WRN] New candle save : RNDRUSDT
+2023-05-16 22:00:00.264 +02:00 [WRN] New candle save : JOEUSDT
+2023-05-16 22:00:00.265 +02:00 [WRN] New candle save : LQTYUSDT
+2023-05-16 22:01:57.308 +02:00 [WRN] New call at 1 for ExportChart UI
+2023-05-16 22:02:32.591 +02:00 [ERR] An exception occurred while iterating over the results of a query for context type 'MarginCoin.Model.ApplicationDbContext'.
+Microsoft.Data.Sqlite.SqliteException (0x80004005): SQLite Error 1: 'Input string was not in a correct format.'.
+   at Microsoft.Data.Sqlite.SqliteException.ThrowExceptionForRC(Int32 rc, sqlite3 db)
+   at Microsoft.Data.Sqlite.SqliteDataRecord.Read()
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.Enumerator.MoveNext()
+Microsoft.Data.Sqlite.SqliteException (0x80004005): SQLite Error 1: 'Input string was not in a correct format.'.
+   at Microsoft.Data.Sqlite.SqliteException.ThrowExceptionForRC(Int32 rc, sqlite3 db)
+   at Microsoft.Data.Sqlite.SqliteDataRecord.Read()
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.Enumerator.MoveNext()
+2023-05-16 22:22:13.157 +02:00 [WRN] MarginCoin, started!
+2023-05-16 22:22:27.976 +02:00 [WRN] Get Account OK
+2023-05-16 22:22:30.259 +02:00 [WRN] Start trading market...
+2023-05-16 22:23:30.365 +02:00 [WRN] Initial call for ExportChart UI
+2023-05-16 22:24:09.059 +02:00 [WRN] Call Prediction on CELOUSDT up 0,251613/0,74838704
+2023-05-16 22:24:09.155 +02:00 [WRN] Call Prediction on ICXUSDT down 0,5783416/0,42165834
+2023-05-16 22:24:09.250 +02:00 [WRN] Call Prediction on RNDRUSDT down 0,9981018/0,0018982277
+2023-05-16 22:24:09.345 +02:00 [WRN] Call Prediction on ANTUSDT down 0,9999881/1,1928379E-05
+2023-05-16 22:24:09.441 +02:00 [WRN] Call Prediction on DASHUSDT down 0,9999647/3,5228353E-05
+2023-05-16 22:24:09.545 +02:00 [WRN] Call Prediction on COCOSUSDT down 0,999843/0,00015698894
+2023-05-16 22:24:09.650 +02:00 [WRN] Call Prediction on LQTYUSDT down 0,9966594/0,0033406024
+2023-05-16 22:24:09.736 +02:00 [WRN] Call Prediction on CFXUSDT down 0,58678913/0,41321084
+2023-05-16 22:24:09.834 +02:00 [WRN] Call Prediction on ACHUSDT down 0,99942493/0,00057513255
+2023-05-16 22:24:09.939 +02:00 [WRN] Call Prediction on LDOUSDT down 0,9970595/0,0029404617
+2023-05-16 22:24:09.939 +02:00 [WRN] ----------------ML Updated---------------------
+2023-05-16 22:30:00.185 +02:00 [WRN] New candle save : COCOSUSDT
+2023-05-16 22:30:00.185 +02:00 [WRN] New candle save : CELOUSDT
+2023-05-16 22:30:00.185 +02:00 [WRN] New candle save : ICXUSDT
+2023-05-16 22:30:00.185 +02:00 [WRN] New candle save : LDOUSDT
+2023-05-16 22:30:00.185 +02:00 [WRN] New candle save : DASHUSDT
+2023-05-16 22:30:00.186 +02:00 [WRN] New candle save : ANTUSDT
+2023-05-16 22:30:00.186 +02:00 [WRN] New candle save : RNDRUSDT
+2023-05-16 22:30:00.187 +02:00 [WRN] New candle save : LTCUSDT
+2023-05-16 22:30:00.188 +02:00 [WRN] New candle save : LQTYUSDT
+2023-05-16 22:30:00.188 +02:00 [WRN] New candle save : CFXUSDT
+2023-05-16 22:30:00.188 +02:00 [WRN] New candle save : ACHUSDT
+2023-05-16 22:30:00.188 +02:00 [WRN] New candle save : FXSUSDT
+2023-05-16 22:37:15.029 +02:00 [WRN] Watchdog restart websockets
+2023-05-16 22:37:35.085 +02:00 [WRN] Start trading market...
+2023-05-16 22:37:35.088 +02:00 [WRN] Whatchdog kill all websock and restart it
+2023-05-16 22:38:29.817 +02:00 [WRN] MarginCoin, started!
+2023-05-16 22:38:39.403 +02:00 [WRN] Get Account OK
+2023-05-16 22:39:08.224 +02:00 [ERR] THE SIGNAL CLIENT IS DISCONNECTED
+2023-05-16 22:39:59.006 +02:00 [WRN] MarginCoin, started!
+2023-05-16 22:40:13.858 +02:00 [WRN] Get Account OK
+2023-05-16 22:40:16.979 +02:00 [WRN] Start trading market...
+2023-05-16 22:41:16.985 +02:00 [WRN] Initial call for ExportChart UI
+2023-05-16 22:41:54.083 +02:00 [WRN] Call Prediction on CELOUSDT up 0,025311904/0,97468805
+2023-05-16 22:41:54.157 +02:00 [WRN] Call Prediction on ICXUSDT up 0,1619411/0,83805895
+2023-05-16 22:41:54.230 +02:00 [WRN] Call Prediction on RNDRUSDT down 0,9987684/0,0012315513
+2023-05-16 22:41:54.308 +02:00 [WRN] Call Prediction on LTCUSDT down 0,9917099/0,008290117
+2023-05-16 22:41:54.385 +02:00 [WRN] Call Prediction on DASHUSDT down 0,9993624/0,00063759496
+2023-05-16 22:41:54.458 +02:00 [WRN] Call Prediction on COCOSUSDT down 0,99889/0,0011100688
+2023-05-16 22:41:54.531 +02:00 [WRN] Call Prediction on LQTYUSDT down 0,99847/0,0015300268
+2023-05-16 22:41:54.601 +02:00 [WRN] Call Prediction on CFXUSDT down 0,76737463/0,23262537
+2023-05-16 22:41:54.672 +02:00 [WRN] Call Prediction on ACHUSDT down 0,9997403/0,0002596737
+2023-05-16 22:41:54.745 +02:00 [WRN] Call Prediction on LDOUSDT down 0,99759775/0,002402214
+2023-05-16 22:41:54.746 +02:00 [WRN] ----------------ML Updated---------------------
+2023-05-16 22:45:00.046 +02:00 [WRN] New candle save : CELRUSDT
+2023-05-16 22:45:00.046 +02:00 [WRN] New candle save : LTCUSDT
+2023-05-16 22:45:00.052 +02:00 [WRN] New candle save : DENTUSDT
+2023-05-16 22:45:00.052 +02:00 [WRN] New candle save : DASHUSDT
+2023-05-16 22:45:00.139 +02:00 [WRN] New candle save : DODOUSDT
+2023-05-16 22:45:00.214 +02:00 [WRN] New candle save : ICXUSDT
+2023-05-16 22:45:00.218 +02:00 [WRN] New candle save : FXSUSDT
+2023-05-16 22:45:00.219 +02:00 [WRN] New candle save : COTIUSDT
+2023-05-16 22:45:00.219 +02:00 [WRN] New candle save : ACHUSDT
+2023-05-16 22:45:00.219 +02:00 [WRN] New candle save : TRUUSDT
+2023-05-16 22:45:00.220 +02:00 [WRN] New candle save : CELOUSDT
+2023-05-16 22:45:00.221 +02:00 [WRN] New candle save : COCOSUSDT
+2023-05-16 22:45:00.221 +02:00 [WRN] New candle save : LQTYUSDT
+2023-05-16 22:45:00.222 +02:00 [WRN] New candle save : JOEUSDT
+2023-05-16 22:45:00.223 +02:00 [WRN] New candle save : RNDRUSDT
+2023-05-16 22:45:00.224 +02:00 [WRN] New candle save : ANTUSDT
+2023-05-16 22:45:00.225 +02:00 [WRN] New candle save : LDOUSDT
+2023-05-16 22:45:00.225 +02:00 [WRN] New candle save : CFXUSDT
+2023-05-16 22:46:11.616 +02:00 [WRN] BuyFack on ICXUSDT
+2023-05-16 22:46:12.997 +02:00 [WRN] Get Account OK
+2023-05-16 22:56:16.987 +02:00 [WRN] New call at 56 for ExportChart UI
+2023-05-16 22:56:46.749 +02:00 [WRN] Call Prediction on CELOUSDT up 0,026948452/0,9730515
+2023-05-16 22:56:46.829 +02:00 [WRN] Call Prediction on ICXUSDT up 0,41665095/0,58334905
+2023-05-16 22:56:46.908 +02:00 [WRN] Call Prediction on RNDRUSDT down 0,995413/0,0045870156
+2023-05-16 22:56:46.988 +02:00 [WRN] Call Prediction on LTCUSDT down 0,99034846/0,009651483
+2023-05-16 22:56:47.066 +02:00 [WRN] Call Prediction on COCOSUSDT down 0,99958545/0,00041457548
+2023-05-16 22:56:47.149 +02:00 [WRN] Call Prediction on LQTYUSDT down 0,99879515/0,0012048107
+2023-05-16 22:56:47.229 +02:00 [WRN] Call Prediction on CFXUSDT down 0,6515927/0,3484073
+2023-05-16 22:56:47.305 +02:00 [WRN] Call Prediction on ACHUSDT down 0,9999765/2,3481838E-05
+2023-05-16 22:56:47.495 +02:00 [WRN] Call Prediction on LDOUSDT down 0,9985532/0,0014467562
+2023-05-16 22:56:47.496 +02:00 [WRN] ----------------ML Updated---------------------
+2023-05-16 23:00:00.034 +02:00 [WRN] New candle save : LTCUSDT
+2023-05-16 23:00:00.037 +02:00 [WRN] New candle save : CELRUSDT
+2023-05-16 23:00:00.041 +02:00 [WRN] New candle save : DASHUSDT
+2023-05-16 23:00:00.042 +02:00 [WRN] New candle save : ICXUSDT
+2023-05-16 23:00:00.043 +02:00 [WRN] New candle save : COCOSUSDT
+2023-05-16 23:00:00.043 +02:00 [WRN] New candle save : DENTUSDT
+2023-05-16 23:00:00.072 +02:00 [WRN] New candle save : COTIUSDT
+2023-05-16 23:00:00.097 +02:00 [WRN] New candle save : DODOUSDT
+2023-05-16 23:00:00.097 +02:00 [WRN] New candle save : CELOUSDT
+2023-05-16 23:00:00.098 +02:00 [WRN] New candle save : LQTYUSDT
+2023-05-16 23:00:00.098 +02:00 [WRN] New candle save : ANTUSDT
+2023-05-16 23:00:00.098 +02:00 [WRN] New candle save : CFXUSDT
+2023-05-16 23:00:00.098 +02:00 [WRN] New candle save : RNDRUSDT
+2023-05-16 23:00:00.098 +02:00 [WRN] New candle save : LDOUSDT
+2023-05-16 23:00:00.098 +02:00 [WRN] New candle save : FXSUSDT
+2023-05-16 23:00:00.098 +02:00 [WRN] New candle save : ACHUSDT
+2023-05-16 23:00:00.098 +02:00 [WRN] New candle save : JOEUSDT
+2023-05-16 23:00:00.122 +02:00 [WRN] New candle save : TRUUSDT
+2023-05-16 23:11:16.983 +02:00 [WRN] New call at 11 for ExportChart UI
+2023-05-16 23:11:46.851 +02:00 [WRN] Call Prediction on CELOUSDT down 0,9307242/0,069275826
+2023-05-16 23:11:46.930 +02:00 [WRN] Call Prediction on ICXUSDT down 0,95428216/0,04571782
+2023-05-16 23:11:47.011 +02:00 [WRN] Call Prediction on RNDRUSDT down 0,9800396/0,019960342
+2023-05-16 23:11:47.091 +02:00 [WRN] Call Prediction on DASHUSDT down 0,9902034/0,00979662
+2023-05-16 23:11:47.172 +02:00 [WRN] Call Prediction on COCOSUSDT down 0,9983729/0,0016270578
+2023-05-16 23:11:47.254 +02:00 [WRN] Call Prediction on LQTYUSDT down 0,9994288/0,0005712079
+2023-05-16 23:11:47.338 +02:00 [WRN] Call Prediction on CFXUSDT down 0,9707262/0,029273845
+2023-05-16 23:11:47.344 +02:00 [WRN] SellFack on ICXUSDT
+2023-05-16 23:11:47.420 +02:00 [WRN] Call Prediction on ACHUSDT down 0,99824405/0,0017560057
+2023-05-16 23:11:47.499 +02:00 [WRN] Call Prediction on LDOUSDT down 0,9923603/0,007639675
+2023-05-16 23:11:47.500 +02:00 [WRN] ----------------ML Updated---------------------
+2023-05-16 23:11:54.016 +02:00 [WRN] Get Account OK
+2023-05-16 23:15:00.096 +02:00 [WRN] New candle save : LTCUSDT
+2023-05-16 23:15:00.097 +02:00 [WRN] New candle save : CELRUSDT
+2023-05-16 23:15:00.102 +02:00 [WRN] New candle save : DENTUSDT
+2023-05-16 23:15:00.102 +02:00 [WRN] New candle save : ICXUSDT
+2023-05-16 23:15:00.102 +02:00 [WRN] New candle save : COCOSUSDT
+2023-05-16 23:15:00.103 +02:00 [WRN] New candle save : DASHUSDT
+2023-05-16 23:15:00.103 +02:00 [WRN] New candle save : COTIUSDT
+2023-05-16 23:15:00.105 +02:00 [WRN] New candle save : CELOUSDT
+2023-05-16 23:15:00.105 +02:00 [WRN] New candle save : TRUUSDT
+2023-05-16 23:15:00.128 +02:00 [WRN] New candle save : DODOUSDT
+2023-05-16 23:15:00.137 +02:00 [WRN] New candle save : RNDRUSDT
+2023-05-16 23:15:00.139 +02:00 [WRN] New candle save : FXSUSDT
+2023-05-16 23:15:00.139 +02:00 [WRN] New candle save : ANTUSDT
+2023-05-16 23:15:00.140 +02:00 [WRN] New candle save : ACHUSDT
+2023-05-16 23:15:00.161 +02:00 [WRN] New candle save : CFXUSDT
+2023-05-16 23:15:00.162 +02:00 [WRN] New candle save : LQTYUSDT
+2023-05-16 23:15:00.162 +02:00 [WRN] New candle save : JOEUSDT
+2023-05-16 23:15:00.187 +02:00 [WRN] New candle save : LDOUSDT
+2023-05-16 23:26:17.071 +02:00 [WRN] New call at 26 for ExportChart UI
+2023-05-16 23:26:50.111 +02:00 [WRN] Call Prediction on CELOUSDT down 0,9864123/0,013587644
+2023-05-16 23:26:50.195 +02:00 [WRN] Call Prediction on ICXUSDT down 0,95029336/0,049706694
+2023-05-16 23:26:50.279 +02:00 [WRN] Call Prediction on RNDRUSDT down 0,99852896/0,0014710096
+2023-05-16 23:26:50.361 +02:00 [WRN] Call Prediction on LTCUSDT down 0,9994198/0,0005802344
+2023-05-16 23:26:50.450 +02:00 [WRN] Call Prediction on DASHUSDT down 0,98044544/0,019554527
+2023-05-16 23:26:50.567 +02:00 [WRN] Call Prediction on COCOSUSDT down 0,9998276/0,00017231307
+2023-05-16 23:26:50.650 +02:00 [WRN] Call Prediction on LQTYUSDT down 0,9991762/0,0008237671
+2023-05-16 23:26:50.725 +02:00 [WRN] Call Prediction on CFXUSDT down 0,8428661/0,15713389
+2023-05-16 23:26:50.800 +02:00 [WRN] Call Prediction on ACHUSDT down 0,9996327/0,00036726956
+2023-05-16 23:26:50.878 +02:00 [WRN] Call Prediction on LDOUSDT down 0,99957246/0,00042757663
+2023-05-16 23:26:50.879 +02:00 [WRN] ----------------ML Updated---------------------
+2023-05-16 23:30:00.113 +02:00 [WRN] New candle save : LTCUSDT
+2023-05-16 23:30:00.113 +02:00 [WRN] New candle save : CELRUSDT
+2023-05-16 23:30:00.312 +02:00 [WRN] New candle save : DASHUSDT
+2023-05-16 23:30:00.337 +02:00 [WRN] New candle save : DENTUSDT
+2023-05-16 23:30:00.339 +02:00 [WRN] New candle save : DODOUSDT
+2023-05-16 23:30:00.341 +02:00 [WRN] New candle save : TRUUSDT
+2023-05-16 23:30:00.341 +02:00 [WRN] New candle save : ANTUSDT
+2023-05-16 23:30:00.341 +02:00 [WRN] New candle save : COCOSUSDT
+2023-05-16 23:30:00.341 +02:00 [WRN] New candle save : ICXUSDT
+2023-05-16 23:30:00.343 +02:00 [WRN] New candle save : JOEUSDT
+2023-05-16 23:30:00.344 +02:00 [WRN] New candle save : COTIUSDT
+2023-05-16 23:30:00.345 +02:00 [WRN] New candle save : FXSUSDT
+2023-05-16 23:30:00.344 +02:00 [WRN] New candle save : LQTYUSDT
+2023-05-16 23:30:00.344 +02:00 [WRN] New candle save : RNDRUSDT
+2023-05-16 23:30:00.345 +02:00 [WRN] New candle save : ACHUSDT
+2023-05-16 23:30:00.345 +02:00 [WRN] New candle save : CELOUSDT
+2023-05-16 23:30:00.346 +02:00 [WRN] New candle save : LDOUSDT
+2023-05-16 23:30:00.347 +02:00 [WRN] New candle save : CFXUSDT
+2023-05-16 23:41:17.095 +02:00 [WRN] New call at 41 for ExportChart UI
+2023-05-16 23:41:50.251 +02:00 [WRN] Call Prediction on CELOUSDT down 0,9980111/0,0019888575
+2023-05-16 23:41:50.331 +02:00 [WRN] Call Prediction on ICXUSDT down 0,99995446/4,5498502E-05
+2023-05-16 23:41:50.409 +02:00 [WRN] Call Prediction on RNDRUSDT down 0,9967865/0,0032135672
+2023-05-16 23:41:50.488 +02:00 [WRN] Call Prediction on LTCUSDT down 0,99993217/6,7842346E-05
+2023-05-16 23:41:50.570 +02:00 [WRN] Call Prediction on DASHUSDT down 0,9993932/0,0006067875
+2023-05-16 23:41:50.649 +02:00 [WRN] Call Prediction on COCOSUSDT down 0,9994609/0,0005391126
+2023-05-16 23:41:50.728 +02:00 [WRN] Call Prediction on LQTYUSDT down 0,99973315/0,0002668249
+2023-05-16 23:41:50.805 +02:00 [WRN] Call Prediction on CFXUSDT down 0,9603181/0,039681926
+2023-05-16 23:41:50.878 +02:00 [WRN] Call Prediction on ACHUSDT down 0,9988902/0,0011098345
+2023-05-16 23:41:50.953 +02:00 [WRN] Call Prediction on LDOUSDT down 0,9991173/0,0008827363
+2023-05-16 23:41:50.953 +02:00 [WRN] ----------------ML Updated---------------------
+2023-05-16 23:45:00.130 +02:00 [WRN] New candle save : LTCUSDT
+2023-05-16 23:45:00.132 +02:00 [WRN] New candle save : CELRUSDT
+2023-05-16 23:45:00.135 +02:00 [WRN] New candle save : COCOSUSDT
+2023-05-16 23:45:00.136 +02:00 [WRN] New candle save : ICXUSDT
+2023-05-16 23:45:00.136 +02:00 [WRN] New candle save : DASHUSDT
+2023-05-16 23:45:00.139 +02:00 [WRN] New candle save : CELOUSDT
+2023-05-16 23:45:00.139 +02:00 [WRN] New candle save : DENTUSDT
+2023-05-16 23:45:00.139 +02:00 [WRN] New candle save : COTIUSDT
+2023-05-16 23:45:00.163 +02:00 [WRN] New candle save : TRUUSDT
+2023-05-16 23:45:00.196 +02:00 [WRN] New candle save : DODOUSDT
+2023-05-16 23:45:00.196 +02:00 [WRN] New candle save : ANTUSDT
+2023-05-16 23:45:00.198 +02:00 [WRN] New candle save : RNDRUSDT
+2023-05-16 23:45:00.198 +02:00 [WRN] New candle save : CFXUSDT
+2023-05-16 23:45:00.225 +02:00 [WRN] New candle save : FXSUSDT
+2023-05-16 23:45:00.226 +02:00 [WRN] New candle save : LQTYUSDT
+2023-05-16 23:45:00.226 +02:00 [WRN] New candle save : JOEUSDT
+2023-05-16 23:45:00.228 +02:00 [WRN] New candle save : LDOUSDT
+2023-05-16 23:45:00.227 +02:00 [WRN] New candle save : ACHUSDT
+2023-05-16 23:56:17.065 +02:00 [WRN] New call at 56 for ExportChart UI
+2023-05-16 23:56:50.278 +02:00 [WRN] Call Prediction on CELOUSDT down 0,78601557/0,21398449
+2023-05-16 23:56:50.359 +02:00 [WRN] Call Prediction on ICXUSDT down 0,9982558/0,0017441496
+2023-05-16 23:56:50.442 +02:00 [WRN] Call Prediction on RNDRUSDT down 0,9908607/0,009139307
+2023-05-16 23:56:50.522 +02:00 [WRN] Call Prediction on LTCUSDT down 0,99987566/0,00012434374
+2023-05-16 23:56:50.600 +02:00 [WRN] Call Prediction on DASHUSDT down 0,99950755/0,00049244094
+2023-05-16 23:56:50.680 +02:00 [WRN] Call Prediction on COCOSUSDT down 0,9996904/0,00030955038
+2023-05-16 23:56:50.757 +02:00 [WRN] Call Prediction on LQTYUSDT down 0,9998872/0,00011280846
+2023-05-16 23:56:50.860 +02:00 [WRN] Call Prediction on CFXUSDT down 0,98849034/0,011509581
+2023-05-16 23:56:50.936 +02:00 [WRN] Call Prediction on ACHUSDT down 0,99394435/0,0060557025
+2023-05-16 23:56:51.010 +02:00 [WRN] Call Prediction on LDOUSDT down 0,99939895/0,0006010486
+2023-05-16 23:56:51.010 +02:00 [WRN] ----------------ML Updated---------------------

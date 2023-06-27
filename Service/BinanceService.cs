@@ -8,6 +8,8 @@ using Microsoft.Extensions.Logging;
 using MarginCoin.Misc;
 using Binance.Spot.Models;
 using System.Linq;
+using System.Web;
+using System.Net;
 
 namespace MarginCoin.Service
 {
@@ -16,6 +18,7 @@ namespace MarginCoin.Service
         const string testPublicKey = "HsKWfKtktmw07gqsCyK1TJThULUnAivnFxF13vFUZf4WjLJXsbwmaPOIgw5rNAuQ";  //for https://testnet.binance.vision/
         const string testSecretKey = "ncSzN6J4Efh8Xb53e1uYkuHCw9VFAemUKjCEPdwY5WtdbMJOAEzEIuP5qMrjKewX";
         const string prodPublicKey = "gIDNZ9OsVIUbvFEuLgOhZ3XoQRnwrJ8krkp3TAR2dxQxwYErmKC6GOsMy50LYGWy";
+
         static string prodSecretKey = Environment.GetEnvironmentVariable("BSK");
         public static string secretKey = "";
         public static string publicKey = "";
@@ -79,7 +82,7 @@ namespace MarginCoin.Service
                 string signature = GetSignature(parameters, secretKey);
                 string apiUrl = $"{host}/api/v3/account?{parameters}&signature={signature}";
 
-                if (!Globals.isProd)
+                if (!Global.isProd)
                 {
                     apiUrl = $"{host}/api/v3/account?{parameters}&signature={signature}";
                 }
@@ -124,7 +127,7 @@ namespace MarginCoin.Service
                 string signature = GetSignature(parameters, secretKey);
                 string apiUrl = $"{host}/api/v3/order?{parameters}&signature={signature}";
 
-                if (!Globals.isProd)
+                if (!Global.isProd)
                 {
                     apiUrl = $"{host}/api/v3/order?{parameters}&signature={signature}";
                 }
@@ -150,7 +153,7 @@ namespace MarginCoin.Service
                 string signature = GetSignature(parameters, secretKey);
                 string apiUrl = $"{host}/api/v3/order?{parameters}&signature={signature}";
 
-                if (!Globals.isProd)
+                if (!Global.isProd)
                 {
                     apiUrl = $"{host}/api/v3/order?{parameters}&signature={signature}";
                 }
@@ -176,7 +179,7 @@ namespace MarginCoin.Service
                 string signature = GetSignature(parameters, secretKey);
                 string apiUrl = $"{host}/api/v3/order?{parameters}&signature={signature}";
 
-                if (!Globals.isProd)
+                if (!Global.isProd)
                 {
                     apiUrl = $"{host}/api/v3/order?{parameters}&signature={signature}";
                 }
@@ -203,7 +206,7 @@ namespace MarginCoin.Service
                 string signature = GetSignature(parameters, secretKey);
                 string apiUrl = $"{host}/api/v3/order?{parameters}&signature={signature}";
 
-                if (!Globals.isProd)
+                if (!Global.isProd)
                 {
                     apiUrl = $"{host}/api/v3/order?{parameters}&signature={signature}";
                 }
@@ -229,7 +232,7 @@ namespace MarginCoin.Service
                 string signature = GetSignature(parameters, secretKey);
                 string apiUrl = $"{host}/api/v3/order?{parameters}&signature={signature}";
 
-                if (!Globals.isProd)
+                if (!Global.isProd)
                 {
                     apiUrl = $"{host}/api/v3/order?{parameters}&signature={signature}";
                 }
@@ -245,11 +248,16 @@ namespace MarginCoin.Service
             }
         }
 
+        #region Get CoinMarketCap
+
+
+        #endregion
+        
         #region helper
 
         private static void SetEnv(ref string secretKey, ref string publicKey, ref string host)
         {
-            if (Globals.isProd)
+            if (Global.isProd)
             {
                 secretKey = prodSecretKey;
                 publicKey = prodPublicKey;
@@ -266,7 +274,7 @@ namespace MarginCoin.Service
         private static long ServerTime(string apiKey)
         {
             string apiUrl;
-            if (Globals.isProd)
+            if (Global.isProd)
             {
                 apiUrl = string.Format("https://api.binance.com/api/v3/time");
             }

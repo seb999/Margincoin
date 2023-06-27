@@ -47,6 +47,35 @@ namespace MarginCoin.Misc
             }
         }
 
+        public static T GetApiDataCMC<T>(Uri apiUri, string apiKey)
+        {
+            JsonSerializerOptions jsonSerializerOptions = new JsonSerializerOptions
+            {
+                NumberHandling = System.Text.Json.Serialization.JsonNumberHandling.AllowReadingFromString,
+                MaxDepth = 20
+            };
+
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = apiUri;
+                client.DefaultRequestHeaders.Accept.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                client.DefaultRequestHeaders.Add("X-CMC_PRO_API_KEY", apiKey);
+
+                var response = client.GetAsync("").Result;
+                if (response.IsSuccessStatusCode)
+                {
+                   return JsonSerializer.Deserialize<T>(response.Content.ReadAsStringAsync().Result, jsonSerializerOptions);
+                    
+                }
+                else
+                {
+                   
+                    return default(T);
+                }
+            }
+        }
+
         public static T PostApiData<T>(Uri apiUri, string apiKey, HttpContent data)
         {
             System.Net.HttpStatusCode httpStatusCode = new System.Net.HttpStatusCode();
