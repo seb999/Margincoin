@@ -14,22 +14,32 @@ namespace MarginCoin.Misc
 
         public static MacdSlope CalculateMacdSlope(List<Candle> symbolCandles, string tradingInterval)
         {
-            //We calculate how many candle for 1Hours
-            var interval = TradeHelper.NumberCandleInInterval(tradingInterval, 1);
+            try
+            {
+                MacdSlope mySlope = new MacdSlope();
 
-            //Calculate the slope for 4 differente point
-            var coefficient1 = (symbolCandles[symbolCandles.Count - 1].MacdHist - symbolCandles[symbolCandles.Count - (1 + interval)].MacdHist) / interval;
-            var coefficient2 = (symbolCandles[symbolCandles.Count - 2].MacdHist - symbolCandles[symbolCandles.Count - (2 + interval)].MacdHist) / interval;
-            var coefficient3 = (symbolCandles[symbolCandles.Count - 3].MacdHist - symbolCandles[symbolCandles.Count - (3 + interval)].MacdHist) / interval;
-            var coefficient4 = (symbolCandles[symbolCandles.Count - 4].MacdHist - symbolCandles[symbolCandles.Count - (4 + interval)].MacdHist) / interval;
+                //We calculate how many candle for 1Hours
+                var interval = TradeHelper.NumberCandleInInterval(tradingInterval, 1);
+
+                //Calculate the slope for 4 differente point
+                var coefficient1 = (symbolCandles[symbolCandles.Count - 1].MacdHist - symbolCandles[symbolCandles.Count - (1 + interval)].MacdHist) / interval;
+                var coefficient2 = (symbolCandles[symbolCandles.Count - 2].MacdHist - symbolCandles[symbolCandles.Count - (2 + interval)].MacdHist) / interval;
+                var coefficient3 = (symbolCandles[symbolCandles.Count - 3].MacdHist - symbolCandles[symbolCandles.Count - (3 + interval)].MacdHist) / interval;
+                var coefficient4 = (symbolCandles[symbolCandles.Count - 4].MacdHist - symbolCandles[symbolCandles.Count - (4 + interval)].MacdHist) / interval;
 
 
-            MacdSlope mySlope = new MacdSlope();
-            mySlope.Slope = (coefficient1 + coefficient2 + coefficient3 + coefficient4) / 4;
-            mySlope.P2 = new Point() { x = symbolCandles[symbolCandles.Count - 1].t, y = symbolCandles[symbolCandles.Count - 1].MacdHist };
-            mySlope.P1 = new Point() { x = symbolCandles[symbolCandles.Count - 5].t, y = symbolCandles[symbolCandles.Count - 5].MacdHist };
+                
+                mySlope.Slope = (coefficient1 + coefficient2 + coefficient3 + coefficient4) / 4;
+                mySlope.P2 = new Point() { x = symbolCandles[symbolCandles.Count - 1].t, y = symbolCandles[symbolCandles.Count - 1].MacdHist };
+                mySlope.P1 = new Point() { x = symbolCandles[symbolCandles.Count - 5].t, y = symbolCandles[symbolCandles.Count - 5].MacdHist };
 
-            return mySlope;
+                return mySlope;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
 
         /// <summary>

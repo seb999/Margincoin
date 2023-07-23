@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.WebSockets;
@@ -55,7 +56,7 @@ namespace MarginCoin.Controllers
         private readonly int prevCandleCount = 2;
         private readonly double stopLossPercentage = 2;
         private readonly double takeProfitPercentage = 0.5;
-        private readonly int maxOpenTrade = 5;
+        private readonly int maxOpenTrade = 2;
         //Max amount to invest for each trade
         private readonly int quoteOrderQty = 3000;
         //Select short list of symbol or full list(on test server on 6 symbols allowed)
@@ -126,6 +127,7 @@ namespace MarginCoin.Controllers
             {
                 await _webSocket.ws.DisconnectAsync(CancellationToken.None);
                 await _webSocket.ws1.DisconnectAsync(CancellationToken.None);
+                Global.candleMatrix.Clear();
                 _logger.LogWarning($"Whatchdog kill all websock and restart it");
             }
 
@@ -209,45 +211,10 @@ namespace MarginCoin.Controllers
                         if (Global.candleMatrix[i][0].s == stream.k.s)
                         {
                             symbolIndex = i;
+                            UpdateMatrix(stream, symbolIndex);
                             break;
                         }
                     }
-
-                    if (!stream.k.x)
-                    {
-                        if (Global.candleMatrix[symbolIndex].Count > 0) Global.candleMatrix[symbolIndex] = Global.candleMatrix[symbolIndex].SkipLast(1).ToList();
-                    }
-                    else
-                    {
-                        Console.WriteLine($"New candle save : {stream.k.s}");
-                        _logger.LogWarning($"New candle save : {stream.k.s}");
-                        Global.onHold.Remove(stream.k.s);
-                    }
-
-                    Candle newCandle = new Candle()
-                    {
-                        s = stream.k.s,
-                        o = stream.k.o,
-                        h = stream.k.h,
-                        l = stream.k.l,
-                        c = stream.k.c,
-                        //P = TradeHelper.CalculPourcentChange(stream.k.c, Globals.candleMatrix[symbolIndex].ToList(), interval, 4),
-                    };
-                    Global.candleMatrix[symbolIndex].Add(newCandle);
-
-                    //Calculate RSI / MACD / EMA
-                    List<Candle> candleListForSymbol = Global.candleMatrix[symbolIndex];
-
-                    Global.candleMatrix[symbolIndex] = TradeIndicator.CalculateIndicator(candleListForSymbol);
-
-                    //Calculate the Average True Range ATR
-                    //Globals.candleMatrix[symbolIndex].ToList().Last().ATR = TradeIndicator.CalculateATR(Globals.candleMatrix[symbolIndex].ToList());
-
-                    //Calculate the slope of the MACD historic (derivative) 
-                    Global.candleMatrix[symbolIndex].ToList().Last().MacdSlope = TradeHelper.CalculateMacdSlope(Global.candleMatrix[symbolIndex].ToList(), interval).Slope;
-
-                    //We order the matrix with best coin to worst coin
-                    Global.candleMatrix = Global.candleMatrix.OrderByDescending(p => p.Last().MacdSlope).ToList();
 
                     return Task.CompletedTask;
 
@@ -267,6 +234,49 @@ namespace MarginCoin.Controllers
             {
                 _webSocket.ws = new MarketDataWebSocket($"{symbol.ToLower()}@kline_{interval}");
             }
+        }
+
+        private void UpdateMatrix(StreamData stream, int symbolIndex)
+        {
+            //Global.candleMatrix.ToList().Where(p => p.First().s == symbol).Select(p => p.Last()).FirstOrDefault();
+
+            Candle newCandle = new Candle()
+            {
+                s = stream.k.s,
+                o = stream.k.o,
+                h = stream.k.h,
+                l = stream.k.l,
+                c = stream.k.c,
+                //P = TradeHelper.CalculPourcentChange(stream.k.c, Globals.candleMatrix[symbolIndex].ToList(), interval, 4),
+            };
+
+            if (!stream.k.x)
+            {
+                if (Global.candleMatrix[symbolIndex].Count > 0) Global.candleMatrix[symbolIndex] = Global.candleMatrix[symbolIndex].SkipLast(1).ToList();
+                Global.candleMatrix[symbolIndex].Add(newCandle);
+            }
+            else
+            {
+                Global.candleMatrix[symbolIndex].Add(newCandle);
+                Console.WriteLine($"New candle save : {stream.k.s}");
+                _logger.LogWarning($"New candle save : {stream.k.s}");
+                Global.onHold.Remove(stream.k.s);
+            }
+
+
+            //Calculate RSI / MACD / EMA
+            List<Candle> candleListForSymbol = Global.candleMatrix[symbolIndex];
+
+            Global.candleMatrix[symbolIndex] = TradeIndicator.CalculateIndicator(candleListForSymbol);
+
+            //Calculate the Average True Range ATR
+            //Globals.candleMatrix[symbolIndex].ToList().Last().ATR = TradeIndicator.CalculateATR(Globals.candleMatrix[symbolIndex].ToList());
+
+            //Calculate the slope of the MACD historic (derivative) 
+            Global.candleMatrix[symbolIndex].ToList().Last().MacdSlope = TradeHelper.CalculateMacdSlope(Global.candleMatrix[symbolIndex].ToList(), interval).Slope;
+
+            //We order the matrix with best coin to worst coin
+            Global.candleMatrix = Global.candleMatrix.OrderByDescending(p => p.Last().MacdSlope).ToList();
         }
 
         public async Task<string> OpenWebSocketOnSpot()
@@ -316,6 +326,17 @@ namespace MarginCoin.Controllers
                          if (Global.isTradingOpen)
                          {
                              ProcessMarketMatrix();
+
+                             for (int i = 0; i < Global.candleMatrix.Count; i++)
+                             {
+                                 for (int j = 0; j < Global.candleMatrix[i].Count; j++)
+                                 {
+                                     if (Global.candleMatrix[i][j].s != Global.candleMatrix[i][0].s)
+                                     {
+                                         Console.WriteLine("candles for " + Global.candleMatrix[i][0].s + " incoherante");
+                                     }
+                                 }
+                             }
                          }
                      }
                      //return Task.CompletedTask;
@@ -345,16 +366,14 @@ namespace MarginCoin.Controllers
                     ReviewOpenTrade(item.Symbol);
                 }
 
-                if(_repositoryService.GetActiveOrder().Count >= maxOpenTrade) return;
-
-                foreach (var symbolCandelList in Global.candleMatrix.Take(10).ToList())
+                if (_repositoryService.GetActiveOrder().Count < maxOpenTrade)
                 {
-                    var symbolSpot = marketStreamOnSpot.Where(p => p.s == symbolCandelList.Last().s).FirstOrDefault();
-
-                    ReviewSpotMarket(symbolSpot, Global.candleMatrix.ToList());
+                    foreach (var symbolCandelList in Global.candleMatrix.Take(10).ToList())
+                    {
+                        ReviewSpotMarket(marketStreamOnSpot, symbolCandelList);
+                    }
                 }
 
-                //Send last data to frontend
                 _hub.Clients.All.SendAsync("trading", JsonSerializer.Serialize(marketStreamOnSpot));
             }
             catch (Exception ex)
@@ -367,10 +386,17 @@ namespace MarginCoin.Controllers
             }
         }
 
-        private void ReviewSpotMarket(MarketStream symbolSpot, List<List<Candle>> candleMatrix)
+        private void ReviewSpotMarket(List<MarketStream> marketStreamList, List<Candle> symbolCandelList)
         {
+            var symbolSpot = marketStreamOnSpot.Where(p => p.s == symbolCandelList.Last().s).FirstOrDefault();
+
+            if(symbolSpot == null)
+            {
+                return;
+            }
+
             var activeOrder = _repositoryService.GetActiveOrder().FirstOrDefault(p => p.Symbol == symbolSpot.s);
-            var symbolCandle = Global.candleMatrix.Where(p => p.Last().s == symbolSpot.s).FirstOrDefault();
+            var symbolCandle = Global.candleMatrix.Where(p => p.Last().s == symbolSpot.s).ToList().FirstOrDefault();
             var activeOrderCount = _repositoryService.GetActiveOrder().Count();
 
             if (activeOrder == null && activeOrderCount < maxOpenTrade)

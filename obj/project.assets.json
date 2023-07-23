@@ -3901,28 +3901,26 @@
     ]
   },
   "packageFolders": {
-    "/Users/sebastien/.nuget/packages/": {},
-    "/usr/local/share/dotnet/sdk/NuGetFallbackFolder": {}
+    "C:\\Users\\sdubos\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/sebastien/_Git/Dotnet/Margincoin/MarginCoin.csproj",
+      "projectUniqueName": "C:\\_git\\dotnet\\Margincoin\\MarginCoin.csproj",
       "projectName": "MarginCoin",
-      "projectPath": "/Users/sebastien/_Git/Dotnet/Margincoin/MarginCoin.csproj",
-      "packagesPath": "/Users/sebastien/.nuget/packages/",
-      "outputPath": "/Users/sebastien/_Git/Dotnet/Margincoin/obj/",
+      "projectPath": "C:\\_git\\dotnet\\Margincoin\\MarginCoin.csproj",
+      "packagesPath": "C:\\Users\\sdubos\\.nuget\\packages\\",
+      "outputPath": "C:\\_git\\dotnet\\Margincoin\\obj\\",
       "projectStyle": "PackageReference",
-      "fallbackFolders": [
-        "/usr/local/share/dotnet/sdk/NuGetFallbackFolder"
-      ],
       "configFilePaths": [
-        "/Users/sebastien/.nuget/NuGet/NuGet.Config"
+        "C:\\Users\\sdubos\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
         "net6.0"
       ],
       "sources": {
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -4029,20 +4027,6 @@
         ],
         "assetTargetFallback": true,
         "warn": true,
-        "downloadDependencies": [
-          {
-            "name": "Microsoft.AspNetCore.App.Ref",
-            "version": "[6.0.14, 6.0.14]"
-          },
-          {
-            "name": "Microsoft.NETCore.App.Host.osx-x64",
-            "version": "[6.0.14, 6.0.14]"
-          },
-          {
-            "name": "Microsoft.NETCore.App.Ref",
-            "version": "[6.0.14, 6.0.14]"
-          }
-        ],
         "frameworkReferences": {
           "Microsoft.AspNetCore.App": {
             "privateAssets": "none"
@@ -4051,7 +4035,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/7.0.201/RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.203\\RuntimeIdentifierGraph.json"
       }
     }
   }

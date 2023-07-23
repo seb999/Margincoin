@@ -1,0 +1,1 @@
+2023-07-23 11:22:03.772 +02:00 [WRN] MarginCoin, started!

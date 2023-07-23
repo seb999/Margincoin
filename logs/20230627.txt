@@ -1205,3 +1205,16 @@ System.AggregateException: One or more errors occurred. (nodename nor servname p
    at MarginCoin.Misc.HttpHelper.GetApiData[T](Uri apiUri, String apiKey) in /Users/sebastien/_Git/Dotnet/Margincoin/Misc/HttpHelper.cs:line 18
    at MarginCoin.Service.BinanceService.ServerTime(String apiKey) in /Users/sebastien/_Git/Dotnet/Margincoin/Service/BinanceService.cs:line 285
    at MarginCoin.Service.BinanceService.Account(HttpStatusCode& httpStatusCode) in /Users/sebastien/_Git/Dotnet/Margincoin/Service/BinanceService.cs:line 81
+2023-06-27 22:53:25.477 +02:00 [WRN] MarginCoin, started!
+2023-06-27 22:54:18.329 +02:00 [WRN] Get Account OK
+2023-06-27 22:54:27.018 +02:00 [WRN] Get Account OK
+2023-06-27 22:54:29.832 +02:00 [WRN] Start trading market...
+2023-06-27 22:56:02.749 +02:00 [WRN] MarginCoin, started!
+2023-06-27 22:56:10.311 +02:00 [ERR] THE SIGNAL CLIENT IS DISCONNECTED
+2023-06-27 22:56:24.880 +02:00 [WRN] MarginCoin, started!
+2023-06-27 22:56:33.372 +02:00 [WRN] Start trading market...
+2023-06-27 22:56:36.096 +02:00 [WRN] Get Account OK
+2023-06-27 22:58:26.928 +02:00 [WRN] MarginCoin, started!
+2023-06-27 22:58:42.211 +02:00 [WRN] Get Account OK
+2023-06-27 22:58:43.746 +02:00 [WRN] Start trading market...
+2023-06-27 22:58:47.291 +02:00 [WRN] Get Account OK
