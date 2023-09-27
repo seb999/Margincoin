@@ -56,12 +56,12 @@ namespace MarginCoin.Controllers
         private readonly int prevCandleCount = 2;
         private readonly double stopLossPercentage = 2;
         private readonly double takeProfitPercentage = 0.5;
-        private readonly int maxOpenTrade = 2;
+        private readonly int maxOpenTrade = 3;
         //Max amount to invest for each trade
         private readonly int quoteOrderQty = 3000;
         //Select short list of symbol or full list(on test server on 6 symbols allowed)
         private readonly bool fullSymbolList = true;
-        private readonly int nbrOfSymbol = 15;   //Not below 10 as we trade later on the 10 best of this list
+        private readonly int nbrOfSymbol = 18;   //Not below 10 as we trade later on the 10 best of this list
         
         #endregion
 
@@ -211,7 +211,7 @@ namespace MarginCoin.Controllers
                         if (Global.candleMatrix[i][0].s == stream.k.s)
                         {
                             symbolIndex = i;
-                            UpdateMatrix(stream, symbolIndex);
+                            UpdateMatrix(stream, Global.candleMatrix[i]);
                             break;
                         }
                     }
@@ -234,6 +234,47 @@ namespace MarginCoin.Controllers
             {
                 _webSocket.ws = new MarketDataWebSocket($"{symbol.ToLower()}@kline_{interval}");
             }
+        }
+
+         private void UpdateMatrix(StreamData stream, List<Candle> theItem)
+        {
+            Candle newCandle = new Candle()
+            {
+                s = stream.k.s,
+                o = stream.k.o,
+                h = stream.k.h,
+                l = stream.k.l,
+                c = stream.k.c,
+                //P = TradeHelper.CalculPourcentChange(stream.k.c, Globals.candleMatrix[symbolIndex].ToList(), interval, 4),
+            };
+
+            if (!stream.k.x)
+            {
+                if (theItem.Count > 0) theItem = theItem.SkipLast(1).ToList();
+                theItem.Add(newCandle);
+            }
+            else
+            {
+                theItem.Add(newCandle);
+                Console.WriteLine($"New candle save : {stream.k.s}");
+                _logger.LogWarning($"New candle save : {stream.k.s}");
+                Global.onHold.Remove(stream.k.s);
+            }
+
+
+            //Calculate RSI / MACD / EMA
+            //List<Candle> candleListForSymbol = Global.candleMatrix[symbolIndex];
+
+           theItem = TradeIndicator.CalculateIndicator(theItem);
+
+            //Calculate the Average True Range ATR
+            //Globals.candleMatrix[symbolIndex].ToList().Last().ATR = TradeIndicator.CalculateATR(Globals.candleMatrix[symbolIndex].ToList());
+
+            //Calculate the slope of the MACD historic (derivative) 
+            theItem.ToList().Last().MacdSlope = TradeHelper.CalculateMacdSlope(theItem.ToList(), interval).Slope;
+
+            //We order the matrix with best coin to worst coin
+            Global.candleMatrix = Global.candleMatrix.OrderByDescending(p => p.Last().MacdSlope).ToList();
         }
 
         private void UpdateMatrix(StreamData stream, int symbolIndex)
@@ -515,7 +556,7 @@ namespace MarginCoin.Controllers
                 {
                     //Kill it if not green after 1 minute!
                     TimeSpan span = DateTime.Now.Subtract(DateTime.Parse(activeOrder.OpenDate));
-                    if (activeOrder.HighPrice <= activeOrder.OpenPrice && span.TotalMinutes > 2)
+                    if (activeOrder.HighPrice <= activeOrder.OpenPrice && span.TotalMinutes > 7)
                     {
                         if (Global.onAir)
                         {

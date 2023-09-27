@@ -1,8 +1,0 @@
-2023-06-06 22:47:38.760 +02:00 [WRN] MarginCoin, started!
-2023-06-06 22:47:51.713 +02:00 [WRN] Start trading market...
-2023-06-06 22:47:54.363 +02:00 [WRN] Get Account OK
-2023-06-06 22:48:54.676 +02:00 [WRN] Initial call for ExportChart UI
-2023-06-06 22:48:57.074 +02:00 [WRN] ----------------ML Updated---------------------
-2023-06-06 22:50:08.965 +02:00 [WRN] MarginCoin, started!
-2023-06-06 22:50:15.305 +02:00 [WRN] Start trading market...
-2023-06-06 22:50:17.000 +02:00 [WRN] Get Account OK

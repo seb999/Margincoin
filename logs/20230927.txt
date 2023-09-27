@@ -1,0 +1,99 @@
+2023-09-27 15:16:01.955 +02:00 [WRN] MarginCoin, started!
+2023-09-27 15:16:44.913 +02:00 [ERR] HTTP GET /wallet responded 500 in 79.3338 ms
+System.Net.Http.HttpRequestException: Failed to proxy the request to http://localhost:4201/wallet, because the request to the proxy target failed. Check that the proxy target server is running and accepting requests to http://localhost:4201/.
+
+The underlying exception message was 'Connection refused (localhost:4201)'.Check the InnerException for more details.
+ ---> System.Net.Http.HttpRequestException: Connection refused (localhost:4201)
+ ---> System.Net.Sockets.SocketException (61): Connection refused
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.ThrowException(SocketError error, CancellationToken cancellationToken)
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.System.Threading.Tasks.Sources.IValueTaskSource.GetResult(Int16 token)
+   at System.Net.Sockets.Socket.<ConnectAsync>g__WaitForConnectWithCancellation|277_0(AwaitableSocketAsyncEventArgs saea, ValueTask connectTask, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.ConnectToTcpHostAsync(String host, Int32 port, HttpRequestMessage initialRequest, Boolean async, CancellationToken cancellationToken)
+   --- End of inner exception stack trace ---
+   at System.Net.Http.HttpConnectionPool.ConnectToTcpHostAsync(String host, Int32 port, HttpRequestMessage initialRequest, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.ConnectAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.CreateHttp11ConnectionAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.AddHttp11ConnectionAsync(HttpRequestMessage request)
+   at System.Threading.Tasks.TaskCompletionSourceWithCancellation`1.WaitWithCancellationAsync(CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.GetHttp11ConnectionAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.SendWithVersionDetectionAndRetryAsync(HttpRequestMessage request, Boolean async, Boolean doRequestAuth, CancellationToken cancellationToken)
+   at System.Net.Http.DiagnosticsHandler.SendAsyncCore(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpClient.<SendAsync>g__Core|83_0(HttpRequestMessage request, HttpCompletionOption completionOption, CancellationTokenSource cts, Boolean disposeCts, CancellationTokenSource pendingRequestsCts, CancellationToken originalCancellationToken)
+   at Microsoft.AspNetCore.SpaServices.Extensions.Proxy.SpaProxy.PerformProxyRequest(HttpContext context, HttpClient httpClient, Task`1 baseUriTask, CancellationToken applicationStoppingToken, Boolean proxy404s)
+   --- End of inner exception stack trace ---
+   at Microsoft.AspNetCore.SpaServices.Extensions.Proxy.SpaProxy.PerformProxyRequest(HttpContext context, HttpClient httpClient, Task`1 baseUriTask, CancellationToken applicationStoppingToken, Boolean proxy404s)
+   at Microsoft.AspNetCore.Builder.SpaProxyingExtensions.<>c__DisplayClass2_0.<<UseProxyToSpaDevelopmentServer>b__0>d.MoveNext()
+--- End of stack trace from previous location ---
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+2023-09-27 15:16:44.976 +02:00 [ERR] An unhandled exception has occurred while executing the request.
+System.Net.Http.HttpRequestException: Failed to proxy the request to http://localhost:4201/wallet, because the request to the proxy target failed. Check that the proxy target server is running and accepting requests to http://localhost:4201/.
+
+The underlying exception message was 'Connection refused (localhost:4201)'.Check the InnerException for more details.
+ ---> System.Net.Http.HttpRequestException: Connection refused (localhost:4201)
+ ---> System.Net.Sockets.SocketException (61): Connection refused
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.ThrowException(SocketError error, CancellationToken cancellationToken)
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.System.Threading.Tasks.Sources.IValueTaskSource.GetResult(Int16 token)
+   at System.Net.Sockets.Socket.<ConnectAsync>g__WaitForConnectWithCancellation|277_0(AwaitableSocketAsyncEventArgs saea, ValueTask connectTask, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.ConnectToTcpHostAsync(String host, Int32 port, HttpRequestMessage initialRequest, Boolean async, CancellationToken cancellationToken)
+   --- End of inner exception stack trace ---
+   at System.Net.Http.HttpConnectionPool.ConnectToTcpHostAsync(String host, Int32 port, HttpRequestMessage initialRequest, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.ConnectAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.CreateHttp11ConnectionAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.AddHttp11ConnectionAsync(HttpRequestMessage request)
+   at System.Threading.Tasks.TaskCompletionSourceWithCancellation`1.WaitWithCancellationAsync(CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.GetHttp11ConnectionAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.SendWithVersionDetectionAndRetryAsync(HttpRequestMessage request, Boolean async, Boolean doRequestAuth, CancellationToken cancellationToken)
+   at System.Net.Http.DiagnosticsHandler.SendAsyncCore(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpClient.<SendAsync>g__Core|83_0(HttpRequestMessage request, HttpCompletionOption completionOption, CancellationTokenSource cts, Boolean disposeCts, CancellationTokenSource pendingRequestsCts, CancellationToken originalCancellationToken)
+   at Microsoft.AspNetCore.SpaServices.Extensions.Proxy.SpaProxy.PerformProxyRequest(HttpContext context, HttpClient httpClient, Task`1 baseUriTask, CancellationToken applicationStoppingToken, Boolean proxy404s)
+   --- End of inner exception stack trace ---
+   at Microsoft.AspNetCore.SpaServices.Extensions.Proxy.SpaProxy.PerformProxyRequest(HttpContext context, HttpClient httpClient, Task`1 baseUriTask, CancellationToken applicationStoppingToken, Boolean proxy404s)
+   at Microsoft.AspNetCore.Builder.SpaProxyingExtensions.<>c__DisplayClass2_0.<<UseProxyToSpaDevelopmentServer>b__0>d.MoveNext()
+--- End of stack trace from previous location ---
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware.Invoke(HttpContext context)
+2023-09-27 15:17:41.611 +02:00 [WRN] Get Account OK
+2023-09-27 15:17:46.882 +02:00 [WRN] Start trading market...
+2023-09-27 15:19:46.965 +02:00 [WRN] Initial call for ExportChart UI
+2023-09-27 15:20:36.071 +02:00 [WRN] Call Prediction on DOTUSDT down 0,5183804/0,48161957
+2023-09-27 15:20:36.156 +02:00 [WRN] Call Prediction on BNBUSDT down 0,9459967/0,05400331
+2023-09-27 15:20:36.238 +02:00 [WRN] Call Prediction on ADAUSDT down 0,9675817/0,032418355
+2023-09-27 15:20:36.317 +02:00 [WRN] Call Prediction on AVAXUSDT down 0,9939567/0,0060432814
+2023-09-27 15:20:36.398 +02:00 [WRN] Call Prediction on XRPUSDT down 0,9590672/0,040932823
+2023-09-27 15:20:36.479 +02:00 [WRN] Call Prediction on LTCUSDT down 0,86537063/0,13462934
+2023-09-27 15:20:36.558 +02:00 [WRN] Call Prediction on TRXUSDT down 0,92893416/0,071065895
+2023-09-27 15:20:36.639 +02:00 [WRN] Call Prediction on BTCUSDT up 0,4688155/0,5311845
+2023-09-27 15:20:36.723 +02:00 [WRN] Call Prediction on MATICUSDT down 0,9938112/0,0061888243
+2023-09-27 15:20:36.810 +02:00 [WRN] Call Prediction on DOGEUSDT down 0,98697364/0,013026361
+2023-09-27 15:20:36.905 +02:00 [WRN] Call Prediction on SOLUSDT down 0,96723324/0,032766737
+2023-09-27 15:20:37.130 +02:00 [WRN] Call Prediction on SHIBUSDT down 0,88971806/0,110281944
+2023-09-27 15:20:37.215 +02:00 [WRN] Call Prediction on ETHUSDT down 0,97927845/0,02072152
+2023-09-27 15:20:37.218 +02:00 [WRN] ----------------ML Updated---------------------
+2023-09-27 15:30:00.100 +02:00 [WRN] New candle save : ETHUSDT
+2023-09-27 15:30:00.100 +02:00 [WRN] New candle save : ADAUSDT
+2023-09-27 15:30:00.187 +02:00 [WRN] New candle save : BTCUSDT
+2023-09-27 15:30:00.255 +02:00 [WRN] New candle save : LTCUSDT
+2023-09-27 15:30:00.256 +02:00 [WRN] New candle save : DOGEUSDT
+2023-09-27 15:30:00.256 +02:00 [WRN] New candle save : XRPUSDT
+2023-09-27 15:30:00.256 +02:00 [WRN] New candle save : SOLUSDT
+2023-09-27 15:30:00.256 +02:00 [WRN] New candle save : MATICUSDT
+2023-09-27 15:30:00.258 +02:00 [WRN] New candle save : AVAXUSDT
+2023-09-27 15:30:00.259 +02:00 [WRN] New candle save : TRXUSDT
+2023-09-27 15:30:00.260 +02:00 [WRN] New candle save : BNBUSDT
+2023-09-27 15:30:00.260 +02:00 [WRN] New candle save : SHIBUSDT
+2023-09-27 15:30:00.260 +02:00 [WRN] New candle save : DOTUSDT
+2023-09-27 15:34:46.953 +02:00 [WRN] New call at 34 for ExportChart UI
+2023-09-27 15:35:29.003 +02:00 [WRN] Call Prediction on DOTUSDT down 0,71256036/0,28743964
+2023-09-27 15:35:29.089 +02:00 [WRN] Call Prediction on BNBUSDT down 0,994365/0,0056350166
+2023-09-27 15:35:29.172 +02:00 [WRN] Call Prediction on ADAUSDT down 0,98484933/0,015150622
+2023-09-27 15:35:29.367 +02:00 [WRN] Call Prediction on AVAXUSDT down 0,9978567/0,0021433216
+2023-09-27 15:35:29.451 +02:00 [WRN] Call Prediction on XRPUSDT down 0,9671002/0,032899767
+2023-09-27 15:35:29.535 +02:00 [WRN] Call Prediction on LTCUSDT down 0,96505517/0,03494478
+2023-09-27 15:35:29.612 +02:00 [WRN] Call Prediction on TRXUSDT down 0,82938784/0,17061211
+2023-09-27 15:35:29.686 +02:00 [WRN] Call Prediction on BTCUSDT down 0,8621729/0,1378271
+2023-09-27 15:35:29.757 +02:00 [WRN] Call Prediction on MATICUSDT down 0,99760985/0,002390109
+2023-09-27 15:35:29.827 +02:00 [WRN] Call Prediction on DOGEUSDT down 0,9893078/0,010692163
+2023-09-27 15:35:29.898 +02:00 [WRN] Call Prediction on SOLUSDT down 0,98823094/0,011769089
+2023-09-27 15:35:29.967 +02:00 [WRN] Call Prediction on SHIBUSDT down 0,94788384/0,05211619
+2023-09-27 15:35:30.039 +02:00 [WRN] Call Prediction on ETHUSDT down 0,989391/0,010609044
+2023-09-27 15:35:30.040 +02:00 [WRN] ----------------ML Updated---------------------
