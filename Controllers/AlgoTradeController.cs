@@ -44,6 +44,8 @@ namespace MarginCoin.Controllers
         int nbrUp = 0;
         int nbrDown = 0;
 
+        private readonly object candleMatrixLock = new object();
+
         #endregion  
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -51,18 +53,18 @@ namespace MarginCoin.Controllers
         ////////////////////////////////////////////////////////////////////////////////////////////////////////
         #region Settings    
 
-        private readonly string interval = "15m";   //1h seem to give better result
+        private readonly string interval = "30m";   //1h seem to give better result
         private readonly string maxCandle = "50";
         private readonly int prevCandleCount = 2;
         private readonly double stopLossPercentage = 2;
         private readonly double takeProfitPercentage = 0.5;
-        private readonly int maxOpenTrade = 3;
+        private readonly int maxOpenTrade = 2;
         //Max amount to invest for each trade
         private readonly int quoteOrderQty = 3000;
         //Select short list of symbol or full list(on test server on 6 symbols allowed)
         private readonly bool fullSymbolList = true;
         private readonly int nbrOfSymbol = 18;   //Not below 10 as we trade later on the 10 best of this list
-        
+
         #endregion
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -236,7 +238,7 @@ namespace MarginCoin.Controllers
             }
         }
 
-         private void UpdateMatrix(StreamData stream, List<Candle> theItem)
+        private void UpdateMatrix(StreamData stream, List<Candle> candleList)
         {
             Candle newCandle = new Candle()
             {
@@ -245,77 +247,40 @@ namespace MarginCoin.Controllers
                 h = stream.k.h,
                 l = stream.k.l,
                 c = stream.k.c,
-                //P = TradeHelper.CalculPourcentChange(stream.k.c, Globals.candleMatrix[symbolIndex].ToList(), interval, 4),
+                P = TradeHelper.CalculPourcentChange(stream.k.c, candleList, interval, 4),
             };
 
             if (!stream.k.x)
             {
-                if (theItem.Count > 0) theItem = theItem.SkipLast(1).ToList();
-                theItem.Add(newCandle);
+                if (candleList.Count == 0) return;
+                candleList = candleList.SkipLast(1).ToList();
+                candleList.Add(newCandle);
             }
             else
             {
-                theItem.Add(newCandle);
+                candleList.Add(newCandle);
                 Console.WriteLine($"New candle save : {stream.k.s}");
                 _logger.LogWarning($"New candle save : {stream.k.s}");
                 Global.onHold.Remove(stream.k.s);
             }
 
-
             //Calculate RSI / MACD / EMA
-            //List<Candle> candleListForSymbol = Global.candleMatrix[symbolIndex];
-
-           theItem = TradeIndicator.CalculateIndicator(theItem);
+            candleList = TradeIndicator.CalculateIndicator(candleList);
 
             //Calculate the Average True Range ATR
             //Globals.candleMatrix[symbolIndex].ToList().Last().ATR = TradeIndicator.CalculateATR(Globals.candleMatrix[symbolIndex].ToList());
 
             //Calculate the slope of the MACD historic (derivative) 
-            theItem.ToList().Last().MacdSlope = TradeHelper.CalculateMacdSlope(theItem.ToList(), interval).Slope;
+            candleList.ToList().Last().MacdSlope = TradeHelper.CalculateMacdSlope(candleList.ToList(), interval).Slope;
 
-            //We order the matrix with best coin to worst coin
-            Global.candleMatrix = Global.candleMatrix.OrderByDescending(p => p.Last().MacdSlope).ToList();
-        }
-
-        private void UpdateMatrix(StreamData stream, int symbolIndex)
-        {
-            //Global.candleMatrix.ToList().Where(p => p.First().s == symbol).Select(p => p.Last()).FirstOrDefault();
-
-            Candle newCandle = new Candle()
+            //We replace old list<candle> for the symbol with this new one
+            for (int i = 0; i < Global.candleMatrix.Count; i++)
             {
-                s = stream.k.s,
-                o = stream.k.o,
-                h = stream.k.h,
-                l = stream.k.l,
-                c = stream.k.c,
-                //P = TradeHelper.CalculPourcentChange(stream.k.c, Globals.candleMatrix[symbolIndex].ToList(), interval, 4),
-            };
-
-            if (!stream.k.x)
-            {
-                if (Global.candleMatrix[symbolIndex].Count > 0) Global.candleMatrix[symbolIndex] = Global.candleMatrix[symbolIndex].SkipLast(1).ToList();
-                Global.candleMatrix[symbolIndex].Add(newCandle);
+                if (Global.candleMatrix[i][0].s == stream.k.s)
+                {
+                     Global.candleMatrix[i] = candleList;
+                }
             }
-            else
-            {
-                Global.candleMatrix[symbolIndex].Add(newCandle);
-                Console.WriteLine($"New candle save : {stream.k.s}");
-                _logger.LogWarning($"New candle save : {stream.k.s}");
-                Global.onHold.Remove(stream.k.s);
-            }
-
-
-            //Calculate RSI / MACD / EMA
-            List<Candle> candleListForSymbol = Global.candleMatrix[symbolIndex];
-
-            Global.candleMatrix[symbolIndex] = TradeIndicator.CalculateIndicator(candleListForSymbol);
-
-            //Calculate the Average True Range ATR
-            //Globals.candleMatrix[symbolIndex].ToList().Last().ATR = TradeIndicator.CalculateATR(Globals.candleMatrix[symbolIndex].ToList());
-
-            //Calculate the slope of the MACD historic (derivative) 
-            Global.candleMatrix[symbolIndex].ToList().Last().MacdSlope = TradeHelper.CalculateMacdSlope(Global.candleMatrix[symbolIndex].ToList(), interval).Slope;
-
             //We order the matrix with best coin to worst coin
             Global.candleMatrix = Global.candleMatrix.OrderByDescending(p => p.Last().MacdSlope).ToList();
         }
@@ -350,7 +315,7 @@ namespace MarginCoin.Controllers
                          nbrDown = buffer.Count(pred => pred.P < 0);
 
                          marketStreamOnSpot = buffer.Where(p => mySymbolList.Any(p1 => p1 == p.s)).OrderByDescending(p => p.P).ToList();
-                        
+
                          //Update db symbol table with new coins from Binance
                          if (Global.syncBinanceSymbol)
                          {
@@ -431,7 +396,7 @@ namespace MarginCoin.Controllers
         {
             var symbolSpot = marketStreamOnSpot.Where(p => p.s == symbolCandelList.Last().s).FirstOrDefault();
 
-            if(symbolSpot == null)
+            if (symbolSpot == null)
             {
                 return;
             }
@@ -487,16 +452,15 @@ namespace MarginCoin.Controllers
             const double MIN_POURCENT_UP = 0.2;            //User to identify strong movememnt and ignore micro up mouvement
             const double MIN_RSI = 40;
             const double MAX_RSI = 80;
-            bool isLong = true;
 
-            // if(symbolSpot.P <0)
-            // {
-            //      isLong = false;
-            // }
+            if(symbolSpot.P <0)
+            {
+                 return false;
+            }
 
             if (nbrUp < MIN_CONSECUTIVE_UP_SYMBOL && symbolSpot.P > MAX_SPREAD)
             {
-                isLong = false;
+                return false;
             }
 
             // Check if there are enough candles to perform the analysis
@@ -505,10 +469,9 @@ namespace MarginCoin.Controllers
                 //Check if previous candles are green
                 for (int i = symbolCandles.Count - prevCandleCount; i < symbolCandles.Count; i++)
                 {
-                    if ((TradeHelper.CandleColor(symbolCandles[i]) != "green" || symbolCandles[i].c <= symbolCandles[i - 1].c))
+                    if (TradeHelper.CandleColor(symbolCandles[i]) != "green" || symbolCandles[i].c <= symbolCandles[i - 1].c)
                     {
-                        isLong = false;
-                        break;
+                       return false;
                     }
                 }
 
@@ -524,49 +487,54 @@ namespace MarginCoin.Controllers
             var mlPrediction = _mlService.MLPredList.ToList().FirstOrDefault(p => p.Symbol == symbolSpot.s);
             if (mlPrediction == null || mlPrediction.PredictedLabel != "up" || mlPrediction.Score[1] < MIN_SCORE)
             {
-                isLong = false;
+                return false;
             };
 
             //Check the symbol is not on hold
             if (Global.onHold.ContainsKey(symbolSpot.s) && Global.onHold[symbolSpot.s])
             {
-                isLong = false;
+                return false;
             };
 
             //Check the RSI
             if (symbolCandles.Last().Rsi < MIN_RSI || symbolCandles.Last().Rsi > MAX_RSI)
             {
-                isLong = false;
+                return false;
             };
-            return isLong;
+            
+            return true;
 
             //&& symbolCandle.Last().Macd < 100
         }
-        
+
         private void ReviewOpenTrade(string symbol)
         {
-            lock (Global.candleMatrix.ToList())
+            //we have a problem with sync and killed method called even trade positive
+            //Let's try with an external object
+            // lock (Global.candleMatrix.ToList())  instead of that
+            lock (candleMatrixLock)
             {
                 var activeOrder = _repositoryService.GetActiveOrder().Where(p => p.Symbol == symbol).Select(p => p).FirstOrDefault();
-                var symbolCandle = Global.candleMatrix.ToList().Where(p => p.First().s == symbol).Select(p=>p.Last()).FirstOrDefault();
+                var symbolCandle = Global.candleMatrix.ToList().Where(p => p.First().s == symbol).Select(p => p.Last()).FirstOrDefault();
                 var lastPrice = symbolCandle.c;
                 var highPrice = symbolCandle.h;
-               
+
                 if (activeOrder != null)
                 {
-                    //Kill it if not green after 1 minute!
                     TimeSpan span = DateTime.Now.Subtract(DateTime.Parse(activeOrder.OpenDate));
-                    if (activeOrder.HighPrice <= activeOrder.OpenPrice && span.TotalMinutes > 7)
+                    if (activeOrder.HighPrice <= activeOrder.OpenPrice && span.TotalMinutes > 15)
                     {
                         if (Global.onAir)
                         {
                             Console.WriteLine("Close trade : stop lose ");
                             Sell(activeOrder.Id, "killed");
+                            return;
                         }
                         else
                         {
                             Console.WriteLine("Close fake trade : stop lose ");
                             SellFack(activeOrder.Id, "killed", lastPrice);
+                            return;
                         }
                     }
 
@@ -577,11 +545,13 @@ namespace MarginCoin.Controllers
                         {
                             Console.WriteLine("Close trade : stop lose ");
                             Sell(activeOrder.Id, "stop lose");
+                            return;
                         }
                         else
                         {
                             Console.WriteLine("Close fake trade : stop lose ");
                             SellFack(activeOrder.Id, "stop lose", lastPrice);
+                            return;
                         }
                     }
 
@@ -592,11 +562,13 @@ namespace MarginCoin.Controllers
                         {
                             Console.WriteLine("Close trade : take profit");
                             Sell(activeOrder.Id, "Take profit");
+                            return;
                         }
                         else
                         {
                             Console.WriteLine("Close fake trade : take profit");
                             SellFack(activeOrder.Id, "Take profit", lastPrice);
+                            return;
                         }
                     }
 
@@ -608,11 +580,13 @@ namespace MarginCoin.Controllers
                         {
                             Console.WriteLine("Close trade : AI take profit ");
                             Sell(activeOrder.Id, "AI sold");
+                            return;
                         }
                         else
                         {
                             Console.WriteLine("Close fake trade : AI take profit ");
                             SellFack(activeOrder.Id, "AI sold", lastPrice);
+                            return;
                         }
                     }
 
@@ -769,7 +743,7 @@ namespace MarginCoin.Controllers
 
             myOrder.ClosePrice = Helper.CalculateAvragePrice(binanceOrder);
             //myOrder.Fee += binanceOrder.fills.Sum(P => long.Parse(P.commission));
-            myOrder.Profit = Math.Round((myOrder.ClosePrice - myOrder.OpenPrice) * myOrder.Quantity) - myOrder.Fee;
+            myOrder.Profit = Math.Round((myOrder.ClosePrice - myOrder.OpenPrice) * myOrder.Quantity);
             myOrder.IsClosed = 1;
             myOrder.Type = closeType;
             myOrder.MLSellScore = _mlService.MLPredList.ToList().Where(p => p.Symbol == binanceOrder.symbol).Select(p => p.Score[0]).FirstOrDefault();

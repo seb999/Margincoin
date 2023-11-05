@@ -33,16 +33,17 @@
         </div>
       </div>
 
-      <div class="input-group col-5" >
+      <div class="input-group col-5">
         <input class="form-control sm" placeholder="yyyy-mm-dd" name="dp" [(ngModel)]="model" ngbDatepicker
           #d="ngbDatepicker" (dateSelect)="filterOrderList()">
         <button class="btn btn-outline-secondary calendar btn-sm mr-1 " (click)="d.toggle();filterOrderList();"
           type="button"> <span style="color: orange"><i class="fa-solid fa-calendar-days"></i></span></button>
         <button class="btn btn-outline-warning btn-sm" (click)="model = today();filterOrderList()">Today</button>
-     
-     
+
+
         <button *ngIf="tradeOpen" class="btn btn-outline-warning btn-sm" (click)="debugBuy()">Test Order</button>
-        <button *ngIf="tradeOpen" class="btn btn-outline-warning btn-sm" (click)="syncBinanceSymbol()">Binance sync</button>
+        <button *ngIf="tradeOpen" class="btn btn-outline-warning btn-sm" (click)="syncBinanceSymbol()">Binance
+          sync</button>
 
         <button *ngIf="!tradeOpen" class="btn btn-outline-warning btn-sm" disabled>Test Order</button>
         <button *ngIf="!tradeOpen" class="btn btn-outline-warning btn-sm" disabled>Binance sync</button>
@@ -57,17 +58,15 @@
   </div>
 
   <div class="col-1">
-    <mat-slide-toggle [(ngModel)]="isProd" [color]="color" (change)="changeTradeServer()"> <b
-        *ngIf="isProd">
-        <p style="color: white; padding-top: 13px;">Prod</p> 
+    <mat-slide-toggle [(ngModel)]="isProd" [color]="color" (change)="changeTradeServer()"> <b *ngIf="isProd">
+        <p style="color: white; padding-top: 13px;">Prod</p>
       </b> <b *ngIf="!isProd">
-        <p style="color: white; padding-top: 13px;">Test</p> 
+        <p style="color: white; padding-top: 13px;">Test</p>
       </b>
     </mat-slide-toggle>
   </div>
   <div class="col-1">
-    <mat-slide-toggle [(ngModel)]="isOnAir" [color]="color" (change)="changeTradingMode()"> <b
-        *ngIf="isOnAir">
+    <mat-slide-toggle [(ngModel)]="isOnAir" [color]="color" (change)="changeTradingMode()"> <b *ngIf="isOnAir">
         <p style="color: white; padding-top: 13px;">On Air</p>
       </b> <b *ngIf="!isOnAir">
         <p style="color: white; padding-top: 13px;">Off</p>
@@ -113,9 +112,10 @@
           <th scope="col" id="volume" class="tableTh"></th>
           <th scope="col" id="volume" class="tableTh"></th>
           <th scope="col" id="volume" class="tableTh">
-            <button class="btn" (click)="refreshOrderTable()" style="padding-left: 0px;padding-right:0px; float: left;"><span
-              style="color: orange"><i class="fa fa-arrows-rotate"></i>
-            </span></button>
+            <button class="btn" (click)="refreshOrderTable()"
+              style="padding-left: 0px;padding-right:0px; float: left;"><span style="color: orange"><i
+                  class="fa fa-arrows-rotate"></i>
+              </span></button>
           </th>
         </tr>
       </thead>
@@ -134,18 +134,18 @@
           <td *ngIf="(order.closePrice - order.openPrice) < 0 && order.closePrice!=0" style="color: rgb(236, 44, 44);">
             {{
             (((order.closePrice - order.openPrice) / (order.openPrice))*100).toFixed(2) }}</td>
-          <td *ngIf="((order.closePrice - order.openPrice)*order.quantity-order.fee) >=0 && order.closePrice!=0"
-            style="color: limegreen;">{{((order.closePrice - order.openPrice)*order.quantity-order.fee).toFixed(2)}}
+          <td *ngIf="((order.closePrice - order.openPrice)*order.quantity) >=0 && order.closePrice!=0"
+            style="color: limegreen;">{{((order.closePrice - order.openPrice)*order.quantity).toFixed(2)}}
           </td>
-          <td *ngIf="((order.closePrice - order.openPrice)*order.quantity-order.fee) < 0 && order.closePrice!=0"
+          <td *ngIf="((order.closePrice - order.openPrice)*order.quantity) < 0 && order.closePrice!=0"
             style="color: rgb(236, 44, 44);">{{((order.closePrice -
-            order.openPrice)*order.quantity-order.fee).toFixed(2)}}</td>
-          <td *ngIf="((order.highPrice - order.openPrice)*order.quantity-order.fee) < 0 && order.highPrice!=0"
+            order.openPrice)*order.quantity).toFixed(2)}}</td>
+          <td *ngIf="((order.highPrice - order.openPrice)*order.quantity) < 0 && order.highPrice!=0"
             style="color: rgb(236, 44, 44);">{{((order.highPrice -
-            order.openPrice)*order.quantity-order.fee).toFixed(2)}}
+            order.openPrice)*order.quantity).toFixed(2)}}
           </td>
-          <td *ngIf="((order.highPrice - order.openPrice)*order.quantity-order.fee) >=0 && order.highPrice!=0"
-            style="color: limegreen;">{{((order.highPrice - order.openPrice)*order.quantity-order.fee).toFixed(2)}}
+          <td *ngIf="((order.highPrice - order.openPrice)*order.quantity) >=0 && order.highPrice!=0"
+            style="color: limegreen;">{{((order.highPrice - order.openPrice)*order.quantity).toFixed(2)}}
           </td>
           <td>{{order.openDate}}</td>
           <td>{{order.closeDate}}</td>
@@ -153,17 +153,6 @@
           <td>{{order.rsi.toFixed(2)}}</td>
           <td>{{order.mlBuyScore.toFixed(2)}}</td>
           <td>{{order.mlSellScore.toFixed(2)}}</td>
-          <!-- <td *ngIf="((order.macd > order.macdSign && order.rsi>40 ))"  style="color: limegreen;">up</td> -->
-          <!-- <td *ngIf="((order.macd <= order.macdSign && order.rsi < 50 ))"  style="color: rgb(236, 44, 44);">down</td>
-          <td *ngIf="((order.macdSign < 0 ))"  style="color: rgb(236, 44, 44);">MACD negatif</td>
-          <td *ngIf="((order.rsI_2 > 65 && order.rsi < 65))"  style="color: rgb(236, 44, 44);">RSI cross </td> -->
-          <!-- 
-          <td *ngIf="((order.macd > 0 ))"  style="color: limegreen;">up</td>
-           
-         
-          <td *ngIf="((order.rsi_2 < 30 && order.rsi_1 < 30 && order.rsi < 30))"  style="color: limegreen;">up</td> -->
-          <!-- <td *ngIf="((order.macdHist_2>order.macdHist_1 || order.macdHist_1 > order.macdHist))" style="color: rgb(236, 44, 44);">Down</td>0))" style="color: limegreen;">Up</td> -->
-          <!-- <td *ngIf="((order.macdHist_2>order.macdHist_1 || order.macdHist_1 > order.macdHist))" style="color: rgb(236, 44, 44);">Down</td> -->
           <td>
             <button class="btn" *ngIf="order.isClosed" (click)="closeTrade(order.id, order.closePrice);" disabled
               style="padding-left: 0px;padding-right:0px"><span style="color: orange"><i class="far fa-trash-alt"></i>
@@ -187,14 +176,14 @@
           <td></td>
           <td></td>
           <td></td>
-          
+
 
           <td><b>Total</b></td>
           <td *ngIf="totalProfit >=0" style="color: limegreen;">{{totalProfit.toFixed(4)}}</td>
           <td *ngIf="totalProfit < 0" style="color: rgb(255, 57, 57);">{{totalProfit.toFixed(4)}}</td>
-          <td *ngIf="totalBestProfit >=0" style="color: limegreen;">{{totalBestProfit.toFixed(4)}}</td>
+          <td *ngIf="totalBestProfit >= 0" style="color: limegreen;">{{totalBestProfit.toFixed(4)}}</td>
           <td *ngIf="totalBestProfit < 0" style="color: rgb(255, 57, 57);">{{totalBestProfit.toFixed(4)}}</td>
-          
+
           <td></td>
           <td></td>
           <td></td>
@@ -220,25 +209,25 @@
     <div class="row">
       <table class="table table-sm mt-2 table-dark">
         <tbody>
-         <tr>
-          <td>
-            <a style="color: orange" >Balance</a>
-          </td>
-          <td>{{this.balance?.toFixed(0)}}</td>
-          <td>
-            <a style="color: orange" >{{this.displaySymbol}}</a>
-          </td>
-         </tr>
+          <tr>
+            <td>
+              <a style="color: orange">Balance</a>
+            </td>
+            <td>{{this.balance?.toFixed(0)}}</td>
+            <td>
+              <a style="color: orange">{{this.displaySymbol}}</a>
+            </td>
+          </tr>
 
-         <tr>
-          <td>
-            <a style="color: orange" >Slope</a>
-          </td>
-          <td>{{this.slope?.slope.toFixed(2)}}</td>
-          <td>
-            <a style="color: orange" >{{this.displaySymbol}}</a>
-          </td>
-         </tr>
+          <tr>
+            <td>
+              <a style="color: orange">Slope</a>
+            </td>
+            <td>{{this.slope?.slope.toFixed(2)}}</td>
+            <td>
+              <a style="color: orange">{{this.displaySymbol}}</a>
+            </td>
+          </tr>
 
         </tbody>
       </table>
@@ -277,7 +266,7 @@
       </table>
     </div>
 
-   
+
   </div>
 </div>
 

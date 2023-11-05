@@ -54,11 +54,11 @@ namespace MarginCoin.Misc
             try
             {
                 var backTimeCandle = TradeHelper.NumberCandleInInterval(tradingInterval, backTimelineHours);
-                return ((last - candleMatrice[candleMatrice.Count - backTimeCandle].c) / last) * 100;
+                return (last - candleMatrice[candleMatrice.Count - backTimeCandle].c) / last * 100;
             }
             catch (System.Exception ex)
             {
-                return 0;
+                return -1;
             }
         }
 

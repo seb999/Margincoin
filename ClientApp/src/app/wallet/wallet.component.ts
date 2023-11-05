@@ -504,7 +504,7 @@ export class WalletComponent {
   async displayHighstock() {
     let chartHeight = '';
     this.ohlc = null;
-    this.ohlc = await this.orderDetailHelper.getIntradayData(this.displaySymbol, 75, this.interval);
+    this.ohlc = await this.orderDetailHelper.getIntradayData(this.displaySymbol, this.interval, 40);
 
     let chartData = [] as any;
     let volume = [] as any;

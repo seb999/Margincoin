@@ -65,7 +65,9 @@ namespace MarginCoin.Controllers
                 {
                     myAccount.balances.Add(new balances() { asset = item.Replace("USDT", ""), free = "0", locked = "0" });
                 }
-            }
+            }  
+            //Filter and keep only the pair that we trade
+            myAccount.balances = myAccount.balances.Where(p => Global.AItradeSymbol.Any(p2 => p2.Replace("USDT", "") == p.asset || p.asset == "USDT")).ToList();
  
             return myAccount;
         }
