@@ -38,17 +38,35 @@ namespace MarginCoin.Controllers
         }
 
         [HttpGet("[action]")]
-        public List<string> GetSymbolList()
+        public List<Symbol> GetSymbolList()
         {
-            if (Global.fullSymbolList)
+            if (Global.isProd)
             {
-                return _appDbContext.Symbol.Where(p => p.IsOnProd != 0 && p.Rank < Global.nbrOfSymbol).OrderBy(p => p.Rank).Select(p => p.SymbolName).ToList();
+                return _appDbContext.Symbol.Where(p => p.IsOnProd != 0 && p.Rank < Global.nbrOfSymbol).OrderBy(p => p.Rank).ToList();
             }
             else
             {
-                return _appDbContext.Symbol.Where(p => p.IsOnTest != 0).Select(p => p.SymbolName).ToList();
+                return _appDbContext.Symbol.Where(p => p.IsOnTest != 0 && p.Rank < Global.nbrOfSymbol).OrderBy(p => p.Rank).ToList();
             }
         }
+
+        /// <summary>
+        /// Retrun list to top 60 coins from DB
+        /// </summary>
+        /// <returns></returns>
+        public List<Symbol> GetSymbolBaseList()
+        {
+            if (Global.isProd)
+            {
+                return _appDbContext.Symbol.Where(p => p.IsOnProd != 0 && p.Rank < 60).OrderBy(p => p.Rank).ToList();
+            }
+            else
+            {
+                return _appDbContext.Symbol.Where(p => p.IsOnTest != 0 && p.Rank < 60).OrderBy(p => p.Rank).ToList();
+            }
+        }
+
+
 
         //Used once to copy all symbol from binance to my Symbol table
         public void UpdateDbSymbol(List<string> symbolList)
@@ -79,8 +97,6 @@ namespace MarginCoin.Controllers
                     _appDbContext.SaveChanges();
                 }
             }
-
-
         }
 
         public void UpdateCoinMarketCap()

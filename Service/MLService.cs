@@ -15,13 +15,14 @@ namespace MarginCoin.Service
 {
     public class MLService : IMLService
     {
+        public delegate void TimeElapseDelegate();
+        private TimeElapseDelegate _timeElapseCallDelegate;
         private readonly string downloadFolder;
         private readonly string screenShotFolder;
         private readonly string imageFolder;
-        private readonly List<int> reccurence;
         private ILogger _logger;
         private IHubContext<SignalRHub> _hub;
-        private System.Timers.Timer MLTimer = new System.Timers.Timer();
+        private Timer MLTimer = new Timer();
         public List<MLPrediction> MLPredList { get; set; }
 
         private bool isFirstTrigger = false;
@@ -38,10 +39,11 @@ namespace MarginCoin.Service
             imageFolder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + @"/Downloads/MCImage";
         }
 
-        public void InitML()
+        public void InitML(TimeElapseDelegate timeElapseDelegate)
         {
+            _timeElapseCallDelegate = timeElapseDelegate;
             isFirstTrigger = true;
-            MLTimer.Interval = 120000; 
+            MLTimer.Interval = 120000;
             MLTimer.Elapsed += new ElapsedEventHandler(MLTimer_Elapsed);
             MLTimer.Start();
         }
@@ -56,14 +58,15 @@ namespace MarginCoin.Service
             if (!isFirstTrigger && Global.isTradingOpen)
             {
                 _logger.LogWarning($"New call at {DateTime.Now.Minute} for ExportChart UI");
-                _hub.Clients.All.SendAsync("exportChart", JsonSerializer.Serialize(Global.AItradeSymbol));
+                _hub.Clients.All.SendAsync("exportChart", JsonSerializer.Serialize(Global.SymbolWeTrade));
+                _timeElapseCallDelegate();
             }
             else
             {
                 isFirstTrigger = false;
                 _logger.LogWarning($"Initial call for ExportChart UI");
-                _hub.Clients.All.SendAsync("exportChart", JsonSerializer.Serialize(Global.AItradeSymbol));
-
+                _hub.Clients.All.SendAsync("exportChart", JsonSerializer.Serialize(Global.SymbolWeTrade));
+                _timeElapseCallDelegate();
                 MLTimer.Stop();
                 MLTimer.Interval = 900000;
                 MLTimer.Start();

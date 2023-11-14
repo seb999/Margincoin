@@ -222,13 +222,14 @@ namespace MarginCoin.Service
             }
         }
 
-        public BinanceOrder SellLimit(string symbol, double quantity, MyEnum.TimeInForce timeInForce, ref System.Net.HttpStatusCode httpStatusCode)
+        public BinanceOrder SellLimit(string symbol, double quantity, double price, MyEnum.TimeInForce timeInForce, ref System.Net.HttpStatusCode httpStatusCode)
         {
             string stringQuantity = quantity.ToString().Replace(",", ".");
+            string stringPrice = price.ToString().Replace(",", ".");
             try
             {
                 SetEnv(ref secretKey, ref publicKey, ref host);
-                string parameters = $"timestamp={ServerTime(publicKey)}&symbol={symbol}&quantity={stringQuantity}&timeInForce={timeInForce.ToString()}&side=SELL&type=LIMIT&recvWindow=60000";
+                string parameters = $"timestamp={ServerTime(publicKey)}&symbol={symbol}&quantity={stringQuantity}&price={stringPrice}&timeInForce={timeInForce.ToString()}&side=SELL&type=LIMIT&recvWindow=60000";
                 string signature = GetSignature(parameters, secretKey);
                 string apiUrl = $"{host}/api/v3/order?{parameters}&signature={signature}";
 
@@ -239,7 +240,7 @@ namespace MarginCoin.Service
                
                 var result = HttpHelper.PostApiData<BinanceOrder>(new Uri(apiUrl), publicKey, new StringContent("", Encoding.UTF8, "application/json"), ref httpStatusCode);
                 _logger.LogWarning($"Call {MyEnum.BinanceApiCall.SellLimit} {httpStatusCode.ToString()}");
-             return result;
+                return result;
             }
             catch (System.Exception e)
             {

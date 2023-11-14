@@ -7,7 +7,9 @@ export enum BackEndMessage {
   apiTooManyRequest = 'BinanceTooManyRequest',
   apiCheckAllowedIP = 'BinanceCheckAllowedIP',
   sellOrderFilled = 'sellOrderFilled',
+  buyOrderFilled = 'buyOrderFilled',
   sellOrderExired = 'sellOrderExired',
+  buyOrderExired = 'buyOrderExired',
   exportChart = 'exportChart',
   webSocketStopped = 'WebSocketStopped'
 };

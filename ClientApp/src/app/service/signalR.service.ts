@@ -57,6 +57,14 @@ export class SignalRService {
             return this.eventMessage.emit(serverMsg);
         });
 
+        this.hubConnection.on(BackEndMessage.buyOrderFilled, (data) => {
+            let serverMsg: ServerMsg = {
+                msgName: BackEndMessage.buyOrderFilled,
+                order: JSON.parse(data)
+            };
+            return this.eventMessage.emit(serverMsg);
+        });
+
         this.hubConnection.on(BackEndMessage.newOrder, () => {
             let serverMsg: ServerMsg = { msgName: BackEndMessage.newOrder};
             return this.eventMessage.emit(serverMsg);
@@ -79,6 +87,11 @@ export class SignalRService {
 
         this.hubConnection.on(BackEndMessage.sellOrderExired, () => {
             let serverMsg: ServerMsg = { msgName: BackEndMessage.sellOrderExired};
+            return this.eventMessage.emit(serverMsg);
+        });
+
+        this.hubConnection.on(BackEndMessage.buyOrderExired, () => {
+            let serverMsg: ServerMsg = { msgName: BackEndMessage.buyOrderExired};
             return this.eventMessage.emit(serverMsg);
         });
 

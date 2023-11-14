@@ -57,8 +57,8 @@ public class RepositoryService : IRepositoryService
         // Calculate the current market price
         Candle lastCandle = symbolCandles.Select(p => p).LastOrDefault();
 
-        //If price up 0.2% we move the stop lose to open price
-        if (lastCandle.c > activeOrder.OpenPrice * 1.002)
+        //If price up 0.4% we move the stop lose to open price
+        if (lastCandle.c > activeOrder.OpenPrice * 1.004)
         {
             // Update the stop loss price of the active order
             activeOrder.StopLose = activeOrder.OpenPrice;

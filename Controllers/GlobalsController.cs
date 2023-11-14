@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Text.Json;
+using MarginCoin.Model;
 using Microsoft.AspNetCore.Mvc;
 
 
@@ -9,8 +10,11 @@ namespace MarginCoin.Controllers
     [Route("api/[controller]")]
     public class GlobalsController : ControllerBase
     {
-        public GlobalsController()
+        private readonly ApplicationDbContext _appDbContext;
+
+        public GlobalsController([FromServices] ApplicationDbContext appDbContext)
         {
+             _appDbContext = appDbContext;
         }
 
         // Select Binance server - Prod or test
@@ -24,19 +28,8 @@ namespace MarginCoin.Controllers
         public void SetServer(bool isProd)
         {
             Global.isProd = isProd;
-        }
-
-        // When server is production, execute real order or not
-        [HttpGet("[action]")]
-        public bool GetTradingMode()
-        {
-            return Global.onAir;
-        }
-
-        [HttpGet("[action]/{onAir}")]
-        public void SetTradingMode(bool onAir)
-        {
-            Global.onAir = onAir;
+            ActionController actionController = new ActionController(_appDbContext);
+            Global.SymbolWeTrade = actionController.GetSymbolList();
         }
 
         // START and STOP the trading

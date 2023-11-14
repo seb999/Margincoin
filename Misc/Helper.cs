@@ -34,22 +34,5 @@ namespace MarginCoin.Misc
             myString = myString.Replace(",", ".");
             return double.Parse(myString, CultureInfo.InvariantCulture);
         }
-
-        //private double CalculateAvragePrice(BinanceOrder myOrder)
-        //{
-        //    var executedAmount = myOrder.fills.Sum(p => Helper.ToDouble(p.price) * Helper.ToDouble(p.qty));
-        //    var executedQty = myOrder.fills.Sum(p => Helper.ToDouble(p.qty));
-        //    return executedAmount / executedQty;
-        //}
-
-        //review by AI
-        public static double CalculateAvragePrice(BinanceOrder myOrder)
-        {
-            double executedAmount = myOrder.fills
-                .Sum(fill => Helper.ToDouble(fill.price) * Helper.ToDouble(fill.qty));
-            double executedQty = myOrder.fills
-                .Sum(fill => Helper.ToDouble(fill.qty));
-            return executedAmount / executedQty;
-        }
     }
 }

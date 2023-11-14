@@ -25,7 +25,7 @@ namespace MarginCoin.Controllers
         private readonly ApplicationDbContext _appDbContext;
         private ILogger _logger;
 
-        public BinanceController(IHubContext<SignalRHub> hub, 
+        public BinanceController(IHubContext<SignalRHub> hub,
             [FromServices] ApplicationDbContext appDbContext,
             ILogger<AlgoTradeController> logger,
             IBinanceService binanceService)
@@ -42,7 +42,7 @@ namespace MarginCoin.Controllers
             System.Net.HttpStatusCode httpStatusCode = System.Net.HttpStatusCode.NoContent;
 
             //My asset and quantity available from Binance wallet
-            BinanceAccount myAccount =_binanceService.Account(ref httpStatusCode);
+            BinanceAccount myAccount = _binanceService.Account(ref httpStatusCode);
 
             if (httpStatusCode == System.Net.HttpStatusCode.NotFound) _hub.Clients.All.SendAsync(MyEnum.BinanceHttpError.BinanceAccessFaulty.ToString());
             if (httpStatusCode == System.Net.HttpStatusCode.NoContent) _hub.Clients.All.SendAsync(MyEnum.BinanceHttpError.BinanceAccessFaulty.ToString());
@@ -52,23 +52,30 @@ namespace MarginCoin.Controllers
             if (myAccount == null) return null;
 
             //Get list of symbol to monitor from DB
-            List<string> dbSymbolList = Global.fullSymbolList ? _appDbContext.Symbol.Where(p => p.IsOnProd != 0).Select(p => p.SymbolName).ToList()
-                                                                : _appDbContext.Symbol.Where(p => p.IsOnTest != 0).Select(p => p.SymbolName).ToList();
-           
+            List<Symbol> dbSymbolList = Global.fullSymbolList ? _appDbContext.Symbol.Where(p => p.IsOnProd != 0).ToList()
+                                                                : _appDbContext.Symbol.Where(p => p.IsOnTest != 0).ToList();
+
             //Remove what is not in the db list
-            myAccount.balances = myAccount.balances.Where(p => dbSymbolList.Any(p2 => p2.Replace("USDT", "") == p.asset || p.asset == "USDT")).ToList();
+            myAccount.balances = myAccount.balances.Where(p => dbSymbolList.Any(p2 => p2.SymbolName.Replace("USDT", "") == p.asset || p.asset == "USDT")).ToList();
 
             //Add what is not from the db list
             foreach (var item in dbSymbolList)
             {
-                if (myAccount.balances.Where(p => p.asset == item.Replace("USDT", "")).FirstOrDefault() == null)
+                if (myAccount.balances.Where(p => p.asset == item.SymbolName.Replace("USDT", "")).FirstOrDefault() == null)
                 {
-                    myAccount.balances.Add(new balances() { asset = item.Replace("USDT", ""), free = "0", locked = "0" });
+                    myAccount.balances.Add(new balances() { asset = item.SymbolName.Replace("USDT", ""), free = "0", locked = "0" });
                 }
-            }  
+            }
+
             //Filter and keep only the pair that we trade
-            myAccount.balances = myAccount.balances.Where(p => Global.AItradeSymbol.Any(p2 => p2.Replace("USDT", "") == p.asset || p.asset == "USDT")).ToList();
- 
+            myAccount.balances = myAccount.balances.Where(p => Global.SymbolWeTrade.Any(p2 => p2.SymbolName.Replace("USDT", "") == p.asset || p.asset == "USDT")).ToList();
+
+             //Order based on coinmarket rank
+
+             myAccount.balances  = myAccount.balances
+            .OrderBy(p1 => dbSymbolList.FirstOrDefault(p2 => p2.SymbolName.Replace("USDT", "") == p1.asset)?.Rank ?? int.MaxValue)
+            .ToList();
+            
             return myAccount;
         }
 
@@ -84,17 +91,42 @@ namespace MarginCoin.Controllers
                 return;
             }
 
-            if(myBinanceOrder.status == "EXPIRED")
+            if (myBinanceOrder.status == "EXPIRED")
             {
                 await _hub.Clients.All.SendAsync(MyEnum.BinanceHttpError.BinanceSellOrderExpired.ToString());
                 _logger.LogWarning($"Call {MyEnum.BinanceApiCall.SellMarket} {symbol} Expired");
-                
+
             }
 
             await Task.Delay(500);
             if (_binanceService.OrderStatus(myBinanceOrder.symbol, myBinanceOrder.orderId).status == "FILLED")
             {
                 await _hub.Clients.All.SendAsync("sellOrderFilled", JsonSerializer.Serialize(myBinanceOrder));
+            }
+        }
+
+        [HttpGet("[action]/{symbol}/{quoteQty}")]
+        public async void Buy(string symbol, double quoteQty)
+        {
+            System.Net.HttpStatusCode httpStatusCode = System.Net.HttpStatusCode.NoContent;
+            BinanceOrder myBinanceOrder = _binanceService.BuyMarket(symbol, quoteQty, ref httpStatusCode);
+            if (myBinanceOrder == null) return;
+            if (myBinanceOrder.status == "FILLED")
+            {
+                await _hub.Clients.All.SendAsync("buyOrderFilled", JsonSerializer.Serialize(myBinanceOrder));
+                return;
+            }
+
+            if (myBinanceOrder.status == "EXPIRED")
+            {
+                await _hub.Clients.All.SendAsync(MyEnum.BinanceHttpError.BinanceSellOrderExpired.ToString());
+                _logger.LogWarning($"Call {MyEnum.BinanceApiCall.BuyMarket} {symbol} Expired");
+            }
+
+            await Task.Delay(500);
+            if (_binanceService.OrderStatus(myBinanceOrder.symbol, myBinanceOrder.orderId).status == "FILLED")
+            {
+                await _hub.Clients.All.SendAsync("buyOrderFilled", JsonSerializer.Serialize(myBinanceOrder));
             }
         }
     }

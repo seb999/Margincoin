@@ -148,31 +148,6 @@ namespace MarginCoin.Misc
             return candleList;
         }
 
-        internal static void DisplayStatus(Order activeOrder, List<MarketStream> marketStreamList)
-        {
-            if (activeOrder != null)
-            {
-                double currentPrice = marketStreamList.Where(p => p.s == activeOrder.Symbol).Select(p => p.c).FirstOrDefault();
-                Console.WriteLine(DateTime.Now + " - Trading - Profit : " + Math.Round(((currentPrice - activeOrder.OpenPrice) * activeOrder.Quantity) - activeOrder.Fee));
-            }
-            else
-            {
-                Console.WriteLine(DateTime.Now + " - Trading - No active order");
-            }
-        }
-
-        internal static bool DataQualityCheck(List<MarketStream> marketStreamList)
-        {
-            if (marketStreamList.Last().c != 0)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-
         internal static string CandleColor(Candle candle)
         {
             if (candle.c > candle.o) return "green";
@@ -180,6 +155,14 @@ namespace MarginCoin.Misc
             return "";
         }
 
+        public static double CalculateAvragePrice(BinanceOrder myOrder)
+        {
+            double executedAmount = myOrder.fills
+                .Sum(fill => Helper.ToDouble(fill.price) * Helper.ToDouble(fill.qty));
+            double executedQty = myOrder.fills
+                .Sum(fill => Helper.ToDouble(fill.qty));
+            return executedAmount / executedQty;
+        }
 
     }
 }

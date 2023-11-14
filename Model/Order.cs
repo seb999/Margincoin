@@ -7,7 +7,8 @@ namespace MarginCoin.Model
         [Key]
         public int Id { get; set; }
         public string Symbol { get; set; }
-        public double Quantity { get; set; }
+        public double QuantityBuy { get; set; }
+        public double QuantitySell { get; set; }
         public double OpenPrice { get; set; }
         public double HighPrice { get; set; }
         public double LowPrice { get; set; }
@@ -19,7 +20,6 @@ namespace MarginCoin.Model
         public double Fee { get; set; }
         public int IsClosed { get; set; }
         public string Type { get; set; }
-        public string Cat { get; set; }
         public string OpenDate { get; set; }
         public string CloseDate { get; set; }
         public double RSI { get; set; }

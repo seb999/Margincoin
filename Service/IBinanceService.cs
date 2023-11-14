@@ -33,7 +33,7 @@ namespace MarginCoin.Service
 
         public BinanceOrder BuyLimit(string symbol, double qty, MyEnum.TimeInForce timeInForce);
 
-        public BinanceOrder SellLimit(string symbol, double qty, MyEnum.TimeInForce timeInForce, ref System.Net.HttpStatusCode httpStatusCode);
+        public BinanceOrder SellLimit(string symbol, double qty, double price, MyEnum.TimeInForce timeInForce, ref System.Net.HttpStatusCode httpStatusCode);
 
     }
 }
