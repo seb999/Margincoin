@@ -82,9 +82,8 @@
       <thead class="thead-light">
         <tr>
           <th scope="col" id="last" class="tableTh ">Symbol</th>
+          <th scope="col" id="volume" class="tableTh">Qty</th>
           <th scope="col" id="volume" class="tableTh">Open</th>
-          <!-- <th scope="col" id="volume" class="tableTh">High</th>
-          <th scope="col" id="volume" class="tableTh">Low</th> -->
           <th scope="col" id="volume" class="tableTh">Close</th>
           <th scope="col" id="volume" class="tableTh">%</th>
           <th scope="col" id="volume" class="tableTh">Profit</th>
@@ -93,12 +92,6 @@
           <th scope="col" id="volume" class="tableTh">Close</th>
           <th scope="col" id="volume" class="tableTh">Type</th>
           <th scope="col" id="volume" class="tableTh">Rsi</th>
-          <th scope="col" id="volume" class="tableTh">BuyML</th>
-          <th scope="col" id="volume" class="tableTh">SellML</th>
-          <!-- <th scope="col" id="volume" class="tableTh">MACD/RSI</th>
-          <th scope="col" id="volume" class="tableTh">MACD/negatif</th>
-          <th scope="col" id="volume" class="tableTh">RSI/cross30</th> -->
-          <th scope="col" id="volume" class="tableTh"></th>
           <th scope="col" id="volume" class="tableTh"></th>
           <th scope="col" id="volume" class="tableTh">
             <button class="btn" (click)="refreshOrderTable()"
@@ -112,9 +105,9 @@
         <tr *ngFor="let order of orderList" class="alert alert-warning"
           [ngClass]="{'alert alert-warning': order.closeDate == null}">
           <td>{{order.symbol}}</td>
+          <td *ngIf="!order.isClosed">{{order.quantityBuy*order.openPrice}}/0000</td>
+          <td *ngIf="order.isClosed">{{order.quantityBuy*order.openPrice}}/{{order.quantitySell*order.closePrice}}</td>
           <td>{{order.openPrice.toFixed(5)}}</td>
-          <!-- <td>{{order.highPrice.toFixed(5)}}</td>
-          <td>{{order.lowPrice.toFixed(5)}}</td> -->
           <td>{{order.closePrice.toFixed(5)}}</td>
           <td *ngIf="order.closePrice==0">--</td>
           <td *ngIf="order.closePrice==0">--</td>
@@ -140,8 +133,6 @@
           <td>{{order.closeDate}}</td>
           <td>{{order.type}}</td>
           <td>{{order.rsi.toFixed(2)}}</td>
-          <td>{{order.mlBuyScore.toFixed(2)}}</td>
-          <td>{{order.mlSellScore.toFixed(2)}}</td>
           <td>
             <button class="btn" *ngIf="order.isClosed" (click)="closeTrade(order.id, order.closePrice);" disabled
               style="padding-left: 0px;padding-right:0px"><span style="color: orange"><i class="far fa-trash-alt"></i>
@@ -253,8 +244,6 @@
         </tbody>
       </table>
     </div>
-
-
   </div>
 </div>
 

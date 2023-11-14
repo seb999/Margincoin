@@ -602,6 +602,7 @@ namespace MarginCoin.Controllers
                 //Save here binance order result in db
                 SaveTrade(symbolSpot, symbolCandleList, myBinanceOrder);
                 Global.onHold.Remove(symbolSpot.s);
+                myBinanceOrder.price = TradeHelper.CalculateAvragePrice(myBinanceOrder).ToString();
                 await _hub.Clients.All.SendAsync("newPendingOrder", JsonSerializer.Serialize(myBinanceOrder));
                 await Task.Delay(500);
                 await _hub.Clients.All.SendAsync("newOrder");

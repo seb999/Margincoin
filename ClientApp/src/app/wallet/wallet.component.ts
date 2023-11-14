@@ -138,12 +138,12 @@ export class WalletComponent {
       if (this.serverMsg.msgName == BackEndMessage.newPendingOrder) {
         let binanceOrder = this.serverMsg.order;
         if (this.orderPopOver.isOpen()) {
-          setTimeout(() => { this.openPopOver(this.orderPopOver, binanceOrder); }, 6000);
+          setTimeout(() => { this.openPopOver(this.orderPopOver, binanceOrder); }, 7000);
           setTimeout(() => { this.closePopOver(this.orderPopOver); }, 11000);
         }
         else {
           this.openPopOver(this.orderPopOver, binanceOrder);
-          setTimeout(() => { this.closePopOver(this.orderPopOver); }, 5000);
+          setTimeout(() => { this.closePopOver(this.orderPopOver); }, 7000);
         }
       }
 
