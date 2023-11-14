@@ -13,9 +13,9 @@ export class SignalRService {
 
     public startConnection = () => {
         this.hubConnection = new signalR.HubConnectionBuilder()
-          .withUrl(location.origin + '/Signalr')
-          .withAutomaticReconnect()
-          .build();
+            .withUrl(location.origin + '/Signalr')
+            .withAutomaticReconnect()
+            .build();
 
         this.hubConnection
             .start()
@@ -66,43 +66,25 @@ export class SignalRService {
         });
 
         this.hubConnection.on(BackEndMessage.newOrder, () => {
-            let serverMsg: ServerMsg = { msgName: BackEndMessage.newOrder};
+            let serverMsg: ServerMsg = { msgName: BackEndMessage.newOrder };
             return this.eventMessage.emit(serverMsg);
         });
 
-        this.hubConnection.on(BackEndMessage.apiAccessFaulty, () => {
-            let serverMsg: ServerMsg = { msgName: BackEndMessage.apiAccessFaulty };
+        this.hubConnection.on(BackEndMessage.webSocketStopped, () => {
+            let serverMsg: ServerMsg = { msgName: BackEndMessage.webSocketStopped };
             return this.eventMessage.emit(serverMsg);
         });
 
-      this.hubConnection.on(BackEndMessage.webSocketStopped, () => {
-        let serverMsg: ServerMsg = { msgName: BackEndMessage.webSocketStopped };
-        return this.eventMessage.emit(serverMsg);
-      });
-
-        this.hubConnection.on(BackEndMessage.apiTooManyRequest, () => {
-            let serverMsg: ServerMsg = { msgName: BackEndMessage.apiTooManyRequest};
-            return this.eventMessage.emit(serverMsg);
-        });
-
-        this.hubConnection.on(BackEndMessage.sellOrderExired, () => {
-            let serverMsg: ServerMsg = { msgName: BackEndMessage.sellOrderExired};
-            return this.eventMessage.emit(serverMsg);
-        });
-
-        this.hubConnection.on(BackEndMessage.buyOrderExired, () => {
-            let serverMsg: ServerMsg = { msgName: BackEndMessage.buyOrderExired};
-            return this.eventMessage.emit(serverMsg);
-        });
-
-        this.hubConnection.on(BackEndMessage.apiCheckAllowedIP, () => {
-            let serverMsg: ServerMsg = { msgName: BackEndMessage.apiCheckAllowedIP};
+        this.hubConnection.on(BackEndMessage.httpRequestError, () => {
+            let serverMsg: ServerMsg = { msgName: BackEndMessage.httpRequestError };
             return this.eventMessage.emit(serverMsg);
         });
 
         this.hubConnection.on(BackEndMessage.exportChart, (data) => {
-            let serverMsg: ServerMsg = { msgName: BackEndMessage.exportChart,
-                tradeSymbolList: JSON.parse(data) };
+            let serverMsg: ServerMsg = {
+                msgName: BackEndMessage.exportChart,
+                tradeSymbolList: JSON.parse(data)
+            };
             return this.eventMessage.emit(serverMsg);
         });
     }

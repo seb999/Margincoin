@@ -18,22 +18,15 @@ namespace MarginCoin.Service
         string Interval { get; set; }
         string Limit { get; set; } 
 
-        public List<BinanceAsset> Asset(ref System.Net.HttpStatusCode httpStatusCode);
-
-        public BinanceAccount Account(ref System.Net.HttpStatusCode httpStatusCode);
-
+        public List<BinanceAsset> Asset();
+        public BinanceAccount Account();
         public List<BinancePrice> GetSymbolPrice ();
         public void GetCandles(string symbol, ref List<List<Candle>> candleMatrix);
-
         public BinanceOrder OrderStatus(string symbol, double orderId);
-
-        public BinanceOrder BuyMarket(string symbol, double quoteQty, ref System.Net.HttpStatusCode httpStatusCode);
-
-        public BinanceOrder SellMarket(string symbol, double qty, ref System.Net.HttpStatusCode httpStatusCode);
-
+        public BinanceOrder BuyMarket(string symbol, double quoteQty);
+        public BinanceOrder SellMarket(string symbol, double qty);
         public BinanceOrder BuyLimit(string symbol, double qty, MyEnum.TimeInForce timeInForce);
-
-        public BinanceOrder SellLimit(string symbol, double qty, double price, MyEnum.TimeInForce timeInForce, ref System.Net.HttpStatusCode httpStatusCode);
+        public BinanceOrder SellLimit(string symbol, double qty, double price, MyEnum.TimeInForce timeInForce);
 
     }
 }

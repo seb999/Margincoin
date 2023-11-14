@@ -119,7 +119,6 @@ export class WalletComponent {
 
     this.signalRService.onMessage().subscribe(async message => {
       this.serverMsg = message;
-
       if (this.serverMsg.msgName == BackEndMessage.trading) {
         this.tradeOpen = true;
         this.showMessageInfo = true;
@@ -148,6 +147,12 @@ export class WalletComponent {
         }
       }
 
+      if (this.serverMsg.msgName == BackEndMessage.newOrder) {
+        this.orderList = await this.getAllOrder(this.model.day + "-" + this.model.month + "-" + this.model.year);
+        this.calculateProfit();
+        this.refreshUI();
+      }
+
       if (this.serverMsg.msgName == BackEndMessage.sellOrderFilled 
         || this.serverMsg.msgName == BackEndMessage.buyOrderFilled) {
         this.orderList = await this.getAllOrder(this.model.day + "-" + this.model.month + "-" + this.model.year);
@@ -156,13 +161,7 @@ export class WalletComponent {
         setTimeout(() => {
           this.closePopOver(this.orderPopOver);
           this.refreshUI();
-        }, 5000);
-      }
-
-      if (this.serverMsg.msgName == BackEndMessage.newOrder) {
-        this.orderList = await this.getAllOrder(this.model.day + "-" + this.model.month + "-" + this.model.year);
-        this.calculateProfit();
-        this.refreshUI();
+        }, 7000);
       }
 
       if (this.serverMsg.msgName == BackEndMessage.exportChart) {
@@ -176,10 +175,7 @@ export class WalletComponent {
         this.trade();
       }
 
-      if (this.serverMsg.msgName == BackEndMessage.apiAccessFaulty
-        || this.serverMsg.msgName == BackEndMessage.apiTooManyRequest
-        || this.serverMsg.msgName == BackEndMessage.apiCheckAllowedIP
-        || this.serverMsg.msgName == BackEndMessage.sellOrderExired) {
+      if (this.serverMsg.msgName == BackEndMessage.httpRequestError) {
         this.showMessageError = true;
         this.messageError = this.serverMsg.msgName;
         setTimeout(() => { this.showMessageError = false }, 7000);

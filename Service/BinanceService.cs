@@ -6,15 +6,16 @@ using MarginCoin.Class;
 using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
 using MarginCoin.Misc;
-using Binance.Spot.Models;
 using System.Linq;
-using System.Web;
-using System.Net;
+using System.Text.Json;
+using Microsoft.AspNetCore.SignalR;
 
 namespace MarginCoin.Service
 {
     public class BinanceService : IBinanceService
     {
+        System.Net.HttpStatusCode httpStatusCode;
+        private IHubContext<SignalRHub> _hub;
         const string testPublicKey = "HsKWfKtktmw07gqsCyK1TJThULUnAivnFxF13vFUZf4WjLJXsbwmaPOIgw5rNAuQ";  //for https://testnet.binance.vision/
         const string testSecretKey = "ncSzN6J4Efh8Xb53e1uYkuHCw9VFAemUKjCEPdwY5WtdbMJOAEzEIuP5qMrjKewX";
         const string prodPublicKey = "gIDNZ9OsVIUbvFEuLgOhZ3XoQRnwrJ8krkp3TAR2dxQxwYErmKC6GOsMy50LYGWy";
@@ -29,21 +30,37 @@ namespace MarginCoin.Service
 
         ILogger _logger;
 
-        public BinanceService(ILogger<BinanceService> logger)
+        public BinanceService(ILogger<BinanceService> logger, IHubContext<SignalRHub> hub)
         {
             _logger = logger;
+            _hub = hub;
+            httpStatusCode = new System.Net.HttpStatusCode();
         }
 
-        public List<BinancePrice> GetSymbolPrice ()
+        #region Get ticker / klines for symbol
+
+        public List<BinancePrice> GetSymbolPrice()
         {
             string apiUrl = $"https://api.binance.com/api/v3/ticker/price";
             List<BinancePrice> symbolPrice = HttpHelper.GetApiData<List<BinancePrice>>(new Uri(apiUrl));
-            symbolPrice =  symbolPrice.Where(p => p.symbol.Contains("USDT")).ToList();
-            
+            symbolPrice = symbolPrice.Where(p => p.symbol.Contains("USDT")).ToList();
             return symbolPrice;
         }
 
-        public List<BinanceAsset> Asset(ref System.Net.HttpStatusCode httpStatusCode)
+        public void GetCandles(string symbol, ref List<List<Candle>> candleMatrix)
+        {
+            //Get data from Binance API
+            string apiUrl = $"https://api3.binance.com/api/v3/klines?symbol={symbol}&interval={Interval}&limit=100";
+            List<List<double>> coinQuotation = HttpHelper.GetApiData<List<List<double>>>(new Uri(apiUrl));
+            List<Candle> candleList = new List<Candle>();
+            candleList = TradeHelper.CreateCandleList(coinQuotation, symbol);
+            candleMatrix.Add(candleList);
+        }
+
+        #endregion
+
+        #region Wallet
+        public List<BinanceAsset> Asset()
         {
             try
             {
@@ -72,30 +89,29 @@ namespace MarginCoin.Service
             }
         }
 
-        public BinanceAccount Account(ref System.Net.HttpStatusCode httpStatusCode)
+        public BinanceAccount Account()
         {
             try
             {
                 SetEnv(ref secretKey, ref publicKey, ref host);
-
                 string parameters = $"timestamp={ServerTime(publicKey)}&recvWindow=60000";
                 string signature = GetSignature(parameters, secretKey);
                 string apiUrl = $"{host}/api/v3/account?{parameters}&signature={signature}";
 
-                if (!Global.isProd)
-                {
-                    apiUrl = $"{host}/api/v3/account?{parameters}&signature={signature}";
-                }
-
+                //call Binance API
                 var result = HttpHelper.GetApiData<BinanceAccount>(new Uri(apiUrl), publicKey, ref httpStatusCode);
+
+                //log httpStatusCode result
+                _logger.LogWarning($"Get {MyEnum.BinanceApiCall.Account} {httpStatusCode.ToString()}");
+                _hub.Clients.All.SendAsync("httpRequestError", JsonSerializer.Serialize(httpStatusCode));
+
+                //Return result
                 if (result != null)
                 {
-                    _logger.LogWarning($"Get {MyEnum.BinanceApiCall.Account} {httpStatusCode.ToString()}");
                     return result;
                 }
                 else
                 {
-                    _logger.LogWarning($"Get {MyEnum.BinanceApiCall.Account} {httpStatusCode.ToString()}");
                     return null;
                 }
             }
@@ -106,33 +122,23 @@ namespace MarginCoin.Service
             }
         }
 
-        public void GetCandles(string symbol, ref List<List<Candle>> candleMatrix)
-        {
-            //Get data from Binance API
-            string apiUrl = $"https://api3.binance.com/api/v3/klines?symbol={symbol}&interval={Interval}&limit=100";
-            List<List<double>> coinQuotation = HttpHelper.GetApiData<List<List<double>>>(new Uri(apiUrl));
-            List<Candle> candleList = new List<Candle>();
-            candleList = TradeHelper.CreateCandleList(coinQuotation, symbol);
-            candleMatrix.Add(candleList);
-        }
+        #endregion
 
+        #region Order
         public BinanceOrder OrderStatus(string symbol, double orderId)
         {
             try
             {
-                System.Net.HttpStatusCode httpStatusCode = System.Net.HttpStatusCode.NoContent;
-
                 SetEnv(ref secretKey, ref publicKey, ref host);
                 string parameters = $"timestamp={ServerTime(publicKey)}&symbol={symbol}&orderId={orderId}&recvWindow=60000";
                 string signature = GetSignature(parameters, secretKey);
                 string apiUrl = $"{host}/api/v3/order?{parameters}&signature={signature}";
 
-                if (!Global.isProd)
-                {
-                    apiUrl = $"{host}/api/v3/order?{parameters}&signature={signature}";
-                }
-
+                //call binance api
                 var result = HttpHelper.GetApiData<BinanceOrder>(new Uri(apiUrl), publicKey, ref httpStatusCode);
+                _hub.Clients.All.SendAsync("httpRequestError", JsonSerializer.Serialize(httpStatusCode));
+
+                //log httpStatusCode result
                 _logger.LogWarning($"Get {MyEnum.BinanceApiCall.OrderStatus} {httpStatusCode.ToString()}");
                 return result;
             }
@@ -143,7 +149,7 @@ namespace MarginCoin.Service
             }
         }
 
-        public BinanceOrder BuyMarket(string symbol, double quoteQty, ref System.Net.HttpStatusCode httpStatusCode)
+        public BinanceOrder BuyMarket(string symbol, double quoteQty)
         {
             string stringQty = quoteQty.ToString().Replace(",", ".");
             try
@@ -153,13 +159,12 @@ namespace MarginCoin.Service
                 string signature = GetSignature(parameters, secretKey);
                 string apiUrl = $"{host}/api/v3/order?{parameters}&signature={signature}";
 
-                if (!Global.isProd)
-                {
-                    apiUrl = $"{host}/api/v3/order?{parameters}&signature={signature}";
-                }
-
+                //Call Binance API
                 var result = HttpHelper.PostApiData<BinanceOrder>(new Uri(apiUrl), publicKey, new StringContent("", Encoding.UTF8, "application/json"), ref httpStatusCode);
-                _logger.LogWarning($"Call {MyEnum.BinanceApiCall.BuyMarket} {symbol} {httpStatusCode.ToString()}");
+
+                //log httpStatusCode result
+                _logger.LogWarning($"Call {MyEnum.BinanceApiCall.BuyMarket} {symbol} {httpStatusCode}");
+                _hub.Clients.All.SendAsync("httpRequestError", JsonSerializer.Serialize(httpStatusCode));
                 return result;
             }
             catch (System.Exception e)
@@ -169,7 +174,7 @@ namespace MarginCoin.Service
             }
         }
 
-        public BinanceOrder SellMarket(string symbol, double qty, ref System.Net.HttpStatusCode httpStatusCode)
+        public BinanceOrder SellMarket(string symbol, double qty)
         {
             string stringQuantity = qty.ToString().Replace(",", ".");
             try
@@ -179,13 +184,12 @@ namespace MarginCoin.Service
                 string signature = GetSignature(parameters, secretKey);
                 string apiUrl = $"{host}/api/v3/order?{parameters}&signature={signature}";
 
-                if (!Global.isProd)
-                {
-                    apiUrl = $"{host}/api/v3/order?{parameters}&signature={signature}";
-                }
-
+                //Call Binance API
                 var result = HttpHelper.PostApiData<BinanceOrder>(new Uri(apiUrl), publicKey, new StringContent("", Encoding.UTF8, "application/json"), ref httpStatusCode);
-                _logger.LogWarning($"Call {MyEnum.BinanceApiCall.SellMarket} {symbol} {httpStatusCode.ToString()}");
+
+                //log httpStatusCode result
+                _logger.LogWarning($"Call {MyEnum.BinanceApiCall.SellMarket} {symbol} {httpStatusCode}");
+                _hub.Clients.All.SendAsync("httpRequestError", JsonSerializer.Serialize(httpStatusCode));
                 return result;
             }
             catch (System.Exception e)
@@ -198,21 +202,19 @@ namespace MarginCoin.Service
         public BinanceOrder BuyLimit(string symbol, double quantity, MyEnum.TimeInForce timeInForce)
         {
             string stringQuantity = quantity.ToString().Replace(",", ".");
-            System.Net.HttpStatusCode httpStatusCode = System.Net.HttpStatusCode.NoContent;
             try
             {
                 SetEnv(ref secretKey, ref publicKey, ref host);
-                string parameters = $"timestamp={ServerTime(publicKey)}&symbol={symbol}&quantity={stringQuantity}&timeInForce={timeInForce.ToString()}&side=BUY&type=LIMIT&recvWindow=60000";
+                string parameters = $"timestamp={ServerTime(publicKey)}&symbol={symbol}&quantity={stringQuantity}&timeInForce={timeInForce}&side=BUY&type=LIMIT&recvWindow=60000";
                 string signature = GetSignature(parameters, secretKey);
                 string apiUrl = $"{host}/api/v3/order?{parameters}&signature={signature}";
 
-                if (!Global.isProd)
-                {
-                    apiUrl = $"{host}/api/v3/order?{parameters}&signature={signature}";
-                }
-               
+                //call binance api
                 var result = HttpHelper.PostApiData<BinanceOrder>(new Uri(apiUrl), publicKey, new StringContent("", Encoding.UTF8, "application/json"), ref httpStatusCode);
+
+                //log httpStatusCode result 
                 _logger.LogWarning(httpStatusCode.ToString(), "Call " + MyEnum.BinanceApiCall.BuyLimit);
+                _hub.Clients.All.SendAsync("httpRequestError", JsonSerializer.Serialize(httpStatusCode));
                 return result;
             }
             catch (System.Exception e)
@@ -222,7 +224,7 @@ namespace MarginCoin.Service
             }
         }
 
-        public BinanceOrder SellLimit(string symbol, double quantity, double price, MyEnum.TimeInForce timeInForce, ref System.Net.HttpStatusCode httpStatusCode)
+        public BinanceOrder SellLimit(string symbol, double quantity, double price, MyEnum.TimeInForce timeInForce)
         {
             string stringQuantity = quantity.ToString().Replace(",", ".");
             string stringPrice = price.ToString().Replace(",", ".");
@@ -233,13 +235,12 @@ namespace MarginCoin.Service
                 string signature = GetSignature(parameters, secretKey);
                 string apiUrl = $"{host}/api/v3/order?{parameters}&signature={signature}";
 
-                if (!Global.isProd)
-                {
-                    apiUrl = $"{host}/api/v3/order?{parameters}&signature={signature}";
-                }
-               
+                //call binance api
                 var result = HttpHelper.PostApiData<BinanceOrder>(new Uri(apiUrl), publicKey, new StringContent("", Encoding.UTF8, "application/json"), ref httpStatusCode);
-                _logger.LogWarning($"Call {MyEnum.BinanceApiCall.SellLimit} {httpStatusCode.ToString()}");
+
+                //log httpStatusCode result 
+                _logger.LogWarning($"Call {MyEnum.BinanceApiCall.SellLimit} {httpStatusCode}");
+                _hub.Clients.All.SendAsync("httpRequestError", JsonSerializer.Serialize(httpStatusCode));
                 return result;
             }
             catch (System.Exception e)
@@ -249,11 +250,8 @@ namespace MarginCoin.Service
             }
         }
 
-        #region Get CoinMarketCap
-
-
         #endregion
-        
+
         #region helper
 
         private static void SetEnv(ref string secretKey, ref string publicKey, ref string host)

@@ -574,23 +574,7 @@ namespace MarginCoin.Controllers
 
         private async void Buy(MarketStream symbolSpot, List<Candle> symbolCandleList)
         {
-            System.Net.HttpStatusCode httpStatusCode = System.Net.HttpStatusCode.NoContent;
-            BinanceOrder myBinanceOrder = _binanceService.BuyMarket(symbolSpot.s, quoteOrderQty, ref httpStatusCode);
-
-            //if order not executed we try divide amount by 2 and 3
-            if (httpStatusCode == System.Net.HttpStatusCode.BadRequest)
-            {
-                myBinanceOrder = _binanceService.BuyMarket(symbolSpot.s, quoteOrderQty / 2, ref httpStatusCode);
-                if (httpStatusCode == System.Net.HttpStatusCode.BadRequest)
-                {
-                    myBinanceOrder = _binanceService.BuyMarket(symbolSpot.s, quoteOrderQty / 3, ref httpStatusCode);
-                    if (httpStatusCode == System.Net.HttpStatusCode.BadRequest)
-                    {
-                        _logger.LogWarning($"Call {MyEnum.BinanceApiCall.BuyMarket} {symbolSpot.s} Locked");
-                        return;
-                    }
-                }
-            }
+            BinanceOrder myBinanceOrder = _binanceService.BuyMarket(symbolSpot.s, quoteOrderQty);
 
             if (myBinanceOrder == null)
             {
@@ -600,8 +584,7 @@ namespace MarginCoin.Controllers
 
             if (myBinanceOrder.status == "EXPIRED")
             {
-                await _hub.Clients.All.SendAsync(MyEnum.BinanceHttpError.BinanceSellOrderExpired.ToString());
-                _logger.LogWarning($"Call {MyEnum.BinanceApiCall.BuyMarket} {symbolSpot.s} Expired");
+                _logger.LogWarning($"Call {MyEnum.BinanceApiCall.BuyMarket} {symbolSpot.s} Order status Expired");
                 Global.onHold.Remove(symbolSpot.s);
                 return;
 
@@ -627,11 +610,9 @@ namespace MarginCoin.Controllers
 
         private async void Sell(double id, double price, string closeType)
         {
-            System.Net.HttpStatusCode httpStatusCode = System.Net.HttpStatusCode.NoContent;
-
             Order myOrder = _appDbContext.Order.Where(p => p.Id == id).Select(p => p).FirstOrDefault();
             //BinanceOrder myBinanceOrder = _binanceService.SellMarket(myOrder.Symbol, myOrder.QuantityBuy, ref httpStatusCode);
-            BinanceOrder myBinanceOrder = _binanceService.SellLimit(myOrder.Symbol, myOrder.QuantityBuy, price, MyEnum.TimeInForce.GTC, ref httpStatusCode);
+            BinanceOrder myBinanceOrder = _binanceService.SellLimit(myOrder.Symbol, myOrder.QuantityBuy, price, MyEnum.TimeInForce.GTC);
             if (myBinanceOrder == null) return;
 
             int i = 0;
@@ -640,6 +621,11 @@ namespace MarginCoin.Controllers
                 if (i == 5) break;
                 myBinanceOrder = _binanceService.OrderStatus(myBinanceOrder.symbol, myBinanceOrder.orderId);
                 i++;
+            }
+
+            if (myBinanceOrder.status == "EXPIRED")
+            {
+                _logger.LogWarning($"Call {MyEnum.BinanceApiCall.SellLimit} {myOrder.Symbol} Expired");
             }
 
             if (myBinanceOrder.status == "FILLED")
