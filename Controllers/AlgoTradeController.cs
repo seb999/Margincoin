@@ -612,8 +612,8 @@ namespace MarginCoin.Controllers
         private async void Sell(double id, double price, string closeType)
         {
             Order myOrder = _appDbContext.Order.Where(p => p.Id == id).Select(p => p).FirstOrDefault();
-            //BinanceOrder myBinanceOrder = _binanceService.SellMarket(myOrder.Symbol, myOrder.QuantityBuy, ref httpStatusCode);
-            BinanceOrder myBinanceOrder = _binanceService.SellLimit(myOrder.Symbol, myOrder.QuantityBuy, price, MyEnum.TimeInForce.GTC);
+            BinanceOrder myBinanceOrder = _binanceService.SellMarket(myOrder.Symbol, myOrder.QuantityBuy);
+            //BinanceOrder myBinanceOrder = _binanceService.SellLimit(myOrder.Symbol, myOrder.QuantityBuy, price, MyEnum.TimeInForce.IOC);
             if (myBinanceOrder == null) return;
 
             int i = 0;

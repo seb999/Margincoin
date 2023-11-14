@@ -1,3 +1,1820 @@
 2023-11-14 07:57:11.856 +01:00 [WRN] MarginCoin, started!
 2023-11-14 14:34:39.603 +01:00 [WRN] MarginCoin, started!
 2023-11-14 15:08:13.180 +01:00 [WRN] MarginCoin, started!
+2023-11-14 18:40:36.852 +01:00 [WRN] MarginCoin, started!
+2023-11-14 18:41:18.080 +01:00 [WRN] Get Account OK
+2023-11-14 18:41:22.557 +01:00 [ERR] THE SIGNAL CLIENT IS DISCONNECTED
+2023-11-14 18:41:25.396 +01:00 [WRN] Get Account OK
+2023-11-14 18:41:57.191 +01:00 [WRN] Call SellMarket ADAUSDT OK
+2023-11-14 18:42:05.175 +01:00 [WRN] Get Account OK
+2023-11-14 18:51:40.011 +01:00 [WRN] MarginCoin, started!
+2023-11-14 18:52:07.208 +01:00 [ERR] HTTP GET /sockjs-node/info responded 500 in 83.5828 ms
+System.Net.Http.HttpRequestException: Failed to proxy the request to http://localhost:4201/sockjs-node/info?t=1699984327012, because the request to the proxy target failed. Check that the proxy target server is running and accepting requests to http://localhost:4201/.
+
+The underlying exception message was 'Connection refused (localhost:4201)'.Check the InnerException for more details.
+ ---> System.Net.Http.HttpRequestException: Connection refused (localhost:4201)
+ ---> System.Net.Sockets.SocketException (61): Connection refused
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.ThrowException(SocketError error, CancellationToken cancellationToken)
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.System.Threading.Tasks.Sources.IValueTaskSource.GetResult(Int16 token)
+   at System.Net.Sockets.Socket.<ConnectAsync>g__WaitForConnectWithCancellation|277_0(AwaitableSocketAsyncEventArgs saea, ValueTask connectTask, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.ConnectToTcpHostAsync(String host, Int32 port, HttpRequestMessage initialRequest, Boolean async, CancellationToken cancellationToken)
+   --- End of inner exception stack trace ---
+   at System.Net.Http.HttpConnectionPool.ConnectToTcpHostAsync(String host, Int32 port, HttpRequestMessage initialRequest, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.ConnectAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.CreateHttp11ConnectionAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.AddHttp11ConnectionAsync(HttpRequestMessage request)
+   at System.Threading.Tasks.TaskCompletionSourceWithCancellation`1.WaitWithCancellationAsync(CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.GetHttp11ConnectionAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.SendWithVersionDetectionAndRetryAsync(HttpRequestMessage request, Boolean async, Boolean doRequestAuth, CancellationToken cancellationToken)
+   at System.Net.Http.DiagnosticsHandler.SendAsyncCore(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpClient.<SendAsync>g__Core|83_0(HttpRequestMessage request, HttpCompletionOption completionOption, CancellationTokenSource cts, Boolean disposeCts, CancellationTokenSource pendingRequestsCts, CancellationToken originalCancellationToken)
+   at Microsoft.AspNetCore.SpaServices.Extensions.Proxy.SpaProxy.PerformProxyRequest(HttpContext context, HttpClient httpClient, Task`1 baseUriTask, CancellationToken applicationStoppingToken, Boolean proxy404s)
+   --- End of inner exception stack trace ---
+   at Microsoft.AspNetCore.SpaServices.Extensions.Proxy.SpaProxy.PerformProxyRequest(HttpContext context, HttpClient httpClient, Task`1 baseUriTask, CancellationToken applicationStoppingToken, Boolean proxy404s)
+   at Microsoft.AspNetCore.Builder.SpaProxyingExtensions.<>c__DisplayClass2_0.<<UseProxyToSpaDevelopmentServer>b__0>d.MoveNext()
+--- End of stack trace from previous location ---
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+2023-11-14 18:52:07.272 +01:00 [ERR] An unhandled exception has occurred while executing the request.
+System.Net.Http.HttpRequestException: Failed to proxy the request to http://localhost:4201/sockjs-node/info?t=1699984327012, because the request to the proxy target failed. Check that the proxy target server is running and accepting requests to http://localhost:4201/.
+
+The underlying exception message was 'Connection refused (localhost:4201)'.Check the InnerException for more details.
+ ---> System.Net.Http.HttpRequestException: Connection refused (localhost:4201)
+ ---> System.Net.Sockets.SocketException (61): Connection refused
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.ThrowException(SocketError error, CancellationToken cancellationToken)
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.System.Threading.Tasks.Sources.IValueTaskSource.GetResult(Int16 token)
+   at System.Net.Sockets.Socket.<ConnectAsync>g__WaitForConnectWithCancellation|277_0(AwaitableSocketAsyncEventArgs saea, ValueTask connectTask, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.ConnectToTcpHostAsync(String host, Int32 port, HttpRequestMessage initialRequest, Boolean async, CancellationToken cancellationToken)
+   --- End of inner exception stack trace ---
+   at System.Net.Http.HttpConnectionPool.ConnectToTcpHostAsync(String host, Int32 port, HttpRequestMessage initialRequest, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.ConnectAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.CreateHttp11ConnectionAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.AddHttp11ConnectionAsync(HttpRequestMessage request)
+   at System.Threading.Tasks.TaskCompletionSourceWithCancellation`1.WaitWithCancellationAsync(CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.GetHttp11ConnectionAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.SendWithVersionDetectionAndRetryAsync(HttpRequestMessage request, Boolean async, Boolean doRequestAuth, CancellationToken cancellationToken)
+   at System.Net.Http.DiagnosticsHandler.SendAsyncCore(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpClient.<SendAsync>g__Core|83_0(HttpRequestMessage request, HttpCompletionOption completionOption, CancellationTokenSource cts, Boolean disposeCts, CancellationTokenSource pendingRequestsCts, CancellationToken originalCancellationToken)
+   at Microsoft.AspNetCore.SpaServices.Extensions.Proxy.SpaProxy.PerformProxyRequest(HttpContext context, HttpClient httpClient, Task`1 baseUriTask, CancellationToken applicationStoppingToken, Boolean proxy404s)
+   --- End of inner exception stack trace ---
+   at Microsoft.AspNetCore.SpaServices.Extensions.Proxy.SpaProxy.PerformProxyRequest(HttpContext context, HttpClient httpClient, Task`1 baseUriTask, CancellationToken applicationStoppingToken, Boolean proxy404s)
+   at Microsoft.AspNetCore.Builder.SpaProxyingExtensions.<>c__DisplayClass2_0.<<UseProxyToSpaDevelopmentServer>b__0>d.MoveNext()
+--- End of stack trace from previous location ---
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware.Invoke(HttpContext context)
+2023-11-14 18:52:57.764 +01:00 [WRN] MarginCoin, started!
+2023-11-14 18:53:17.353 +01:00 [WRN] Get Account OK
+2023-11-14 18:53:47.355 +01:00 [WRN] Call SellMarket SOLUSDT OK
+2023-11-14 18:54:16.617 +01:00 [ERR] THE SIGNAL CLIENT IS DISCONNECTED
+2023-11-14 18:54:18.030 +01:00 [WRN] Get Account OK
+2023-11-14 18:57:38.374 +01:00 [WRN] Call SellMarket BNBUSDT OK
+2023-11-14 18:57:58.352 +01:00 [ERR] THE SIGNAL CLIENT IS DISCONNECTED
+2023-11-14 19:01:20.026 +01:00 [ERR] THE SIGNAL CLIENT IS DISCONNECTED
+2023-11-14 19:01:23.127 +01:00 [WRN] Get Account OK
+2023-11-14 19:01:36.947 +01:00 [ERR] THE SIGNAL CLIENT IS DISCONNECTED
+2023-11-14 19:01:38.692 +01:00 [WRN] Get Account OK
+2023-11-14 19:02:46.791 +01:00 [ERR] THE SIGNAL CLIENT IS DISCONNECTED
+2023-11-14 19:02:56.320 +01:00 [WRN] MarginCoin, started!
+2023-11-14 19:03:07.998 +01:00 [WRN] Get Account OK
+2023-11-14 19:03:14.170 +01:00 [ERR] THE SIGNAL CLIENT IS DISCONNECTED
+2023-11-14 19:03:15.567 +01:00 [WRN] Get Account OK
+2023-11-14 19:03:26.383 +01:00 [WRN] Call SellMarket SOLUSDT BadRequest
+2023-11-14 19:04:17.417 +01:00 [WRN] Call SellMarket SOLUSDT BadRequest
+2023-11-14 19:04:38.192 +01:00 [WRN] Call SellMarket SOLUSDT BadRequest
+2023-11-14 19:05:58.448 +01:00 [ERR] THE SIGNAL CLIENT IS DISCONNECTED
+2023-11-14 19:05:59.925 +01:00 [ERR] THE SIGNAL CLIENT IS DISCONNECTED
+2023-11-14 19:06:01.659 +01:00 [WRN] Get Account OK
+2023-11-14 19:06:11.145 +01:00 [WRN] Call SellMarket SOLUSDT BadRequest
+2023-11-14 19:07:10.696 +01:00 [WRN] MarginCoin, started!
+2023-11-14 19:07:18.822 +01:00 [ERR] THE SIGNAL CLIENT IS DISCONNECTED
+2023-11-14 19:07:22.962 +01:00 [WRN] Get Account OK
+2023-11-14 19:07:29.309 +01:00 [ERR] THE SIGNAL CLIENT IS DISCONNECTED
+2023-11-14 19:07:31.766 +01:00 [WRN] Get Account OK
+2023-11-14 19:07:38.954 +01:00 [WRN] Call SellMarket SOLUSDT BadRequest
+2023-11-14 19:07:50.707 +01:00 [WRN] Call SellMarket SOLUSDT OK
+2023-11-14 19:08:08.705 +01:00 [ERR] THE SIGNAL CLIENT IS DISCONNECTED
+2023-11-14 19:08:10.677 +01:00 [WRN] Get Account OK
+2023-11-14 19:08:26.405 +01:00 [WRN] Call SellMarket ADAUSDT BadRequest
+2023-11-14 19:08:38.905 +01:00 [WRN] Call SellMarket ADAUSDT OK
+2023-11-14 19:08:48.052 +01:00 [WRN] Get Account OK
+2023-11-14 19:12:01.979 +01:00 [WRN] MarginCoin, started!
+2023-11-14 19:12:10.084 +01:00 [ERR] THE SIGNAL CLIENT IS DISCONNECTED
+2023-11-14 19:12:13.986 +01:00 [WRN] Get Account OK
+2023-11-14 19:12:21.993 +01:00 [WRN] Call SellMarket SOLUSDT OK
+2023-11-14 19:12:29.957 +01:00 [WRN] Get Account OK
+2023-11-14 19:12:45.895 +01:00 [WRN] Call SellMarket SOLUSDT BadRequest
+2023-11-14 19:22:16.863 +01:00 [WRN] MarginCoin, started!
+2023-11-14 19:22:24.579 +01:00 [ERR] THE SIGNAL CLIENT IS DISCONNECTED
+2023-11-14 19:22:28.225 +01:00 [WRN] Get Account OK
+2023-11-14 19:22:36.158 +01:00 [WRN] Call SellMarket SOLUSDT BadRequest
+2023-11-14 19:22:57.873 +01:00 [WRN] Call SellMarket BNBUSDT OK
+2023-11-14 19:23:05.759 +01:00 [WRN] Get Account OK
+2023-11-14 19:25:01.100 +01:00 [WRN] MarginCoin, started!
+2023-11-14 19:25:09.485 +01:00 [ERR] THE SIGNAL CLIENT IS DISCONNECTED
+2023-11-14 19:25:13.702 +01:00 [WRN] Get Account OK
+2023-11-14 19:27:43.421 +01:00 [WRN] Call SellMarket BNBUSDT BadRequest
+2023-11-14 19:27:56.543 +01:00 [WRN] Call SellMarket SOLUSDT OK
+2023-11-14 19:28:04.268 +01:00 [WRN] Get Account OK
+2023-11-14 19:30:24.071 +01:00 [WRN] MarginCoin, started!
+2023-11-14 19:30:32.884 +01:00 [ERR] THE SIGNAL CLIENT IS DISCONNECTED
+2023-11-14 19:30:36.731 +01:00 [WRN] Get Account OK
+2023-11-14 19:30:37.528 +01:00 [WRN] Start trading market...
+2023-11-14 19:31:08.914 +01:00 [WRN] Call BuyMarket LINKUSDT OK
+2023-11-14 19:31:10.454 +01:00 [WRN] Get Account OK
+2023-11-14 19:32:23.263 +01:00 [ERR] THE SIGNAL CLIENT IS DISCONNECTED
+2023-11-14 19:32:25.931 +01:00 [WRN] Get Account OK
+2023-11-14 19:32:37.619 +01:00 [WRN] Initial call for ExportChart UI
+2023-11-14 19:33:30.629 +01:00 [WRN] Call Prediction on DOTUSDT down 0,9672686/0,032731373
+2023-11-14 19:33:30.726 +01:00 [WRN] Call Prediction on BNBUSDT down 0,98460543/0,015394602
+2023-11-14 19:33:30.809 +01:00 [WRN] Call Prediction on ADAUSDT down 0,69620645/0,30379355
+2023-11-14 19:33:30.889 +01:00 [WRN] Call Prediction on AVAXUSDT down 0,5652673/0,43473268
+2023-11-14 19:33:30.969 +01:00 [WRN] Call Prediction on XRPUSDT down 0,9473335/0,052666504
+2023-11-14 19:33:31.064 +01:00 [WRN] Call Prediction on LTCUSDT down 0,7939648/0,20603518
+2023-11-14 19:33:31.154 +01:00 [WRN] Call Prediction on TRXUSDT down 0,7777225/0,22227748
+2023-11-14 19:33:31.242 +01:00 [WRN] Call Prediction on BTCUSDT up 0,42586052/0,5741395
+2023-11-14 19:33:31.331 +01:00 [WRN] Call Prediction on MATICUSDT up 0,17610985/0,82389015
+2023-11-14 19:33:31.420 +01:00 [WRN] Call Prediction on LINKUSDT down 0,56113696/0,43886298
+2023-11-14 19:33:31.840 +01:00 [WRN] Call Prediction on DOGEUSDT down 0,92666715/0,0733329
+2023-11-14 19:33:31.949 +01:00 [WRN] Call Prediction on WBTCUSDT down 0,9131396/0,08686042
+2023-11-14 19:33:32.074 +01:00 [WRN] Call Prediction on SOLUSDT down 0,99411845/0,005881579
+2023-11-14 19:33:32.188 +01:00 [WRN] Call Prediction on ETHUSDT down 0,8223698/0,17763016
+2023-11-14 19:33:32.191 +01:00 [WRN] ----------------ML Updated---------------------
+2023-11-14 19:33:58.355 +01:00 [ERR] THE SIGNAL CLIENT IS DISCONNECTED
+2023-11-14 19:34:00.304 +01:00 [WRN] Get Account OK
+2023-11-14 19:34:35.103 +01:00 [ERR] THE SIGNAL CLIENT IS DISCONNECTED
+2023-11-14 19:34:37.781 +01:00 [WRN] Get Account OK
+2023-11-14 19:34:42.734 +01:00 [ERR] THE SIGNAL CLIENT IS DISCONNECTED
+2023-11-14 19:34:44.412 +01:00 [WRN] Get Account OK
+2023-11-14 19:34:48.764 +01:00 [ERR] THE SIGNAL CLIENT IS DISCONNECTED
+2023-11-14 19:34:50.082 +01:00 [WRN] Get Account OK
+2023-11-14 19:35:22.957 +01:00 [ERR] THE SIGNAL CLIENT IS DISCONNECTED
+2023-11-14 19:35:25.420 +01:00 [WRN] Get Account OK
+2023-11-14 19:36:14.480 +01:00 [WRN] Call SellLimit OK
+2023-11-14 19:36:15.217 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 19:36:15.762 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 19:36:16.387 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 19:36:16.966 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 19:36:17.713 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 19:36:20.862 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:36:29.798 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:36:48.969 +01:00 [WRN] Call BuyMarket TUSDUSDT OK
+2023-11-14 19:36:50.289 +01:00 [WRN] Get Account OK
+2023-11-14 19:37:07.240 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:37:09.390 +01:00 [WRN] Call SellLimit OK
+2023-11-14 19:37:10.992 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 19:37:11.534 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 19:37:12.082 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 19:37:13.133 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 19:37:13.747 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 19:37:14.295 +01:00 [WRN] Call SellLimit OK
+2023-11-14 19:37:14.843 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 19:37:15.393 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 19:37:15.944 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 19:37:16.487 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 19:37:17.030 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 19:37:29.731 +01:00 [ERR] THE SIGNAL CLIENT IS DISCONNECTED
+2023-11-14 19:37:31.493 +01:00 [WRN] Get Account OK
+2023-11-14 19:38:05.539 +01:00 [ERR] THE SIGNAL CLIENT IS DISCONNECTED
+2023-11-14 19:38:07.313 +01:00 [WRN] Get Account OK
+2023-11-14 19:38:59.812 +01:00 [ERR] THE SIGNAL CLIENT IS DISCONNECTED
+2023-11-14 19:39:01.457 +01:00 [WRN] Get Account OK
+2023-11-14 19:40:56.513 +01:00 [ERR] THE SIGNAL CLIENT IS DISCONNECTED
+2023-11-14 19:40:59.060 +01:00 [WRN] Get Account OK
+2023-11-14 19:41:19.566 +01:00 [ERR] THE SIGNAL CLIENT IS DISCONNECTED
+2023-11-14 19:41:22.277 +01:00 [WRN] Get Account OK
+2023-11-14 19:42:21.501 +01:00 [ERR] THE SIGNAL CLIENT IS DISCONNECTED
+2023-11-14 19:42:24.027 +01:00 [WRN] Get Account OK
+2023-11-14 19:42:32.595 +01:00 [WRN] MarginCoin, started!
+2023-11-14 19:43:03.076 +01:00 [ERR] THE SIGNAL CLIENT IS DISCONNECTED
+2023-11-14 19:43:06.587 +01:00 [WRN] Get Account OK
+2023-11-14 19:43:46.770 +01:00 [ERR] THE SIGNAL CLIENT IS DISCONNECTED
+2023-11-14 19:43:48.960 +01:00 [WRN] Get Account OK
+2023-11-14 19:44:16.895 +01:00 [ERR] THE SIGNAL CLIENT IS DISCONNECTED
+2023-11-14 19:44:19.129 +01:00 [WRN] Get Account OK
+2023-11-14 19:51:11.454 +01:00 [ERR] THE SIGNAL CLIENT IS DISCONNECTED
+2023-11-14 19:51:11.457 +01:00 [ERR] HTTP GET /sockjs-node/612/ah1xboew/websocket responded 500 in 413684.8735 ms
+System.AggregateException: One or more errors occurred. (The remote party closed the WebSocket connection without completing the close handshake.)
+ ---> System.Net.WebSockets.WebSocketException (2): The remote party closed the WebSocket connection without completing the close handshake.
+   at System.Net.WebSockets.ManagedWebSocket.ThrowIfEOFUnexpected(Boolean throwOnPrematureClosure)
+   at System.Net.WebSockets.ManagedWebSocket.EnsureBufferContainsAsync(Int32 minimumRequiredBytes, CancellationToken cancellationToken, Boolean throwOnPrematureClosure)
+   at System.Runtime.CompilerServices.PoolingAsyncValueTaskMethodBuilder`1.StateMachineBox`1.System.Threading.Tasks.Sources.IValueTaskSource.GetResult(Int16 token)
+   at System.Net.WebSockets.ManagedWebSocket.ReceiveAsyncPrivate[TResult](Memory`1 payloadBuffer, CancellationToken cancellationToken)
+   at System.Runtime.CompilerServices.PoolingAsyncValueTaskMethodBuilder`1.StateMachineBox`1.System.Threading.Tasks.Sources.IValueTaskSource<TResult>.GetResult(Int16 token)
+   at System.Threading.Tasks.ValueTask`1.ValueTaskSourceAsTask.<>c.<.cctor>b__4_0(Object state)
+   --- End of inner exception stack trace ---
+   at Microsoft.AspNetCore.SpaServices.Extensions.Proxy.SpaProxy.PumpWebSocket(WebSocket source, WebSocket destination, Int32 bufferSize, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.SpaServices.Extensions.Proxy.SpaProxy.AcceptProxyWebSocketRequest(HttpContext context, Uri destinationUri, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.SpaServices.Extensions.Proxy.SpaProxy.PerformProxyRequest(HttpContext context, HttpClient httpClient, Task`1 baseUriTask, CancellationToken applicationStoppingToken, Boolean proxy404s)
+   at Microsoft.AspNetCore.Builder.SpaProxyingExtensions.<>c__DisplayClass2_0.<<UseProxyToSpaDevelopmentServer>b__0>d.MoveNext()
+--- End of stack trace from previous location ---
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+2023-11-14 19:51:11.564 +01:00 [ERR] An unhandled exception has occurred while executing the request.
+System.AggregateException: One or more errors occurred. (The remote party closed the WebSocket connection without completing the close handshake.)
+ ---> System.Net.WebSockets.WebSocketException (2): The remote party closed the WebSocket connection without completing the close handshake.
+   at System.Net.WebSockets.ManagedWebSocket.ThrowIfEOFUnexpected(Boolean throwOnPrematureClosure)
+   at System.Net.WebSockets.ManagedWebSocket.EnsureBufferContainsAsync(Int32 minimumRequiredBytes, CancellationToken cancellationToken, Boolean throwOnPrematureClosure)
+   at System.Runtime.CompilerServices.PoolingAsyncValueTaskMethodBuilder`1.StateMachineBox`1.System.Threading.Tasks.Sources.IValueTaskSource.GetResult(Int16 token)
+   at System.Net.WebSockets.ManagedWebSocket.ReceiveAsyncPrivate[TResult](Memory`1 payloadBuffer, CancellationToken cancellationToken)
+   at System.Runtime.CompilerServices.PoolingAsyncValueTaskMethodBuilder`1.StateMachineBox`1.System.Threading.Tasks.Sources.IValueTaskSource<TResult>.GetResult(Int16 token)
+   at System.Threading.Tasks.ValueTask`1.ValueTaskSourceAsTask.<>c.<.cctor>b__4_0(Object state)
+   --- End of inner exception stack trace ---
+   at Microsoft.AspNetCore.SpaServices.Extensions.Proxy.SpaProxy.PumpWebSocket(WebSocket source, WebSocket destination, Int32 bufferSize, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.SpaServices.Extensions.Proxy.SpaProxy.AcceptProxyWebSocketRequest(HttpContext context, Uri destinationUri, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.SpaServices.Extensions.Proxy.SpaProxy.PerformProxyRequest(HttpContext context, HttpClient httpClient, Task`1 baseUriTask, CancellationToken applicationStoppingToken, Boolean proxy404s)
+   at Microsoft.AspNetCore.Builder.SpaProxyingExtensions.<>c__DisplayClass2_0.<<UseProxyToSpaDevelopmentServer>b__0>d.MoveNext()
+--- End of stack trace from previous location ---
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware.Invoke(HttpContext context)
+2023-11-14 19:51:11.566 +01:00 [WRN] The response has already started, the error page middleware will not be executed.
+2023-11-14 19:51:11.576 +01:00 [ERR] Connection id "0HMV585SRD5SO", Request id "0HMV585SRD5SO:00000002": An unhandled exception was thrown by the application.
+System.AggregateException: One or more errors occurred. (The remote party closed the WebSocket connection without completing the close handshake.)
+ ---> System.Net.WebSockets.WebSocketException (2): The remote party closed the WebSocket connection without completing the close handshake.
+   at System.Net.WebSockets.ManagedWebSocket.ThrowIfEOFUnexpected(Boolean throwOnPrematureClosure)
+   at System.Net.WebSockets.ManagedWebSocket.EnsureBufferContainsAsync(Int32 minimumRequiredBytes, CancellationToken cancellationToken, Boolean throwOnPrematureClosure)
+   at System.Runtime.CompilerServices.PoolingAsyncValueTaskMethodBuilder`1.StateMachineBox`1.System.Threading.Tasks.Sources.IValueTaskSource.GetResult(Int16 token)
+   at System.Net.WebSockets.ManagedWebSocket.ReceiveAsyncPrivate[TResult](Memory`1 payloadBuffer, CancellationToken cancellationToken)
+   at System.Runtime.CompilerServices.PoolingAsyncValueTaskMethodBuilder`1.StateMachineBox`1.System.Threading.Tasks.Sources.IValueTaskSource<TResult>.GetResult(Int16 token)
+   at System.Threading.Tasks.ValueTask`1.ValueTaskSourceAsTask.<>c.<.cctor>b__4_0(Object state)
+   --- End of inner exception stack trace ---
+   at Microsoft.AspNetCore.SpaServices.Extensions.Proxy.SpaProxy.PumpWebSocket(WebSocket source, WebSocket destination, Int32 bufferSize, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.SpaServices.Extensions.Proxy.SpaProxy.AcceptProxyWebSocketRequest(HttpContext context, Uri destinationUri, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.SpaServices.Extensions.Proxy.SpaProxy.PerformProxyRequest(HttpContext context, HttpClient httpClient, Task`1 baseUriTask, CancellationToken applicationStoppingToken, Boolean proxy404s)
+   at Microsoft.AspNetCore.Builder.SpaProxyingExtensions.<>c__DisplayClass2_0.<<UseProxyToSpaDevelopmentServer>b__0>d.MoveNext()
+--- End of stack trace from previous location ---
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.HttpProtocol.ProcessRequests[TContext](IHttpApplication`1 application)
+2023-11-14 19:51:13.845 +01:00 [WRN] Get Account OK
+2023-11-14 19:51:16.588 +01:00 [WRN] Start trading market...
+2023-11-14 19:51:42.720 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:51:42.820 +01:00 [ERR] ProcessMarketMatrix failled
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at MarginCoin.Controllers.AlgoTradeController.ReviewOpenTrade(String symbol) in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 519
+   at MarginCoin.Controllers.AlgoTradeController.ProcessMarketMatrix() in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 382
+2023-11-14 19:51:44.404 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:51:44.443 +01:00 [ERR] ProcessMarketMatrix failled
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at MarginCoin.Controllers.AlgoTradeController.ReviewOpenTrade(String symbol) in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 519
+   at MarginCoin.Controllers.AlgoTradeController.ProcessMarketMatrix() in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 382
+2023-11-14 19:51:45.476 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:51:45.515 +01:00 [ERR] ProcessMarketMatrix failled
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at MarginCoin.Controllers.AlgoTradeController.ReviewOpenTrade(String symbol) in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 519
+   at MarginCoin.Controllers.AlgoTradeController.ProcessMarketMatrix() in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 382
+2023-11-14 19:51:46.070 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:51:46.110 +01:00 [ERR] ProcessMarketMatrix failled
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at MarginCoin.Controllers.AlgoTradeController.ReviewOpenTrade(String symbol) in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 519
+   at MarginCoin.Controllers.AlgoTradeController.ProcessMarketMatrix() in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 382
+2023-11-14 19:51:46.690 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:51:46.730 +01:00 [ERR] ProcessMarketMatrix failled
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at MarginCoin.Controllers.AlgoTradeController.ReviewOpenTrade(String symbol) in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 519
+   at MarginCoin.Controllers.AlgoTradeController.ProcessMarketMatrix() in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 382
+2023-11-14 19:51:47.324 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:51:47.362 +01:00 [ERR] ProcessMarketMatrix failled
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at MarginCoin.Controllers.AlgoTradeController.ReviewOpenTrade(String symbol) in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 519
+   at MarginCoin.Controllers.AlgoTradeController.ProcessMarketMatrix() in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 382
+2023-11-14 19:51:48.013 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:51:48.056 +01:00 [ERR] ProcessMarketMatrix failled
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at MarginCoin.Controllers.AlgoTradeController.ReviewOpenTrade(String symbol) in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 519
+   at MarginCoin.Controllers.AlgoTradeController.ProcessMarketMatrix() in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 382
+2023-11-14 19:51:49.008 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:51:49.034 +01:00 [ERR] ProcessMarketMatrix failled
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at MarginCoin.Controllers.AlgoTradeController.ReviewOpenTrade(String symbol) in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 519
+   at MarginCoin.Controllers.AlgoTradeController.ProcessMarketMatrix() in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 382
+2023-11-14 19:51:50.023 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:51:50.063 +01:00 [ERR] ProcessMarketMatrix failled
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at MarginCoin.Controllers.AlgoTradeController.ReviewOpenTrade(String symbol) in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 519
+   at MarginCoin.Controllers.AlgoTradeController.ProcessMarketMatrix() in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 382
+2023-11-14 19:51:51.428 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:51:51.468 +01:00 [ERR] ProcessMarketMatrix failled
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at MarginCoin.Controllers.AlgoTradeController.ReviewOpenTrade(String symbol) in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 519
+   at MarginCoin.Controllers.AlgoTradeController.ProcessMarketMatrix() in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 382
+2023-11-14 19:51:52.208 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:51:52.248 +01:00 [ERR] ProcessMarketMatrix failled
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at MarginCoin.Controllers.AlgoTradeController.ReviewOpenTrade(String symbol) in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 519
+   at MarginCoin.Controllers.AlgoTradeController.ProcessMarketMatrix() in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 382
+2023-11-14 19:51:53.039 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:51:53.080 +01:00 [ERR] ProcessMarketMatrix failled
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at MarginCoin.Controllers.AlgoTradeController.ReviewOpenTrade(String symbol) in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 519
+   at MarginCoin.Controllers.AlgoTradeController.ProcessMarketMatrix() in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 382
+2023-11-14 19:51:54.094 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:51:54.162 +01:00 [ERR] ProcessMarketMatrix failled
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at MarginCoin.Controllers.AlgoTradeController.ReviewOpenTrade(String symbol) in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 519
+   at MarginCoin.Controllers.AlgoTradeController.ProcessMarketMatrix() in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 382
+2023-11-14 19:51:55.076 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:51:55.101 +01:00 [ERR] ProcessMarketMatrix failled
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at MarginCoin.Controllers.AlgoTradeController.ReviewOpenTrade(String symbol) in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 519
+   at MarginCoin.Controllers.AlgoTradeController.ProcessMarketMatrix() in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 382
+2023-11-14 19:51:56.033 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:51:56.074 +01:00 [ERR] ProcessMarketMatrix failled
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at MarginCoin.Controllers.AlgoTradeController.ReviewOpenTrade(String symbol) in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 519
+   at MarginCoin.Controllers.AlgoTradeController.ProcessMarketMatrix() in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 382
+2023-11-14 19:51:57.038 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:51:57.078 +01:00 [ERR] ProcessMarketMatrix failled
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at MarginCoin.Controllers.AlgoTradeController.ReviewOpenTrade(String symbol) in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 519
+   at MarginCoin.Controllers.AlgoTradeController.ProcessMarketMatrix() in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 382
+2023-11-14 19:51:58.041 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:51:58.073 +01:00 [ERR] ProcessMarketMatrix failled
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at MarginCoin.Controllers.AlgoTradeController.ReviewOpenTrade(String symbol) in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 519
+   at MarginCoin.Controllers.AlgoTradeController.ProcessMarketMatrix() in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 382
+2023-11-14 19:51:59.508 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:51:59.548 +01:00 [ERR] ProcessMarketMatrix failled
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at MarginCoin.Controllers.AlgoTradeController.ReviewOpenTrade(String symbol) in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 519
+   at MarginCoin.Controllers.AlgoTradeController.ProcessMarketMatrix() in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 382
+2023-11-14 19:52:00.115 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:52:00.154 +01:00 [ERR] ProcessMarketMatrix failled
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at MarginCoin.Controllers.AlgoTradeController.ReviewOpenTrade(String symbol) in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 519
+   at MarginCoin.Controllers.AlgoTradeController.ProcessMarketMatrix() in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 382
+2023-11-14 19:52:01.030 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:52:01.072 +01:00 [ERR] ProcessMarketMatrix failled
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at MarginCoin.Controllers.AlgoTradeController.ReviewOpenTrade(String symbol) in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 519
+   at MarginCoin.Controllers.AlgoTradeController.ProcessMarketMatrix() in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 382
+2023-11-14 19:52:02.208 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:52:02.234 +01:00 [ERR] ProcessMarketMatrix failled
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at MarginCoin.Controllers.AlgoTradeController.ReviewOpenTrade(String symbol) in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 519
+   at MarginCoin.Controllers.AlgoTradeController.ProcessMarketMatrix() in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 382
+2023-11-14 19:52:03.018 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:52:03.059 +01:00 [ERR] ProcessMarketMatrix failled
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at MarginCoin.Controllers.AlgoTradeController.ReviewOpenTrade(String symbol) in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 519
+   at MarginCoin.Controllers.AlgoTradeController.ProcessMarketMatrix() in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 382
+2023-11-14 19:52:04.286 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:52:04.327 +01:00 [ERR] ProcessMarketMatrix failled
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at MarginCoin.Controllers.AlgoTradeController.ReviewOpenTrade(String symbol) in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 519
+   at MarginCoin.Controllers.AlgoTradeController.ProcessMarketMatrix() in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 382
+2023-11-14 19:52:05.894 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:52:05.920 +01:00 [ERR] ProcessMarketMatrix failled
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at MarginCoin.Controllers.AlgoTradeController.ReviewOpenTrade(String symbol) in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 519
+   at MarginCoin.Controllers.AlgoTradeController.ProcessMarketMatrix() in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 382
+2023-11-14 19:52:06.344 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:52:06.657 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:52:06.683 +01:00 [ERR] ProcessMarketMatrix failled
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at MarginCoin.Controllers.AlgoTradeController.ReviewOpenTrade(String symbol) in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 519
+   at MarginCoin.Controllers.AlgoTradeController.ProcessMarketMatrix() in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 382
+2023-11-14 19:52:07.262 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:52:07.288 +01:00 [ERR] ProcessMarketMatrix failled
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at MarginCoin.Controllers.AlgoTradeController.ReviewOpenTrade(String symbol) in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 519
+   at MarginCoin.Controllers.AlgoTradeController.ProcessMarketMatrix() in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 382
+2023-11-14 19:52:08.036 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:52:08.077 +01:00 [ERR] ProcessMarketMatrix failled
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at MarginCoin.Controllers.AlgoTradeController.ReviewOpenTrade(String symbol) in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 519
+   at MarginCoin.Controllers.AlgoTradeController.ProcessMarketMatrix() in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 382
+2023-11-14 19:52:09.007 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:52:09.046 +01:00 [ERR] ProcessMarketMatrix failled
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at MarginCoin.Controllers.AlgoTradeController.ReviewOpenTrade(String symbol) in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 519
+   at MarginCoin.Controllers.AlgoTradeController.ProcessMarketMatrix() in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 382
+2023-11-14 19:52:09.054 +01:00 [WRN] Call SellLimit OK
+2023-11-14 19:52:09.600 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 19:52:10.008 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:52:10.048 +01:00 [ERR] ProcessMarketMatrix failled
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at MarginCoin.Controllers.AlgoTradeController.ReviewOpenTrade(String symbol) in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 519
+   at MarginCoin.Controllers.AlgoTradeController.ProcessMarketMatrix() in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 382
+2023-11-14 19:52:10.157 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 19:52:10.710 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 19:52:10.997 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:52:11.025 +01:00 [ERR] ProcessMarketMatrix failled
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at MarginCoin.Controllers.AlgoTradeController.ReviewOpenTrade(String symbol) in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 519
+   at MarginCoin.Controllers.AlgoTradeController.ProcessMarketMatrix() in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 382
+2023-11-14 19:52:11.759 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 19:52:12.123 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:52:12.147 +01:00 [ERR] ProcessMarketMatrix failled
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at MarginCoin.Controllers.AlgoTradeController.ReviewOpenTrade(String symbol) in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 519
+   at MarginCoin.Controllers.AlgoTradeController.ProcessMarketMatrix() in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 382
+2023-11-14 19:52:12.305 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 19:52:13.006 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:52:13.032 +01:00 [ERR] ProcessMarketMatrix failled
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at MarginCoin.Controllers.AlgoTradeController.ReviewOpenTrade(String symbol) in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 519
+   at MarginCoin.Controllers.AlgoTradeController.ProcessMarketMatrix() in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 382
+2023-11-14 19:52:14.044 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:52:14.072 +01:00 [ERR] ProcessMarketMatrix failled
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at MarginCoin.Controllers.AlgoTradeController.ReviewOpenTrade(String symbol) in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 519
+   at MarginCoin.Controllers.AlgoTradeController.ProcessMarketMatrix() in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 382
+2023-11-14 19:52:15.509 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:52:15.549 +01:00 [ERR] ProcessMarketMatrix failled
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at MarginCoin.Controllers.AlgoTradeController.ReviewOpenTrade(String symbol) in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 519
+   at MarginCoin.Controllers.AlgoTradeController.ProcessMarketMatrix() in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 382
+2023-11-14 19:52:16.119 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:52:16.161 +01:00 [ERR] ProcessMarketMatrix failled
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at MarginCoin.Controllers.AlgoTradeController.ReviewOpenTrade(String symbol) in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 519
+   at MarginCoin.Controllers.AlgoTradeController.ProcessMarketMatrix() in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 382
+2023-11-14 19:52:17.114 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:52:17.154 +01:00 [ERR] ProcessMarketMatrix failled
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at MarginCoin.Controllers.AlgoTradeController.ReviewOpenTrade(String symbol) in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 519
+   at MarginCoin.Controllers.AlgoTradeController.ProcessMarketMatrix() in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 382
+2023-11-14 19:52:18.129 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:52:18.156 +01:00 [ERR] ProcessMarketMatrix failled
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at MarginCoin.Controllers.AlgoTradeController.ReviewOpenTrade(String symbol) in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 519
+   at MarginCoin.Controllers.AlgoTradeController.ProcessMarketMatrix() in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 382
+2023-11-14 19:52:19.024 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:52:19.064 +01:00 [ERR] ProcessMarketMatrix failled
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at MarginCoin.Controllers.AlgoTradeController.ReviewOpenTrade(String symbol) in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 519
+   at MarginCoin.Controllers.AlgoTradeController.ProcessMarketMatrix() in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 382
+2023-11-14 19:52:20.045 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:52:20.072 +01:00 [ERR] ProcessMarketMatrix failled
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at MarginCoin.Controllers.AlgoTradeController.ReviewOpenTrade(String symbol) in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 519
+   at MarginCoin.Controllers.AlgoTradeController.ProcessMarketMatrix() in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 382
+2023-11-14 19:52:21.009 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:52:21.034 +01:00 [ERR] ProcessMarketMatrix failled
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at MarginCoin.Controllers.AlgoTradeController.ReviewOpenTrade(String symbol) in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 519
+   at MarginCoin.Controllers.AlgoTradeController.ProcessMarketMatrix() in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 382
+2023-11-14 19:52:22.109 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:52:22.149 +01:00 [ERR] ProcessMarketMatrix failled
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at MarginCoin.Controllers.AlgoTradeController.ReviewOpenTrade(String symbol) in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 519
+   at MarginCoin.Controllers.AlgoTradeController.ProcessMarketMatrix() in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 382
+2023-11-14 19:52:24.007 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:52:24.033 +01:00 [ERR] ProcessMarketMatrix failled
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at MarginCoin.Controllers.AlgoTradeController.ReviewOpenTrade(String symbol) in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 519
+   at MarginCoin.Controllers.AlgoTradeController.ProcessMarketMatrix() in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 382
+2023-11-14 19:52:24.610 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:52:24.636 +01:00 [ERR] ProcessMarketMatrix failled
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at MarginCoin.Controllers.AlgoTradeController.ReviewOpenTrade(String symbol) in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 519
+   at MarginCoin.Controllers.AlgoTradeController.ProcessMarketMatrix() in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 382
+2023-11-14 19:52:25.213 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:52:25.240 +01:00 [ERR] ProcessMarketMatrix failled
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at MarginCoin.Controllers.AlgoTradeController.ReviewOpenTrade(String symbol) in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 519
+   at MarginCoin.Controllers.AlgoTradeController.ProcessMarketMatrix() in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 382
+2023-11-14 19:52:26.016 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:52:26.057 +01:00 [ERR] ProcessMarketMatrix failled
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at MarginCoin.Controllers.AlgoTradeController.ReviewOpenTrade(String symbol) in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 519
+   at MarginCoin.Controllers.AlgoTradeController.ProcessMarketMatrix() in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 382
+2023-11-14 19:52:27.113 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:52:27.155 +01:00 [ERR] ProcessMarketMatrix failled
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at MarginCoin.Controllers.AlgoTradeController.ReviewOpenTrade(String symbol) in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 519
+   at MarginCoin.Controllers.AlgoTradeController.ProcessMarketMatrix() in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 382
+2023-11-14 19:52:28.719 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:52:28.759 +01:00 [ERR] ProcessMarketMatrix failled
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at MarginCoin.Controllers.AlgoTradeController.ReviewOpenTrade(String symbol) in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 519
+   at MarginCoin.Controllers.AlgoTradeController.ProcessMarketMatrix() in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 382
+2023-11-14 19:52:30.323 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:52:30.362 +01:00 [ERR] ProcessMarketMatrix failled
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at MarginCoin.Controllers.AlgoTradeController.ReviewOpenTrade(String symbol) in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 519
+   at MarginCoin.Controllers.AlgoTradeController.ProcessMarketMatrix() in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 382
+2023-11-14 19:52:32.289 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:52:32.330 +01:00 [ERR] ProcessMarketMatrix failled
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at MarginCoin.Controllers.AlgoTradeController.ReviewOpenTrade(String symbol) in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 519
+   at MarginCoin.Controllers.AlgoTradeController.ProcessMarketMatrix() in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 382
+2023-11-14 19:52:35.407 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:52:35.445 +01:00 [ERR] ProcessMarketMatrix failled
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at MarginCoin.Controllers.AlgoTradeController.ReviewOpenTrade(String symbol) in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 519
+   at MarginCoin.Controllers.AlgoTradeController.ProcessMarketMatrix() in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 382
+2023-11-14 19:52:36.129 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:52:36.169 +01:00 [ERR] ProcessMarketMatrix failled
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at MarginCoin.Controllers.AlgoTradeController.ReviewOpenTrade(String symbol) in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 519
+   at MarginCoin.Controllers.AlgoTradeController.ProcessMarketMatrix() in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 382
+2023-11-14 19:52:38.746 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:52:38.787 +01:00 [ERR] ProcessMarketMatrix failled
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at MarginCoin.Controllers.AlgoTradeController.ReviewOpenTrade(String symbol) in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 519
+   at MarginCoin.Controllers.AlgoTradeController.ProcessMarketMatrix() in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 382
+2023-11-14 19:52:39.855 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:52:39.895 +01:00 [ERR] ProcessMarketMatrix failled
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at MarginCoin.Controllers.AlgoTradeController.ReviewOpenTrade(String symbol) in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 519
+   at MarginCoin.Controllers.AlgoTradeController.ProcessMarketMatrix() in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 382
+2023-11-14 19:52:40.933 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:52:40.995 +01:00 [ERR] ProcessMarketMatrix failled
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at MarginCoin.Controllers.AlgoTradeController.ReviewOpenTrade(String symbol) in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 519
+   at MarginCoin.Controllers.AlgoTradeController.ProcessMarketMatrix() in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 382
+2023-11-14 19:52:41.562 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:52:41.603 +01:00 [ERR] ProcessMarketMatrix failled
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at MarginCoin.Controllers.AlgoTradeController.ReviewOpenTrade(String symbol) in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 519
+   at MarginCoin.Controllers.AlgoTradeController.ProcessMarketMatrix() in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 382
+2023-11-14 19:52:42.252 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:52:42.291 +01:00 [ERR] ProcessMarketMatrix failled
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at MarginCoin.Controllers.AlgoTradeController.ReviewOpenTrade(String symbol) in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 519
+   at MarginCoin.Controllers.AlgoTradeController.ProcessMarketMatrix() in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 382
+2023-11-14 19:52:42.851 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:52:42.890 +01:00 [ERR] ProcessMarketMatrix failled
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at MarginCoin.Controllers.AlgoTradeController.ReviewOpenTrade(String symbol) in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 519
+   at MarginCoin.Controllers.AlgoTradeController.ProcessMarketMatrix() in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 382
+2023-11-14 19:52:43.454 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:52:43.494 +01:00 [ERR] ProcessMarketMatrix failled
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at MarginCoin.Controllers.AlgoTradeController.ReviewOpenTrade(String symbol) in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 519
+   at MarginCoin.Controllers.AlgoTradeController.ProcessMarketMatrix() in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 382
+2023-11-14 19:52:44.057 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:52:44.098 +01:00 [ERR] ProcessMarketMatrix failled
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at MarginCoin.Controllers.AlgoTradeController.ReviewOpenTrade(String symbol) in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 519
+   at MarginCoin.Controllers.AlgoTradeController.ProcessMarketMatrix() in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 382
+2023-11-14 19:52:44.772 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:52:44.812 +01:00 [ERR] ProcessMarketMatrix failled
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at MarginCoin.Controllers.AlgoTradeController.ReviewOpenTrade(String symbol) in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 519
+   at MarginCoin.Controllers.AlgoTradeController.ProcessMarketMatrix() in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 382
+2023-11-14 19:52:45.407 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:52:45.448 +01:00 [ERR] ProcessMarketMatrix failled
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at MarginCoin.Controllers.AlgoTradeController.ReviewOpenTrade(String symbol) in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 519
+   at MarginCoin.Controllers.AlgoTradeController.ProcessMarketMatrix() in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 382
+2023-11-14 19:52:46.016 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:52:46.055 +01:00 [ERR] ProcessMarketMatrix failled
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at MarginCoin.Controllers.AlgoTradeController.ReviewOpenTrade(String symbol) in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 519
+   at MarginCoin.Controllers.AlgoTradeController.ProcessMarketMatrix() in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 382
+2023-11-14 19:52:46.618 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:52:46.658 +01:00 [ERR] ProcessMarketMatrix failled
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at MarginCoin.Controllers.AlgoTradeController.ReviewOpenTrade(String symbol) in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 519
+   at MarginCoin.Controllers.AlgoTradeController.ProcessMarketMatrix() in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 382
+2023-11-14 19:52:47.708 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:52:47.746 +01:00 [ERR] ProcessMarketMatrix failled
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at MarginCoin.Controllers.AlgoTradeController.ReviewOpenTrade(String symbol) in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 519
+   at MarginCoin.Controllers.AlgoTradeController.ProcessMarketMatrix() in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 382
+2023-11-14 19:52:48.308 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:52:48.349 +01:00 [ERR] ProcessMarketMatrix failled
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at MarginCoin.Controllers.AlgoTradeController.ReviewOpenTrade(String symbol) in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 519
+   at MarginCoin.Controllers.AlgoTradeController.ProcessMarketMatrix() in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 382
+2023-11-14 19:52:48.905 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:52:48.943 +01:00 [ERR] ProcessMarketMatrix failled
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at MarginCoin.Controllers.AlgoTradeController.ReviewOpenTrade(String symbol) in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 519
+   at MarginCoin.Controllers.AlgoTradeController.ProcessMarketMatrix() in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 382
+2023-11-14 19:52:49.577 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:52:49.617 +01:00 [ERR] ProcessMarketMatrix failled
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at MarginCoin.Controllers.AlgoTradeController.ReviewOpenTrade(String symbol) in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 519
+   at MarginCoin.Controllers.AlgoTradeController.ProcessMarketMatrix() in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 382
+2023-11-14 19:52:50.198 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:52:50.239 +01:00 [ERR] ProcessMarketMatrix failled
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at MarginCoin.Controllers.AlgoTradeController.ReviewOpenTrade(String symbol) in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 519
+   at MarginCoin.Controllers.AlgoTradeController.ProcessMarketMatrix() in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 382
+2023-11-14 19:52:50.911 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:52:50.951 +01:00 [ERR] ProcessMarketMatrix failled
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at MarginCoin.Controllers.AlgoTradeController.ReviewOpenTrade(String symbol) in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 519
+   at MarginCoin.Controllers.AlgoTradeController.ProcessMarketMatrix() in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 382
+2023-11-14 19:52:51.608 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:52:51.647 +01:00 [ERR] ProcessMarketMatrix failled
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at MarginCoin.Controllers.AlgoTradeController.ReviewOpenTrade(String symbol) in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 519
+   at MarginCoin.Controllers.AlgoTradeController.ProcessMarketMatrix() in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 382
+2023-11-14 19:52:52.203 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:52:52.243 +01:00 [ERR] ProcessMarketMatrix failled
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at MarginCoin.Controllers.AlgoTradeController.ReviewOpenTrade(String symbol) in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 519
+   at MarginCoin.Controllers.AlgoTradeController.ProcessMarketMatrix() in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 382
+2023-11-14 19:52:53.235 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:52:53.275 +01:00 [ERR] ProcessMarketMatrix failled
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at MarginCoin.Controllers.AlgoTradeController.ReviewOpenTrade(String symbol) in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 519
+   at MarginCoin.Controllers.AlgoTradeController.ProcessMarketMatrix() in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 382
+2023-11-14 19:52:54.006 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:52:54.041 +01:00 [ERR] ProcessMarketMatrix failled
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at MarginCoin.Controllers.AlgoTradeController.ReviewOpenTrade(String symbol) in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 519
+   at MarginCoin.Controllers.AlgoTradeController.ProcessMarketMatrix() in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 382
+2023-11-14 19:52:54.998 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:52:55.039 +01:00 [ERR] ProcessMarketMatrix failled
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at MarginCoin.Controllers.AlgoTradeController.ReviewOpenTrade(String symbol) in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 519
+   at MarginCoin.Controllers.AlgoTradeController.ProcessMarketMatrix() in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 382
+2023-11-14 19:52:56.055 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:52:56.098 +01:00 [ERR] ProcessMarketMatrix failled
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at MarginCoin.Controllers.AlgoTradeController.ReviewOpenTrade(String symbol) in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 519
+   at MarginCoin.Controllers.AlgoTradeController.ProcessMarketMatrix() in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 382
+2023-11-14 19:52:57.018 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:52:57.058 +01:00 [ERR] ProcessMarketMatrix failled
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at MarginCoin.Controllers.AlgoTradeController.ReviewOpenTrade(String symbol) in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 519
+   at MarginCoin.Controllers.AlgoTradeController.ProcessMarketMatrix() in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 382
+2023-11-14 19:52:58.038 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:52:58.077 +01:00 [ERR] ProcessMarketMatrix failled
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at MarginCoin.Controllers.AlgoTradeController.ReviewOpenTrade(String symbol) in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 519
+   at MarginCoin.Controllers.AlgoTradeController.ProcessMarketMatrix() in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 382
+2023-11-14 19:52:59.104 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:52:59.131 +01:00 [ERR] ProcessMarketMatrix failled
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at MarginCoin.Controllers.AlgoTradeController.ReviewOpenTrade(String symbol) in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 519
+   at MarginCoin.Controllers.AlgoTradeController.ProcessMarketMatrix() in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 382
+2023-11-14 19:53:00.489 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:53:00.529 +01:00 [ERR] ProcessMarketMatrix failled
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at MarginCoin.Controllers.AlgoTradeController.ReviewOpenTrade(String symbol) in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 519
+   at MarginCoin.Controllers.AlgoTradeController.ProcessMarketMatrix() in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 382
+2023-11-14 19:53:01.085 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:53:01.124 +01:00 [ERR] ProcessMarketMatrix failled
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at MarginCoin.Controllers.AlgoTradeController.ReviewOpenTrade(String symbol) in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 519
+   at MarginCoin.Controllers.AlgoTradeController.ProcessMarketMatrix() in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 382
+2023-11-14 19:53:02.147 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:53:02.187 +01:00 [ERR] ProcessMarketMatrix failled
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at MarginCoin.Controllers.AlgoTradeController.ReviewOpenTrade(String symbol) in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 519
+   at MarginCoin.Controllers.AlgoTradeController.ProcessMarketMatrix() in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 382
+2023-11-14 19:53:03.139 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:53:03.166 +01:00 [ERR] ProcessMarketMatrix failled
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at MarginCoin.Controllers.AlgoTradeController.ReviewOpenTrade(String symbol) in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 519
+   at MarginCoin.Controllers.AlgoTradeController.ProcessMarketMatrix() in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 382
+2023-11-14 19:53:04.084 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:53:04.123 +01:00 [ERR] ProcessMarketMatrix failled
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at MarginCoin.Controllers.AlgoTradeController.ReviewOpenTrade(String symbol) in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 519
+   at MarginCoin.Controllers.AlgoTradeController.ProcessMarketMatrix() in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 382
+2023-11-14 19:53:05.071 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:53:05.111 +01:00 [ERR] ProcessMarketMatrix failled
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at MarginCoin.Controllers.AlgoTradeController.ReviewOpenTrade(String symbol) in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 519
+   at MarginCoin.Controllers.AlgoTradeController.ProcessMarketMatrix() in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 382
+2023-11-14 19:53:06.027 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:53:06.069 +01:00 [ERR] ProcessMarketMatrix failled
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at MarginCoin.Controllers.AlgoTradeController.ReviewOpenTrade(String symbol) in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 519
+   at MarginCoin.Controllers.AlgoTradeController.ProcessMarketMatrix() in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 382
+2023-11-14 19:53:07.015 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:53:07.041 +01:00 [ERR] ProcessMarketMatrix failled
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at MarginCoin.Controllers.AlgoTradeController.ReviewOpenTrade(String symbol) in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 519
+   at MarginCoin.Controllers.AlgoTradeController.ProcessMarketMatrix() in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 382
+2023-11-14 19:53:08.019 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:53:08.045 +01:00 [ERR] ProcessMarketMatrix failled
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at MarginCoin.Controllers.AlgoTradeController.ReviewOpenTrade(String symbol) in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 519
+   at MarginCoin.Controllers.AlgoTradeController.ProcessMarketMatrix() in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 382
+2023-11-14 19:53:09.018 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:53:09.059 +01:00 [ERR] ProcessMarketMatrix failled
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at MarginCoin.Controllers.AlgoTradeController.ReviewOpenTrade(String symbol) in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 519
+   at MarginCoin.Controllers.AlgoTradeController.ProcessMarketMatrix() in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 382
+2023-11-14 19:53:09.984 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:53:10.011 +01:00 [ERR] ProcessMarketMatrix failled
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at MarginCoin.Controllers.AlgoTradeController.ReviewOpenTrade(String symbol) in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 519
+   at MarginCoin.Controllers.AlgoTradeController.ProcessMarketMatrix() in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 382
+2023-11-14 19:53:11.024 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:53:11.050 +01:00 [ERR] ProcessMarketMatrix failled
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at MarginCoin.Controllers.AlgoTradeController.ReviewOpenTrade(String symbol) in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 519
+   at MarginCoin.Controllers.AlgoTradeController.ProcessMarketMatrix() in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 382
+2023-11-14 19:53:12.069 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:53:12.096 +01:00 [ERR] ProcessMarketMatrix failled
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at MarginCoin.Controllers.AlgoTradeController.ReviewOpenTrade(String symbol) in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 519
+   at MarginCoin.Controllers.AlgoTradeController.ProcessMarketMatrix() in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 382
+2023-11-14 19:53:13.120 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:53:13.146 +01:00 [ERR] ProcessMarketMatrix failled
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at MarginCoin.Controllers.AlgoTradeController.ReviewOpenTrade(String symbol) in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 519
+   at MarginCoin.Controllers.AlgoTradeController.ProcessMarketMatrix() in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 382
+2023-11-14 19:53:14.059 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:53:14.099 +01:00 [ERR] ProcessMarketMatrix failled
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at MarginCoin.Controllers.AlgoTradeController.ReviewOpenTrade(String symbol) in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 519
+   at MarginCoin.Controllers.AlgoTradeController.ProcessMarketMatrix() in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 382
+2023-11-14 19:53:15.392 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:53:15.418 +01:00 [ERR] ProcessMarketMatrix failled
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at MarginCoin.Controllers.AlgoTradeController.ReviewOpenTrade(String symbol) in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 519
+   at MarginCoin.Controllers.AlgoTradeController.ProcessMarketMatrix() in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 382
+2023-11-14 19:53:16.517 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:53:16.558 +01:00 [ERR] ProcessMarketMatrix failled
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at MarginCoin.Controllers.AlgoTradeController.ReviewOpenTrade(String symbol) in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 519
+   at MarginCoin.Controllers.AlgoTradeController.ProcessMarketMatrix() in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 382
+2023-11-14 19:53:16.595 +01:00 [WRN] Initial call for ExportChart UI
+2023-11-14 19:53:17.120 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:53:17.160 +01:00 [ERR] ProcessMarketMatrix failled
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at MarginCoin.Controllers.AlgoTradeController.ReviewOpenTrade(String symbol) in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 519
+   at MarginCoin.Controllers.AlgoTradeController.ProcessMarketMatrix() in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 382
+2023-11-14 19:53:18.114 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:53:18.668 +01:00 [WRN] Call SellLimit OK
+2023-11-14 19:53:19.209 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 19:53:19.760 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 19:53:20.309 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 19:53:20.856 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 19:53:21.408 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 19:53:21.984 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:53:22.527 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:53:23.084 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:53:23.619 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:53:24.179 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:53:25.759 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:53:26.314 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:53:26.890 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:53:27.459 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:53:28.147 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:53:28.910 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:53:29.942 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:53:30.530 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:53:31.074 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:53:31.630 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:53:32.285 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:53:32.847 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:53:33.390 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:53:34.965 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:53:35.520 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:53:36.190 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:53:36.780 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:53:37.344 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:53:37.892 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:53:38.458 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:53:39.006 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:53:39.584 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:53:40.135 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:53:40.695 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:53:41.234 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:53:42.396 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:53:43.241 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:53:43.804 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:53:44.364 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:53:44.942 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:53:45.493 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:53:46.056 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:53:46.599 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:53:47.160 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:53:47.828 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:53:48.395 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:53:48.938 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:53:49.520 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:53:50.193 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:53:50.759 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:53:51.303 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:53:51.870 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:53:52.450 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:53:53.603 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:53:54.262 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:53:54.848 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:53:55.402 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:53:56.015 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:53:57.034 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:53:57.921 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:53:58.469 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:53:59.148 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:53:59.709 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:54:00.276 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:54:00.824 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:54:01.393 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:54:02.238 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:54:02.894 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:54:03.436 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:54:04.002 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:54:04.544 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:54:05.229 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:54:06.324 +01:00 [WRN] Call Prediction on DOTUSDT down 0,9672686/0,032731373
+2023-11-14 19:54:06.411 +01:00 [WRN] Call Prediction on BNBUSDT down 0,98460543/0,015394602
+2023-11-14 19:54:06.612 +01:00 [WRN] Call Prediction on ADAUSDT down 0,69620645/0,30379355
+2023-11-14 19:54:06.701 +01:00 [WRN] Call Prediction on AVAXUSDT down 0,5652673/0,43473268
+2023-11-14 19:54:06.870 +01:00 [WRN] Call Prediction on XRPUSDT down 0,9473335/0,052666504
+2023-11-14 19:54:06.957 +01:00 [WRN] Call Prediction on LTCUSDT down 0,7939648/0,20603518
+2023-11-14 19:54:07.040 +01:00 [WRN] Call Prediction on TRXUSDT down 0,7777225/0,22227748
+2023-11-14 19:54:07.127 +01:00 [WRN] Call Prediction on BTCUSDT up 0,42586052/0,5741395
+2023-11-14 19:54:07.217 +01:00 [WRN] Call Prediction on MATICUSDT up 0,17610985/0,82389015
+2023-11-14 19:54:07.302 +01:00 [WRN] Call Prediction on LINKUSDT down 0,56113696/0,43886298
+2023-11-14 19:54:07.388 +01:00 [WRN] Call Prediction on DOGEUSDT down 0,92666715/0,0733329
+2023-11-14 19:54:07.477 +01:00 [WRN] Call Prediction on WBTCUSDT down 0,9131396/0,08686042
+2023-11-14 19:54:07.563 +01:00 [WRN] Call Prediction on SOLUSDT down 0,99411845/0,005881579
+2023-11-14 19:54:07.649 +01:00 [WRN] Call Prediction on ETHUSDT down 0,8223698/0,17763016
+2023-11-14 19:54:07.651 +01:00 [WRN] ----------------ML Updated---------------------
+2023-11-14 19:54:08.135 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:54:09.713 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:54:11.181 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:54:12.646 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:54:13.529 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:54:17.684 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:54:18.225 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:54:19.805 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:54:20.367 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:54:20.941 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:54:21.589 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:54:22.645 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:54:23.195 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:54:23.763 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:54:24.785 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:54:25.462 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:54:26.011 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:54:26.576 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:54:27.127 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:54:27.726 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:54:28.274 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:54:28.904 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:54:29.452 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:54:30.024 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:54:30.578 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:54:31.141 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:54:31.690 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:54:32.741 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:54:33.299 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:54:33.869 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:54:34.415 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:54:35.012 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:54:35.599 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:54:36.212 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:54:36.754 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:54:37.331 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:54:37.898 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:54:38.590 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:54:39.136 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:54:39.722 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:54:40.267 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:54:40.976 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:54:41.545 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:54:42.116 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:54:42.656 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:54:43.226 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:54:43.776 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:54:44.363 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:54:45.935 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:54:46.596 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:54:47.624 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:54:48.201 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:54:48.753 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:54:49.312 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:54:50.415 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:54:50.996 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:54:51.544 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:54:52.132 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:54:52.677 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:54:53.240 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:54:53.810 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:54:54.863 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:54:55.411 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:54:55.975 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:54:56.522 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:54:57.080 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:54:57.656 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:54:58.223 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:54:58.925 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:54:59.492 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:55:01.056 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:55:01.642 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:55:02.207 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:55:02.811 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:55:03.357 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:55:03.928 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:55:04.484 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:55:05.047 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:55:05.591 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:55:06.161 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:55:06.740 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:55:07.330 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:55:07.878 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:55:08.438 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:55:09.119 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:55:09.697 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:55:10.246 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:55:10.811 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:55:11.361 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:55:11.923 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:55:12.472 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:55:13.115 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:55:13.689 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:55:14.258 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:55:14.921 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:55:15.581 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:55:16.128 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:55:16.730 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:55:17.272 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:55:17.846 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:55:18.420 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:55:19.009 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:55:20.571 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:55:21.337 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:55:21.885 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:55:22.448 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:55:23.078 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:55:23.661 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:55:24.320 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:55:24.877 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:55:25.539 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:55:27.185 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:55:27.729 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:55:28.302 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:55:29.335 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:55:29.943 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:55:30.489 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:55:31.047 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:55:31.598 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:55:32.165 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:55:32.711 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:55:33.278 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:55:33.817 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:55:34.404 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:55:34.952 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:55:35.515 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:55:36.230 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:55:36.797 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:55:37.347 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:55:37.916 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:55:38.467 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:55:39.082 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:55:39.659 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:55:40.716 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:55:41.376 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:55:41.939 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:55:42.486 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:55:43.073 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:55:43.626 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:55:44.226 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:55:44.778 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:55:45.445 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:55:45.988 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:55:46.589 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:55:47.134 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:55:47.702 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:55:48.257 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:55:48.813 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:55:49.364 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:55:50.413 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:55:50.964 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:55:51.535 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:55:52.567 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:55:53.133 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:55:53.700 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:55:54.408 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:55:55.446 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:55:56.010 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:55:56.555 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:55:57.115 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:55:57.677 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:55:58.235 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:55:58.785 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:55:59.372 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:55:59.942 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:56:00.611 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:56:01.186 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:56:01.794 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:56:02.358 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:56:02.926 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:56:03.476 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:56:04.046 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:56:04.700 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:56:05.367 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:56:05.924 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:56:06.505 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:56:07.051 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:56:07.610 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:56:08.161 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:56:08.725 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:56:09.266 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:56:09.825 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:56:10.370 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:56:10.964 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:56:11.502 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:56:12.168 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:56:12.720 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:56:13.322 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:56:13.867 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:56:14.444 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:56:15.002 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:56:15.699 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:56:16.433 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:56:17.115 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:56:17.660 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:56:18.232 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:56:18.782 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:56:19.336 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:56:19.887 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:56:20.452 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:56:21.069 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:56:21.671 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:56:22.222 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:56:22.788 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:56:23.336 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:56:23.896 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:56:24.447 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:56:25.073 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:56:25.612 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:56:26.177 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:56:26.723 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:56:27.279 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:56:27.822 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:56:28.386 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:56:28.922 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:56:29.485 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:56:30.043 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:56:30.600 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:56:31.151 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:56:31.792 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:56:32.334 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:56:32.894 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:56:33.436 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:56:33.995 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:56:34.570 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:56:35.372 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:56:35.916 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:56:36.487 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:56:37.030 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:56:37.619 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:56:38.198 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:56:38.758 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:56:39.302 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:56:39.990 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:56:40.557 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:56:41.159 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:56:42.177 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:56:42.762 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:56:43.315 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:56:44.944 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:56:45.490 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:56:46.055 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:56:46.634 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:56:47.178 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:56:47.722 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:56:48.292 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:56:48.841 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:56:49.397 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:56:49.938 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:56:50.495 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:56:51.038 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:56:51.602 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:56:52.166 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:56:52.721 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:56:53.267 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:56:53.823 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:56:54.383 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:56:54.943 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:56:55.515 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:56:56.161 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:56:56.733 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:56:57.298 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:56:57.860 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:56:58.416 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:56:58.962 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:56:59.524 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:57:00.066 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:57:01.630 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:57:02.196 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:57:02.753 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:57:03.770 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:57:04.358 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:57:04.899 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:57:05.459 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:57:06.007 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:57:06.567 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:57:07.128 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:57:07.684 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:57:08.224 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:57:08.790 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:57:09.351 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:57:09.921 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:57:10.465 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:57:11.022 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:57:11.599 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:57:12.256 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:57:12.855 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:57:13.414 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:57:13.962 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:57:14.536 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:57:15.076 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:57:15.680 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:57:16.239 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:57:16.804 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:57:17.360 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:57:17.926 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:57:18.471 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:57:19.273 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:57:19.815 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:57:20.395 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:57:20.938 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:57:21.499 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:57:22.578 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:57:23.136 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:57:23.688 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:57:24.239 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:57:24.862 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:57:25.419 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:57:25.961 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:57:27.514 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:57:28.058 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:57:28.637 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:57:29.181 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:57:29.765 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:57:30.790 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:57:31.348 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:57:31.900 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:57:32.514 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:57:33.099 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:57:33.651 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:57:34.253 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:57:34.854 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:57:36.409 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:57:36.973 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:57:37.527 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:57:38.082 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:57:38.644 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:57:39.200 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:57:39.753 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:57:40.420 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:57:40.988 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:57:41.573 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:57:42.119 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:57:42.824 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:57:43.373 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:57:45.466 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:57:46.009 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:57:46.571 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:57:47.134 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:57:47.692 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:57:48.237 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:57:48.789 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:57:49.329 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:57:49.887 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:57:51.458 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:57:52.013 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:57:52.564 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:57:53.122 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:57:53.670 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:57:54.222 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:57:54.790 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 19:57:55.344 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 20:00:25.640 +01:00 [WRN] MarginCoin, started!
+2023-11-14 20:00:51.698 +01:00 [WRN] Get Account OK
+2023-11-14 20:01:40.410 +01:00 [WRN] Start trading market...
+2023-11-14 20:03:40.416 +01:00 [WRN] Initial call for ExportChart UI
+2023-11-14 20:04:29.973 +01:00 [WRN] Call Prediction on DOTUSDT down 0,7745602/0,22543976
+2023-11-14 20:04:30.055 +01:00 [WRN] Call Prediction on BNBUSDT down 0,97404975/0,025950195
+2023-11-14 20:04:30.135 +01:00 [WRN] Call Prediction on ADAUSDT down 0,91570914/0,08429084
+2023-11-14 20:04:30.216 +01:00 [WRN] Call Prediction on AVAXUSDT down 0,9354558/0,064544216
+2023-11-14 20:04:30.300 +01:00 [WRN] Call Prediction on XRPUSDT down 0,97895277/0,021047229
+2023-11-14 20:04:30.385 +01:00 [WRN] Call Prediction on LTCUSDT down 0,96726704/0,03273292
+2023-11-14 20:04:30.465 +01:00 [WRN] Call Prediction on TRXUSDT down 0,91186804/0,08813197
+2023-11-14 20:04:30.670 +01:00 [WRN] Call Prediction on BTCUSDT down 0,8046076/0,19539243
+2023-11-14 20:04:30.756 +01:00 [WRN] Call Prediction on MATICUSDT down 0,7745602/0,22543976
+2023-11-14 20:04:30.839 +01:00 [WRN] Call Prediction on LINKUSDT up 0,22001427/0,7799858
+2023-11-14 20:04:30.946 +01:00 [WRN] Call Prediction on DOGEUSDT down 0,9704522/0,029547807
+2023-11-14 20:04:31.120 +01:00 [WRN] Call Prediction on WBTCUSDT down 0,91628605/0,08371398
+2023-11-14 20:04:31.200 +01:00 [WRN] Call Prediction on SOLUSDT down 0,95834804/0,04165194
+2023-11-14 20:04:31.282 +01:00 [WRN] Call Prediction on ETHUSDT down 0,9229054/0,077094644
+2023-11-14 20:04:31.284 +01:00 [WRN] ----------------ML Updated---------------------
+2023-11-14 20:08:41.393 +01:00 [WRN] Call BuyMarket TUSDUSDT OK
+2023-11-14 20:08:43.449 +01:00 [WRN] Get Account OK
+2023-11-14 20:08:51.246 +01:00 [WRN] Call SellLimit OK
+2023-11-14 20:08:51.791 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 20:08:52.346 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 20:08:52.890 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 20:08:53.480 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 20:08:54.025 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 20:09:39.854 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 20:11:18.166 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 20:12:18.363 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 20:12:22.340 +01:00 [ERR] THE SIGNAL CLIENT IS DISCONNECTED
+2023-11-14 20:12:24.240 +01:00 [ERR] THE SIGNAL CLIENT IS DISCONNECTED
+2023-11-14 20:12:26.281 +01:00 [WRN] Get Account OK
+2023-11-14 20:18:11.057 +01:00 [WRN] MarginCoin, started!
+2023-11-14 20:18:17.666 +01:00 [WRN] Get Account OK
+2023-11-14 20:18:47.453 +01:00 [ERR] THE SIGNAL CLIENT IS DISCONNECTED
+2023-11-14 20:18:49.672 +01:00 [WRN] Get Account OK
+2023-11-14 20:19:47.601 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 20:19:47.740 +01:00 [ERR] THE SIGNAL CLIENT IS DISCONNECTED
+2023-11-14 20:19:49.219 +01:00 [ERR] THE SIGNAL CLIENT IS DISCONNECTED
+2023-11-14 20:19:50.476 +01:00 [WRN] Get Account OK
+2023-11-14 20:28:15.020 +01:00 [ERR] THE SIGNAL CLIENT IS DISCONNECTED
+2023-11-14 20:28:16.563 +01:00 [WRN] Get Account OK
+2023-11-14 20:29:39.091 +01:00 [ERR] THE SIGNAL CLIENT IS DISCONNECTED
+2023-11-14 20:29:41.231 +01:00 [WRN] Get Account OK
+2023-11-14 20:53:11.157 +01:00 [WRN] MarginCoin, started!
+2023-11-14 20:53:44.091 +01:00 [WRN] Get Account OK
+2023-11-14 20:54:21.317 +01:00 [WRN] MarginCoin, started!
+2023-11-14 20:54:39.642 +01:00 [WRN] Get Account OK
+2023-11-14 21:05:34.338 +01:00 [WRN] MarginCoin, started!
+2023-11-14 21:06:08.485 +01:00 [WRN] Get Account OK
+2023-11-14 21:06:28.720 +01:00 [ERR] THE SIGNAL CLIENT IS DISCONNECTED
+2023-11-14 21:06:30.481 +01:00 [WRN] Get Account OK
+2023-11-14 21:07:15.304 +01:00 [WRN] Start trading market...
+2023-11-14 21:07:39.169 +01:00 [ERR] ProcessMarketMatrix failled
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at MarginCoin.Controllers.AlgoTradeController.ReviewOpenTrade(String symbol) in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 519
+   at MarginCoin.Controllers.AlgoTradeController.ProcessMarketMatrix() in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 382
+2023-11-14 21:07:39.824 +01:00 [ERR] ProcessMarketMatrix failled
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at MarginCoin.Controllers.AlgoTradeController.ReviewOpenTrade(String symbol) in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 519
+   at MarginCoin.Controllers.AlgoTradeController.ProcessMarketMatrix() in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 382
+2023-11-14 21:07:40.821 +01:00 [ERR] ProcessMarketMatrix failled
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at MarginCoin.Controllers.AlgoTradeController.ReviewOpenTrade(String symbol) in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 519
+   at MarginCoin.Controllers.AlgoTradeController.ProcessMarketMatrix() in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 382
+2023-11-14 21:07:41.896 +01:00 [ERR] ProcessMarketMatrix failled
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at MarginCoin.Controllers.AlgoTradeController.ReviewOpenTrade(String symbol) in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 519
+   at MarginCoin.Controllers.AlgoTradeController.ProcessMarketMatrix() in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 382
+2023-11-14 21:07:42.828 +01:00 [ERR] ProcessMarketMatrix failled
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at MarginCoin.Controllers.AlgoTradeController.ReviewOpenTrade(String symbol) in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 519
+   at MarginCoin.Controllers.AlgoTradeController.ProcessMarketMatrix() in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 382
+2023-11-14 21:07:43.824 +01:00 [ERR] ProcessMarketMatrix failled
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at MarginCoin.Controllers.AlgoTradeController.ReviewOpenTrade(String symbol) in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 519
+   at MarginCoin.Controllers.AlgoTradeController.ProcessMarketMatrix() in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 382
+2023-11-14 21:07:44.824 +01:00 [ERR] ProcessMarketMatrix failled
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at MarginCoin.Controllers.AlgoTradeController.ReviewOpenTrade(String symbol) in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 519
+   at MarginCoin.Controllers.AlgoTradeController.ProcessMarketMatrix() in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 382
+2023-11-14 21:07:45.823 +01:00 [ERR] ProcessMarketMatrix failled
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at MarginCoin.Controllers.AlgoTradeController.ReviewOpenTrade(String symbol) in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 519
+   at MarginCoin.Controllers.AlgoTradeController.ProcessMarketMatrix() in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 382
+2023-11-14 21:07:46.823 +01:00 [ERR] ProcessMarketMatrix failled
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at MarginCoin.Controllers.AlgoTradeController.ReviewOpenTrade(String symbol) in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 519
+   at MarginCoin.Controllers.AlgoTradeController.ProcessMarketMatrix() in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 382
+2023-11-14 21:07:47.830 +01:00 [ERR] ProcessMarketMatrix failled
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at MarginCoin.Controllers.AlgoTradeController.ReviewOpenTrade(String symbol) in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 519
+   at MarginCoin.Controllers.AlgoTradeController.ProcessMarketMatrix() in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 382
+2023-11-14 21:07:48.823 +01:00 [ERR] ProcessMarketMatrix failled
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at MarginCoin.Controllers.AlgoTradeController.ReviewOpenTrade(String symbol) in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 519
+   at MarginCoin.Controllers.AlgoTradeController.ProcessMarketMatrix() in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 382
+2023-11-14 21:07:49.821 +01:00 [ERR] ProcessMarketMatrix failled
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at MarginCoin.Controllers.AlgoTradeController.ReviewOpenTrade(String symbol) in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 519
+   at MarginCoin.Controllers.AlgoTradeController.ProcessMarketMatrix() in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 382
+2023-11-14 21:07:50.823 +01:00 [ERR] ProcessMarketMatrix failled
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at MarginCoin.Controllers.AlgoTradeController.ReviewOpenTrade(String symbol) in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 519
+   at MarginCoin.Controllers.AlgoTradeController.ProcessMarketMatrix() in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 382
+2023-11-14 21:07:51.959 +01:00 [ERR] ProcessMarketMatrix failled
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at MarginCoin.Controllers.AlgoTradeController.ReviewOpenTrade(String symbol) in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 519
+   at MarginCoin.Controllers.AlgoTradeController.ProcessMarketMatrix() in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 382
+2023-11-14 21:07:52.823 +01:00 [ERR] ProcessMarketMatrix failled
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at MarginCoin.Controllers.AlgoTradeController.ReviewOpenTrade(String symbol) in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 519
+   at MarginCoin.Controllers.AlgoTradeController.ProcessMarketMatrix() in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 382
+2023-11-14 21:07:57.032 +01:00 [WRN] MarginCoin, started!
+2023-11-14 21:08:06.043 +01:00 [WRN] Start trading market...
+2023-11-14 21:08:08.290 +01:00 [WRN] Get Account OK
+2023-11-14 21:08:33.144 +01:00 [ERR] ProcessMarketMatrix failled
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at MarginCoin.Controllers.AlgoTradeController.ReviewOpenTrade(String symbol) in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 519
+   at MarginCoin.Controllers.AlgoTradeController.ProcessMarketMatrix() in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 382
+2023-11-14 21:08:33.834 +01:00 [ERR] ProcessMarketMatrix failled
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at MarginCoin.Controllers.AlgoTradeController.ReviewOpenTrade(String symbol) in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 519
+   at MarginCoin.Controllers.AlgoTradeController.ProcessMarketMatrix() in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 382
+2023-11-14 21:08:34.831 +01:00 [ERR] ProcessMarketMatrix failled
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at MarginCoin.Controllers.AlgoTradeController.ReviewOpenTrade(String symbol) in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 519
+   at MarginCoin.Controllers.AlgoTradeController.ProcessMarketMatrix() in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 382
+2023-11-14 21:08:35.832 +01:00 [ERR] ProcessMarketMatrix failled
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at MarginCoin.Controllers.AlgoTradeController.ReviewOpenTrade(String symbol) in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 519
+   at MarginCoin.Controllers.AlgoTradeController.ProcessMarketMatrix() in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 382
+2023-11-14 21:08:36.829 +01:00 [ERR] ProcessMarketMatrix failled
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at MarginCoin.Controllers.AlgoTradeController.ReviewOpenTrade(String symbol) in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 519
+   at MarginCoin.Controllers.AlgoTradeController.ProcessMarketMatrix() in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 382
+2023-11-14 21:08:43.214 +01:00 [ERR] THE SIGNAL CLIENT IS DISCONNECTED
+2023-11-14 21:08:48.750 +01:00 [WRN] Get Account OK
+2023-11-14 21:08:58.696 +01:00 [WRN] Call BuyMarket SOLUSDT OK
+2023-11-14 21:09:47.158 +01:00 [ERR] THE SIGNAL CLIENT IS DISCONNECTED
+2023-11-14 21:09:49.221 +01:00 [ERR] THE SIGNAL CLIENT IS DISCONNECTED
+2023-11-14 21:09:54.255 +01:00 [WRN] Get Account OK
+2023-11-14 21:09:55.103 +01:00 [WRN] Get Account OK
+2023-11-14 21:10:06.049 +01:00 [WRN] Initial call for ExportChart UI
+2023-11-14 21:11:06.237 +01:00 [WRN] Call Prediction on DOTUSDT down 0,89954907/0,1004509
+2023-11-14 21:11:06.474 +01:00 [WRN] Call Prediction on BNBUSDT down 0,84320337/0,15679663
+2023-11-14 21:11:06.560 +01:00 [WRN] Call Prediction on ADAUSDT up 0,48870322/0,5112967
+2023-11-14 21:11:06.644 +01:00 [WRN] Call Prediction on AVAXUSDT down 0,9990158/0,0009841683
+2023-11-14 21:11:06.729 +01:00 [WRN] Call Prediction on XRPUSDT down 0,5073434/0,49265656
+2023-11-14 21:11:06.814 +01:00 [WRN] Call Prediction on LTCUSDT down 0,92032564/0,07967432
+2023-11-14 21:11:06.905 +01:00 [WRN] Call Prediction on TRXUSDT up 0,4053197/0,5946803
+2023-11-14 21:11:06.987 +01:00 [WRN] Call Prediction on BTCUSDT down 0,61820585/0,38179415
+2023-11-14 21:11:07.071 +01:00 [WRN] Call Prediction on MATICUSDT up 0,21185778/0,7881422
+2023-11-14 21:11:07.156 +01:00 [WRN] Call Prediction on LINKUSDT up 0,018746201/0,9812538
+2023-11-14 21:11:07.239 +01:00 [WRN] Call Prediction on DOGEUSDT down 0,5230468/0,47695315
+2023-11-14 21:11:07.320 +01:00 [WRN] Call Prediction on WBTCUSDT up 0,32974198/0,67025805
+2023-11-14 21:11:07.402 +01:00 [WRN] Call Prediction on SOLUSDT up 0,27734086/0,7226591
+2023-11-14 21:11:07.482 +01:00 [WRN] Call Prediction on ETHUSDT down 0,7153987/0,2846013
+2023-11-14 21:11:07.484 +01:00 [WRN] ----------------ML Updated---------------------
+2023-11-14 21:11:51.306 +01:00 [WRN] Call SellLimit OK
+2023-11-14 21:11:52.859 +01:00 [WRN] Call BuyMarket LINKUSDT OK
+2023-11-14 21:12:00.933 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:12:01.205 +01:00 [ERR] THE SIGNAL CLIENT IS DISCONNECTED
+2023-11-14 21:12:02.418 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:12:03.075 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:12:04.649 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:12:05.807 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:12:09.283 +01:00 [WRN] Get Account OK
+2023-11-14 21:12:50.966 +01:00 [WRN] Call SellLimit OK
+2023-11-14 21:12:53.109 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:12:53.775 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:12:55.401 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:12:56.634 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:12:57.625 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:15:16.344 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 21:15:16.699 +01:00 [ERR] THE SIGNAL CLIENT IS DISCONNECTED
+2023-11-14 21:15:19.237 +01:00 [WRN] Get Account OK
+2023-11-14 21:15:26.629 +01:00 [ERR] THE SIGNAL CLIENT IS DISCONNECTED
+2023-11-14 21:15:29.209 +01:00 [WRN] Get Account OK
+2023-11-14 21:15:56.394 +01:00 [ERR] THE SIGNAL CLIENT IS DISCONNECTED
+2023-11-14 21:15:57.941 +01:00 [WRN] Get Account OK
+2023-11-14 21:16:38.618 +01:00 [ERR] THE SIGNAL CLIENT IS DISCONNECTED
+2023-11-14 21:16:40.097 +01:00 [WRN] Get Account OK
+2023-11-14 21:19:26.166 +01:00 [ERR] THE SIGNAL CLIENT IS DISCONNECTED
+2023-11-14 21:19:28.744 +01:00 [WRN] Get Account OK
+2023-11-14 21:20:07.924 +01:00 [ERR] ProcessMarketMatrix failled
+Microsoft.EntityFrameworkCore.DbUpdateConcurrencyException: The database operation was expected to affect 1 row(s), but actually affected 0 row(s); data may have been modified or deleted since entities were loaded. See http://go.microsoft.com/fwlink/?LinkId=527962 for information on understanding and handling optimistic concurrency exceptions.
+   at Microsoft.EntityFrameworkCore.Update.AffectedCountModificationCommandBatch.ThrowAggregateUpdateConcurrencyException(Int32 commandIndex, Int32 expectedRowsAffected, Int32 rowsAffected)
+   at Microsoft.EntityFrameworkCore.Update.AffectedCountModificationCommandBatch.ConsumeResultSetWithoutPropagation(Int32 commandIndex, RelationalDataReader reader)
+   at Microsoft.EntityFrameworkCore.Update.AffectedCountModificationCommandBatch.Consume(RelationalDataReader reader)
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.Execute(IRelationalConnection connection)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.Execute(IEnumerable`1 commandBatches, IRelationalConnection connection)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChanges(IList`1 entriesToSave)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChanges(StateManager stateManager, Boolean acceptAllChangesOnSuccess)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.<>c.<SaveChanges>b__104_0(DbContext _, ValueTuple`2 t)
+   at Microsoft.EntityFrameworkCore.Storage.NonRetryingExecutionStrategy.Execute[TState,TResult](TState state, Func`3 operation, Func`3 verifySucceeded)
+   at Microsoft.EntityFrameworkCore.DbContext.SaveChanges(Boolean acceptAllChangesOnSuccess)
+   at RepositoryService.UpdateStopLoss(List`1 symbolCandles, Order activeOrder) in /Users/sebastien/_Git/Dotnet/Margincoin/Service/RepositoryService.cs:line 66
+   at MarginCoin.Controllers.AlgoTradeController.ReviewOpenTrade(String symbol) in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 559
+   at MarginCoin.Controllers.AlgoTradeController.ProcessMarketMatrix() in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 382
+2023-11-14 21:20:16.478 +01:00 [ERR] THE SIGNAL CLIENT IS DISCONNECTED
+2023-11-14 21:20:17.958 +01:00 [WRN] Get Account OK
+2023-11-14 21:20:29.368 +01:00 [WRN] Call BuyMarket SOLUSDT OK
+2023-11-14 21:20:55.904 +01:00 [WRN] MarginCoin, started!
+2023-11-14 21:21:02.779 +01:00 [ERR] THE SIGNAL CLIENT IS DISCONNECTED
+2023-11-14 21:21:05.795 +01:00 [WRN] Get Account OK
+2023-11-14 21:21:11.687 +01:00 [WRN] Start trading market...
+2023-11-14 21:21:51.379 +01:00 [WRN] Call BuyMarket SOLUSDT OK
+2023-11-14 21:21:52.942 +01:00 [WRN] Get Account OK
+2023-11-14 21:22:30.750 +01:00 [WRN] Call SellLimit OK
+2023-11-14 21:22:31.567 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:22:38.252 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:22:38.811 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:22:39.410 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:22:39.958 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:22:45.898 +01:00 [WRN] Call SellLimit SOLUSDT Expired
+2023-11-14 21:22:52.782 +01:00 [ERR] THE SIGNAL CLIENT IS DISCONNECTED
+2023-11-14 21:22:55.971 +01:00 [WRN] Get Account OK
+2023-11-14 21:23:02.665 +01:00 [WRN] Call SellLimit OK
+2023-11-14 21:23:03.217 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:23:04.258 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:23:05.310 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:23:05.862 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:23:06.439 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:23:06.439 +01:00 [WRN] Call SellLimit SOLUSDT Expired
+2023-11-14 21:23:11.691 +01:00 [WRN] Initial call for ExportChart UI
+2023-11-14 21:24:08.936 +01:00 [WRN] Call SellLimit OK
+2023-11-14 21:24:09.298 +01:00 [WRN] Call Prediction on DOTUSDT down 0,89954907/0,1004509
+2023-11-14 21:24:09.377 +01:00 [WRN] Call Prediction on BNBUSDT down 0,84320337/0,15679663
+2023-11-14 21:24:09.459 +01:00 [WRN] Call Prediction on ADAUSDT up 0,48870322/0,5112967
+2023-11-14 21:24:09.486 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:24:09.541 +01:00 [WRN] Call Prediction on AVAXUSDT down 0,9990158/0,0009841683
+2023-11-14 21:24:09.619 +01:00 [WRN] Call Prediction on XRPUSDT down 0,5073434/0,49265656
+2023-11-14 21:24:09.700 +01:00 [WRN] Call Prediction on LTCUSDT down 0,92032564/0,07967432
+2023-11-14 21:24:09.786 +01:00 [WRN] Call Prediction on TRXUSDT up 0,4053197/0,5946803
+2023-11-14 21:24:09.918 +01:00 [WRN] Call Prediction on BTCUSDT down 0,61820585/0,38179415
+2023-11-14 21:24:10.000 +01:00 [WRN] Call Prediction on MATICUSDT up 0,21185778/0,7881422
+2023-11-14 21:24:10.048 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:24:10.085 +01:00 [WRN] Call Prediction on LINKUSDT up 0,018746201/0,9812538
+2023-11-14 21:24:10.321 +01:00 [WRN] Call Prediction on DOGEUSDT down 0,5230468/0,47695315
+2023-11-14 21:24:10.406 +01:00 [WRN] Call Prediction on WBTCUSDT up 0,32974198/0,67025805
+2023-11-14 21:24:10.492 +01:00 [WRN] Call Prediction on SOLUSDT up 0,27734086/0,7226591
+2023-11-14 21:24:10.573 +01:00 [WRN] Call Prediction on ETHUSDT down 0,7153987/0,2846013
+2023-11-14 21:24:10.575 +01:00 [WRN] ----------------ML Updated---------------------
+2023-11-14 21:24:10.620 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:24:12.669 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:24:13.227 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:24:13.227 +01:00 [WRN] Call SellLimit SOLUSDT Expired
+2023-11-14 21:24:13.798 +01:00 [WRN] Call SellLimit OK
+2023-11-14 21:24:14.341 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:24:15.378 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:24:15.929 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:24:16.497 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:24:17.045 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:24:17.045 +01:00 [WRN] Call SellLimit SOLUSDT Expired
+2023-11-14 21:24:17.613 +01:00 [WRN] Call SellLimit OK
+2023-11-14 21:24:18.167 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:24:18.719 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:24:19.275 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:24:19.826 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:24:20.875 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:24:20.875 +01:00 [WRN] Call SellLimit SOLUSDT Expired
+2023-11-14 21:24:21.451 +01:00 [WRN] Call SellLimit OK
+2023-11-14 21:24:22.000 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:24:22.571 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:24:23.143 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:24:23.795 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:24:24.371 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:24:24.371 +01:00 [WRN] Call SellLimit SOLUSDT Expired
+2023-11-14 21:24:24.965 +01:00 [WRN] Call SellLimit OK
+2023-11-14 21:24:25.522 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:24:26.065 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:24:26.649 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:24:27.197 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:24:27.765 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:24:27.766 +01:00 [WRN] Call SellLimit SOLUSDT Expired
+2023-11-14 21:24:28.407 +01:00 [WRN] Call SellLimit OK
+2023-11-14 21:24:29.455 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:24:30.482 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:24:31.034 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:24:31.579 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:24:32.127 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:24:32.127 +01:00 [WRN] Call SellLimit SOLUSDT Expired
+2023-11-14 21:24:32.701 +01:00 [WRN] Call SellLimit OK
+2023-11-14 21:24:33.250 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:24:33.811 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:24:34.356 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:24:34.970 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:24:35.111 +01:00 [ERR] THE SIGNAL CLIENT IS DISCONNECTED
+2023-11-14 21:24:35.530 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:24:35.530 +01:00 [WRN] Call SellLimit SOLUSDT Expired
+2023-11-14 21:24:36.854 +01:00 [WRN] Get Account OK
+2023-11-14 21:24:37.098 +01:00 [WRN] Call SellLimit OK
+2023-11-14 21:24:45.443 +01:00 [WRN] Get Account OK
+2023-11-14 21:25:01.401 +01:00 [WRN] Call BuyMarket LINKUSDT OK
+2023-11-14 21:25:02.764 +01:00 [WRN] Get Account OK
+2023-11-14 21:25:56.806 +01:00 [WRN] Call SellLimit OK
+2023-11-14 21:25:57.525 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:25:58.102 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:25:58.825 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:25:59.449 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:25:59.996 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:25:59.996 +01:00 [WRN] Call SellLimit LINKUSDT Expired
+2023-11-14 21:26:02.424 +01:00 [WRN] Call SellLimit OK
+2023-11-14 21:26:02.973 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:26:03.550 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:26:04.216 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:26:04.567 +01:00 [WRN] Call SellLimit OK
+2023-11-14 21:26:04.784 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:26:05.129 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:26:05.333 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:26:05.333 +01:00 [WRN] Call SellLimit LINKUSDT Expired
+2023-11-14 21:26:05.676 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:26:06.235 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:26:06.505 +01:00 [WRN] Call SellLimit OK
+2023-11-14 21:26:06.841 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:26:07.107 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:26:07.384 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:26:07.385 +01:00 [WRN] Call SellLimit LINKUSDT Expired
+2023-11-14 21:26:07.661 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:26:08.199 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:26:08.754 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:26:09.334 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:26:09.334 +01:00 [WRN] Call SellLimit LINKUSDT Expired
+2023-11-14 21:26:21.132 +01:00 [WRN] Call SellLimit OK
+2023-11-14 21:26:21.686 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:26:22.240 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:26:22.799 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:26:23.195 +01:00 [WRN] Call SellLimit OK
+2023-11-14 21:26:23.749 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:26:23.852 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:26:24.407 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:26:24.408 +01:00 [WRN] Call SellLimit LINKUSDT Expired
+2023-11-14 21:26:25.293 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:26:25.845 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:26:26.444 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:26:27.481 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:26:27.481 +01:00 [WRN] Call SellLimit LINKUSDT Expired
+2023-11-14 21:26:28.154 +01:00 [WRN] Call SellLimit OK
+2023-11-14 21:26:28.716 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:26:29.264 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:26:29.774 +01:00 [WRN] Call SellLimit OK
+2023-11-14 21:26:29.916 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:26:30.333 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:26:30.488 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:26:30.879 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:26:31.054 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:26:31.054 +01:00 [WRN] Call SellLimit LINKUSDT Expired
+2023-11-14 21:26:31.546 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:26:31.612 +01:00 [WRN] Call SellLimit OK
+2023-11-14 21:26:32.145 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:26:32.175 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:26:32.307 +01:00 [WRN] Call SellLimit OK
+2023-11-14 21:26:32.724 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:26:32.808 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:26:32.808 +01:00 [WRN] Call SellLimit LINKUSDT Expired
+2023-11-14 21:26:32.869 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:26:33.300 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:26:33.420 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:26:33.849 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:26:34.445 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:26:34.445 +01:00 [WRN] Call SellLimit LINKUSDT Expired
+2023-11-14 21:26:34.451 +01:00 [WRN] Call SellLimit OK
+2023-11-14 21:26:34.482 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:26:35.017 +01:00 [WRN] Call SellLimit OK
+2023-11-14 21:26:35.026 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:26:35.506 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:26:35.578 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:26:35.578 +01:00 [WRN] Call SellLimit LINKUSDT Expired
+2023-11-14 21:26:35.674 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:26:36.210 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:26:36.228 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:26:36.809 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:26:36.822 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:26:37.387 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:26:37.390 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:26:37.937 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:26:37.937 +01:00 [WRN] Call SellLimit LINKUSDT Expired
+2023-11-14 21:26:37.939 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:26:37.939 +01:00 [WRN] Call SellLimit LINKUSDT Expired
+2023-11-14 21:26:40.698 +01:00 [WRN] Call SellLimit OK
+2023-11-14 21:26:41.348 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:26:41.916 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:26:42.468 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:26:43.018 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:26:43.497 +01:00 [WRN] Call SellLimit OK
+2023-11-14 21:26:43.570 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:26:43.571 +01:00 [WRN] Call SellLimit LINKUSDT Expired
+2023-11-14 21:26:44.056 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:26:44.602 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:26:45.159 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:26:45.578 +01:00 [WRN] Call SellLimit OK
+2023-11-14 21:26:45.705 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:26:46.221 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:26:46.248 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:26:46.248 +01:00 [WRN] Call SellLimit LINKUSDT Expired
+2023-11-14 21:26:46.770 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:26:46.788 +01:00 [WRN] Call SellLimit OK
+2023-11-14 21:26:47.335 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:26:47.793 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:26:47.885 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:26:48.353 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:26:48.431 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:26:48.901 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:26:48.901 +01:00 [WRN] Call SellLimit LINKUSDT Expired
+2023-11-14 21:26:48.979 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:26:49.541 +01:00 [WRN] Call SellLimit OK
+2023-11-14 21:26:49.999 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:26:50.000 +01:00 [WRN] Call SellLimit LINKUSDT Expired
+2023-11-14 21:26:50.093 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:26:50.575 +01:00 [WRN] Call SellLimit OK
+2023-11-14 21:26:50.662 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:26:51.128 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:26:51.207 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:26:51.685 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:26:51.795 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:26:52.236 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:26:52.341 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:26:52.341 +01:00 [WRN] Call SellLimit LINKUSDT Expired
+2023-11-14 21:26:52.785 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:26:52.904 +01:00 [WRN] Call SellLimit OK
+2023-11-14 21:26:53.361 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:26:53.361 +01:00 [WRN] Call SellLimit LINKUSDT Expired
+2023-11-14 21:26:53.453 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:26:53.998 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:26:54.545 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:26:55.203 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:26:55.864 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:26:55.864 +01:00 [WRN] Call SellLimit LINKUSDT Expired
+2023-11-14 21:26:56.502 +01:00 [WRN] Call SellLimit OK
+2023-11-14 21:26:57.059 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:26:57.610 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:26:58.169 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:26:58.716 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:26:59.260 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:26:59.260 +01:00 [WRN] Call SellLimit LINKUSDT Expired
+2023-11-14 21:27:06.825 +01:00 [WRN] Call SellLimit OK
+2023-11-14 21:27:08.381 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:27:08.925 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:27:09.611 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:27:10.159 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:27:10.725 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:27:10.725 +01:00 [WRN] Call SellLimit LINKUSDT Expired
+2023-11-14 21:27:11.659 +01:00 [WRN] Call SellLimit OK
+2023-11-14 21:27:12.768 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:27:13.317 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:27:13.869 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:27:14.419 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:27:14.969 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:27:14.969 +01:00 [WRN] Call SellLimit LINKUSDT Expired
+2023-11-14 21:27:18.324 +01:00 [WRN] Call SellLimit OK
+2023-11-14 21:27:18.877 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:27:19.542 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:27:20.599 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:27:21.161 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:27:21.705 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:27:21.706 +01:00 [WRN] Call SellLimit LINKUSDT Expired
+2023-11-14 21:27:23.217 +01:00 [WRN] Call SellLimit OK
+2023-11-14 21:27:23.764 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:27:24.324 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:27:24.873 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:27:25.440 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:27:25.993 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:27:25.994 +01:00 [WRN] Call SellLimit LINKUSDT Expired
+2023-11-14 21:27:28.521 +01:00 [WRN] Call SellLimit OK
+2023-11-14 21:27:29.069 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:27:29.614 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:27:30.164 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:27:30.749 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:27:31.313 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:27:31.313 +01:00 [WRN] Call SellLimit LINKUSDT Expired
+2023-11-14 21:28:23.045 +01:00 [WRN] Call SellLimit OK
+2023-11-14 21:28:24.077 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:28:24.624 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:28:25.127 +01:00 [WRN] Call SellLimit OK
+2023-11-14 21:28:25.178 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:28:25.733 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:28:26.159 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:28:26.288 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:28:26.288 +01:00 [WRN] Call SellLimit LINKUSDT Expired
+2023-11-14 21:28:26.712 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:28:27.176 +01:00 [WRN] Call SellLimit OK
+2023-11-14 21:28:27.269 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:28:27.736 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:28:27.817 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:28:28.348 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:28:28.369 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:28:28.369 +01:00 [WRN] Call SellLimit LINKUSDT Expired
+2023-11-14 21:28:28.898 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:28:29.489 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:28:29.927 +01:00 [WRN] Call SellLimit OK
+2023-11-14 21:28:30.048 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:28:30.049 +01:00 [WRN] Call SellLimit LINKUSDT Expired
+2023-11-14 21:28:30.485 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:28:31.037 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:28:31.605 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:28:32.159 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:28:32.713 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:28:32.713 +01:00 [WRN] Call SellLimit LINKUSDT Expired
+2023-11-14 21:29:28.793 +01:00 [WRN] Call SellLimit OK
+2023-11-14 21:29:29.378 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:29:29.935 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:29:30.507 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:29:31.084 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:29:31.631 +01:00 [WRN] Get OrderStatus OK
+2023-11-14 21:29:31.631 +01:00 [WRN] Call SellLimit LINKUSDT Expired
+2023-11-14 21:29:32.392 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 21:29:34.495 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 21:29:35.700 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 21:29:36.245 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 21:29:37.230 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 21:29:37.735 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 21:29:38.279 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 21:29:38.397 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 21:29:38.798 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 21:29:38.953 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 21:29:39.558 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 21:29:39.851 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 21:29:40.117 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 21:29:40.768 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 21:29:41.332 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 21:29:57.310 +01:00 [ERR] THE SIGNAL CLIENT IS DISCONNECTED
+2023-11-14 21:29:58.821 +01:00 [WRN] Get Account OK
+2023-11-14 21:30:00.056 +01:00 [WRN] New candle save : TUSDUSDT
+2023-11-14 21:30:00.056 +01:00 [WRN] New candle save : BNBUSDT
+2023-11-14 21:30:00.056 +01:00 [WRN] New candle save : LTCUSDT
+2023-11-14 21:30:00.056 +01:00 [WRN] New candle save : XRPUSDT
+2023-11-14 21:30:00.059 +01:00 [WRN] New candle save : DOGEUSDT
+2023-11-14 21:30:00.085 +01:00 [WRN] New candle save : ADAUSDT
+2023-11-14 21:30:00.085 +01:00 [WRN] New candle save : SOLUSDT
+2023-11-14 21:30:00.086 +01:00 [WRN] New candle save : LINKUSDT
+2023-11-14 21:30:00.088 +01:00 [WRN] New candle save : TRXUSDT
+2023-11-14 21:30:00.093 +01:00 [WRN] New candle save : MATICUSDT
+2023-11-14 21:30:00.094 +01:00 [WRN] New candle save : DOTUSDT
+2023-11-14 21:30:00.095 +01:00 [WRN] New candle save : AVAXUSDT
+2023-11-14 21:30:00.095 +01:00 [WRN] New candle save : BTCUSDT
+2023-11-14 21:30:00.095 +01:00 [WRN] New candle save : WBTCUSDT
+2023-11-14 21:30:00.117 +01:00 [WRN] New candle save : LDOUSDT
+2023-11-14 21:30:00.095 +01:00 [WRN] New candle save : ETHUSDT
+2023-11-14 21:30:06.832 +01:00 [WRN] Call SellLimit BadRequest
+2023-11-14 21:31:21.014 +01:00 [ERR] ProcessMarketMatrix failled
+Microsoft.EntityFrameworkCore.DbUpdateConcurrencyException: The database operation was expected to affect 1 row(s), but actually affected 0 row(s); data may have been modified or deleted since entities were loaded. See http://go.microsoft.com/fwlink/?LinkId=527962 for information on understanding and handling optimistic concurrency exceptions.
+   at Microsoft.EntityFrameworkCore.Update.AffectedCountModificationCommandBatch.ThrowAggregateUpdateConcurrencyException(Int32 commandIndex, Int32 expectedRowsAffected, Int32 rowsAffected)
+   at Microsoft.EntityFrameworkCore.Update.AffectedCountModificationCommandBatch.ConsumeResultSetWithoutPropagation(Int32 commandIndex, RelationalDataReader reader)
+   at Microsoft.EntityFrameworkCore.Update.AffectedCountModificationCommandBatch.Consume(RelationalDataReader reader)
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.Execute(IRelationalConnection connection)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.Execute(IEnumerable`1 commandBatches, IRelationalConnection connection)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChanges(IList`1 entriesToSave)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChanges(StateManager stateManager, Boolean acceptAllChangesOnSuccess)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.<>c.<SaveChanges>b__104_0(DbContext _, ValueTuple`2 t)
+   at Microsoft.EntityFrameworkCore.Storage.NonRetryingExecutionStrategy.Execute[TState,TResult](TState state, Func`3 operation, Func`3 verifySucceeded)
+   at Microsoft.EntityFrameworkCore.DbContext.SaveChanges(Boolean acceptAllChangesOnSuccess)
+   at RepositoryService.UpdateStopLoss(List`1 symbolCandles, Order activeOrder) in /Users/sebastien/_Git/Dotnet/Margincoin/Service/RepositoryService.cs:line 66
+   at MarginCoin.Controllers.AlgoTradeController.ReviewOpenTrade(String symbol) in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 559
+   at MarginCoin.Controllers.AlgoTradeController.ProcessMarketMatrix() in /Users/sebastien/_Git/Dotnet/Margincoin/Controllers/AlgoTradeController.cs:line 382
+2023-11-14 21:31:55.275 +01:00 [WRN] MarginCoin, started!
+2023-11-14 21:32:02.482 +01:00 [WRN] Get Account OK
+2023-11-14 21:32:15.215 +01:00 [ERR] THE SIGNAL CLIENT IS DISCONNECTED
+2023-11-14 21:32:17.320 +01:00 [WRN] Get Account OK
+2023-11-14 21:32:21.600 +01:00 [WRN] Start trading market...
+2023-11-14 21:32:54.368 +01:00 [WRN] Call BuyMarket SOLUSDT OK
+2023-11-14 21:32:56.541 +01:00 [WRN] Get Account OK
+2023-11-14 21:33:25.442 +01:00 [WRN] Call SellMarket SOLUSDT OK
+2023-11-14 21:33:34.223 +01:00 [WRN] Get Account OK
+2023-11-14 21:34:21.670 +01:00 [WRN] Initial call for ExportChart UI
+2023-11-14 21:36:17.647 +01:00 [WRN] Call Prediction on DOTUSDT up 0,19923565/0,8007644
+2023-11-14 21:36:17.731 +01:00 [WRN] Call Prediction on BNBUSDT down 0,9453913/0,054608703
+2023-11-14 21:36:17.818 +01:00 [WRN] Call Prediction on ADAUSDT up 0,49090162/0,5090984
+2023-11-14 21:36:18.151 +01:00 [WRN] Call Prediction on AVAXUSDT down 0,93937856/0,06062146
+2023-11-14 21:36:18.228 +01:00 [WRN] Call Prediction on XRPUSDT down 0,6046649/0,39533517
+2023-11-14 21:36:18.299 +01:00 [WRN] Call Prediction on LTCUSDT down 0,70819235/0,2918076
+2023-11-14 21:36:18.376 +01:00 [WRN] Call Prediction on TRXUSDT up 0,2886943/0,7113057
+2023-11-14 21:36:18.451 +01:00 [WRN] Call Prediction on BTCUSDT up 0,19987085/0,8001291
+2023-11-14 21:36:18.531 +01:00 [WRN] Call Prediction on MATICUSDT up 0,37846085/0,6215391
+2023-11-14 21:36:18.608 +01:00 [WRN] Call Prediction on LINKUSDT up 0,004660336/0,99533963
+2023-11-14 21:36:18.689 +01:00 [WRN] Call Prediction on DOGEUSDT up 0,25194594/0,7480541
+2023-11-14 21:36:18.773 +01:00 [WRN] Call Prediction on WBTCUSDT up 0,28371245/0,7162876
+2023-11-14 21:36:19.124 +01:00 [WRN] Call Prediction on SOLUSDT up 0,14674324/0,85325676
+2023-11-14 21:36:19.205 +01:00 [WRN] Call Prediction on ETHUSDT up 0,44527647/0,5547235
+2023-11-14 21:36:19.206 +01:00 [WRN] ----------------ML Updated---------------------
+2023-11-14 21:41:55.154 +01:00 [ERR] THE SIGNAL CLIENT IS DISCONNECTED
+2023-11-14 21:41:56.891 +01:00 [WRN] Get Account OK
+2023-11-14 21:42:32.239 +01:00 [ERR] THE SIGNAL CLIENT IS DISCONNECTED
+2023-11-14 21:42:33.424 +01:00 [WRN] Get Account OK
+2023-11-14 21:42:47.101 +01:00 [ERR] THE SIGNAL CLIENT IS DISCONNECTED
+2023-11-14 21:42:48.758 +01:00 [WRN] Get Account OK
+2023-11-14 21:42:57.992 +01:00 [ERR] THE SIGNAL CLIENT IS DISCONNECTED
+2023-11-14 21:42:59.443 +01:00 [WRN] Get Account OK
+2023-11-14 21:49:24.462 +01:00 [WRN] New call at 49 for ExportChart UI
+2023-11-14 21:50:09.373 +01:00 [WRN] Call Prediction on DOTUSDT up 0,19923565/0,8007644
+2023-11-14 21:50:09.448 +01:00 [WRN] Call Prediction on BNBUSDT down 0,9453913/0,054608703
+2023-11-14 21:50:09.525 +01:00 [WRN] Call Prediction on ADAUSDT up 0,49090162/0,5090984
+2023-11-14 21:50:09.600 +01:00 [WRN] Call Prediction on AVAXUSDT down 0,93937856/0,06062146
+2023-11-14 21:50:09.678 +01:00 [WRN] Call Prediction on XRPUSDT down 0,6046649/0,39533517
+2023-11-14 21:50:09.752 +01:00 [WRN] Call Prediction on LTCUSDT down 0,70819235/0,2918076
+2023-11-14 21:50:09.983 +01:00 [WRN] Call Prediction on TRXUSDT up 0,2886943/0,7113057
+2023-11-14 21:50:10.064 +01:00 [WRN] Call Prediction on BTCUSDT up 0,19987085/0,8001291
+2023-11-14 21:50:10.136 +01:00 [WRN] Call Prediction on MATICUSDT up 0,37846085/0,6215391
+2023-11-14 21:50:10.207 +01:00 [WRN] Call Prediction on LINKUSDT up 0,004660336/0,99533963
+2023-11-14 21:50:10.284 +01:00 [WRN] Call Prediction on DOGEUSDT up 0,25194594/0,7480541
+2023-11-14 21:50:10.363 +01:00 [WRN] Call Prediction on WBTCUSDT up 0,28371245/0,7162876
+2023-11-14 21:50:10.440 +01:00 [WRN] Call Prediction on SOLUSDT up 0,14674324/0,85325676
+2023-11-14 21:50:10.513 +01:00 [WRN] Call Prediction on ETHUSDT up 0,44527647/0,5547235
+2023-11-14 21:50:10.515 +01:00 [WRN] ----------------ML Updated---------------------
+2023-11-14 22:00:00.145 +01:00 [WRN] New candle save : DOGEUSDT
+2023-11-14 22:00:00.147 +01:00 [WRN] New candle save : BTCUSDT
+2023-11-14 22:00:00.147 +01:00 [WRN] New candle save : LTCUSDT
+2023-11-14 22:00:00.175 +01:00 [WRN] New candle save : TUSDUSDT
+2023-11-14 22:00:00.179 +01:00 [WRN] New candle save : ETHUSDT
+2023-11-14 22:00:00.207 +01:00 [WRN] New candle save : TRXUSDT
+2023-11-14 22:00:00.209 +01:00 [WRN] New candle save : LDOUSDT
+2023-11-14 22:00:00.210 +01:00 [WRN] New candle save : TUSDUSDT
+2023-11-14 22:00:00.210 +01:00 [WRN] New candle save : LINKUSDT
+2023-11-14 22:00:00.210 +01:00 [WRN] New candle save : AVAXUSDT
+2023-11-14 22:00:00.211 +01:00 [WRN] New candle save : ADAUSDT
+2023-11-14 22:00:00.211 +01:00 [WRN] New candle save : SOLUSDT
+2023-11-14 22:00:00.211 +01:00 [WRN] New candle save : DOTUSDT
+2023-11-14 22:00:00.211 +01:00 [WRN] New candle save : XRPUSDT
+2023-11-14 22:00:00.211 +01:00 [WRN] New candle save : BNBUSDT
+2023-11-14 22:00:00.211 +01:00 [WRN] New candle save : LDOUSDT
+2023-11-14 22:00:00.212 +01:00 [WRN] New candle save : MATICUSDT
+2023-11-14 22:00:00.213 +01:00 [WRN] New candle save : WBTCUSDT
+2023-11-14 22:04:24.482 +01:00 [WRN] New call at 4 for ExportChart UI
+2023-11-14 22:05:10.585 +01:00 [WRN] Call Prediction on DOTUSDT up 0,28286365/0,7171364
+2023-11-14 22:05:10.656 +01:00 [WRN] Call Prediction on BNBUSDT down 0,76458365/0,23541632
+2023-11-14 22:05:10.726 +01:00 [WRN] Call Prediction on ADAUSDT up 0,22261025/0,77738976
+2023-11-14 22:05:10.803 +01:00 [WRN] Call Prediction on AVAXUSDT down 0,95943975/0,040560294
+2023-11-14 22:05:10.900 +01:00 [WRN] Call Prediction on XRPUSDT down 0,62511414/0,3748859
+2023-11-14 22:05:11.427 +01:00 [WRN] Call Prediction on LTCUSDT down 0,7042512/0,29574877
+2023-11-14 22:05:11.498 +01:00 [WRN] Call Prediction on TRXUSDT down 0,5078943/0,4921058
+2023-11-14 22:05:11.572 +01:00 [WRN] Call Prediction on BTCUSDT up 0,18898483/0,8110152
+2023-11-14 22:05:11.646 +01:00 [WRN] Call Prediction on MATICUSDT up 0,4075509/0,5924491
+2023-11-14 22:05:11.724 +01:00 [WRN] Call Prediction on LINKUSDT up 0,008801964/0,991198
+2023-11-14 22:05:11.797 +01:00 [WRN] Call Prediction on DOGEUSDT up 0,09639646/0,90360355
+2023-11-14 22:05:11.875 +01:00 [WRN] Call Prediction on WBTCUSDT up 0,36587825/0,6341217
+2023-11-14 22:05:11.947 +01:00 [WRN] Call Prediction on SOLUSDT up 0,47036782/0,5296321
+2023-11-14 22:05:12.024 +01:00 [WRN] Call Prediction on ETHUSDT up 0,28174654/0,7182535
+2023-11-14 22:05:12.026 +01:00 [WRN] ----------------ML Updated---------------------
+2023-11-14 22:07:22.659 +01:00 [ERR] THE SIGNAL CLIENT IS DISCONNECTED
+2023-11-14 22:07:24.922 +01:00 [WRN] Get Account OK
+2023-11-14 22:14:10.413 +01:00 [WRN] MarginCoin, started!
+2023-11-14 22:14:19.429 +01:00 [WRN] Get Account OK

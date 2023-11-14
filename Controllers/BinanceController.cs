@@ -78,24 +78,18 @@ namespace MarginCoin.Controllers
         [HttpGet("[action]/{symbol}/{qty}")]
         public async void Sell(string symbol, double qty)
         {
-            System.Net.HttpStatusCode httpStatusCode = System.Net.HttpStatusCode.NoContent;
             BinanceOrder myBinanceOrder = _binanceService.SellMarket(symbol, qty);
             if (myBinanceOrder == null) return;
 
-            if (httpStatusCode == System.Net.HttpStatusCode.BadRequest)
-            {
-                await _hub.Clients.All.SendAsync(MyEnum.BinanceHttpError.BadRequest.ToString());
-            }
-
             if (myBinanceOrder.status == "EXPIRED")
             {
-                await _hub.Clients.All.SendAsync(MyEnum.BinanceHttpError.SellOrderExpired.ToString());
                 _logger.LogWarning($"Call {MyEnum.BinanceApiCall.SellMarket} {symbol} Expired");
 
             }
 
             if (myBinanceOrder.status == "FILLED")
             {
+                myBinanceOrder.price = TradeHelper.CalculateAvragePrice(myBinanceOrder).ToString();
                 await _hub.Clients.All.SendAsync("sellOrderFilled", JsonSerializer.Serialize(myBinanceOrder));
                 return;
             }
@@ -104,7 +98,8 @@ namespace MarginCoin.Controllers
                 await Task.Delay(300);
                 if (_binanceService.OrderStatus(myBinanceOrder.symbol, myBinanceOrder.orderId).status == "FILLED")
                 {
-                    await _hub.Clients.All.SendAsync("sellOrderFilled", JsonSerializer.Serialize(myBinanceOrder));
+                    myBinanceOrder.price = TradeHelper.CalculateAvragePrice(myBinanceOrder).ToString();
+                    await _hub.Clients.All.SendAsync("sellOrderFilled", JsonSerializer.Serialize(myBinanceOrder.ToString()));
                 }
             }
         }

@@ -127,7 +127,7 @@ export class WalletComponent {
           this.CandleList.forEach(candle => {
             if (order.symbol === candle.s && !order.isClosed) {
               this.orderList[index].closePrice = candle.c;
-              this.orderList[index].profit = (candle.c - order.openPrice) * order.quantity;
+              this.orderList[index].profit = (candle.c - order.openPrice) * order.quantityBuy;
             }
           });
         });
@@ -177,8 +177,8 @@ export class WalletComponent {
 
       if (this.serverMsg.msgName == BackEndMessage.httpRequestError) {
         this.showMessageError = true;
-        this.messageError = this.serverMsg.msgName;
-        setTimeout(() => { this.showMessageError = false }, 7000);
+        this.messageError = this.serverMsg.httpError;
+        setTimeout(() => { this.showMessageError = false }, 5000);
       }
     });
   }
@@ -229,7 +229,7 @@ export class WalletComponent {
 
     this.totalBestProfit = 0;
     if (this.orderList.length > 0) {
-      this.totalBestProfit = this.orderList.map(a => (a.highPrice - a.openPrice) * a.quantity).reduce(function (a, b) {
+      this.totalBestProfit = this.orderList.map(a => (a.highPrice - a.openPrice) * a.quantityBuy).reduce(function (a, b) {
         if (a != 0) return a + b;
       });
     }

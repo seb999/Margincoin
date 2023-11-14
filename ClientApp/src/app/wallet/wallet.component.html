@@ -93,6 +93,7 @@
           <th scope="col" id="volume" class="tableTh">Type</th>
           <th scope="col" id="volume" class="tableTh">Rsi</th>
           <th scope="col" id="volume" class="tableTh"></th>
+          <th scope="col" id="volume" class="tableTh"></th>
           <th scope="col" id="volume" class="tableTh">
             <button class="btn" (click)="refreshOrderTable()"
               style="padding-left: 0px;padding-right:0px; float: left;"><span style="color: orange"><i
@@ -105,8 +106,8 @@
         <tr *ngFor="let order of orderList" class="alert alert-warning"
           [ngClass]="{'alert alert-warning': order.closeDate == null}">
           <td>{{order.symbol}}</td>
-          <td *ngIf="!order.isClosed">{{order.quantityBuy*order.openPrice}}/0000</td>
-          <td *ngIf="order.isClosed">{{order.quantityBuy*order.openPrice}}/{{order.quantitySell*order.closePrice}}</td>
+          <td *ngIf="!order.isClosed">{{(order.quantityBuy*order.openPrice).toFixed(0)}}/0000</td>
+          <td *ngIf="order.isClosed">{{(order.quantityBuy*order.openPrice).toFixed(0)}}/{{(order.quantitySell*order.closePrice).toFixed(0)}}</td>
           <td>{{order.openPrice.toFixed(5)}}</td>
           <td>{{order.closePrice.toFixed(5)}}</td>
           <td *ngIf="order.closePrice==0">--</td>
@@ -156,16 +157,12 @@
           <td></td>
           <td></td>
           <td></td>
-
-
+          <td></td>
           <td><b>Total</b></td>
           <td *ngIf="totalProfit >=0" style="color: limegreen;">{{totalProfit.toFixed(4)}}</td>
           <td *ngIf="totalProfit < 0" style="color: rgb(255, 57, 57);">{{totalProfit.toFixed(4)}}</td>
           <td *ngIf="totalBestProfit >= 0" style="color: limegreen;">{{totalBestProfit.toFixed(4)}}</td>
           <td *ngIf="totalBestProfit < 0" style="color: rgb(255, 57, 57);">{{totalBestProfit.toFixed(4)}}</td>
-
-          <td></td>
-          <td></td>
           <td></td>
           <td></td>
           <td></td>

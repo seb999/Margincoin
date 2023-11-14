@@ -57,7 +57,7 @@
 
       
             <div class="row">
-              <div class="col-2">Amount : {{openOrder?.openPrice * openOrder?.quantity}}</div>
+              <div class="col-2">Amount : {{openOrder?.openPrice * openOrder?.quantityBuy}}</div>
               <div class="col-2">Price : {{openOrder?.openPrice}}</div>
               <div class="col-2" *ngIf="(((coinData?.k?.c-openOrder?.openPrice) / (openOrder?.openPrice))*100) >=0"
                 style="color: limegreen;">{{ (((coinData?.k?.c-openOrder?.openPrice) /
@@ -65,10 +65,10 @@
               <div class="col-2" *ngIf="(((coinData?.k?.c-openOrder?.openPrice) / (openOrder?.openPrice))*100) <0"
                 style="color: red;">{{ (((coinData?.k?.c-openOrder?.openPrice) /
                 (openOrder?.openPrice))*100).toFixed(2) }}%</div>
-              <div class="col-2" *ngIf="(coinData?.k?.c-openOrder?.openPrice) * openOrder?.quantity>=0"
+              <div class="col-2" *ngIf="(coinData?.k?.c-openOrder?.openPrice) * openOrder?.quantityBuy>=0"
                 style="color: limegreen;">
                 Profit :{{((coinData?.k?.c-openOrder?.openPrice) * openOrder?.quantity).toFixed(2)}}</div>
-              <div class="col-2" *ngIf="(coinData?.k?.c-openOrder?.openPrice) * openOrder?.quantity<0"
+              <div class="col-2" *ngIf="(coinData?.k?.c-openOrder?.openPrice) * openOrder?.quantityBuy<0"
                 style="color: red;">Profit
                 :{{((coinData?.k?.c-openOrder?.openPrice) * openOrder?.quantity).toFixed(2)}}</div>
             </div>

@@ -101,9 +101,14 @@ namespace MarginCoin.Service
                 //call Binance API
                 var result = HttpHelper.GetApiData<BinanceAccount>(new Uri(apiUrl), publicKey, ref httpStatusCode);
 
+                _logger.LogWarning($"Get {MyEnum.BinanceApiCall.Account} {httpStatusCode}");
+
+                var toto = result.balances.Where(p=>p.asset == "TUSD").FirstOrDefault();
                 //log httpStatusCode result
-                _logger.LogWarning($"Get {MyEnum.BinanceApiCall.Account} {httpStatusCode.ToString()}");
-                _hub.Clients.All.SendAsync("httpRequestError", JsonSerializer.Serialize(httpStatusCode));
+                if (httpStatusCode != System.Net.HttpStatusCode.OK)
+                {
+                    _hub.Clients.All.SendAsync("httpRequestError", httpStatusCode.ToString());
+                }
 
                 //Return result
                 if (result != null)
@@ -136,10 +141,14 @@ namespace MarginCoin.Service
 
                 //call binance api
                 var result = HttpHelper.GetApiData<BinanceOrder>(new Uri(apiUrl), publicKey, ref httpStatusCode);
-                _hub.Clients.All.SendAsync("httpRequestError", JsonSerializer.Serialize(httpStatusCode));
 
                 //log httpStatusCode result
-                _logger.LogWarning($"Get {MyEnum.BinanceApiCall.OrderStatus} {httpStatusCode.ToString()}");
+                _logger.LogWarning($"Get {MyEnum.BinanceApiCall.OrderStatus} {httpStatusCode}");
+                
+                if (httpStatusCode != System.Net.HttpStatusCode.OK)
+                {
+                    _hub.Clients.All.SendAsync("httpRequestError", httpStatusCode.ToString());
+                }
                 return result;
             }
             catch (System.Exception e)
@@ -164,7 +173,10 @@ namespace MarginCoin.Service
 
                 //log httpStatusCode result
                 _logger.LogWarning($"Call {MyEnum.BinanceApiCall.BuyMarket} {symbol} {httpStatusCode}");
-                _hub.Clients.All.SendAsync("httpRequestError", JsonSerializer.Serialize(httpStatusCode));
+                if (httpStatusCode != System.Net.HttpStatusCode.OK)
+                {
+                    _hub.Clients.All.SendAsync("httpRequestError", httpStatusCode.ToString());
+                }
                 return result;
             }
             catch (System.Exception e)
@@ -189,7 +201,10 @@ namespace MarginCoin.Service
 
                 //log httpStatusCode result
                 _logger.LogWarning($"Call {MyEnum.BinanceApiCall.SellMarket} {symbol} {httpStatusCode}");
-                _hub.Clients.All.SendAsync("httpRequestError", JsonSerializer.Serialize(httpStatusCode));
+                if (httpStatusCode != System.Net.HttpStatusCode.OK)
+                {
+                    _hub.Clients.All.SendAsync("httpRequestError", httpStatusCode.ToString());
+                }
                 return result;
             }
             catch (System.Exception e)
@@ -214,7 +229,10 @@ namespace MarginCoin.Service
 
                 //log httpStatusCode result 
                 _logger.LogWarning(httpStatusCode.ToString(), "Call " + MyEnum.BinanceApiCall.BuyLimit);
-                _hub.Clients.All.SendAsync("httpRequestError", JsonSerializer.Serialize(httpStatusCode));
+                if (httpStatusCode != System.Net.HttpStatusCode.OK)
+                {
+                    _hub.Clients.All.SendAsync("httpRequestError", httpStatusCode.ToString());
+                }
                 return result;
             }
             catch (System.Exception e)
@@ -240,7 +258,10 @@ namespace MarginCoin.Service
 
                 //log httpStatusCode result 
                 _logger.LogWarning($"Call {MyEnum.BinanceApiCall.SellLimit} {httpStatusCode}");
-                _hub.Clients.All.SendAsync("httpRequestError", JsonSerializer.Serialize(httpStatusCode));
+                if (httpStatusCode != System.Net.HttpStatusCode.OK)
+                {
+                    _hub.Clients.All.SendAsync("httpRequestError", httpStatusCode.ToString());
+                }
                 return result;
             }
             catch (System.Exception e)

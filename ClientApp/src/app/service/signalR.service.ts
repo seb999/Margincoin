@@ -75,8 +75,11 @@ export class SignalRService {
             return this.eventMessage.emit(serverMsg);
         });
 
-        this.hubConnection.on(BackEndMessage.httpRequestError, () => {
-            let serverMsg: ServerMsg = { msgName: BackEndMessage.httpRequestError };
+        this.hubConnection.on(BackEndMessage.httpRequestError, (error) => {
+            console.log(error);
+            let serverMsg: ServerMsg = { 
+                msgName: BackEndMessage.httpRequestError,
+                httpError : error};
             return this.eventMessage.emit(serverMsg);
         });
 
