@@ -29,7 +29,7 @@ namespace MarginCoin
         {
             //AA new instance of the class for each call
             services.AddScoped<IBinanceService, BinanceService>();
-            services.AddScoped<IRepositoryService, RepositoryService>();
+            services.AddScoped<IOrderService, RepositoryService>();
 
             //Same instance of the class during lifetime
             services.AddSingleton<IMLService, MLService>();

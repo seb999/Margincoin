@@ -18,4 +18,6 @@ public static class Global
     internal static List<List<Candle>> candleMatrix = new List<List<Candle>>();
     internal static int? nbrOfSymbol;
     public static string interval;
+    internal static double stopLossPercentage;
+    internal static double takeProfitPercentage;
 }

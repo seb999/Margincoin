@@ -130,6 +130,34 @@ namespace MarginCoin.Service
         #endregion
 
         #region Order
+
+        public BinanceOrder CancelOrder(string symbol, double orderId)
+        {
+            try
+            {
+                SetEnv(ref secretKey, ref publicKey, ref host);
+                string parameters = $"timestamp={ServerTime(publicKey)}&symbol={symbol}&orderId={orderId}&recvWindow=60000";
+                string signature = GetSignature(parameters, secretKey);
+                string apiUrl = $"{host}/api/v3/order?{parameters}&signature={signature}";
+
+                //call binance api
+                var result = HttpHelper.DeleteApiData<BinanceOrder>(new Uri(apiUrl), publicKey, ref httpStatusCode);
+
+                _logger.LogWarning($"Get {MyEnum.BinanceApiCall.CancelOrder} {httpStatusCode}");
+                
+                if (httpStatusCode != System.Net.HttpStatusCode.OK)
+                {
+                    _hub.Clients.All.SendAsync("httpRequestError", httpStatusCode.ToString());
+                }
+                return result;
+            }
+            catch (System.Exception e)
+            {
+                _logger.LogError(e, "Get " + MyEnum.BinanceApiCall.OrderStatus);
+                return null;
+            }
+        }
+
         public BinanceOrder OrderStatus(string symbol, double orderId)
         {
             try
@@ -214,13 +242,14 @@ namespace MarginCoin.Service
             }
         }
 
-        public BinanceOrder BuyLimit(string symbol, double quantity, MyEnum.TimeInForce timeInForce)
+        public BinanceOrder BuyLimit(string symbol, double quantity, double price, MyEnum.TimeInForce timeInForce)
         {
             string stringQuantity = quantity.ToString().Replace(",", ".");
+            string stringPrice = price.ToString().Replace(",", ".");
             try
             {
                 SetEnv(ref secretKey, ref publicKey, ref host);
-                string parameters = $"timestamp={ServerTime(publicKey)}&symbol={symbol}&quantity={stringQuantity}&timeInForce={timeInForce}&side=BUY&type=LIMIT&recvWindow=60000";
+                string parameters = $"timestamp={ServerTime(publicKey)}&symbol={symbol}&quantity={stringQuantity}&price={stringPrice}&timeInForce={timeInForce}&side=BUY&type=LIMIT&recvWindow=60000";
                 string signature = GetSignature(parameters, secretKey);
                 string apiUrl = $"{host}/api/v3/order?{parameters}&signature={signature}";
 

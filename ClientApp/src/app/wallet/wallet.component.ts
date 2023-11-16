@@ -147,7 +147,7 @@ export class WalletComponent {
         }
       }
 
-      if (this.serverMsg.msgName == BackEndMessage.newOrder) {
+      if (this.serverMsg.msgName == BackEndMessage.refreshUI) {
         this.orderList = await this.getAllOrder(this.model.day + "-" + this.model.month + "-" + this.model.year);
         this.calculateProfit();
         this.refreshUI();

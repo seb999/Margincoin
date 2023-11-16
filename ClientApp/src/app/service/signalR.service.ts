@@ -65,8 +65,8 @@ export class SignalRService {
             return this.eventMessage.emit(serverMsg);
         });
 
-        this.hubConnection.on(BackEndMessage.newOrder, () => {
-            let serverMsg: ServerMsg = { msgName: BackEndMessage.newOrder };
+        this.hubConnection.on(BackEndMessage.refreshUI, () => {
+            let serverMsg: ServerMsg = { msgName: BackEndMessage.refreshUI };
             return this.eventMessage.emit(serverMsg);
         });
 

@@ -4,6 +4,8 @@ using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using MarginCoin.Model;
 using System.Globalization;
+using MarginCoin.Class;
+using MarginCoin.Misc;
 
 namespace MarginCoin.Controllers
 {

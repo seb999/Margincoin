@@ -65,12 +65,12 @@ namespace MarginCoin.Misc
                 var response = client.GetAsync("").Result;
                 if (response.IsSuccessStatusCode)
                 {
-                   return JsonSerializer.Deserialize<T>(response.Content.ReadAsStringAsync().Result, jsonSerializerOptions);
-                    
+                    return JsonSerializer.Deserialize<T>(response.Content.ReadAsStringAsync().Result, jsonSerializerOptions);
+
                 }
                 else
                 {
-                   
+
                     return default(T);
                 }
             }
@@ -97,6 +97,35 @@ namespace MarginCoin.Misc
 
                 var response = client.PostAsync(apiUri, data).Result;
 
+                if (response.IsSuccessStatusCode)
+                {
+                    httpStatusCode = response.StatusCode;
+                    return JsonSerializer.Deserialize<T>(response.Content.ReadAsStringAsync().Result, jsonSerializerOptions);
+                }
+                else
+                {
+                    httpStatusCode = response.StatusCode;
+                    return default(T);
+                }
+            }
+        }
+
+        public static T DeleteApiData<T>(Uri apiUri, string apiKey, ref System.Net.HttpStatusCode httpStatusCode)
+        {
+            JsonSerializerOptions jsonSerializerOptions = new JsonSerializerOptions
+            {
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                NumberHandling = System.Text.Json.Serialization.JsonNumberHandling.AllowReadingFromString
+            };
+
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = apiUri;
+                client.DefaultRequestHeaders.Accept.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                client.DefaultRequestHeaders.Add("X-MBX-APIKEY", apiKey);
+
+                var response = client.DeleteAsync("").Result;
                 if (response.IsSuccessStatusCode)
                 {
                     httpStatusCode = response.StatusCode;

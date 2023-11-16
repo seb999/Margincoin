@@ -23,9 +23,10 @@ namespace MarginCoin.Service
         public List<BinancePrice> GetSymbolPrice ();
         public void GetCandles(string symbol, ref List<List<Candle>> candleMatrix);
         public BinanceOrder OrderStatus(string symbol, double orderId);
+         public BinanceOrder CancelOrder(string symbol, double orderId);
         public BinanceOrder BuyMarket(string symbol, double quoteQty);
         public BinanceOrder SellMarket(string symbol, double qty);
-        public BinanceOrder BuyLimit(string symbol, double qty, MyEnum.TimeInForce timeInForce);
+        public BinanceOrder BuyLimit(string symbol, double qty, double price, MyEnum.TimeInForce timeInForce);
         public BinanceOrder SellLimit(string symbol, double qty, double price, MyEnum.TimeInForce timeInForce);
 
     }
