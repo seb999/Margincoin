@@ -92,7 +92,7 @@
           <th scope="col" id="volume" class="tableTh">Close</th>
           <th scope="col" id="volume" class="tableTh">Type</th>
           <th scope="col" id="volume" class="tableTh">Rsi</th>
-          <th scope="col" id="volume" class="tableTh"></th>
+          <th scope="col" id="volume" class="tableTh">Status</th>
           <th scope="col" id="volume" class="tableTh"></th>
           <th scope="col" id="volume" class="tableTh"></th>
           <th scope="col" id="volume" class="tableTh">
@@ -107,7 +107,7 @@
         <tr *ngFor="let order of orderList" class="alert alert-warning"
         [ngClass]="{
           'alert alert-warning': order.closeDate == null,
-          'alert alert-danger': order.Status !== 'FILLED'
+          'alert alert-danger': order.status !== 'FILLED'
         }">
           <td>{{order.symbol}}</td>
           <td *ngIf="!order.isClosed">{{(order.quantityBuy*order.openPrice).toFixed(0)}}/0000</td>

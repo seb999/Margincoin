@@ -90,8 +90,6 @@ public class RepositoryService : IOrderService
             Symbol = binanceOrder.symbol,
             ATR = symbolCandle.Last().ATR,
             RSI = symbolCandle.Last().Rsi,
-            RSI_1 = symbolCandle[symbolCandle.Count - 2].Rsi,
-            RSI_2 = symbolCandle[symbolCandle.Count - 3].Rsi,
             EMA = symbolCandle.Last().Ema,
             StochSlowD = symbolCandle.Last().StochSlowD,
             StochSlowK = symbolCandle.Last().StochSlowK,

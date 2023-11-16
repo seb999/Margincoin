@@ -1,27 +1,28 @@
 {
   "format": 1,
   "restore": {
-    "C:\\_git\\dotnet\\Margincoin\\MarginCoin.csproj": {}
+    "/Users/sebastien/_Git/Dotnet/Margincoin/MarginCoin.csproj": {}
   },
   "projects": {
-    "C:\\_git\\dotnet\\Margincoin\\MarginCoin.csproj": {
+    "/Users/sebastien/_Git/Dotnet/Margincoin/MarginCoin.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\_git\\dotnet\\Margincoin\\MarginCoin.csproj",
+        "projectUniqueName": "/Users/sebastien/_Git/Dotnet/Margincoin/MarginCoin.csproj",
         "projectName": "MarginCoin",
-        "projectPath": "C:\\_git\\dotnet\\Margincoin\\MarginCoin.csproj",
-        "packagesPath": "C:\\Users\\sdubos\\.nuget\\packages\\",
-        "outputPath": "C:\\_git\\dotnet\\Margincoin\\obj\\",
+        "projectPath": "/Users/sebastien/_Git/Dotnet/Margincoin/MarginCoin.csproj",
+        "packagesPath": "/Users/sebastien/.nuget/packages/",
+        "outputPath": "/Users/sebastien/_Git/Dotnet/Margincoin/obj/",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "/usr/local/share/dotnet/sdk/NuGetFallbackFolder"
+        ],
         "configFilePaths": [
-          "C:\\Users\\sdubos\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+          "/Users/sebastien/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net6.0"
         ],
         "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -62,15 +63,15 @@
             },
             "Microsoft.AspNetCore.SpaServices.Extensions": {
               "target": "Package",
-              "version": "[6.0.12, )"
+              "version": "[6.0.13, )"
             },
             "Microsoft.EntityFrameworkCore": {
               "target": "Package",
-              "version": "[6.0.12, )"
+              "version": "[6.0.13, )"
             },
             "Microsoft.EntityFrameworkCore.Sqlite": {
               "target": "Package",
-              "version": "[6.0.12, )"
+              "version": "[6.0.13, )"
             },
             "Microsoft.Extensions.Logging": {
               "target": "Package",
@@ -131,19 +132,15 @@
           "downloadDependencies": [
             {
               "name": "Microsoft.AspNetCore.App.Ref",
-              "version": "[6.0.24, 6.0.24]"
+              "version": "[6.0.14, 6.0.14]"
             },
             {
-              "name": "Microsoft.NETCore.App.Host.win-x64",
-              "version": "[6.0.24, 6.0.24]"
+              "name": "Microsoft.NETCore.App.Host.osx-x64",
+              "version": "[6.0.14, 6.0.14]"
             },
             {
               "name": "Microsoft.NETCore.App.Ref",
-              "version": "[6.0.24, 6.0.24]"
-            },
-            {
-              "name": "Microsoft.WindowsDesktop.App.Ref",
-              "version": "[6.0.24, 6.0.24]"
+              "version": "[6.0.14, 6.0.14]"
             }
           ],
           "frameworkReferences": {
@@ -154,7 +151,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.403\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/7.0.201/RuntimeIdentifierGraph.json"
         }
       }
     }

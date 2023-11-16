@@ -145,7 +145,7 @@
           }
         }
       },
-      "Microsoft.AspNetCore.SpaServices.Extensions/6.0.12": {
+      "Microsoft.AspNetCore.SpaServices.Extensions/6.0.13": {
         "type": "package",
         "dependencies": {
           "Microsoft.Extensions.FileProviders.Physical": "6.0.0"
@@ -160,7 +160,7 @@
           "Microsoft.AspNetCore.App"
         ]
       },
-      "Microsoft.Data.Sqlite.Core/6.0.12": {
+      "Microsoft.Data.Sqlite.Core/6.0.13": {
         "type": "package",
         "dependencies": {
           "SQLitePCLRaw.core": "2.1.2"
@@ -176,11 +176,11 @@
           }
         }
       },
-      "Microsoft.EntityFrameworkCore/6.0.12": {
+      "Microsoft.EntityFrameworkCore/6.0.13": {
         "type": "package",
         "dependencies": {
-          "Microsoft.EntityFrameworkCore.Abstractions": "6.0.12",
-          "Microsoft.EntityFrameworkCore.Analyzers": "6.0.12",
+          "Microsoft.EntityFrameworkCore.Abstractions": "6.0.13",
+          "Microsoft.EntityFrameworkCore.Analyzers": "6.0.13",
           "Microsoft.Extensions.Caching.Memory": "6.0.1",
           "Microsoft.Extensions.DependencyInjection": "6.0.1",
           "Microsoft.Extensions.Logging": "6.0.0",
@@ -201,7 +201,7 @@
           "buildTransitive/net6.0/Microsoft.EntityFrameworkCore.props": {}
         }
       },
-      "Microsoft.EntityFrameworkCore.Abstractions/6.0.12": {
+      "Microsoft.EntityFrameworkCore.Abstractions/6.0.13": {
         "type": "package",
         "compile": {
           "lib/net6.0/Microsoft.EntityFrameworkCore.Abstractions.dll": {
@@ -214,7 +214,7 @@
           }
         }
       },
-      "Microsoft.EntityFrameworkCore.Analyzers/6.0.12": {
+      "Microsoft.EntityFrameworkCore.Analyzers/6.0.13": {
         "type": "package",
         "compile": {
           "lib/netstandard2.0/_._": {}
@@ -223,10 +223,10 @@
           "lib/netstandard2.0/_._": {}
         }
       },
-      "Microsoft.EntityFrameworkCore.Relational/6.0.12": {
+      "Microsoft.EntityFrameworkCore.Relational/6.0.13": {
         "type": "package",
         "dependencies": {
-          "Microsoft.EntityFrameworkCore": "6.0.12",
+          "Microsoft.EntityFrameworkCore": "6.0.13",
           "Microsoft.Extensions.Configuration.Abstractions": "6.0.0"
         },
         "compile": {
@@ -240,10 +240,10 @@
           }
         }
       },
-      "Microsoft.EntityFrameworkCore.Sqlite/6.0.12": {
+      "Microsoft.EntityFrameworkCore.Sqlite/6.0.13": {
         "type": "package",
         "dependencies": {
-          "Microsoft.EntityFrameworkCore.Sqlite.Core": "6.0.12",
+          "Microsoft.EntityFrameworkCore.Sqlite.Core": "6.0.13",
           "SQLitePCLRaw.bundle_e_sqlite3": "2.1.2"
         },
         "compile": {
@@ -253,11 +253,11 @@
           "lib/net6.0/_._": {}
         }
       },
-      "Microsoft.EntityFrameworkCore.Sqlite.Core/6.0.12": {
+      "Microsoft.EntityFrameworkCore.Sqlite.Core/6.0.13": {
         "type": "package",
         "dependencies": {
-          "Microsoft.Data.Sqlite.Core": "6.0.12",
-          "Microsoft.EntityFrameworkCore.Relational": "6.0.12",
+          "Microsoft.Data.Sqlite.Core": "6.0.13",
+          "Microsoft.EntityFrameworkCore.Relational": "6.0.13",
           "Microsoft.Extensions.DependencyModel": "6.0.0"
         },
         "compile": {
@@ -1788,24 +1788,24 @@
         "microsoft.aspnetcore.identity.entityframeworkcore.nuspec"
       ]
     },
-    "Microsoft.AspNetCore.SpaServices.Extensions/6.0.12": {
-      "sha512": "Qi8cOsGw5WBbmK8h6KXWXSt5Y77251n9cfx/vjOBa+CQMK3sxaKb2JxeDT0HpWbc9fmawuY6a06rie4eabKo6g==",
+    "Microsoft.AspNetCore.SpaServices.Extensions/6.0.13": {
+      "sha512": "KrWa0JjXDaj0v+97QTPryHc8HRyxFLXZ7KnCEGRFcQjylbN0Nuxia4u07KjEvoS6RtGdd34AIS3bg3NAwToDQQ==",
       "type": "package",
-      "path": "microsoft.aspnetcore.spaservices.extensions/6.0.12",
+      "path": "microsoft.aspnetcore.spaservices.extensions/6.0.13",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
         "Icon.png",
         "THIRD-PARTY-NOTICES.TXT",
         "lib/net6.0/Microsoft.AspNetCore.SpaServices.Extensions.dll",
-        "microsoft.aspnetcore.spaservices.extensions.6.0.12.nupkg.sha512",
+        "microsoft.aspnetcore.spaservices.extensions.6.0.13.nupkg.sha512",
         "microsoft.aspnetcore.spaservices.extensions.nuspec"
       ]
     },
-    "Microsoft.Data.Sqlite.Core/6.0.12": {
-      "sha512": "bui5wPPqq9OwTL5A+YJPcVStTPrOFcLwg/kAVWyqdjrTief4kTK/3bNv0MqUDVNgAUG8pcFbtdc674CIh1F3gw==",
+    "Microsoft.Data.Sqlite.Core/6.0.13": {
+      "sha512": "J0tI2FyZcobMWBCWgSVFrp7fvkSPUfQzQUt16A0nMRfvq4IkozkEdx6rNpo0lGcCgUYeMimRw8H3ueqdkxGFXw==",
       "type": "package",
-      "path": "microsoft.data.sqlite.core/6.0.12",
+      "path": "microsoft.data.sqlite.core/6.0.13",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -1814,14 +1814,14 @@
         "lib/net6.0/Microsoft.Data.Sqlite.xml",
         "lib/netstandard2.0/Microsoft.Data.Sqlite.dll",
         "lib/netstandard2.0/Microsoft.Data.Sqlite.xml",
-        "microsoft.data.sqlite.core.6.0.12.nupkg.sha512",
+        "microsoft.data.sqlite.core.6.0.13.nupkg.sha512",
         "microsoft.data.sqlite.core.nuspec"
       ]
     },
-    "Microsoft.EntityFrameworkCore/6.0.12": {
-      "sha512": "xb10XFoPf/gWu8ik5v7xnVyUY7W21LBOLtT7PidzwYVdnE3aKuQ/bIZLcQuY7rdDNT89/wse2q5FRjm207cIMQ==",
+    "Microsoft.EntityFrameworkCore/6.0.13": {
+      "sha512": "SnTTQzyP+VUibyONIxi4e2crxYzkW5qfO64tmqxaY5J0KzJolR/nHo8ty4wParaeoybSQz7m9p+6lC7xJ1SHBg==",
       "type": "package",
-      "path": "microsoft.entityframeworkcore/6.0.12",
+      "path": "microsoft.entityframeworkcore/6.0.13",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -1829,76 +1829,76 @@
         "buildTransitive/net6.0/Microsoft.EntityFrameworkCore.props",
         "lib/net6.0/Microsoft.EntityFrameworkCore.dll",
         "lib/net6.0/Microsoft.EntityFrameworkCore.xml",
-        "microsoft.entityframeworkcore.6.0.12.nupkg.sha512",
+        "microsoft.entityframeworkcore.6.0.13.nupkg.sha512",
         "microsoft.entityframeworkcore.nuspec"
       ]
     },
-    "Microsoft.EntityFrameworkCore.Abstractions/6.0.12": {
-      "sha512": "hvRytAcLhrb35HmtMjYWsNZZLt39ryuN7j04lDchRa9VToreyqgo5gMniTdQ6MfCflxtGnDes65V/Y2pjbEyWg==",
+    "Microsoft.EntityFrameworkCore.Abstractions/6.0.13": {
+      "sha512": "m0PpkBONNPOEdVXkHNfdDETMAZKqWEX6E4kzmrvC4b+5OgFCnuxJHyAJ3Relyw8jsjsCFednrFI3nINXGDX5Sg==",
       "type": "package",
-      "path": "microsoft.entityframeworkcore.abstractions/6.0.12",
+      "path": "microsoft.entityframeworkcore.abstractions/6.0.13",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
         "Icon.png",
         "lib/net6.0/Microsoft.EntityFrameworkCore.Abstractions.dll",
         "lib/net6.0/Microsoft.EntityFrameworkCore.Abstractions.xml",
-        "microsoft.entityframeworkcore.abstractions.6.0.12.nupkg.sha512",
+        "microsoft.entityframeworkcore.abstractions.6.0.13.nupkg.sha512",
         "microsoft.entityframeworkcore.abstractions.nuspec"
       ]
     },
-    "Microsoft.EntityFrameworkCore.Analyzers/6.0.12": {
-      "sha512": "ZDUY+KlsIyKdfvIJeNdqRiPExFQ5GRZVdx/Cp52vhpCJRImYv34O0Xfmw2eiLu4qe1jmM2pTzAAFKELaKwtj/w==",
+    "Microsoft.EntityFrameworkCore.Analyzers/6.0.13": {
+      "sha512": "JxZMC31ObhjlDF9rPp2JR5zRjYlhI/hx8cuHPE9Isg4ft7OmpFxRI2EHTOlTUwfRjN7Q41i3SWI8tv67zBP99w==",
       "type": "package",
-      "path": "microsoft.entityframeworkcore.analyzers/6.0.12",
+      "path": "microsoft.entityframeworkcore.analyzers/6.0.13",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
         "Icon.png",
         "analyzers/dotnet/cs/Microsoft.EntityFrameworkCore.Analyzers.dll",
         "lib/netstandard2.0/_._",
-        "microsoft.entityframeworkcore.analyzers.6.0.12.nupkg.sha512",
+        "microsoft.entityframeworkcore.analyzers.6.0.13.nupkg.sha512",
         "microsoft.entityframeworkcore.analyzers.nuspec"
       ]
     },
-    "Microsoft.EntityFrameworkCore.Relational/6.0.12": {
-      "sha512": "HBtRGHtF0Vf+BIQTkRGiopmE5rLYhj59xPpd17S1tLgYpiHDVbepCuHwh5H63fzjO99Z4tW5wmmEGF7KnD91WQ==",
+    "Microsoft.EntityFrameworkCore.Relational/6.0.13": {
+      "sha512": "kFMLjZPvUeg/hRdYBXSWtOaxFWTI2sf5a31Gbq6xXivOVQbOV8TBC6K7MsG91HiLpzBsWO5fvGiD9SiIAfhpNw==",
       "type": "package",
-      "path": "microsoft.entityframeworkcore.relational/6.0.12",
+      "path": "microsoft.entityframeworkcore.relational/6.0.13",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
         "Icon.png",
         "lib/net6.0/Microsoft.EntityFrameworkCore.Relational.dll",
         "lib/net6.0/Microsoft.EntityFrameworkCore.Relational.xml",
-        "microsoft.entityframeworkcore.relational.6.0.12.nupkg.sha512",
+        "microsoft.entityframeworkcore.relational.6.0.13.nupkg.sha512",
         "microsoft.entityframeworkcore.relational.nuspec"
       ]
     },
-    "Microsoft.EntityFrameworkCore.Sqlite/6.0.12": {
-      "sha512": "2Hutlqt07bnWZFtYqT1lj0otX8ygMyBikysGnfQNF2TK3i5GqSTeJ8tqNi/URiI9II7Cyl15A0rflXmFoySuIw==",
+    "Microsoft.EntityFrameworkCore.Sqlite/6.0.13": {
+      "sha512": "lh9ggbl2PwAoAcNH4wA22casTHK0cElJN2m2Ap7X5itOpJVAJDBhHMdXR+Mh1yoQ7Dq9EsUSFlJJFQ2Yskf9/Q==",
       "type": "package",
-      "path": "microsoft.entityframeworkcore.sqlite/6.0.12",
+      "path": "microsoft.entityframeworkcore.sqlite/6.0.13",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
         "Icon.png",
         "lib/net6.0/_._",
-        "microsoft.entityframeworkcore.sqlite.6.0.12.nupkg.sha512",
+        "microsoft.entityframeworkcore.sqlite.6.0.13.nupkg.sha512",
         "microsoft.entityframeworkcore.sqlite.nuspec"
       ]
     },
-    "Microsoft.EntityFrameworkCore.Sqlite.Core/6.0.12": {
-      "sha512": "07vKE7+t9Z2BfGmHuJwNZNv8m1GWt7ZpYYHFh1tQg1oC6FJ78bSaFzLawsf2NK6CLhbB8DBsjE0rRhxMJ4rXsA==",
+    "Microsoft.EntityFrameworkCore.Sqlite.Core/6.0.13": {
+      "sha512": "Yyj1sNBHgvaTcsrWH90KWNtp0Z44Gav8/gwNwAM22Zz7top/7FF1TG75PBEk8S2I3qSGZjUHA+KOpWDJPfzQcQ==",
       "type": "package",
-      "path": "microsoft.entityframeworkcore.sqlite.core/6.0.12",
+      "path": "microsoft.entityframeworkcore.sqlite.core/6.0.13",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
         "Icon.png",
         "lib/net6.0/Microsoft.EntityFrameworkCore.Sqlite.dll",
         "lib/net6.0/Microsoft.EntityFrameworkCore.Sqlite.xml",
-        "microsoft.entityframeworkcore.sqlite.core.6.0.12.nupkg.sha512",
+        "microsoft.entityframeworkcore.sqlite.core.6.0.13.nupkg.sha512",
         "microsoft.entityframeworkcore.sqlite.core.nuspec"
       ]
     },
@@ -3884,9 +3884,9 @@
       "Cryptowatcher.TA-LIb-Core >= 1.0.0",
       "Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore >= 6.0.12",
       "Microsoft.AspNetCore.Identity.EntityFrameworkCore >= 6.0.12",
-      "Microsoft.AspNetCore.SpaServices.Extensions >= 6.0.12",
-      "Microsoft.EntityFrameworkCore >= 6.0.12",
-      "Microsoft.EntityFrameworkCore.Sqlite >= 6.0.12",
+      "Microsoft.AspNetCore.SpaServices.Extensions >= 6.0.13",
+      "Microsoft.EntityFrameworkCore >= 6.0.13",
+      "Microsoft.EntityFrameworkCore.Sqlite >= 6.0.13",
       "Microsoft.Extensions.Logging >= 6.0.0",
       "Microsoft.ML >= 1.7.1",
       "Microsoft.ML.Vision >= 1.7.1",
@@ -3901,26 +3901,28 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\sdubos\\.nuget\\packages\\": {}
+    "/Users/sebastien/.nuget/packages/": {},
+    "/usr/local/share/dotnet/sdk/NuGetFallbackFolder": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\_git\\dotnet\\Margincoin\\MarginCoin.csproj",
+      "projectUniqueName": "/Users/sebastien/_Git/Dotnet/Margincoin/MarginCoin.csproj",
       "projectName": "MarginCoin",
-      "projectPath": "C:\\_git\\dotnet\\Margincoin\\MarginCoin.csproj",
-      "packagesPath": "C:\\Users\\sdubos\\.nuget\\packages\\",
-      "outputPath": "C:\\_git\\dotnet\\Margincoin\\obj\\",
+      "projectPath": "/Users/sebastien/_Git/Dotnet/Margincoin/MarginCoin.csproj",
+      "packagesPath": "/Users/sebastien/.nuget/packages/",
+      "outputPath": "/Users/sebastien/_Git/Dotnet/Margincoin/obj/",
       "projectStyle": "PackageReference",
+      "fallbackFolders": [
+        "/usr/local/share/dotnet/sdk/NuGetFallbackFolder"
+      ],
       "configFilePaths": [
-        "C:\\Users\\sdubos\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        "/Users/sebastien/.nuget/NuGet/NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net6.0"
       ],
       "sources": {
-        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -3961,15 +3963,15 @@
           },
           "Microsoft.AspNetCore.SpaServices.Extensions": {
             "target": "Package",
-            "version": "[6.0.12, )"
+            "version": "[6.0.13, )"
           },
           "Microsoft.EntityFrameworkCore": {
             "target": "Package",
-            "version": "[6.0.12, )"
+            "version": "[6.0.13, )"
           },
           "Microsoft.EntityFrameworkCore.Sqlite": {
             "target": "Package",
-            "version": "[6.0.12, )"
+            "version": "[6.0.13, )"
           },
           "Microsoft.Extensions.Logging": {
             "target": "Package",
@@ -4030,19 +4032,15 @@
         "downloadDependencies": [
           {
             "name": "Microsoft.AspNetCore.App.Ref",
-            "version": "[6.0.24, 6.0.24]"
+            "version": "[6.0.14, 6.0.14]"
           },
           {
-            "name": "Microsoft.NETCore.App.Host.win-x64",
-            "version": "[6.0.24, 6.0.24]"
+            "name": "Microsoft.NETCore.App.Host.osx-x64",
+            "version": "[6.0.14, 6.0.14]"
           },
           {
             "name": "Microsoft.NETCore.App.Ref",
-            "version": "[6.0.24, 6.0.24]"
-          },
-          {
-            "name": "Microsoft.WindowsDesktop.App.Ref",
-            "version": "[6.0.24, 6.0.24]"
+            "version": "[6.0.14, 6.0.14]"
           }
         ],
         "frameworkReferences": {
@@ -4053,7 +4051,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.403\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/7.0.201/RuntimeIdentifierGraph.json"
       }
     }
   }

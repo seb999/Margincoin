@@ -11,7 +11,7 @@ using Tensorflow;
 
 namespace MarginCoin.Service
 {
-    public class GarbageService
+    public class GarbagePoolService
     {
         private ILogger _logger;
         private IHubContext<SignalRHub> _hub;
@@ -19,7 +19,7 @@ namespace MarginCoin.Service
         private readonly ApplicationDbContext _appDbContext;
         private Timer GarbageTimer = new Timer();
 
-        public GarbageService(ILogger<MLService> logger,
+        public GarbagePoolService(ILogger<MLService> logger,
             IHubContext<SignalRHub> hub,
             IBinanceService binanceService,
             [FromServices] ApplicationDbContext appDbContext)
@@ -41,20 +41,16 @@ namespace MarginCoin.Service
 
         private void GarbageTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
-            CheckOrderPool();
+            CheckPool();
         }
 
-        public void ForceGarbageOrder()
+        public void ForceGarbagePool()
         {
-            CheckOrderPool();
+            CheckPool();
         }
 
-        private void CheckOrderPool()
+        private void CheckPool()
         {
-            //todo 
-            //YOU HAVE TO MOVE HERE methods to SaveOrderDb, updateOrderDb, CloseOrderDB
-            //Then what ever type of order you send to market, you check the status here and call the 
-            //previous method, and you display popup order in UI and you refrersh UI
             //1 read on local db pending order buy or sell
             var pendingOrderList = _appDbContext.Order.Where(p => p.IsClosed == 0).ToList();
 
@@ -67,7 +63,7 @@ namespace MarginCoin.Service
                 //For each pending order in local db
                 foreach (var pendingOrder in pendingOrderList)
                 {
-                    //we get the order from binance pool
+                    //we get the order status from binance pool
                     var myBinanceOrder = _binanceService.OrderStatus(pendingOrder.Symbol, pendingOrder.OrderId);
 
                     //We update the status in local db with binanceOrder status

@@ -137,6 +137,17 @@ namespace MarginCoin.Controllers
                 OpenWebSocketOnSymbol(symbol);
             }
 
+            //add open order symbol not in SymbolWeTrade list
+            foreach (var order in _orderService.GetActiveOrder())
+            {
+                if(Global.SymbolWeTrade.SingleOrDefault(p=>p.SymbolName == order.Symbol) == null)
+                {
+                    var orderSymbol = Global.SymbolBaseList.SingleOrDefault(p=>p.SymbolName == order.Symbol);
+                    OpenWebSocketOnSymbol(orderSymbol);
+                    Global.SymbolWeTrade.Add(orderSymbol);
+                }
+            }
+
             //Open websoket on Spot
             await OpenWebSocketOnSpot();
 
@@ -357,8 +368,8 @@ namespace MarginCoin.Controllers
                 if (Global.SymbolWeTrade.Where(p => p.SymbolName == symbol.s).FirstOrDefault() == null)
                 {
                     Symbol hotSymbol = Global.SymbolBaseList.Where(p => p.SymbolName == symbol.s).FirstOrDefault();
-                    Global.SymbolWeTrade.Add(hotSymbol);
                     OpenWebSocketOnSymbol(hotSymbol);
+                    Global.SymbolWeTrade.Add(hotSymbol);
                 }
             }
         }
