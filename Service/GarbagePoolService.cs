@@ -5,9 +5,7 @@ using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
 using MarginCoin.Model;
 using Microsoft.AspNetCore.Mvc;
-using System.Globalization;
 using System;
-using Tensorflow;
 
 namespace MarginCoin.Service
 {
@@ -16,18 +14,21 @@ namespace MarginCoin.Service
         private ILogger _logger;
         private IHubContext<SignalRHub> _hub;
         private IBinanceService _binanceService;
+        private IOrderService _orderService;
         private readonly ApplicationDbContext _appDbContext;
         private Timer GarbageTimer = new Timer();
 
-        public GarbagePoolService(ILogger<MLService> logger,
+        public GarbagePoolService(ILogger<GarbagePoolService> logger,
             IHubContext<SignalRHub> hub,
             IBinanceService binanceService,
+            IOrderService orderService,
             [FromServices] ApplicationDbContext appDbContext)
         {
             _logger = logger;
             _hub = hub;
             _appDbContext = appDbContext;
             _binanceService = binanceService;
+            _orderService = orderService;
 
             GarbageTimer.Interval = 30000;
             GarbageTimer.Elapsed += new ElapsedEventHandler(GarbageTimer_Elapsed);
@@ -39,7 +40,7 @@ namespace MarginCoin.Service
             GarbageTimer.Stop();
         }
 
-        private void GarbageTimer_Elapsed(object sender, ElapsedEventArgs e)
+        void GarbageTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
             CheckPool();
         }
@@ -52,47 +53,83 @@ namespace MarginCoin.Service
         private void CheckPool()
         {
             //1 read on local db pending order buy or sell
-            var pendingOrderList = _appDbContext.Order.Where(p => p.IsClosed == 0).ToList();
+            var poolOrder = _appDbContext.Order.Where(p => p.Status != MyEnum.OrderStatus.FILLED.ToString()).ToList();
 
-            if (pendingOrderList == null)
-            {
+            //No order in the pool
+            if (!poolOrder.Any())
                 return;
-            }
-            else
+
+            //For each pending order in local db
+            foreach (var order in poolOrder)
             {
-                //For each pending order in local db
-                foreach (var pendingOrder in pendingOrderList)
+                //we get the order status from binance pool
+                var myBinanceOrder = _binanceService.OrderStatus(order.Symbol, order.OrderId);
+                var storedDate = DateTime.ParseExact(order.OpenDate, "dd/MM/yyyy HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture);
+                var currentDateMinusOffset = DateTime.Now.AddSeconds(-50);
+                var orderStatus = myBinanceOrder.status;
+                var orderSide = myBinanceOrder.side;
+
+                if ((orderStatus == "NEW" || orderStatus == "PARTIALLY_FILLED") && storedDate.CompareTo(currentDateMinusOffset) <= 0)
                 {
-                    //we get the order status from binance pool
-                    var myBinanceOrder = _binanceService.OrderStatus(pendingOrder.Symbol, pendingOrder.OrderId);
+                    _binanceService.CancelOrder(myBinanceOrder.symbol, myBinanceOrder.orderId);
+                }
 
-                    //We update the status in local db with binanceOrder status
-                    pendingOrder.Status = myBinanceOrder.status;
-
-                    //If the binanceOrder is not filled we kill it if too old or we just save the status in local db
-                    if (myBinanceOrder.status != MyEnum.OrderStatus.FILLED.ToString())
+                if (orderStatus == "FILLED")
+                {
+                    if (orderSide == "BUY")
                     {
-                        DateTime storedDate = DateTime.ParseExact(pendingOrder.OpenDate, "dd/MM/yyyy HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture);
-                        DateTime currentDateMinusOffset = DateTime.Now.AddSeconds(-50);
+                        _orderService.UpdateBuyOrderDb(order.Id, myBinanceOrder);
+                    }
+                    if (orderSide == "SELL")
+                    {
+                        _orderService.UpdateSellOrderDb(order.Id, myBinanceOrder);
+                        _orderService.CloseOrderDb(order.Id, myBinanceOrder);
+                    }
+                }
 
-                        if (storedDate.CompareTo(currentDateMinusOffset) <= 0)
+                if (orderStatus == "PARTIALLY_FILLED")
+                {
+                    if (orderSide == "BUY")
+                    {
+                        _orderService.UpdateBuyOrderDb(order.Id, myBinanceOrder);
+                    }
+                    if (orderSide == "SELL")
+                        _orderService.UpdateSellOrderDb(order.Id, myBinanceOrder);
+                }
+
+                if (orderStatus == "CANCELED" || orderStatus == "REJECTED" || orderStatus == "EXPIRED")
+                {
+                    if (orderSide == "BUY")
+                    {
+                        if (myBinanceOrder.executedQty == "")
                         {
-                            // we cancel the order
-                            pendingOrder.Status = MyEnum.OrderStatus.CANCELED.ToString();
-
-                            _binanceService.CancelOrder(myBinanceOrder.symbol, myBinanceOrder.orderId);
+                            Global.onHold.Remove(order.Symbol);
+                            _orderService.DeleteOrder(order.Id);
+                        }
+                        else
+                        {
+                            _orderService.UpdateBuyOrderDb(order.Id, myBinanceOrder);
+                             _orderService.RecycleOrderDb(order.Id);
                         }
                     }
-                    else
+                    if (orderSide == "SELL")
                     {
-                        //We have to close the order on db with price / type of close etc....
+                        if (myBinanceOrder.executedQty == "")
+                        {
+                            _orderService.UpdateTypeDb(order.Id, "");
+                            _orderService.RecycleOrderDb(order.Id); 
+                            Global.onHold.Remove(order.Symbol);
+                        }
+                        else
+                        {
+                            _orderService.UpdateSellOrderDb(order.Id, myBinanceOrder);
+                            Global.onHold.Remove(order.Symbol);
+                        }
                     }
-                     _appDbContext.Order.Update(pendingOrder);
-                    _appDbContext.SaveChanges();
-
-                    _hub.Clients.All.SendAsync("refreshUI");
                 }
             }
+
+            _hub.Clients.All.SendAsync("refreshUI");
         }
     }
 }

@@ -18,8 +18,13 @@ namespace MarginCoin.Service
 
         void SaveOrderDb(MarketStream symbolSpot, List<Candle> symbolCandle, BinanceOrder binanceOrder);
 
-        public void CloseOrderDb(double orderId, string closeType, BinanceOrder binanceOrder);
+        public void CloseOrderDb(double orderId, BinanceOrder binanceOrder);
 
-        public void UpdateOrderDb(double id, BinanceOrder binanceOrder);
+        public void UpdateStatusDb(double id, BinanceOrder binanceOrder);
+        public void DeleteOrder(double id);
+        public void UpdateTypeDb(double id, string closeType);
+         public void UpdateBuyOrderDb(double id, BinanceOrder binanceOrder);
+         public void UpdateSellOrderDb(double id, BinanceOrder binanceOrder);
+        public void RecycleOrderDb(double id);
     }
 }

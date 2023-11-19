@@ -48,7 +48,7 @@ namespace MarginCoin.Controllers
             } 
 
             //Get list of symbol to monitor from DB
-            List<Symbol> dbSymbolList = Global.fullSymbolList ? _appDbContext.Symbol.Where(p => p.IsOnProd != 0).ToList()
+            List<Symbol> dbSymbolList = Global.isProd ? _appDbContext.Symbol.Where(p => p.IsOnProd != 0).ToList()
                                                                 : _appDbContext.Symbol.Where(p => p.IsOnTest != 0).ToList();
 
             //Remove what is not in the db list

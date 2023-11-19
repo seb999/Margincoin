@@ -76,6 +76,7 @@ public class RepositoryService : IOrderService
         {
             OrderId = binanceOrder.orderId,
             Status = binanceOrder.status,
+            Side = binanceOrder.side,
             OpenDate = DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss"),
             OpenPrice = TradeHelper.CalculateAvragePrice(binanceOrder),
             HighPrice = 0,
@@ -85,6 +86,7 @@ public class RepositoryService : IOrderService
             TakeProfit = TradeHelper.CalculateAvragePrice(binanceOrder) * (1 - (Global.takeProfitPercentage / 100)),
             StopLose = TradeHelper.CalculateAvragePrice(binanceOrder) * (1 - (Global.stopLossPercentage / 100)),
             QuantityBuy = Helper.ToDouble(binanceOrder.executedQty),
+            QuantitySell = 0,
             IsClosed = 0,
             Fee = Global.isProd ? binanceOrder.fills.Sum(p => Helper.ToDouble(p.commission)) : Math.Round((TradeHelper.CalculateAvragePrice(binanceOrder) * Helper.ToDouble(binanceOrder.executedQty)) / 100) * 0.1,
             Symbol = binanceOrder.symbol,
@@ -102,27 +104,80 @@ public class RepositoryService : IOrderService
         _appDbContext.SaveChanges();
     }
 
-    public void CloseOrderDb(double orderId, string closeType, BinanceOrder binanceOrder)
-    {
-        Order myOrder = _appDbContext.Order.Where(p => p.Id == orderId).Select(p => p).FirstOrDefault();
-        if (!Global.onHold.ContainsKey(myOrder.Symbol)) Global.onHold.Add(myOrder.Symbol, true);
-
-        myOrder.ClosePrice = TradeHelper.CalculateAvragePrice(binanceOrder);
-        myOrder.QuantitySell = binanceOrder.fills.Sum(fill => Helper.ToDouble(fill.qty));
-        myOrder.Profit = Math.Round((myOrder.ClosePrice - myOrder.OpenPrice) * myOrder.QuantitySell);
-        myOrder.IsClosed = 1;
-        myOrder.Type = closeType;
-        myOrder.CloseDate = DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss");
-        _appDbContext.SaveChanges();
-    }
-
-    public void UpdateOrderDb(double id, BinanceOrder binanceOrder)
+    public void UpdateStatusDb(double id, BinanceOrder binanceOrder)
     {
         Order myOrder = _appDbContext.Order.Where(p => p.Id == id).FirstOrDefault();
         myOrder.OrderId = binanceOrder.orderId;
         myOrder.Status = binanceOrder.status;
-        _appDbContext.Order.Add(myOrder);
+        myOrder.Side = binanceOrder.side;
+        _appDbContext.Order.Update(myOrder);
         _appDbContext.SaveChanges();
+    }
+
+    public void UpdateSellOrderDb(double id, BinanceOrder binanceOrder)
+    {
+        Order myOrder = _appDbContext.Order.Where(p => p.Id == id).FirstOrDefault();
+        myOrder.Status = binanceOrder.status;
+        myOrder.ClosePrice = TradeHelper.CalculateAvragePrice(binanceOrder);
+        myOrder.QuantitySell = Helper.ToDouble(binanceOrder.executedQty);
+        _appDbContext.Order.Update(myOrder);
+        _appDbContext.SaveChanges();
+    }
+
+    public void UpdateBuyOrderDb(double id, BinanceOrder binanceOrder)
+    {
+        Order myOrder = _appDbContext.Order.Where(p => p.Id == id).FirstOrDefault();
+        myOrder.Status = binanceOrder.status;
+        myOrder.OpenPrice = TradeHelper.CalculateAvragePrice(binanceOrder);
+        myOrder.QuantityBuy = Helper.ToDouble(binanceOrder.executedQty);
+        _appDbContext.Order.Update(myOrder);
+        _appDbContext.SaveChanges();
+    }
+
+    public void UpdateTypeDb(double id, string closeType)
+    {
+        Order myOrder = _appDbContext.Order.Where(p => p.Id == id).FirstOrDefault();
+        myOrder.Type = closeType;
+        _appDbContext.Order.Update(myOrder);
+        _appDbContext.SaveChanges();
+    }
+
+    public void RecycleOrderDb(double id)
+    {
+        Order myOrder = _appDbContext.Order.Where(p => p.Id == id).FirstOrDefault();
+        myOrder.Type = "";
+        myOrder.Status = "FILLED";
+        _appDbContext.Order.Update(myOrder);
+        _appDbContext.SaveChanges();
+    }
+
+    public void CloseOrderDb(double id, BinanceOrder binanceOrder)
+    {
+        Order myOrder = _appDbContext.Order.Where(p => p.Id == id).Select(p => p).FirstOrDefault();
+        if (!Global.onHold.ContainsKey(myOrder.Symbol)) Global.onHold.Add(myOrder.Symbol, true);
+        myOrder.Status = binanceOrder.status;
+        myOrder.ClosePrice = TradeHelper.CalculateAvragePrice(binanceOrder);
+        myOrder.QuantitySell = binanceOrder.fills.Sum(fill => Helper.ToDouble(fill.qty));
+        myOrder.Profit = Math.Round((myOrder.ClosePrice - myOrder.OpenPrice) * myOrder.QuantitySell);
+        myOrder.IsClosed = 1;
+        myOrder.CloseDate = DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss");
+        _appDbContext.Order.Update(myOrder);
+        _appDbContext.SaveChanges();
+    }
+
+    public void DeleteOrder(double id)
+    {
+        try
+        {
+            Order myOrder = _appDbContext.Order.SingleOrDefault(p => p.Id == id);
+            _appDbContext.Order.Remove(myOrder);
+            _appDbContext.SaveChanges();
+        }
+        catch (System.Exception ex)
+        {
+
+        }
+
     }
 
     #endregion

@@ -7,8 +7,10 @@ namespace MarginCoin.Model
         [Key]
         public int Id { get; set; }
         public double OrderId { get; set; }
-        public string Status { get; set; }
         public string Symbol { get; set; }
+        public string Side { get; set; }
+        public string Status { get; set; }
+        public int IsClosed { get; set; }
         public double QuantityBuy { get; set; }
         public double QuantitySell { get; set; }
         public double OpenPrice { get; set; }
@@ -20,7 +22,6 @@ namespace MarginCoin.Model
         public double TakeProfit { get; set; }
         public double Profit { get; set; }
         public double Fee { get; set; }
-        public int IsClosed { get; set; }
         public string Type { get; set; }
         public string OpenDate { get; set; }
         public string CloseDate { get; set; }

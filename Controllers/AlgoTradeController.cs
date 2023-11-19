@@ -60,7 +60,6 @@ namespace MarginCoin.Controllers
         //Max amount to invest for each trade
         private readonly int quoteOrderQty = 3000;
         //Select short list of symbol or full list(on test server on 6 symbols allowed)
-        private readonly bool isProdSymbolList = false;
         private readonly int nbrOfSymbol = 18;   //Not below 10 as we trade later on the 10 best of this list
 
         #endregion
@@ -90,7 +89,6 @@ namespace MarginCoin.Controllers
             _mlService = mLService;
             _watchDog = watchDog;
             _webSocket = webSocket;
-            Global.fullSymbolList = isProdSymbolList;
             Global.syncBinanceSymbol = false;
             Global.nbrOfSymbol = nbrOfSymbol;
             Global.interval = interval;
@@ -437,11 +435,11 @@ namespace MarginCoin.Controllers
                 }
 
 
-                if (Global.swallowOneOrder == true && symbolSpot.s != "XRPUSDT")
+                if (Global.testBuyLimit == true && symbolSpot.s == "SOLUSDT")
                 {
-                    Global.swallowOneOrder = false;
+                    Global.testBuyLimit = false;
                     Console.WriteLine($"Opening trade on {symbolSpot.s}");
-                    BuyMarket(symbolSpot, symbolCandle);
+                    BuyLimit(symbolSpot, symbolCandle);
                 }
 
                 if (symbolSpot.P < 0 && IsShort(symbolSpot, symbolCandle))
@@ -577,7 +575,6 @@ namespace MarginCoin.Controllers
 
         #region Buy / Sell
 
-
         private async void BuyLimit(MarketStream symbolSpot, List<Candle> symbolCandleList)
         {
             var orderPrice = symbolSpot.c * (1 - orderOffset / 100);
@@ -593,25 +590,28 @@ namespace MarginCoin.Controllers
 
             myBinanceOrder.price = TradeHelper.CalculateAvragePrice(myBinanceOrder).ToString();
             await _hub.Clients.All.SendAsync("newPendingOrder", JsonSerializer.Serialize(myBinanceOrder));
-
             await Task.Delay(500);
             await _hub.Clients.All.SendAsync("refreshUI");
-            //Call ForceGarbageOrder here
-
         }
 
         private async void SellLimit(double id, double price, string closeType)
         {
-            var orderPrice = price * (1 + orderOffset / 100);
             var myOrder = _appDbContext.Order.SingleOrDefault(p => p.Id == id);
-            var myBinanceOrder = _binanceService.SellLimit(myOrder.Symbol, myOrder.QuantityBuy, orderPrice, MyEnum.TimeInForce.IOC);
+             //we exit in the buy order is still pending
+            if(myOrder.Status!="FILLED")
+                return;
 
+            var orderPrice = price * (1 + orderOffset / 100);
+            var myBinanceOrder = _binanceService.SellLimit(myOrder.Symbol, myOrder.QuantityBuy - myOrder.QuantitySell, orderPrice, MyEnum.TimeInForce.IOC);
             if (myBinanceOrder == null)
                 return;
 
-            _orderService.UpdateOrderDb(id, myBinanceOrder);
+            _orderService.UpdateTypeDb(id, closeType);
+            _orderService.UpdateStatusDb(id, myBinanceOrder);
             await Task.Delay(500);
             await _hub.Clients.All.SendAsync("sellOrderFilled", JsonSerializer.Serialize(myBinanceOrder)); //it is not really filled here, maybe not filled but we inform UI of new order                                                                                                //Call ForceGarbageOrder here
+            await Task.Delay(500);
+            await _hub.Clients.All.SendAsync("refreshUI");
         }
 
         private async void BuyMarket(MarketStream symbolSpot, List<Candle> symbolCandleList)
@@ -653,7 +653,7 @@ namespace MarginCoin.Controllers
         private async void SellMarket(double id, string closeType)
         {
             Order myOrder = _appDbContext.Order.SingleOrDefault(p => p.Id == id);
-            BinanceOrder myBinanceOrder = _binanceService.SellMarket(myOrder.Symbol, myOrder.QuantityBuy);
+            BinanceOrder myBinanceOrder = _binanceService.SellMarket(myOrder.Symbol, myOrder.QuantityBuy-myOrder.QuantitySell);
             
             if (myBinanceOrder == null) 
                 return;
@@ -673,7 +673,8 @@ namespace MarginCoin.Controllers
 
             if (myBinanceOrder.status == MyEnum.OrderStatus.FILLED.ToString())
             {
-                _orderService.CloseOrderDb(id, closeType, myBinanceOrder);
+                _orderService.UpdateTypeDb(id, closeType);
+                _orderService.CloseOrderDb(id, myBinanceOrder);
                 await Task.Delay(500);
                 await _hub.Clients.All.SendAsync("sellOrderFilled", JsonSerializer.Serialize(myBinanceOrder));
             }
@@ -686,7 +687,7 @@ namespace MarginCoin.Controllers
         [HttpGet("[action]")]
         public void TestBinanceBuy()
         {
-            Global.swallowOneOrder = true;
+            Global.testBuyLimit = true;
         }
         #endregion
     }

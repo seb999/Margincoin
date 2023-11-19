@@ -1,1 +1,1 @@
-{"ContentRoots":["/Users/sebastien/_Git/Dotnet/Margincoin/wwwroot/"],"Root":{"Children":{"favicon.ico":{"Children":null,"Asset":{"ContentRootIndex":0,"SubPath":"favicon.ico"},"Patterns":null}},"Asset":null,"Patterns":[{"ContentRootIndex":0,"Pattern":"**","Depth":0}]}}
+{"ContentRoots":["C:\\_git\\dotnet\\Margincoin\\wwwroot\\"],"Root":{"Children":{"favicon.ico":{"Children":null,"Asset":{"ContentRootIndex":0,"SubPath":"favicon.ico"},"Patterns":null}},"Asset":null,"Patterns":[{"ContentRootIndex":0,"Pattern":"**","Depth":0}]}}

@@ -3,12 +3,12 @@
   <div class="col-9">
     <div class="row">
       <div class="col-3">
-        <button *ngIf="!tradeOpen" class="btn" (click)="trade()">
+        <button *ngIf="!isTradeOpen" class="btn" (click)="trade()">
           <span style="color: green">
             <i class="fa-solid fa-play fa-xl"></i>
           </span>
         </button>
-        <button *ngIf="tradeOpen" class="btn" disabled>
+        <button *ngIf="isTradeOpen" class="btn" disabled>
           <span style="color: green">
             <i class="fa-solid fa-play fa-xl"></i>
           </span>
@@ -36,32 +36,34 @@
       <div class="input-group col-5">
         <input class="form-control sm" placeholder="yyyy-mm-dd" name="dp" [(ngModel)]="model" ngbDatepicker
           #d="ngbDatepicker" (dateSelect)="filterOrderList()">
-        <button class="btn btn-outline-secondary calendar btn-sm mr-1 " (click)="d.toggle();filterOrderList();"
+        <button class="btn btn-outline-secondary calendar btn-sm mr-1" (click)="d.toggle();filterOrderList();"
           type="button"> <span style="color: orange"><i class="fa-solid fa-calendar-days"></i></span></button>
-        <button class="btn btn-outline-warning btn-sm" (click)="model = today();filterOrderList()">Today</button>
-
-
-        <button *ngIf="tradeOpen" class="btn btn-outline-warning btn-sm" (click)="debugBuy()">Test Order</button>
-        <button *ngIf="tradeOpen" class="btn btn-outline-warning btn-sm" (click)="syncBinanceSymbol()">Binance
-          sync</button>
-
-        <button *ngIf="!tradeOpen" class="btn btn-outline-warning btn-sm" disabled>Test Order</button>
-        <button *ngIf="!tradeOpen" class="btn btn-outline-warning btn-sm" disabled>Binance sync</button>
+        <button class="btn btn-warning btn-sm mr-1" (click)="model = today();filterOrderList()">Today</button>
+        <button *ngIf="isTradeOpen" class="btn btn-outline-warning btn-sm mr-1" (click)="debugBuy()">Test Buy Limit</button>
+        <button *ngIf="isTradeOpen" class="btn btn-outline-warning btn-sm mr-1" (click)="syncBinanceSymbol()">Binance sync</button>
+        <button *ngIf="!isTradeOpen" class="btn btn-outline-warning btn-sm mr-1" disabled>Test Limit Order</button>
+        <button *ngIf="!isTradeOpen" class="btn btn-outline-warning btn-sm mr-1" disabled>Binance sync</button>
       </div>
-
     </div>
 
   </div>
 
   <div class="col-1">
-    <mat-slide-toggle [(ngModel)]="isProd" [color]="color" (change)="changeTradeServer()"> <b *ngIf="isProd">
-        <p style="color: white; padding-top: 13px;">Prod</p>
-      </b> <b *ngIf="!isProd">
-        <p style="color: white; padding-top: 13px;">Test</p>
+    <mat-slide-toggle [(ngModel)]="isMarketOrder" [color]="color" (change)="changeOrderType()"> <b *ngIf="isMarketOrder">
+        <p style="color: white; padding-top: 13px;">MARKET</p>
+      </b> <b *ngIf="!isMarketOrder">
+        <p style="color: white; padding-top: 13px;">LIMIT</p>
       </b>
     </mat-slide-toggle>
   </div>
-  <div class="col-1"> </div>
+  <div class="col-1"> 
+    <mat-slide-toggle [(ngModel)]="isProd" [color]="color" (change)="changeTradeServer()"> <b *ngIf="isProd">
+      <p style="color: white; padding-top: 13px;">PROD</p>
+    </b> <b *ngIf="!isProd">
+      <p style="color: white; padding-top: 13px;">TEST</p>
+    </b>
+  </mat-slide-toggle>
+  </div>
 
   <div class="col-1">
     <button class="btn" (click)="clearChart()" style="padding-right: 10px;padding-right:0px; float: right;"><span
@@ -319,18 +321,18 @@
   <label for="amount" class="col-sm-3 col-form-label">Qty</label>
   <div class="col-sm-9 d-flex align-items-center">
     <input id="qty" class="form-control form-control-sm" name="qty" required [(ngModel)]="this.popupQty" (ngModelChange)="onPopupQtyChange()">
-    <button type="submit" class="btn btn-danger btn-sm ml-2" (click)="modal.close('sell')">Sell</button>
+    <button type="submit" class="btn btn-danger btn-sm ml-2" (click)="modal.close('sell')">Sell Market</button>
   </div>
 </div>
 <div class="form-group row no-gutters">
   <label for="amount" class="col-sm-3 col-form-label">Quote Qty</label>
   <div class="col-sm-9 d-flex align-items-center">
     <input id="quoteQty" class="form-control form-control-sm" name="quoteQty" required [(ngModel)]="this.popupQuoteQty" (ngModelChange)="onPopupQuoteQtyChange()">
-    <button type="submit" class="btn btn-success btn-sm ml-2" (click)="modal.close('buy')">Buy</button>
+    <button type="submit" class="btn btn-success btn-sm ml-2" (click)="modal.close('buy')">Buy Market</button>
   </div>
 </div>
 
-    </form>
+</form>
   </div>
   <div class="modal-footer">
     <button type="button" class="btn btn-secondary btn-sm" (click)="modal.dismiss()" ngbAutofocus>Cancel</button>

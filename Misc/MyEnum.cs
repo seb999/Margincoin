@@ -41,5 +41,11 @@ namespace MarginCoin.Misc
             EXPIRED,
             EXPIRED_IN_MATCH
         }
+
+        public enum OrderSide
+        {
+            BUY,
+            SELL
+        }
     }
 }
