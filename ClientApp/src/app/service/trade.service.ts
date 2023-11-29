@@ -163,14 +163,4 @@ export class TradeService {
     };
     return await this.httpService.xhr(httpSetting);
   }
-
-  async trade(isTradeOpen): Promise<any> {
-    this.setTradeParam(isTradeOpen);
-    //We start trading
-    const httpSetting: HttpSettings = {
-      method: 'GET',
-      url: location.origin + '/api/AlgoTrade/MonitorMarket',
-    };
-    return await this.httpService.xhr(httpSetting);
-  }
 }

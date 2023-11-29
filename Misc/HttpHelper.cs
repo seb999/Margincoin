@@ -76,13 +76,13 @@ namespace MarginCoin.Misc
             }
         }
 
-        public static T PostApiData<T>(Uri apiUri, string apiKey, HttpContent data)
+        public static T PostApiData<T>(string apiUri, string apiKey, HttpContent data)
         {
             System.Net.HttpStatusCode httpStatusCode = new System.Net.HttpStatusCode();
             return PostApiData<T>(apiUri, apiKey, data, ref httpStatusCode);
         }
 
-        public static T PostApiData<T>(Uri apiUri, string apiKey, HttpContent data, ref System.Net.HttpStatusCode httpStatusCode)
+        public static T PostApiData<T>(string apiUri, string apiKey, HttpContent data, ref System.Net.HttpStatusCode httpStatusCode)
         {
             JsonSerializerOptions jsonSerializerOptions = new JsonSerializerOptions
             {

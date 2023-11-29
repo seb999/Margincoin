@@ -28,7 +28,7 @@ namespace MarginCoin.Misc
                 var coefficient4 = (symbolCandles[symbolCandles.Count - 4].MacdHist - symbolCandles[symbolCandles.Count - (4 + interval)].MacdHist) / interval;
 
 
-                
+
                 mySlope.Slope = (coefficient1 + coefficient2 + coefficient3 + coefficient4) / 4;
                 mySlope.P2 = new Point() { x = symbolCandles[symbolCandles.Count - 1].t, y = symbolCandles[symbolCandles.Count - 1].MacdHist };
                 mySlope.P1 = new Point() { x = symbolCandles[symbolCandles.Count - 5].t, y = symbolCandles[symbolCandles.Count - 5].MacdHist };
@@ -157,12 +157,16 @@ namespace MarginCoin.Misc
 
         public static double CalculateAvragePrice(BinanceOrder myOrder)
         {
+            if (myOrder.fills == null || myOrder.fills.Count == 0)
+            {
+                return Helper.ToDouble(myOrder.price);
+            }
+
             double executedAmount = myOrder.fills
                 .Sum(fill => Helper.ToDouble(fill.price) * Helper.ToDouble(fill.qty));
             double executedQty = myOrder.fills
                 .Sum(fill => Helper.ToDouble(fill.qty));
             return executedAmount / executedQty;
         }
-
     }
 }

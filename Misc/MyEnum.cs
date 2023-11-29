@@ -21,7 +21,8 @@ namespace MarginCoin.Misc
             Asset,
             Account,
             OrderStatus,
-            CancelOrder
+            CancelOrder,
+            Ticker
         }
 
         public enum TimeInForce

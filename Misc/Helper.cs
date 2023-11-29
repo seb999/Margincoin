@@ -34,5 +34,23 @@ namespace MarginCoin.Misc
             myString = myString.Replace(",", ".");
             return double.Parse(myString, CultureInfo.InvariantCulture);
         }
+
+        public static int GetNumberDecimal(string value)
+        {
+            // Find the position of the decimal point
+            value = value.Replace(",", ".");
+            int decimalPointIndex = value.IndexOf('.');
+            int decimalDigitIndex = value.IndexOf('1');
+
+            // If there is no decimal point, or if it's the last character, there are no decimal places
+            if (decimalPointIndex == -1 || decimalDigitIndex == 0)
+            {
+                return 0;
+            }
+
+            // Calculate the number of decimal places
+            int decimalPlaces = decimalDigitIndex - decimalPointIndex;
+            return decimalPlaces;
+        }
     }
 }

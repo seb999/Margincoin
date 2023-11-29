@@ -6,17 +6,35 @@ using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using MarginCoin.Misc;
 using System;
+using System.Text.Json;
+using Microsoft.AspNetCore.SignalR;
+using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 
-public class RepositoryService : IOrderService
+public class OrderService : IOrderService
 {
     private readonly ApplicationDbContext _appDbContext;
+    private IBinanceService _binanceService;
+    private IHubContext<SignalRHub> _hub;
+    private ILogger _logger;
 
-    public RepositoryService([FromServices] ApplicationDbContext appDbContext)
+    public OrderService([FromServices] ApplicationDbContext appDbContext,
+        IBinanceService binanceService,
+        IHubContext<SignalRHub> hub,
+        ILogger<OrderService> logger)
     {
         _appDbContext = appDbContext;
+        _binanceService = binanceService;
+        _hub = hub;
+        _logger = logger;
     }
 
-    #region market helper
+    #region trading methods
+
+    public List<Order> GetActiveOrder()
+    {
+        return _appDbContext.Order.Where(p => p.IsClosed == 0).ToList();
+    }
 
     public void UpdateTakeProfit(List<Candle> symbolCandles, Order activeOrder, double takeProfitPercentage)
     {
@@ -37,6 +55,7 @@ public class RepositoryService : IOrderService
         if (symbolCandles.Last().c > activeOrder.HighPrice)
         {
             activeOrder.HighPrice = symbolCandles.Last().c;
+            _hub.Clients.All.SendAsync("refreshUI");
         }
 
         //Save Low
@@ -47,11 +66,6 @@ public class RepositoryService : IOrderService
 
         _appDbContext.Order.Update(activeOrder);
         _appDbContext.SaveChanges();
-    }
-
-    public List<Order> GetActiveOrder()
-    {
-        return _appDbContext.Order.Where(p => p.IsClosed == 0).ToList();
     }
 
     public void UpdateStopLoss(List<Candle> symbolCandles, Order activeOrder)
@@ -69,6 +83,9 @@ public class RepositoryService : IOrderService
         }
     }
 
+    #endregion
+
+    #region order check/update/delete
     public void SaveOrderDb(MarketStream symbolSpot, List<Candle> symbolCandle, BinanceOrder binanceOrder)
     {
         Console.WriteLine("Open trade");
@@ -79,12 +96,12 @@ public class RepositoryService : IOrderService
             Side = binanceOrder.side,
             OpenDate = DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss"),
             OpenPrice = TradeHelper.CalculateAvragePrice(binanceOrder),
-            HighPrice = 0,
             LowPrice = TradeHelper.CalculateAvragePrice(binanceOrder),
-            ClosePrice = 0,
-            Volume = symbolSpot.v,
             TakeProfit = TradeHelper.CalculateAvragePrice(binanceOrder) * (1 - (Global.takeProfitPercentage / 100)),
             StopLose = TradeHelper.CalculateAvragePrice(binanceOrder) * (1 - (Global.stopLossPercentage / 100)),
+            ClosePrice = 0,
+            HighPrice = 0,
+            Volume = symbolSpot.v,
             QuantityBuy = Helper.ToDouble(binanceOrder.executedQty),
             QuantitySell = 0,
             IsClosed = 0,
@@ -104,22 +121,29 @@ public class RepositoryService : IOrderService
         _appDbContext.SaveChanges();
     }
 
-    public void UpdateStatusDb(double id, BinanceOrder binanceOrder)
+    public void DeleteOrderDb(double id)
+    {
+        try
+        {
+            Order myOrder = _appDbContext.Order.SingleOrDefault(p => p.Id == id);
+            _appDbContext.Order.Remove(myOrder);
+            _appDbContext.SaveChanges();
+        }
+        catch (System.Exception ex)
+        {
+        }
+    }
+
+    public void UpdateSellOrderDb(double id, BinanceOrder binanceOrder, string closeType)
     {
         Order myOrder = _appDbContext.Order.Where(p => p.Id == id).FirstOrDefault();
         myOrder.OrderId = binanceOrder.orderId;
         myOrder.Status = binanceOrder.status;
         myOrder.Side = binanceOrder.side;
-        _appDbContext.Order.Update(myOrder);
-        _appDbContext.SaveChanges();
-    }
-
-    public void UpdateSellOrderDb(double id, BinanceOrder binanceOrder)
-    {
-        Order myOrder = _appDbContext.Order.Where(p => p.Id == id).FirstOrDefault();
-        myOrder.Status = binanceOrder.status;
         myOrder.ClosePrice = TradeHelper.CalculateAvragePrice(binanceOrder);
         myOrder.QuantitySell = Helper.ToDouble(binanceOrder.executedQty);
+        if (closeType != "") myOrder.Type = closeType;
+
         _appDbContext.Order.Update(myOrder);
         _appDbContext.SaveChanges();
     }
@@ -128,16 +152,16 @@ public class RepositoryService : IOrderService
     {
         Order myOrder = _appDbContext.Order.Where(p => p.Id == id).FirstOrDefault();
         myOrder.Status = binanceOrder.status;
-        myOrder.OpenPrice = TradeHelper.CalculateAvragePrice(binanceOrder);
-        myOrder.QuantityBuy = Helper.ToDouble(binanceOrder.executedQty);
-        _appDbContext.Order.Update(myOrder);
-        _appDbContext.SaveChanges();
-    }
 
-    public void UpdateTypeDb(double id, string closeType)
-    {
-        Order myOrder = _appDbContext.Order.Where(p => p.Id == id).FirstOrDefault();
-        myOrder.Type = closeType;
+        var orderPrice = TradeHelper.CalculateAvragePrice(binanceOrder);
+
+        myOrder.OpenPrice = orderPrice;
+        myOrder.OpenPrice = orderPrice;
+        myOrder.LowPrice = orderPrice;
+        myOrder.TakeProfit = orderPrice * (1 - (Global.takeProfitPercentage / 100));
+        myOrder.StopLose = orderPrice * (1 - (Global.stopLossPercentage / 100));
+        myOrder.QuantityBuy = Helper.ToDouble(binanceOrder.executedQty);
+
         _appDbContext.Order.Update(myOrder);
         _appDbContext.SaveChanges();
     }
@@ -165,20 +189,137 @@ public class RepositoryService : IOrderService
         _appDbContext.SaveChanges();
     }
 
-    public void DeleteOrder(double id)
+    #endregion
+
+    #region binance order methods
+
+    public async Task BuyLimit(MarketStream symbolSpot, List<Candle> symbolCandleList)
     {
-        try
-        {
-            Order myOrder = _appDbContext.Order.SingleOrDefault(p => p.Id == id);
-            _appDbContext.Order.Remove(myOrder);
-            _appDbContext.SaveChanges();
-        }
-        catch (System.Exception ex)
-        {
+        var (nbrDecimalPrice, nbrDecimalQty) = GetOrderParameters(symbolSpot);
+        var price = Math.Round(symbolSpot.c * (1 + Global.orderOffset / 100), nbrDecimalPrice);
+        var qty = Math.Round(Global.quoteOrderQty / price, nbrDecimalQty);
 
+        var myBinanceOrder = _binanceService.BuyLimit(symbolSpot.s, qty, price, MyEnum.TimeInForce.GTC);
+
+        if (myBinanceOrder == null)
+        {
+            Global.onHold.Remove(symbolSpot.s);
+            return;
         }
 
+        SaveOrderDb(symbolSpot, symbolCandleList, myBinanceOrder);
+
+        myBinanceOrder.price = TradeHelper.CalculateAvragePrice(myBinanceOrder).ToString();
+        await _hub.Clients.All.SendAsync("newPendingOrder", JsonSerializer.Serialize(myBinanceOrder));
+        await Task.Delay(100);
+        await _hub.Clients.All.SendAsync("refreshUI");
+    }
+
+    public async Task SellLimit(double id, List<MarketStream> marketStreamOnSpot, string closeType)
+    {
+        var myOrder = _appDbContext.Order.SingleOrDefault(p => p.Id == id);
+        var symbolSpot = marketStreamOnSpot.SingleOrDefault(p => p.s == myOrder.Symbol);
+        var (nbrDecimalPrice, nbrDecimalQty) = GetOrderParameters(symbolSpot);
+        var price = Math.Round(symbolSpot.c * (1 - Global.orderOffset / 100), nbrDecimalPrice);
+        var qty = Math.Round(myOrder.QuantityBuy - myOrder.QuantitySell, nbrDecimalQty);
+
+        //we exit in the buy order is still pending
+        if (myOrder.Status != "FILLED")
+            return;
+
+        var myBinanceOrder = _binanceService.SellLimit(myOrder.Symbol, qty, price, MyEnum.TimeInForce.GTC);
+        if (myBinanceOrder == null)
+            return;
+
+        UpdateSellOrderDb(id, myBinanceOrder, closeType);
+
+        if (myBinanceOrder.status == "FILLED")
+            CloseOrderDb(id, myBinanceOrder);
+
+        await Task.Delay(500);
+        await _hub.Clients.All.SendAsync("sellOrderFilled", JsonSerializer.Serialize(myBinanceOrder)); //it is not really filled here, maybe not filled but we inform UI of new order                                                                                                //Call ForceGarbageOrder here
+        await Task.Delay(500);
+        await _hub.Clients.All.SendAsync("refreshUI");
+    }
+
+    public async void BuyMarket(MarketStream symbolSpot, List<Candle> symbolCandleList)
+    {
+        BinanceOrder myBinanceOrder = _binanceService.BuyMarket(symbolSpot.s, Global.quoteOrderQty);
+
+        if (myBinanceOrder == null)
+        {
+            Global.onHold.Remove(symbolSpot.s);
+            return;
+        }
+
+        if (myBinanceOrder.status == "EXPIRED")
+        {
+            Global.onHold.Remove(symbolSpot.s);
+            _logger.LogWarning($"Call {MyEnum.BinanceApiCall.BuyMarket} {symbolSpot.s} Order status Expired");
+            return;
+        }
+
+        int i = 0;
+        while (myBinanceOrder.status != "FILLED" && i < 5)
+        {
+            myBinanceOrder = _binanceService.OrderStatus(myBinanceOrder.symbol, myBinanceOrder.orderId);
+            i++;
+        }
+
+        if (myBinanceOrder.status == "FILLED")
+        {
+            SaveOrderDb(symbolSpot, symbolCandleList, myBinanceOrder);
+
+            Global.onHold.Remove(symbolSpot.s);
+            myBinanceOrder.price = TradeHelper.CalculateAvragePrice(myBinanceOrder).ToString();
+            await _hub.Clients.All.SendAsync("newPendingOrder", JsonSerializer.Serialize(myBinanceOrder));
+            await Task.Delay(500);
+            await _hub.Clients.All.SendAsync("refreshUI");
+        }
+    }
+
+    public async void SellMarket(double id, string closeType)
+    {
+        Order myOrder = _appDbContext.Order.SingleOrDefault(p => p.Id == id);
+        BinanceOrder myBinanceOrder = _binanceService.SellMarket(myOrder.Symbol, myOrder.QuantityBuy - myOrder.QuantitySell);
+
+        if (myBinanceOrder == null)
+            return;
+
+        int i = 0;
+        while (myBinanceOrder.status != MyEnum.OrderStatus.FILLED.ToString() && i < 5)
+        {
+            await Task.Delay(50);
+            myBinanceOrder = _binanceService.OrderStatus(myBinanceOrder.symbol, myBinanceOrder.orderId);
+            i++;
+        }
+
+        if (myBinanceOrder.status == MyEnum.OrderStatus.EXPIRED.ToString())
+        {
+            _logger.LogWarning($"Call {MyEnum.BinanceApiCall.SellLimit} {myOrder.Symbol} Expired");
+        }
+
+        if (myBinanceOrder.status == MyEnum.OrderStatus.FILLED.ToString())
+        {
+            UpdateSellOrderDb(id,myBinanceOrder,closeType);
+            CloseOrderDb(id, myBinanceOrder);
+            await Task.Delay(500);
+            await _hub.Clients.All.SendAsync("sellOrderFilled", JsonSerializer.Serialize(myBinanceOrder));
+        }
+    }
+    
+    #endregion
+
+    #region helper
+
+    private (int nbrDecimalPrice, int nbrDecimalQty) GetOrderParameters(MarketStream symbolSpot)
+    {
+        var ticker = _binanceService.Ticker(symbolSpot.s);
+        var nbrDecimalPrice = Helper.GetNumberDecimal(ticker.symbols[0].filters[0].tickSize);
+        var nbrDecimalQty = Helper.GetNumberDecimal(ticker.symbols[0].filters[1].stepSize);
+        return (nbrDecimalPrice, nbrDecimalQty);
     }
 
     #endregion
+
 }

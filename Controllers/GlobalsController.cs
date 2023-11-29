@@ -24,6 +24,19 @@ namespace MarginCoin.Controllers
             return Global.isProd;
         }
 
+         // Select Binance server - Prod or test
+        [HttpGet("[action]")]
+        public bool GetOrderType()
+        {
+            return Global.isMarketOrder;
+        }
+
+        [HttpGet("[action]/{isMarketOrder}")]
+        public void SetOrderType(bool isMarketOrder)
+        {
+            Global.isMarketOrder = isMarketOrder;
+        }
+
         [HttpGet("[action]/{isProd}")]
         public void SetServer(bool isProd)
         {

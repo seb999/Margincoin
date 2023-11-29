@@ -174,7 +174,7 @@ export class WalletComponent {
 
       if (this.serverMsg.msgName == BackEndMessage.webSocketStopped) {
         this.isTradeOpen = true;
-        this.tradeService.trade(this.isTradeOpen);
+        this.trade();
       }
 
       if (this.serverMsg.msgName == BackEndMessage.httpRequestError) {
@@ -222,8 +222,7 @@ export class WalletComponent {
   }
 
   async changeOrderType() {
-    await this.tradeService.setServer(this.isProd);
-    this.myAccount = await this.tradeService.binanceAccount();
+    await this.tradeService.setOrderType(this.isMarketOrder);
   }
 
   calculateProfit() {
@@ -253,9 +252,32 @@ export class WalletComponent {
     this.balance = balance;
   }
 
+  async trade(): Promise<any> {
+    this.isTradeOpen = true;
+    this.tradeService.setTradeParam(this.isTradeOpen);
+    //We start trading
+    const httpSetting: HttpSettings = {
+      method: 'GET',
+      url: location.origin + '/api/AlgoTrade/MonitorMarket',
+    };
+    return await this.httpService.xhr(httpSetting);
+  }
+
   async stopTrade(): Promise<any> {
     this.isTradeOpen = !this.isTradeOpen;
     this.tradeService.setTradeParam(this.isTradeOpen);
+  }
+  
+  async closeTrade(orderId, lastPrice): Promise<any> {
+    const httpSetting: HttpSettings = {
+      method: 'GET',
+      url: location.origin + '/api/AlgoTrade/CloseTrade/' + orderId + "/" + lastPrice,
+    };
+    return await this.httpService.xhr(httpSetting);
+  }
+
+  debugBuy(){
+    this.tradeService.debugBuy();
   }
 
   /////////////////////////////////////////////////////////////

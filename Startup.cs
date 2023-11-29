@@ -29,12 +29,13 @@ namespace MarginCoin
         {
             //AA new instance of the class for each call
             services.AddScoped<IBinanceService, BinanceService>();
-            services.AddScoped<IOrderService, RepositoryService>();
+            services.AddScoped<IOrderService, OrderService>();
 
             //Same instance of the class during lifetime
             services.AddSingleton<IMLService, MLService>();
             services.AddSingleton<IWatchDog, WatchDog>();
             services.AddSingleton<IWebSocket, WebSocket>();
+            services.AddSingleton<IGarbagePoolService, GarbagePoolService>();
             
             services.AddSignalR();
 

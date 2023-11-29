@@ -57,6 +57,22 @@ namespace MarginCoin.Service
             candleMatrix.Add(candleList);
         }
 
+        public BinanceTicker Ticker(string symbol)
+        {
+            try
+            {
+                string apiUrl = $"{host}/api/v3/exchangeInfo?symbol={symbol}";
+                var result = HttpHelper.GetApiData<BinanceTicker>(new Uri(apiUrl));
+                _logger.LogWarning($"Call {MyEnum.BinanceApiCall.Ticker} {symbol} {httpStatusCode}");
+                return result;
+            }
+            catch (System.Exception e)
+            {
+                _logger.LogError(e, $"Call {MyEnum.BinanceApiCall.BuyMarket}");
+                return null;
+            }
+        }
+
         #endregion
 
         #region Wallet
@@ -70,7 +86,7 @@ namespace MarginCoin.Service
                 string signature = GetSignature(parameters, secretKey);
                 string apiUrl = $"{host}/sapi/v3/asset/getUserAsset?{parameters}&signature={signature}";
 
-                var result = HttpHelper.PostApiData<List<BinanceAsset>>(new Uri(apiUrl), publicKey, new StringContent("", Encoding.UTF8, "application/json"), ref httpStatusCode);
+                var result = HttpHelper.PostApiData<List<BinanceAsset>>(apiUrl, publicKey, new StringContent("", Encoding.UTF8, "application/json"), ref httpStatusCode);
                 if (result != null)
                 {
                     _logger.LogWarning(httpStatusCode.ToString(), "Get " + MyEnum.BinanceApiCall.Asset);
@@ -127,6 +143,8 @@ namespace MarginCoin.Service
             }
         }
 
+        
+        
         #endregion
 
         #region Order
@@ -197,7 +215,7 @@ namespace MarginCoin.Service
                 string apiUrl = $"{host}/api/v3/order?{parameters}&signature={signature}";
 
                 //Call Binance API
-                var result = HttpHelper.PostApiData<BinanceOrder>(new Uri(apiUrl), publicKey, new StringContent("", Encoding.UTF8, "application/json"), ref httpStatusCode);
+                var result = HttpHelper.PostApiData<BinanceOrder>(apiUrl, publicKey, new StringContent("", Encoding.UTF8, "application/json"), ref httpStatusCode);
 
                 //log httpStatusCode result
                 _logger.LogWarning($"Call {MyEnum.BinanceApiCall.BuyMarket} {symbol} {httpStatusCode}");
@@ -225,7 +243,7 @@ namespace MarginCoin.Service
                 string apiUrl = $"{host}/api/v3/order?{parameters}&signature={signature}";
 
                 //Call Binance API
-                var result = HttpHelper.PostApiData<BinanceOrder>(new Uri(apiUrl), publicKey, new StringContent("", Encoding.UTF8, "application/json"), ref httpStatusCode);
+                var result = HttpHelper.PostApiData<BinanceOrder>(apiUrl, publicKey, new StringContent("", Encoding.UTF8, "application/json"), ref httpStatusCode);
 
                 //log httpStatusCode result
                 _logger.LogWarning($"Call {MyEnum.BinanceApiCall.SellMarket} {symbol} {httpStatusCode}");
@@ -242,19 +260,19 @@ namespace MarginCoin.Service
             }
         }
 
-        public BinanceOrder BuyLimit(string symbol, double quantity, double price, MyEnum.TimeInForce timeInForce)
+        public BinanceOrder BuyLimit(string symbol, double qty, double price, MyEnum.TimeInForce timeInForce)
         {
-            string stringQuantity = quantity.ToString().Replace(",", ".");
+            string stringQty = qty.ToString().Replace(",", ".");
             string stringPrice = price.ToString().Replace(",", ".");
             try
             {
                 SetEnv(ref secretKey, ref publicKey, ref host);
-                string parameters = $"timestamp={ServerTime(publicKey)}&symbol={symbol}&quantity={stringQuantity}&price={stringPrice}&timeInForce={timeInForce}&side=BUY&type=LIMIT&recvWindow=60000";
+                string parameters = $"timestamp={ServerTime(publicKey)}&symbol={symbol}&quantity={stringQty}&price={stringPrice}&timeInForce={timeInForce.ToString()}&side=BUY&type=LIMIT&recvWindow=60000";
                 string signature = GetSignature(parameters, secretKey);
                 string apiUrl = $"{host}/api/v3/order?{parameters}&signature={signature}";
 
                 //call binance api
-                var result = HttpHelper.PostApiData<BinanceOrder>(new Uri(apiUrl), publicKey, new StringContent("", Encoding.UTF8, "application/json"), ref httpStatusCode);
+                var result = HttpHelper.PostApiData<BinanceOrder>(apiUrl, publicKey, new StringContent("", Encoding.UTF8, "application/json"), ref httpStatusCode);
 
                 //log httpStatusCode result 
                 _logger.LogWarning(httpStatusCode.ToString(), "Call " + MyEnum.BinanceApiCall.BuyLimit);
@@ -283,7 +301,7 @@ namespace MarginCoin.Service
                 string apiUrl = $"{host}/api/v3/order?{parameters}&signature={signature}";
 
                 //call binance api
-                var result = HttpHelper.PostApiData<BinanceOrder>(new Uri(apiUrl), publicKey, new StringContent("", Encoding.UTF8, "application/json"), ref httpStatusCode);
+                var result = HttpHelper.PostApiData<BinanceOrder>(apiUrl, publicKey, new StringContent("", Encoding.UTF8, "application/json"), ref httpStatusCode);
 
                 //log httpStatusCode result 
                 _logger.LogWarning($"Call {MyEnum.BinanceApiCall.SellLimit} {httpStatusCode}");

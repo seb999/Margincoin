@@ -129,13 +129,15 @@
           <td *ngIf="((order.closePrice - order.openPrice)*order.quantityBuy) < 0 && order.closePrice!=0"
             style="color: rgb(236, 44, 44);">{{((order.closePrice -
             order.openPrice)*order.quantityBuy).toFixed(2)}}</td>
-          <td *ngIf="((order.highPrice - order.openPrice)*order.quantityBuy) < 0 && order.highPrice!=0"
+         
+            <td *ngIf="((order.highPrice - order.openPrice)*order.quantityBuy) < 0 && order.highPrice!=0"
             style="color: rgb(236, 44, 44);">{{((order.highPrice -
             order.openPrice)*order.quantityBuy).toFixed(2)}}
           </td>
           <td *ngIf="((order.highPrice - order.openPrice)*order.quantityBuy) >=0 && order.highPrice!=0"
             style="color: limegreen;">{{((order.highPrice - order.openPrice)*order.quantityBuy).toFixed(2)}}
           </td>
+          <td *ngIf="order.highPrice==0">--</td>
           <td>{{order.openDate}}</td>
           <td>{{order.closeDate}}</td>
           <td>{{order.type}}</td>
