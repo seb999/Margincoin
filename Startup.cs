@@ -35,7 +35,6 @@ namespace MarginCoin
             services.AddSingleton<IMLService, MLService>();
             services.AddSingleton<IWatchDog, WatchDog>();
             services.AddSingleton<IWebSocket, WebSocket>();
-            services.AddSingleton<IGarbagePoolService, GarbagePoolService>();
             
             services.AddSignalR();
 

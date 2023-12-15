@@ -68,7 +68,7 @@ namespace MarginCoin.Service
             }
             catch (System.Exception e)
             {
-                _logger.LogError(e, $"Call {MyEnum.BinanceApiCall.BuyMarket}");
+                _logger.LogError(e, $"Call {MyEnum.BinanceApiCall.Ticker}");
                 return null;
             }
         }
@@ -119,7 +119,7 @@ namespace MarginCoin.Service
 
                 _logger.LogWarning($"Get {MyEnum.BinanceApiCall.Account} {httpStatusCode}");
 
-                var toto = result.balances.Where(p=>p.asset == "TUSD").FirstOrDefault();
+                var toto = result.balances.Where(p => p.asset == "TUSD").FirstOrDefault();
                 //log httpStatusCode result
                 if (httpStatusCode != System.Net.HttpStatusCode.OK)
                 {
@@ -143,12 +143,37 @@ namespace MarginCoin.Service
             }
         }
 
-        
-        
         #endregion
 
         #region Order
 
+        public BinanceOrder CancelSymbolOrder(string symbol)
+        {
+            try
+            {
+                SetEnv(ref secretKey, ref publicKey, ref host);
+                string parameters = $"timestamp={ServerTime(publicKey)}&symbol={symbol}&recvWindow=60000";
+                string signature = GetSignature(parameters, secretKey);
+                string apiUrl = $"{host}/api/v3/openOrders?{parameters}&signature={signature}";
+
+                //call binance api
+                var result = HttpHelper.DeleteApiData<BinanceOrder>(new Uri(apiUrl), publicKey, ref httpStatusCode);
+
+                _logger.LogWarning($"Get {MyEnum.BinanceApiCall.CancelSymbolOrder} {httpStatusCode}");
+
+                if (httpStatusCode != System.Net.HttpStatusCode.OK)
+                {
+                    _hub.Clients.All.SendAsync("httpRequestError", httpStatusCode.ToString());
+                }
+                return result;
+            }
+            catch (System.Exception e)
+            {
+                _logger.LogError(e, "Get " + MyEnum.BinanceApiCall.OrderStatus);
+                return null;
+            }
+        }
+        
         public BinanceOrder CancelOrder(string symbol, double orderId)
         {
             try
@@ -162,7 +187,7 @@ namespace MarginCoin.Service
                 var result = HttpHelper.DeleteApiData<BinanceOrder>(new Uri(apiUrl), publicKey, ref httpStatusCode);
 
                 _logger.LogWarning($"Get {MyEnum.BinanceApiCall.CancelOrder} {httpStatusCode}");
-                
+
                 if (httpStatusCode != System.Net.HttpStatusCode.OK)
                 {
                     _hub.Clients.All.SendAsync("httpRequestError", httpStatusCode.ToString());
@@ -190,7 +215,7 @@ namespace MarginCoin.Service
 
                 //log httpStatusCode result
                 _logger.LogWarning($"Get {MyEnum.BinanceApiCall.OrderStatus} {httpStatusCode}");
-                
+
                 if (httpStatusCode != System.Net.HttpStatusCode.OK)
                 {
                     _hub.Clients.All.SendAsync("httpRequestError", httpStatusCode.ToString());
@@ -320,7 +345,7 @@ namespace MarginCoin.Service
 
         #endregion
 
-        #region helper
+        #region Binance API setings
 
         private static void SetEnv(ref string secretKey, ref string publicKey, ref string host)
         {

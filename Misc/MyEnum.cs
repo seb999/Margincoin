@@ -22,6 +22,7 @@ namespace MarginCoin.Misc
             Account,
             OrderStatus,
             CancelOrder,
+            CancelSymbolOrder,
             Ticker
         }
 

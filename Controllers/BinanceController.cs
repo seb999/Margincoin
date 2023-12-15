@@ -70,6 +70,7 @@ namespace MarginCoin.Controllers
 
             myAccount.balances = myAccount.balances
            .OrderBy(p1 => dbSymbolList.FirstOrDefault(p2 => p2.SymbolName.Replace("USDT", "") == p1.asset)?.Rank ?? int.MaxValue)
+           .OrderByDescending(p2=>p2.asset == "USDT")
            .ToList();
 
             return myAccount;
@@ -118,7 +119,6 @@ namespace MarginCoin.Controllers
 
             if (myBinanceOrder.status == "EXPIRED")
             {
-                await _hub.Clients.All.SendAsync(MyEnum.BinanceHttpError.SellOrderExpired.ToString());
                 _logger.LogWarning($"Call {MyEnum.BinanceApiCall.BuyMarket} {symbol} Expired");
             }
 
@@ -129,10 +129,42 @@ namespace MarginCoin.Controllers
             }
             else
             {
-                await Task.Delay(500);
+                await Task.Delay(300);
                 if (_binanceService.OrderStatus(myBinanceOrder.symbol, myBinanceOrder.orderId).status == "FILLED")
                 {
                     await _hub.Clients.All.SendAsync("buyOrderFilled", JsonSerializer.Serialize(myBinanceOrder));
+                }
+            }
+        }
+
+        [HttpGet("[action]/{symbol}")]
+        public async void CancelSymbolOrder(string symbol)
+        {
+            System.Net.HttpStatusCode httpStatusCode = System.Net.HttpStatusCode.NoContent;
+            BinanceOrder myBinanceOrder = _binanceService.CancelSymbolOrder(symbol + "USDT");
+            if (myBinanceOrder == null) return;
+
+            if (httpStatusCode == System.Net.HttpStatusCode.BadRequest)
+            {
+                await _hub.Clients.All.SendAsync(MyEnum.BinanceHttpError.BadRequest.ToString());
+            }
+
+            if (myBinanceOrder.status == "EXPIRED")
+            {
+                _logger.LogWarning($"Call {MyEnum.BinanceApiCall.CancelOrder} {symbol} Expired");
+            }
+
+            if (myBinanceOrder.status == "FILLED")
+            {
+                await _hub.Clients.All.SendAsync("refreshUI");
+                return;
+            }
+            else
+            {
+                await Task.Delay(500);
+                if (_binanceService.OrderStatus(myBinanceOrder.symbol, myBinanceOrder.orderId).status == "FILLED")
+                {
+                     await _hub.Clients.All.SendAsync("refreshUI");
                 }
             }
         }

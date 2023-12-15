@@ -163,4 +163,12 @@ export class TradeService {
     };
     return await this.httpService.xhr(httpSetting);
   }
+
+  async cancelSymbolOrder(symbol): Promise<any[]> {
+    const httpSetting: HttpSettings = {
+      method: 'GET',
+      url: location.origin + '/api/Binance/CancelSymbolOrder/' + symbol,
+    };
+    return await this.httpService.xhr(httpSetting);
+  }
 }

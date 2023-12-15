@@ -268,16 +268,20 @@ export class WalletComponent {
     this.tradeService.setTradeParam(this.isTradeOpen);
   }
   
-  async closeTrade(orderId, lastPrice): Promise<any> {
+  async closeTrade(id, lastPrice): Promise<any> {
     const httpSetting: HttpSettings = {
       method: 'GET',
-      url: location.origin + '/api/AlgoTrade/CloseTrade/' + orderId + "/" + lastPrice,
+      url: location.origin + '/api/AlgoTrade/CloseTrade/' + id + "/" + lastPrice,
     };
     return await this.httpService.xhr(httpSetting);
   }
 
   debugBuy(){
     this.tradeService.debugBuy();
+  }
+
+  async cancelSymbolOrder(symbol): Promise<any> {
+    this.tradeService.cancelSymbolOrder(symbol);
   }
 
   /////////////////////////////////////////////////////////////

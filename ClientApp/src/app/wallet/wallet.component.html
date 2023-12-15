@@ -232,18 +232,23 @@
           <th>Free</th>
           <th>Locked</th>
           <th></th>
+          <th></th>
         </thead>
         <tbody>
-          <tr *ngFor="let asset of myAccount?.balances">
+          <tr *ngFor="let asset of myAccount?.balances" >
             <td>
               <a style="color: orange" [routerLink]="" (click)="showChart(asset.asset, null);">{{asset?.asset}}</a>
             </td>
             <td>{{asset?.free}}</td>
             <td>{{asset?.locked}}</td>
             <td>
+              <button *ngIf="asset?.locked > 0" class="btn" (click)="cancelSymbolOrder(asset?.asset);"
+                style="padding: 0px;padding:0px"><span style="color: red"><i class="fa-solid fa-xmark"></i>
+                </span></button>
+            </td>
+             <td>
               <button class="btn" (click)="openPopup(popupTemplate, asset?.asset, asset?.free);"
-                style="padding: 0px;padding:0px"><span style="color: orange"><i
-                    class="fa-sharp fa-solid fa-circle-dollar-to-slot"></i>
+                style="padding: 0px;padding:0px"><span style="color: orange"><i class="fa-solid fa-arrow-right-arrow-left"></i>
                 </span></button>
             </td>
           </tr>
@@ -254,9 +259,9 @@
 </div>
 
 <ng-template #popTitle let-order="order">
-  <h3><span *ngIf="order.side == 'BUY'" class="badge badge-success">{{order.side}}</span></h3>
-  <h3><span *ngIf="order.side == 'SELL'" class="badge badge-danger">{{order.side}}</span></h3>
-  <b>{{order.symbol}}</b>
+  <h3><span *ngIf="order?.side == 'BUY'" class="badge badge-success">{{order?.side}}</span></h3>
+  <h3><span *ngIf="order?.side == 'SELL'" class="badge badge-danger">{{order?.side}}</span></h3>
+  <b>{{order?.symbol}}</b>
 </ng-template>
 <ng-template #popContent let-order="order">
   <table>
@@ -265,7 +270,7 @@
         QuoteQty
       </td>
       <td>
-        <b>{{order.cummulativeQuoteQty}}</b>
+        <b>{{order?.cummulativeQuoteQty}}</b>
       </td>
     </tr>
     <tr>
@@ -273,7 +278,7 @@
         Status
       </td>
       <td>
-        <b>{{order.status}}</b>
+        <b>{{order?.status}}</b>
       </td>
     </tr>
     <tr>
@@ -281,7 +286,7 @@
         Price
       </td>
       <td>
-        <b>{{order.price}}</b>
+        <b>{{order?.price}}</b>
       </td>
     </tr>
     <tr>
@@ -289,7 +294,7 @@
         Quantity
       </td>
       <td>
-        <b>{{order.executedQty}}</b>
+        <b>{{order?.executedQty}}</b>
       </td>
     </tr>
     <tr>
@@ -297,7 +302,7 @@
         Fee
       </td>
       <td>
-        <b>{{order.fee}}</b>
+        <b>{{order?.fee}}</b>
       </td>
     </tr>
   </table>
