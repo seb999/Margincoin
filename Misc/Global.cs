@@ -17,6 +17,7 @@ public static class Global
     internal static bool isTradingOpen = false;
     public static bool testBuyLimit = false;
     public static bool isMarketOrder = false;
+    public static bool isDbBusy = false;
     
     //Others
     internal static int? nbrOfSymbol;

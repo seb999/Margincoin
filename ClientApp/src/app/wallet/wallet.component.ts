@@ -110,9 +110,6 @@ export class WalletComponent {
     this.logList = await this.tradeService.getLog();
     this.myAccount = await this.tradeService.binanceAccount();
     this.interval = await this.tradeService.getInterval();
-   
-    this.calculateProfit();
-    this.calculateBalance();
 
     //Open listener on my API SignalR
     this.signalRService.startConnection();
@@ -140,11 +137,17 @@ export class WalletComponent {
         let binanceOrder = this.serverMsg.order;
         if (this.orderPopOver.isOpen()) {
           setTimeout(() => { this.openPopOver(this.orderPopOver, binanceOrder); }, 7000);
-          setTimeout(() => { this.closePopOver(this.orderPopOver); }, 11000);
+          setTimeout(() => { 
+            this.closePopOver(this.orderPopOver); 
+            this.refreshUI();
+          }, 11000);
         }
         else {
           this.openPopOver(this.orderPopOver, binanceOrder);
-          setTimeout(() => { this.closePopOver(this.orderPopOver); }, 7000);
+          setTimeout(() => { 
+            this.closePopOver(this.orderPopOver); 
+            this.refreshUI();
+          }, 7000);
         }
       }
 
@@ -183,6 +186,9 @@ export class WalletComponent {
         setTimeout(() => { this.showMessageError = false }, 5000);
       }
     });
+
+    this.calculateProfit();
+    this.calculateBalance();
   }
 
   async refreshUI() {
@@ -255,7 +261,6 @@ export class WalletComponent {
   async trade(): Promise<any> {
     this.isTradeOpen = true;
     this.tradeService.setTradeParam(this.isTradeOpen);
-    //We start trading
     const httpSetting: HttpSettings = {
       method: 'GET',
       url: location.origin + '/api/AlgoTrade/MonitorMarket',

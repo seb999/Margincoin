@@ -8,6 +8,7 @@ namespace MarginCoin.Model
         public int Id { get; set; }
         public double BuyOrderId { get; set; }
         public double SellOrderId { get; set; }
+        public string OrderDate { get; set; }
         public string Symbol { get; set; }
         public string Side { get; set; }
         public string Status { get; set; }

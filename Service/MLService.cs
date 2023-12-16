@@ -43,7 +43,7 @@ namespace MarginCoin.Service
         {
             _timeElapseCallDelegate = timeElapseDelegate;
             isFirstTrigger = true;
-            MLTimer.Interval = 1200000;
+            MLTimer.Interval =  60000;
             MLTimer.Elapsed += new ElapsedEventHandler(MLTimer_Elapsed);
             MLTimer.Start();
         }

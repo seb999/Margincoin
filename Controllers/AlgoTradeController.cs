@@ -55,7 +55,7 @@ namespace MarginCoin.Controllers
         ////////////////////////////////////////////////////////////////////////////////////////////////////////
         #region Settings
 
-        private readonly double orderOffset = 0.03;
+        private readonly double orderOffset = 0.05;
         private readonly string spotTickerTime = "!ticker_4h@arr"; // !ticker@arr  or  !ticker_1h@arr 
         private readonly string interval = "30m";   //1h seem to give better result
         private readonly string maxCandle = "50";
@@ -128,8 +128,6 @@ namespace MarginCoin.Controllers
             {
                 _mlService.InitML(UpdateSymbolWeTrade);
                 _watchDog.InitWatchDog(RestartWebSocket);
-                // _garbagePoolService.InitGarbagePool(CheckBinancePool);
-
             }
             else
             {
@@ -146,7 +144,7 @@ namespace MarginCoin.Controllers
             }
 
             //add open order symbol not in SymbolWeTrade list
-            foreach (var order in _orderService.GetActiveOrder(_appDbContext))
+            foreach (var order in _orderService.GetActiveOrder())
             {
                 if (Global.SymbolWeTrade.SingleOrDefault(p => p.SymbolName == order.Symbol) == null)
                 {
@@ -169,7 +167,7 @@ namespace MarginCoin.Controllers
             Order myOrder = _appDbContext.Order.Where(p => p.Id == id).Select(p => p).FirstOrDefault();
             if (myOrder == null) return;
 
-            var orderId = myOrder.Side == "BUY" ?  myOrder.BuyOrderId : myOrder.SellOrderId;
+            var orderId = myOrder.Side == "BUY" ? myOrder.BuyOrderId : myOrder.SellOrderId;
 
             if (myOrder.Status == "NEW")
             {
@@ -178,9 +176,9 @@ namespace MarginCoin.Controllers
             else
             {
                 if (Global.isMarketOrder == true)
-                    _orderService.SellMarket(myOrder, "by user", _appDbContext);
+                    _orderService.SellMarket(myOrder, "by user");
                 else
-                    _orderService.SellLimit(myOrder, Global.marketStreamOnSpot, "by user", _appDbContext);
+                    _orderService.SellLimit(myOrder, Global.marketStreamOnSpot.SingleOrDefault(p => p.s == myOrder.Symbol), "by user");
             }
         }
 
@@ -217,7 +215,7 @@ namespace MarginCoin.Controllers
             _hub.Clients.All.SendAsync(MyEnum.BinanceHttpError.WebSocketStopped.ToString());
         }
 
-        public async void OpenWebSocketOnSymbol(Symbol symbol)
+        public void OpenWebSocketOnSymbol(Symbol symbol)
         {
             _binanceService.GetCandles(symbol.SymbolName, ref Global.candleMatrix);
             _webSocket.ws = new MarketDataWebSocket($"{symbol.SymbolName.ToLower()}@kline_{interval}");
@@ -247,9 +245,9 @@ namespace MarginCoin.Controllers
 
             try
             {
-                await _webSocket.ws.ConnectAsync(CancellationToken.None);
-                string message = await onlyOneMessage.Task;
-                await _webSocket.ws.DisconnectAsync(CancellationToken.None);
+                _webSocket.ws.ConnectAsync(CancellationToken.None);
+                var message = onlyOneMessage.Task;
+                _webSocket.ws.DisconnectAsync(CancellationToken.None);
             }
             catch
             {
@@ -309,7 +307,7 @@ namespace MarginCoin.Controllers
             Global.candleMatrix = Global.candleMatrix.OrderByDescending(p => p.Last().P).ToList();
         }
 
-        public async Task<string> OpenWebSocketOnSpot()
+        public async Task OpenWebSocketOnSpot()
         {
             _webSocket.ws1 = new MarketDataWebSocket(spotTickerTime);
             var onlyOneMessage = new TaskCompletionSource<string>();
@@ -356,18 +354,6 @@ namespace MarginCoin.Controllers
                          if (Global.isTradingOpen)
                          {
                              await ProcessMarketMatrix();
-
-                             //Used for debuging
-                             //  for (int i = 0; i < Global.candleMatrix.Count; i++)
-                             //  {
-                             //      for (int j = 0; j < Global.candleMatrix[i].Count; j++)
-                             //      {
-                             //          if (Global.candleMatrix[i][j].s != Global.candleMatrix[i][0].s)
-                             //          {
-                             //              Console.WriteLine("candles for " + Global.candleMatrix[i][0].s + " incoherante");
-                             //          }
-                             //      }
-                             //  }
                          }
                      }
                      //return Task.CompletedTask;
@@ -378,7 +364,7 @@ namespace MarginCoin.Controllers
             string message = await onlyOneMessage.Task;
             await _webSocket.ws1.DisconnectAsync(CancellationToken.None);
 
-            return "";
+            return;
         }
 
         public void UpdateSymbolWeTrade()
@@ -400,19 +386,19 @@ namespace MarginCoin.Controllers
         /////////////////////////////////-----------ALGORYTME----------/////////////////////////////////////////
         ////////////////////////////////////////////////////////////////////////////////////////////////////////
         #region Algo
-        private async Task<string> ProcessMarketMatrix()
+        private async Task ProcessMarketMatrix()
         {
             try
             {
-                await ReviewPendingOrder();
+                ReviewPendingOrder();
 
                 //Review open orders
-                foreach (var item in _orderService.GetActiveOrder(_appDbContext))
+                foreach (var item in _orderService.GetActiveOrder())
                 {
-                    ReviewOpenTrade(item.Symbol);
+                    ReviewOpenTrade(marketStreamOnSpot, item.Symbol);
                 }
 
-                if (_orderService.GetActiveOrder(_appDbContext).Count < maxOpenTrade)
+                if (_orderService.GetActiveOrder().Count < maxOpenTrade)
                 {
                     foreach (var symbolCandelList in Global.candleMatrix.Take(10).ToList())
                     {
@@ -421,12 +407,12 @@ namespace MarginCoin.Controllers
                 }
 
                 await _hub.Clients.All.SendAsync("trading", JsonSerializer.Serialize(marketStreamOnSpot));
-                return "";
+                return;
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, $"ProcessMarketMatrix failled");
-                return "";
+                return;
             }
             finally
             {
@@ -443,9 +429,9 @@ namespace MarginCoin.Controllers
                 return;
             }
 
-            var activeOrder = _orderService.GetActiveOrder(_appDbContext).FirstOrDefault(p => p.Symbol == symbolSpot.s);
+            var activeOrder = _orderService.GetActiveOrder().FirstOrDefault(p => p.Symbol == symbolSpot.s);
             var symbolCandle = Global.candleMatrix.Where(p => p.Last().s == symbolSpot.s).ToList().FirstOrDefault();
-            var activeOrderCount = _orderService.GetActiveOrder(_appDbContext).Count();
+            var activeOrderCount = _orderService.GetActiveOrder().Count();
 
             if (activeOrder == null && activeOrderCount < maxOpenTrade)
             {
@@ -457,7 +443,15 @@ namespace MarginCoin.Controllers
                     }
 
                     Console.WriteLine($"Opening trade on {symbolSpot.s}");
-                    _orderService.BuyMarket(symbolSpot, symbolCandle, _appDbContext);
+
+                    if (Global.isMarketOrder == true)
+                    {
+                        _orderService.BuyMarket(symbolSpot, symbolCandle);
+                    }
+                    else
+                    {
+                        _orderService.BuyLimit(symbolSpot, symbolCandle);
+                    }
                 }
 
 
@@ -465,8 +459,7 @@ namespace MarginCoin.Controllers
                 {
                     Global.testBuyLimit = false;
                     Console.WriteLine($"Opening trade on {symbolSpot.s}");
-                    _orderService.BuyLimit(symbolSpot, symbolCandle, _appDbContext);
-                    //BuyMarket(symbolSpot, symbolCandle);
+                    _orderService.BuyLimit(symbolSpot, symbolCandle);
                 }
 
                 if (symbolSpot.P < 0 && IsShort(symbolSpot, symbolCandle))
@@ -537,61 +530,73 @@ namespace MarginCoin.Controllers
             return true;
         }
 
-        private void ReviewOpenTrade(string symbol)
+        private void ReviewOpenTrade(List<MarketStream> marketStreamList, string symbol)
         {
-            //we have a problem with sync and killed method called even trade positive
-            //Let's try with an external object
-            // lock (Global.candleMatrix.ToList())  instead of that
             lock (candleMatrixLock)
             {
-                var activeOrder = _orderService.GetActiveOrder(_appDbContext).Where(p => p.Symbol == symbol).Select(p => p).FirstOrDefault();
-                var symbolCandle = Global.candleMatrix.ToList().Where(p => p.First().s == symbol).Select(p => p.Last()).FirstOrDefault();
-                var lastPrice = symbolCandle.c;
-                var highPrice = symbolCandle.h;
+                var activeOrder = _orderService.GetActiveOrder().FirstOrDefault(p => p.Symbol == symbol);
+                var symbolCandle = Global.candleMatrix.FirstOrDefault(p => p.Last().s == symbol)?.Last();
+                var lastPrice = symbolCandle?.c;
+                var highPrice = symbolCandle?.h;
 
-                if (activeOrder != null)
+                if (activeOrder == null || symbolCandle == null)
+                    return;
+
+                // Extracted method for logging and selling
+                void LogAndSell(string message)
                 {
-                    TimeSpan span = DateTime.Now.Subtract(DateTime.Parse(activeOrder.OpenDate));
-                    if (activeOrder.HighPrice <= activeOrder.OpenPrice && span.TotalMinutes > 15)
+                    Console.WriteLine($"Close trade: {message}");
+                    if (Global.isMarketOrder)
                     {
-                        Console.WriteLine("Close trade : stop lose ");
-                        _orderService.SellMarket(activeOrder, "killed", _appDbContext);
-                        return;
+                        _orderService.SellMarket(activeOrder, message);
                     }
-
-                    //Check stop lose
-                    if (lastPrice < activeOrder.StopLose)
+                    else
                     {
-                        Console.WriteLine("Close trade : stop lose ");
-                        _orderService.SellMarket(activeOrder, "stop lose", _appDbContext);
-                        return;
+                        _orderService.SellLimit(activeOrder, Global.marketStreamOnSpot.FirstOrDefault(p => p.s == symbol), message);
                     }
-
-                    //take profit
-                    if (lastPrice <= activeOrder.TakeProfit && lastPrice > activeOrder.OpenPrice)
-                    {
-                        Console.WriteLine($"Close trade : take profit (price : {lastPrice} < take profit {activeOrder.TakeProfit})");
-
-                        _orderService.SellMarket(activeOrder, "Take profit", _appDbContext);
-                        return;
-                    }
-
-                    //AI close
-                    if (_mlService.MLPredList.ToList().Where(p => p.Symbol == activeOrder.Symbol).Select(p => p.PredictedLabel).FirstOrDefault() == "down"
-                     && _mlService.MLPredList.ToList().Where(p => p.Symbol == activeOrder.Symbol).Select(p => p.Score[0]).FirstOrDefault() >= 0.97)
-                    {
-                        Console.WriteLine("Close trade : AI take profit ");
-
-                        _orderService.SellMarket(activeOrder, "AI sold", _appDbContext);
-                        return;
-                    }
-
-                    //_orderService.UpdateTakeProfit(Global.candleMatrix.ToList().Where(p => p.Last().s == symbol).FirstOrDefault(), activeOrder, takeProfitPercentage, _appDbContext);
-
-                   // _orderService.UpdateStopLoss(Global.candleMatrix.ToList().Where(p => p.Last().s == symbol).FirstOrDefault(), activeOrder, _appDbContext);
-
-                   // _orderService.SaveHighLow(Global.candleMatrix.ToList().Where(p => p.Last().s == symbol).FirstOrDefault(), activeOrder, _appDbContext);
                 }
+
+                // Check time and close if necessary
+                TimeSpan span = DateTime.Now.Subtract(DateTime.Parse(activeOrder.OpenDate));
+                if (activeOrder.HighPrice <= activeOrder.OpenPrice && span.TotalMinutes > 15)
+                {
+                    LogAndSell("killed");
+                    return ;
+                }
+
+                // Check stop loss
+                if (lastPrice < activeOrder.StopLose)
+                {
+                    LogAndSell("stop lose");
+                    return;
+                }
+
+                // Take profit
+                if (lastPrice <= activeOrder.TakeProfit && lastPrice > activeOrder.OpenPrice)
+                {
+                    Console.WriteLine($"Close trade: take profit (price: {lastPrice} < take profit {activeOrder.TakeProfit})");
+                    LogAndSell("Take profit");
+                    return;
+                }
+
+                // AI close
+                var predictedLabel = _mlService.MLPredList.FirstOrDefault(p => p.Symbol == activeOrder.Symbol)?.PredictedLabel;
+                var score = _mlService.MLPredList.FirstOrDefault(p => p.Symbol == activeOrder.Symbol)?.Score[0];
+
+                if (predictedLabel == "down" && score >= 0.97)
+                {
+                    LogAndSell("AI take profit");
+                    return;
+                }
+
+                if (Global.isDbBusy)
+                    return;
+
+                // Reload only the required properties
+                _appDbContext.Entry(activeOrder).Reload();
+                _orderService.UpdateTakeProfit(Global.candleMatrix.FirstOrDefault(p => p.Last().s == symbol), activeOrder, takeProfitPercentage);
+                _orderService.UpdateStopLoss(Global.candleMatrix.FirstOrDefault(p => p.Last().s == symbol), activeOrder);
+                _orderService.SaveHighLow(Global.candleMatrix.FirstOrDefault(p => p.Last().s == symbol), activeOrder);
             }
         }
 
@@ -600,124 +605,79 @@ namespace MarginCoin.Controllers
             return true;
         }
 
-        private void UpdateSellOrderDb(Order dbOrder, BinanceOrder binanceOrder, string closeType)
-        {
-            try
-            {
-                dbOrder.SellOrderId = binanceOrder.orderId;
-                dbOrder.Status = binanceOrder.status;
-                dbOrder.Side = binanceOrder.side;
-                dbOrder.ClosePrice = TradeHelper.CalculateAvragePrice(binanceOrder);
-                dbOrder.QuantitySell = Helper.ToDouble(binanceOrder.executedQty);
-                if (closeType != "") dbOrder.Type = closeType;
-
-                _appDbContext.Order.Update(dbOrder);
-                _appDbContext.SaveChanges();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex);
-            }
-        }
-
-        private void UpdateBuyOrderDb(Order dbOrder, BinanceOrder binanceOrder)
-        {
-            var orderPrice = TradeHelper.CalculateAvragePrice(binanceOrder);
-
-            dbOrder.Status = binanceOrder.status;
-            dbOrder.OpenPrice = orderPrice;
-            dbOrder.OpenPrice = orderPrice;
-            dbOrder.LowPrice = orderPrice;
-            dbOrder.TakeProfit = orderPrice * (1 - (Global.takeProfitPercentage / 100));
-            dbOrder.StopLose = orderPrice * (1 - (Global.stopLossPercentage / 100));
-            dbOrder.QuantityBuy = Helper.ToDouble(binanceOrder.executedQty);
-
-            _appDbContext.Order.Update(dbOrder);
-            _appDbContext.SaveChanges();
-        }
-
-        private async Task<string> ReviewPendingOrder()
+        private void ReviewPendingOrder()
         {
             if (i < 5)
             {
                 i++;
-                return "";
+                return;
             }
             else
             {
                 i = 0;
-                await CheckSellOrder();
-                await CheckBuyOrder();
-                return "";
+                CheckSellOrder();
+                CheckBuyOrder();
+                return;
             }
         }
 
-        private async Task<string> CheckSellOrder()
+        private void CheckSellOrder()
         {
             //1 read on local db pending order buy or sell
-            var dbOrderList = _appDbContext.Order.Where(p => p.Status != "FILLED" && p.Side == "SELL").Select(p => p).ToList();
+            var dbOrderList = _appDbContext.Order.Where(p => p.Status != "FILLED" && p.Side == "SELL" && p.SellOrderId != 0).Select(p => p).ToList();
 
             //No order in the pool
-            if (!dbOrderList.Any()) return "";
+            if (!dbOrderList.Any()) return;
 
             //For each pending order in local db
             foreach (var dbOrder in dbOrderList)
             {
-               // _appDbContext.Entry(dbOrder).State = EntityState.Detached;
-                 _appDbContext.Entry(dbOrder).Reload();
-                
-                if(dbOrder.SellOrderId == 0) 
-                    return "";
-                //we get the order status from binance pool
+                _appDbContext.Entry(dbOrder).Reload();   //we reload the entity from the database to get last changes !!!!
+
                 var myBinanceOrder = _binanceService.OrderStatus(dbOrder.Symbol, dbOrder.SellOrderId);
-                var storedDate = DateTime.ParseExact(dbOrder.OpenDate, "dd/MM/yyyy HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture);
+                var storedDate = DateTime.ParseExact(dbOrder.OrderDate, "dd/MM/yyyy HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture);
                 var currentDateMinusOffset = DateTime.Now.AddSeconds(-50);
                 var orderStatus = myBinanceOrder.status;
 
-                if ((orderStatus == "NEW" || orderStatus == "PARTIALLY_FILLED") && storedDate.CompareTo(currentDateMinusOffset) <= 0)
+                if ((orderStatus == "NEW"
+                || orderStatus == "PARTIALLY_FILLED")
+                && storedDate.CompareTo(currentDateMinusOffset) <= 0)
                 {
                     _binanceService.CancelOrder(myBinanceOrder.symbol, myBinanceOrder.orderId);
                 }
 
-                if (orderStatus == "FILLED" || orderStatus == "PARTIALLY_FILLED")
+                if (orderStatus == "PARTIALLY_FILLED")
                 {
-                    //_orderService.UpdateSellOrderDb(order, myBinanceOrder, "", _appDbContext);
-                    UpdateSellOrderDb(dbOrder, myBinanceOrder, "");
-                    if (orderStatus == "FILLED")
-                        _orderService.CloseOrderDb(dbOrder, myBinanceOrder, _appDbContext);
-
+                    _orderService.UpdateSellOrderDb(dbOrder, myBinanceOrder, "");
                 }
 
-                if (orderStatus == "CANCELED" || orderStatus == "REJECTED" || orderStatus == "EXPIRED")
+                if (orderStatus == "FILLED")
                 {
-                    decimal.TryParse(myBinanceOrder.executedQty, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out decimal executedQty);
+                    _orderService.CloseOrderDb(dbOrder, myBinanceOrder);
+                }
 
-                    if (executedQty == 0)
-                    {
-                        _orderService.RecycleOrderDb(dbOrder.Id, _appDbContext);
-                        Global.onHold.Remove(dbOrder.Symbol);
-                    }
-                    else
-                    {
-                        //_orderService.UpdateSellOrderDb(order, myBinanceOrder, "", _appDbContext);
-                        UpdateSellOrderDb(dbOrder, myBinanceOrder, "");
-                        Global.onHold.Remove(dbOrder.Symbol);
-                    }
+                if (orderStatus == "CANCELED"
+                || orderStatus == "REJECTED"
+                || orderStatus == "EXPIRED")
+                {
+                    _orderService.UpdateSellOrderDb(dbOrder, myBinanceOrder, "");
+                    _orderService.RecycleOrderDb(dbOrder.Id);
+                    Global.onHold.Remove(dbOrder.Symbol);
                 }
             }
 
-            await _hub.Clients.All.SendAsync("refreshUI");
-            return "";
+            _hub.Clients.All.SendAsync("refreshUI");
+            return;
         }
 
-        private async Task<string> CheckBuyOrder()
+        private async Task CheckBuyOrder()
         {
             //1 read on local db pending order buy or sell
             var dbOrderList = _appDbContext.Order.Where(p => p.Status != "FILLED" && p.Side == "BUY").Select(p => p).ToList();
 
             //No order in the pool
             if (!dbOrderList.Any())
-                return "";
+                return;
 
             //For each pending order in local db
             foreach (var dbOrder in dbOrderList)
@@ -735,8 +695,7 @@ namespace MarginCoin.Controllers
 
                 if (orderStatus == "FILLED" || orderStatus == "PARTIALLY_FILLED")
                 {
-                    //_orderService.UpdateBuyOrderDb(order, myBinanceOrder, _appDbContext);
-                    UpdateBuyOrderDb(dbOrder, myBinanceOrder);
+                    _orderService.UpdateBuyOrderDb(dbOrder, myBinanceOrder);
                 }
 
                 if (orderStatus == "CANCELED" || orderStatus == "REJECTED" || orderStatus == "EXPIRED")
@@ -745,19 +704,18 @@ namespace MarginCoin.Controllers
                     if (executedQty == 0)
                     {
                         Global.onHold.Remove(dbOrder.Symbol);
-                        _orderService.DeleteOrderDb(dbOrder.Id, _appDbContext);
+                        _orderService.DeleteOrderDb(dbOrder.Id);
                     }
                     else
                     {
-                        //_orderService.UpdateBuyOrderDb(order, myBinanceOrder, _appDbContext);
-                        UpdateBuyOrderDb(dbOrder, myBinanceOrder);
-                        _orderService.RecycleOrderDb(dbOrder.Id, _appDbContext);
+                        _orderService.UpdateBuyOrderDb(dbOrder, myBinanceOrder);
+                        _orderService.RecycleOrderDb(dbOrder.Id);
                     }
                 }
             }
 
             await _hub.Clients.All.SendAsync("refreshUI");
-            return "";
+            return;
         }
 
         #endregion
