@@ -62,9 +62,9 @@ namespace MarginCoin.Controllers
         private readonly int prevCandleCount = 2;
         private readonly double stopLossPercentage = 2;
         private readonly double takeProfitPercentage = 0.5;
-        private readonly int maxOpenTrade = 5;
+        private readonly int maxOpenTrade = 3;
         //Max amount to invest for each trade
-        private readonly int quoteOrderQty = 500;
+        private readonly int quoteOrderQty = 1500;
         //Select short list of symbol or full list(on test server on 6 symbols allowed)
         private readonly int nbrOfSymbol = 18;   //Not below 10 as we trade later on the 10 best of this list
 
@@ -268,7 +268,7 @@ namespace MarginCoin.Controllers
                 h = stream.k.h,
                 l = stream.k.l,
                 c = stream.k.c,
-                P = TradeHelper.CalculPourcentChange(stream.k.c, candleList, interval, 4),
+                P = TradeHelper.CalculPourcentChange(stream.k.c, candleList, interval, 2),
             };
 
             if (!stream.k.x)
@@ -369,15 +369,15 @@ namespace MarginCoin.Controllers
 
         public void UpdateSymbolWeTrade()
         {
-            // foreach (var symbol in marketStreamOnSpot.Take(3))
-            // {
-            //     if (Global.SymbolWeTrade.Where(p => p.SymbolName == symbol.s).FirstOrDefault() == null)
-            //     {
-            //         Symbol hotSymbol = Global.SymbolBaseList.Where(p => p.SymbolName == symbol.s).FirstOrDefault();
-            //         OpenWebSocketOnSymbol(hotSymbol);
-            //         Global.SymbolWeTrade.Add(hotSymbol);
-            //     }
-            // }
+            foreach (var symbol in marketStreamOnSpot.Take(3))
+            {
+                if (Global.SymbolWeTrade.Where(p => p.SymbolName == symbol.s).FirstOrDefault() == null)
+                {
+                    Symbol hotSymbol = Global.SymbolBaseList.Where(p => p.SymbolName == symbol.s).FirstOrDefault();
+                    OpenWebSocketOnSymbol(hotSymbol);
+                    Global.SymbolWeTrade.Add(hotSymbol);
+                }
+            }
         }
 
         #endregion

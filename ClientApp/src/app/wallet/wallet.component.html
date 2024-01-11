@@ -1,232 +1,225 @@
-<!-- Button -->
 <div class="row">
+  <!-- Main Column -->
   <div class="col-9">
-    <div class="row">
+    <div class="row mt-2">
       <div class="col-3">
-        <button *ngIf="!isTradeOpen" class="btn" (click)="trade()">
-          <span style="color: green">
-            <i class="fa-solid fa-play fa-xl"></i>
+        <button *ngIf="!isTradeOpen" class="btn btn-success btn-sm mr-1" (click)="trade()">
+          <span>
+            <i class="fa-solid fa-play"></i> Start
           </span>
         </button>
-        <button *ngIf="isTradeOpen" class="btn" disabled>
-          <span style="color: green">
-            <i class="fa-solid fa-play fa-xl"></i>
+        <button *ngIf="isTradeOpen" class="btn btn-success btn-sm mr-1" disabled>
+          <span>
+            <i class="fa-solid fa-play"></i> Start
           </span>
         </button>
-
-        <button class="btn" style="padding: 0px;padding:0px mr-10" (click)="stopTrade()">
-          <span style="color: orange">
-            <i class="fa-solid fa-pause fa-xl"></i>
+        <button class="btn btn-warning btn-sm mr-1" (click)="stopTrade()">
+          <span>
+            <i class="fa-solid fa-pause fa-xl"></i> Pause
           </span>
         </button>
       </div>
-
       <div class="col-1">
         <div *ngIf="showMessageInfo" class="alert alert-warning"
-          style="height: 38px;padding-top: 7px;margin-bottom: 0px;width: 100px;" role="alert"> Trading
+          style="height: 31px;padding-top: 4px;margin-bottom: 0px;width: 100px;" role="alert"> Trading
         </div>
       </div>
-
       <div class="col-3">
         <div *ngIf="showMessageError" class="alert alert-danger"
-          style="height: 38px;padding-top: 7px;margin-bottom: 0px;width: 190px;" role="alert"> {{messageError}}
+          style="height: 31px;padding-top: 4px;margin-bottom: 0px;width: 190px;" role="alert"> {{messageError}}
+        </div>
+        <div *ngIf="showMessageExport" class="alert alert-info"
+          style="height: 31px;padding-top: 4px;margin-bottom: 0px;width: 190px;" role="alert"> {{messageExport}}
         </div>
       </div>
-
-      <div class="input-group col-5">
-        <input class="form-control sm" placeholder="yyyy-mm-dd" name="dp" [(ngModel)]="model" ngbDatepicker
+      <div class="input-group col-5 align-items-end justify-content-end">
+        <div style="height: 31px;padding-top: 4px;margin-bottom: 0px;width: 190px;color: white;" role="alert"> Balance
+          {{this.balance?.toFixed(0)}}
+        </div>
+        <input class="form-control sm custom-width" placeholder="yyyy-mm-dd" name="dp" [(ngModel)]="model" ngbDatepicker
           #d="ngbDatepicker" (dateSelect)="filterOrderList()">
-        <button class="btn btn-outline-secondary calendar btn-sm mr-1" (click)="d.toggle();filterOrderList();"
-          type="button"> <span style="color: orange"><i class="fa-solid fa-calendar-days"></i></span></button>
-        <button class="btn btn-warning btn-sm mr-1" (click)="model = today();filterOrderList()">Today</button>
-        <button *ngIf="isTradeOpen" class="btn btn-outline-warning btn-sm mr-1" (click)="debugBuy()">Test Buy Limit</button>
-        <button *ngIf="isTradeOpen" class="btn btn-outline-warning btn-sm mr-1" (click)="syncBinanceSymbol()">Binance sync</button>
-        <button *ngIf="!isTradeOpen" class="btn btn-outline-warning btn-sm mr-1" disabled>Test Limit Order</button>
-        <button *ngIf="!isTradeOpen" class="btn btn-outline-warning btn-sm mr-1" disabled>Binance sync</button>
+        <button class="btn btn-primary calendar btn-sm mr-1" (click)="d.toggle();filterOrderList();" type="button">
+          <span><i class="fa-solid fa-calendar-days"></i></span></button>
+        <button class="btn btn-primary btn-sm mr-1" (click)="model = today();filterOrderList()">Today</button>
       </div>
     </div>
 
-  </div>
+    <!-- Order table -->
+    <div class="row mr-1">
+      <table class="table table-sm mt-2 table-dark">
+        <thead class="thead">
+          <tr>
+            <th scope="col" id="last" class="tableTh" style="color: darkgray">Symbol</th>
+            <th scope="col" id="volume" class="tableTh" style="color: darkgray">Qty</th>
+            <th scope="col" id="volume" class="tableTh" style="color: darkgray">Open</th>
+            <th scope="col" id="volume" class="tableTh" style="color: darkgray">Close</th>
+            <th scope="col" id="volume" class="tableTh" style="color: darkgray">%</th>
+            <th scope="col" id="volume" class="tableTh" style="color: darkgray">Profit</th>
+            <th scope="col" id="volume" class="tableTh" style="color: darkgray">Best P.</th>
+            <th scope="col" id="volume" class="tableTh" style="color: darkgray">Open</th>
+            <th scope="col" id="volume" class="tableTh" style="color: darkgray">Close</th>
+            <th scope="col" id="volume" class="tableTh" style="color: darkgray">Type</th>
+            <th scope="col" id="volume" class="tableTh" style="color: darkgray">Rsi</th>
+            <th scope="col" id="volume" class="tableTh" style="color: darkgray">Status</th>
+            <th scope="col" id="volume" class="tableTh" style="color: darkgray"></th>
+            <th scope="col" id="volume" class="tableTh" style="color: darkgray"></th>
+            <th scope="col" id="volume" class="tableTh" style="color: darkgray">
+              <button class="btn" (click)="refreshOrderTable()" style="padding: 0px; margin: 0px;"><span
+                  style="color: orange"><i class="fa fa-arrows-rotate"></i>
+                </span></button>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let order of orderList" class="alert alert-warning" [ngClass]="{
+              'alert alert-warning': order.closeDate == null,
+              'alert alert-danger': order.status !== 'FILLED'
+            }">
+            <td>{{order.symbol}}</td>
+            <td *ngIf="!order.isClosed">{{(order.quantityBuy*order.openPrice).toFixed(0)}}/0000</td>
+            <td *ngIf="order.isClosed">
+              {{(order.quantityBuy*order.openPrice).toFixed(0)}}/{{(order.quantitySell*order.closePrice).toFixed(0)}}
+            </td>
+            <td><a href="#" (click)="binanceOrder(order.buyOrderId)">{{order.openPrice.toFixed(5)}}</a></td>
+            <td><a href="#" (click)="binanceOrder(order.sellOrderId)">{{order.closePrice.toFixed(5)}}</a></td>
+            <td *ngIf="order.closePrice==0">--</td>
+            <td *ngIf="order.closePrice==0">--</td>
+            <td *ngIf="(order.closePrice - order.openPrice) >=0 && order.closePrice!=0" style="color: limegreen;">{{
+              (((order.closePrice - order.openPrice) / (order.openPrice))*100).toFixed(2) }}</td>
+            <td *ngIf="(order.closePrice - order.openPrice) < 0 && order.closePrice!=0"
+              style="color: rgb(236, 44, 44);">
+              {{
+              (((order.closePrice - order.openPrice) / (order.openPrice))*100).toFixed(2) }}</td>
+            <td *ngIf="((order.closePrice - order.openPrice)*order.quantityBuy) >=0 && order.closePrice!=0"
+              style="color: limegreen;">{{((order.closePrice - order.openPrice)*order.quantityBuy).toFixed(2)}}
+            </td>
+            <td *ngIf="((order.closePrice - order.openPrice)*order.quantityBuy) < 0 && order.closePrice!=0"
+              style="color: rgb(236, 44, 44);">{{((order.closePrice -
+              order.openPrice)*order.quantityBuy).toFixed(2)}}</td>
 
-  <div class="col-1">
-    <mat-slide-toggle [(ngModel)]="isMarketOrder" [color]="color" (change)="changeOrderType()"> <b *ngIf="isMarketOrder">
-        <p style="color: white; padding-top: 13px;">MARKET</p>
-      </b> <b *ngIf="!isMarketOrder">
-        <p style="color: white; padding-top: 13px;">LIMIT</p>
-      </b>
-    </mat-slide-toggle>
-  </div>
-  <div class="col-1"> 
-    <mat-slide-toggle [(ngModel)]="isProd" [color]="color" (change)="changeTradeServer()"> <b *ngIf="isProd">
-      <p style="color: white; padding-top: 13px;">PROD</p>
-    </b> <b *ngIf="!isProd">
-      <p style="color: white; padding-top: 13px;">TEST</p>
-    </b>
-  </mat-slide-toggle>
-  </div>
-
-  <div class="col-1">
-    <button class="btn" (click)="clearChart()" style="padding-right: 10px;padding-right:0px; float: right;"><span
-        style="color: orange"> <i class="fa-solid fa-eraser"></i>
-      </span></button>
-
-    <button class="btn" (click)="isCollapsed = !isCollapsed" 
-      aria-controls="collapseExample" style="padding-left: 0px;padding-right:0px; float: right;"><span
-        style="color: orange"><i class="fa fa-flask"></i>
-      </span></button>
-  </div>
-</div>
-
-<div class="row">
-  <!-- Order table -->
-  <div class="col-9">
-    <table class="table table-sm mt-2 table-dark">
-      <thead class="thead-light">
-        <tr>
-          <th scope="col" id="last" class="tableTh ">Symbol</th>
-          <th scope="col" id="volume" class="tableTh">Qty</th>
-          <th scope="col" id="volume" class="tableTh">Open</th>
-          <th scope="col" id="volume" class="tableTh">Close</th>
-          <th scope="col" id="volume" class="tableTh">%</th>
-          <th scope="col" id="volume" class="tableTh">Profit</th>
-          <th scope="col" id="volume" class="tableTh">Best P.</th>
-          <th scope="col" id="volume" class="tableTh">Open</th>
-          <th scope="col" id="volume" class="tableTh">Close</th>
-          <th scope="col" id="volume" class="tableTh">Type</th>
-          <th scope="col" id="volume" class="tableTh">Rsi</th>
-          <th scope="col" id="volume" class="tableTh">Status</th>
-          <th scope="col" id="volume" class="tableTh"></th>
-          <th scope="col" id="volume" class="tableTh"></th>
-          <th scope="col" id="volume" class="tableTh">
-            <button class="btn" (click)="refreshOrderTable()"
-              style="padding-left: 0px;padding-right:0px; float: left;"><span style="color: orange"><i
-                  class="fa fa-arrows-rotate"></i>
-              </span></button>
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let order of orderList" class="alert alert-warning"
-        [ngClass]="{
-          'alert alert-warning': order.closeDate == null,
-          'alert alert-danger': order.status !== 'FILLED'
-        }">
-          <td>{{order.symbol}}</td>
-          <td *ngIf="!order.isClosed">{{(order.quantityBuy*order.openPrice).toFixed(0)}}/0000</td>
-          <td *ngIf="order.isClosed">{{(order.quantityBuy*order.openPrice).toFixed(0)}}/{{(order.quantitySell*order.closePrice).toFixed(0)}}</td>
-          <td>{{order.openPrice.toFixed(5)}}</td>
-          <td>{{order.closePrice.toFixed(5)}}</td>
-          <td *ngIf="order.closePrice==0">--</td>
-          <td *ngIf="order.closePrice==0">--</td>
-          <td *ngIf="(order.closePrice - order.openPrice) >=0 && order.closePrice!=0" style="color: limegreen;">{{
-            (((order.closePrice - order.openPrice) / (order.openPrice))*100).toFixed(2) }}</td>
-          <td *ngIf="(order.closePrice - order.openPrice) < 0 && order.closePrice!=0" style="color: rgb(236, 44, 44);">
-            {{
-            (((order.closePrice - order.openPrice) / (order.openPrice))*100).toFixed(2) }}</td>
-          <td *ngIf="((order.closePrice - order.openPrice)*order.quantityBuy) >=0 && order.closePrice!=0"
-            style="color: limegreen;">{{((order.closePrice - order.openPrice)*order.quantityBuy).toFixed(2)}}
-          </td>
-          <td *ngIf="((order.closePrice - order.openPrice)*order.quantityBuy) < 0 && order.closePrice!=0"
-            style="color: rgb(236, 44, 44);">{{((order.closePrice -
-            order.openPrice)*order.quantityBuy).toFixed(2)}}</td>
-         
             <td *ngIf="((order.highPrice - order.openPrice)*order.quantityBuy) < 0 && order.highPrice!=0"
-            style="color: rgb(236, 44, 44);">{{((order.highPrice -
-            order.openPrice)*order.quantityBuy).toFixed(2)}}
-          </td>
-          <td *ngIf="((order.highPrice - order.openPrice)*order.quantityBuy) >=0 && order.highPrice!=0"
-            style="color: limegreen;">{{((order.highPrice - order.openPrice)*order.quantityBuy).toFixed(2)}}
-          </td>
-          <td *ngIf="order.highPrice==0">--</td>
-          <td>{{order.openDate}}</td>
-          <td>{{order.closeDate}}</td>
-          <td>{{order.type}}</td>
-          <td>{{order.rsi.toFixed(2)}}</td>
-          <td>{{order.status}}</td>
-          <td>
-            <button class="btn" *ngIf="order.isClosed" (click)="closeTrade(order.id, order.closePrice);" disabled
-              style="padding-left: 0px;padding-right:0px"><span style="color: orange"><i class="far fa-trash-alt"></i>
-              </span></button>
-            <button class="btn" *ngIf="!order.isClosed" (click)="closeTrade(order.id, order.closePrice);"
-              style="padding-left: 0px;padding-right:0px"><span style="color: orange"><i class="far fa-trash-alt"></i>
-              </span></button>
-          </td>
-          <td>
-            <a [routerLink]="['/orderDetail', order.id]" target="_blank" class="btn"
-              style="padding-left: 0px;padding-right:0px"><span style="color: orange;">
-                <i class="fa-solid fa-chart-line"></i></span></a>
-          </td>
-          <td>
-            <button class="btn" (click)="showChart(order.symbol, order.id);"
-              style="padding-left: 0px;padding-right:0px"><span style="color: orange"><i
-                  class="fa-solid fa-chart-simple"></i> </span></button>
-          </td>
-        </tr>
-        <tr>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td><b>Total</b></td>
-          <td *ngIf="totalProfit >=0" style="color: limegreen;">{{totalProfit.toFixed(4)}}</td>
-          <td *ngIf="totalProfit < 0" style="color: rgb(255, 57, 57);">{{totalProfit.toFixed(4)}}</td>
-          <td *ngIf="totalBestProfit >= 0" style="color: limegreen;">{{totalBestProfit.toFixed(4)}}</td>
-          <td *ngIf="totalBestProfit < 0" style="color: rgb(255, 57, 57);">{{totalBestProfit.toFixed(4)}}</td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-        </tr>
-      </tbody>
-    </table>
+              style="color: rgb(236, 44, 44);">{{((order.highPrice -
+              order.openPrice)*order.quantityBuy).toFixed(2)}}
+            </td>
+            <td *ngIf="((order.highPrice - order.openPrice)*order.quantityBuy) >=0 && order.highPrice!=0"
+              style="color: limegreen;">{{((order.highPrice - order.openPrice)*order.quantityBuy).toFixed(2)}}
+            </td>
+            <td *ngIf="order.highPrice==0">--</td>
+            <td>{{order.openDate}}</td>
+            <td>{{order.closeDate}}</td>
+            <td>{{order.type}}</td>
+            <td>{{order.rsi.toFixed(2)}}</td>
+            <td>{{order.status}}</td>
+            <td>
+              <button class="btn" *ngIf="order.isClosed" (click)="closeTrade(order.id, order.closePrice);" disabled
+                style="padding: 0px; margin: 0px;"><span style="color: orange"><i class="far fa-trash-alt"></i>
+                </span></button>
+              <button class="btn" *ngIf="!order.isClosed" (click)="closeTrade(order.id, order.closePrice);"
+                style="padding: 0px; margin: 0px;"><span style="color: orange"><i class="far fa-trash-alt"></i>
+                </span></button>
+            </td>
+            <td>
+              <a [routerLink]="['/orderDetail', order.id]" target="_blank" class="btn"
+                style="padding: 0px; margin: 0px;"><span style="color: orange;">
+                  <i class="fa-solid fa-chart-line"></i></span></a>
+            </td>
+            <td>
+              <button class="btn" (click)="showChart(order.symbol, order.id);" style="padding: 0px; margin: 0px;"><span
+                  style="color: orange"><i class="fa-solid fa-chart-simple"></i> </span></button>
+            </td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td><b>Total</b></td>
+            <td *ngIf="totalProfit >=0" style="color: limegreen;">{{totalProfit.toFixed(4)}}</td>
+            <td *ngIf="totalProfit < 0" style="color: rgb(255, 57, 57);">{{totalProfit.toFixed(4)}}</td>
+            <td *ngIf="totalBestProfit >= 0" style="color: limegreen;">{{totalBestProfit.toFixed(4)}}</td>
+            <td *ngIf="totalBestProfit < 0" style="color: rgb(255, 57, 57);">{{totalBestProfit.toFixed(4)}}</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 
-  <div class="col-3">
-
-    <div class="row mt-2">
-      <select class="form-control" [(ngModel)]="interval" (change)="changeHighstockResolution(interval)">
-        <option *ngFor="let item of intervalList" [value]="item.value">{{ item.value }}
-        </option>
-      </select>
+  <!-- right side column -->
+  <div class="col-3" style="border-left: 1px solid gray;">
+    <div class="row">
+      <div class="col-12 mt-2">
+        <button class="btn btn-sm btn-primary mr-1 ml-0" (click)="isCollapsed = !isCollapsed"
+          aria-controls="collapseExample"><span><i class="fa fa-flask"></i> Logs
+          </span></button>
+        <button class="btn btn-sm btn-primary mr-1" (click)="clearChart()"><span><i class="fa-solid fa-eraser"></i>
+            Clear
+          </span></button>
+        <button *ngIf="isTradeOpen" class="btn btn-primary btn-sm mr-1" (click)="debugBuy()">Buy</button>
+        <button *ngIf="isTradeOpen" class="btn btn-primary btn-sm mr-1" (click)="syncBinanceSymbol()">Sync</button>
+        <button *ngIf="!isTradeOpen" class="btn btn-primary btn-sm mr-1" disabled>Buy</button>
+        <button *ngIf="!isTradeOpen" class="btn btn-primary btn-sm mr-1" disabled>Sync</button>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-4 mt-2 mb-2">
+        <mat-slide-toggle [(ngModel)]="isMarketOrder" [color]="color" (change)="changeOrderType()"> <span
+            *ngIf="isMarketOrder">
+            <p style="color: white; padding-top: 13px;">Market</p>
+          </span> <span *ngIf="!isMarketOrder">
+            <p style="color: white; padding-top: 13px;">Limit</p>
+          </span>
+        </mat-slide-toggle>
+      </div>
+      <div class="col-4 mt-2">
+        <mat-slide-toggle [(ngModel)]="isProd" [color]="color" (change)="changeTradeServer()"> <span *ngIf="isProd">
+            <p style="color: white; padding-top: 13px;">Prod</p>
+        </span> <span *ngIf="!isProd">
+            <p style="color: white; padding-top: 13px;">Test</p>
+          </span>
+        </mat-slide-toggle>
+      </div>
     </div>
 
-    <div class="row">
-      <table class="table table-sm mt-2 table-dark">
+    <!-- row for chart settings -->
+    <div class="row" style="border-top: 1px solid gray;">
+      <table class="table table-sm table-dark">
         <tbody>
           <tr>
             <td>
-              <a style="color: orange">Balance</a>
-            </td>
-            <td>{{this.balance?.toFixed(0)}}</td>
-            <td>
               <a style="color: orange">{{this.displaySymbol}}</a>
             </td>
-          </tr>
-
-          <tr>
             <td>
               <a style="color: orange">Slope</a>
             </td>
             <td>{{this.slope?.slope.toFixed(2)}}</td>
             <td>
-              <a style="color: orange">{{this.displaySymbol}}</a>
+              <select class="form-control" style="max-width:78px; max-height: 31px;" [(ngModel)]="interval"
+                (change)="changeHighstockResolution(interval)">
+                <option *ngFor="let item of intervalList" [value]="item.value">{{ item.value }}
+                </option>
+              </select>
             </td>
           </tr>
-
         </tbody>
       </table>
     </div>
 
+    <!-- row for chart -->
     <div class="row" *ngIf="chartOptions">
       <highcharts-chart #chart constructorType='stockChart' [Highcharts]="highcharts" [options]="chartOptions"
         [callbackFunction]="chartCallback" [update]="updateFlag" style="width: 100%; height: 100%; display: block;">
       </highcharts-chart>
     </div>
 
-    <div class="row">
-      <table class="table table-sm mt-2 table-dark">
+    <!-- Row for wallet  -->
+    <div class="row" style="border-top: 1px solid gray;">
+      <table class="table table-sm table-dark">
         <thead>
           <th>Asset</th>
           <th>Free</th>
@@ -235,7 +228,7 @@
           <th></th>
         </thead>
         <tbody>
-          <tr *ngFor="let asset of myAccount?.balances" >
+          <tr *ngFor="let asset of myAccount?.balances">
             <td>
               <a style="color: orange" [routerLink]="" (click)="showChart(asset.asset, null);">{{asset?.asset}}</a>
             </td>
@@ -246,9 +239,10 @@
                 style="padding: 0px;padding:0px"><span style="color: red"><i class="fa-solid fa-xmark"></i>
                 </span></button>
             </td>
-             <td>
+            <td>
               <button class="btn" (click)="openPopup(popupTemplate, asset?.asset, asset?.free);"
-                style="padding: 0px;padding:0px"><span style="color: orange"><i class="fa-solid fa-arrow-right-arrow-left"></i>
+                style="padding: 0px;padding:0px"><span style="color: orange"><i
+                    class="fa-solid fa-arrow-right-arrow-left"></i>
                 </span></button>
             </td>
           </tr>
@@ -320,26 +314,28 @@
   </div>
   <div class="modal-body">
     <form>
-     <div class="d-flex align-items-center">
-  <h4>{{this.popupSymbol}}</h4>
-  <h6 class="ml-2">{{this.popupSymbolPrice}} USDT</h6>
-</div>
-<div class="form-group row no-gutters">
-  <label for="amount" class="col-sm-3 col-form-label">Qty</label>
-  <div class="col-sm-9 d-flex align-items-center">
-    <input id="qty" class="form-control form-control-sm" name="qty" required [(ngModel)]="this.popupQty" (ngModelChange)="onPopupQtyChange()">
-    <button type="submit" class="btn btn-danger btn-sm ml-2" (click)="modal.close('sell')">Sell Market</button>
-  </div>
-</div>
-<div class="form-group row no-gutters">
-  <label for="amount" class="col-sm-3 col-form-label">Quote Qty</label>
-  <div class="col-sm-9 d-flex align-items-center">
-    <input id="quoteQty" class="form-control form-control-sm" name="quoteQty" required [(ngModel)]="this.popupQuoteQty" (ngModelChange)="onPopupQuoteQtyChange()">
-    <button type="submit" class="btn btn-success btn-sm ml-2" (click)="modal.close('buy')">Buy Market</button>
-  </div>
-</div>
+      <div class="d-flex align-items-center">
+        <h4>{{this.popupSymbol}}</h4>
+        <h6 class="ml-2">{{this.popupSymbolPrice}} USDT</h6>
+      </div>
+      <div class="form-group row no-gutters">
+        <label for="amount" class="col-sm-3 col-form-label">Qty</label>
+        <div class="col-sm-9 d-flex align-items-center">
+          <input id="qty" class="form-control form-control-sm" name="qty" required [(ngModel)]="this.popupQty"
+            (ngModelChange)="onPopupQtyChange()">
+          <button type="submit" class="btn btn-danger btn-sm ml-2" (click)="modal.close('sell')">Sell Market</button>
+        </div>
+      </div>
+      <div class="form-group row no-gutters">
+        <label for="amount" class="col-sm-3 col-form-label">Quote Qty</label>
+        <div class="col-sm-9 d-flex align-items-center">
+          <input id="quoteQty" class="form-control form-control-sm" name="quoteQty" required
+            [(ngModel)]="this.popupQuoteQty" (ngModelChange)="onPopupQuoteQtyChange()">
+          <button type="submit" class="btn btn-success btn-sm ml-2" (click)="modal.close('buy')">Buy Market</button>
+        </div>
+      </div>
 
-</form>
+    </form>
   </div>
   <div class="modal-footer">
     <button type="button" class="btn btn-secondary btn-sm" (click)="modal.dismiss()" ngbAutofocus>Cancel</button>

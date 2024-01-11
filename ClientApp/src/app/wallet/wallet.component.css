@@ -9,8 +9,14 @@
     /* background-color: rgb(49, 47, 47) !important; 
     color: white !important;  */
     width: 280px;
-   
   }
+
+  /* styles.css (or your style file) */
+.custom-width {
+  max-width: 130px;
+  max-height: 31px;
+}
+
 
 
   /* .my-custom-scrollbar {

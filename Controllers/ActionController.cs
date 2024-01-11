@@ -58,11 +58,11 @@ namespace MarginCoin.Controllers
         {
             if (Global.isProd)
             {
-                return _appDbContext.Symbol.Where(p => p.IsOnProd != 0 && p.Rank < 60).OrderBy(p => p.Rank).ToList();
+                return _appDbContext.Symbol.Where(p => p.IsOnProd != 0 && p.Rank < 100).OrderBy(p => p.Rank).ToList();
             }
             else
             {
-                return _appDbContext.Symbol.Where(p => p.IsOnTest != 0 && p.Rank < 60).OrderBy(p => p.Rank).ToList();
+                return _appDbContext.Symbol.Where(p => p.IsOnTest != 0 && p.Rank < 100).OrderBy(p => p.Rank).ToList();
             }
         }
 

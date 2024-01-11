@@ -71,7 +71,9 @@ export class WalletComponent {
   public serverMsg: ServerMsg;
   public showMessageInfo: boolean = false;
   public showMessageError: boolean = false;
+  public showMessageExport: boolean = false;
   public messageError: string;
+  public messageExport: string;
   public interval: any;
   public intervalList = [] as any;
   public isTradeOpen: boolean;
@@ -169,8 +171,8 @@ export class WalletComponent {
       }
 
       if (this.serverMsg.msgName == BackEndMessage.exportChart) {
-        this.showMessageError = true;
-        this.messageError = "Exporting charts...";
+        this.showMessageExport= true;
+        this.messageExport = "Exporting charts...";
         this.symbolList = this.serverMsg.tradeSymbolList;
         this.exportChart();
       }
@@ -339,7 +341,7 @@ export class WalletComponent {
       });
     }
     setTimeout(() => {
-      this.showMessageError = false
+      this.showMessageExport = false
       this.tradeService.mlUpdate();
     }, 2000);
   }
