@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation, ɵCodegenComponentFactoryResolver } from '@angular/core';
+import { Component, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute } from "@angular/router";
 import { WebSocket1Service } from '../service/websocket1.service';
 import { WebSocket2Service } from '../service/websocket2.service';
