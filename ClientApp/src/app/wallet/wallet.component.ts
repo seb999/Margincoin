@@ -21,7 +21,6 @@ import HC_exporting_offline from "highcharts/modules/offline-exporting";
 import HC_Data from "highcharts/modules/export-data";
 import { AppSetting } from '../app.settings';
 import { BinanceOrder } from '../class/binanceOrder';
-import { FindValueSubscriber } from 'rxjs/internal/operators/find';
 import { BinanceAccount } from '../class/binanceAccount';
 import { TradeService } from '../service/trade.service';
 

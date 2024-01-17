@@ -40,7 +40,7 @@ import { NgbModule, NgbPopover, NgbCollapseModule } from '@ng-bootstrap/ng-boots
     { path: 'tradingboard/:symbol', component: TradingboardComponent },
     { path: 'wallet', component: WalletComponent },
     { path: 'orderDetail/:id', component: OrderDetailComponent },
-], { relativeLinkResolution: 'legacy' })
+])
   ],
   providers: [TradingboardHelper, OrderDetailHelper,  AppSetting ],
   bootstrap: [AppComponent]
