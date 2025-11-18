@@ -104,13 +104,13 @@ export class WalletComponent {
     this.model = this.today();
     this.isTradeOpen = false;
     this.isProd = await this.tradeService.getActiveServer();
-    this.orderList = await this.tradeService.getAllOrder(this.model.day + "-" + this.model.month + "-" + this.model.year);
-    this.isMarketOrder = await this.tradeService.getOrderType();
-    this.symbolList = await this.tradeService.getSymbolList();
-    this.symbolPrice = await this.tradeService.getSymbolPrice();
-    this.logList = await this.tradeService.getLog();
-    this.myAccount = await this.tradeService.binanceAccount();
-    this.interval = await this.tradeService.getInterval();
+    // this.orderList = await this.tradeService.getAllOrder(this.model.day + "-" + this.model.month + "-" + this.model.year);
+    // this.isMarketOrder = await this.tradeService.getOrderType();
+    // this.symbolList = await this.tradeService.getSymbolList();
+    // this.symbolPrice = await this.tradeService.getSymbolPrice();
+    // this.logList = await this.tradeService.getLog();
+    // this.myAccount = await this.tradeService.binanceAccount();
+    // this.interval = await this.tradeService.getInterval();
 
     //Open listener on my API SignalR
     this.signalRService.startConnection();

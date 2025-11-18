@@ -15,6 +15,7 @@ export class TradeService {
       method: 'GET',
       url: location.origin + "/api/Globals/SetServer/" + isProd,
     };
+    console.log(httpSetting);
     return await this.httpService.xhr(httpSetting);
   }
 
@@ -23,6 +24,7 @@ export class TradeService {
       method: 'GET',
       url: location.origin + "/api/Globals/GetServer",
     };
+    console.log(httpSetting);
     return await this.httpService.xhr(httpSetting);
   }
 
