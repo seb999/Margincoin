@@ -12,6 +12,7 @@ using System;
 using MarginCoin.Misc;
 using Serilog;
 using MarginCoin.Service;
+using MarginCoin.Configuration;
 
 namespace MarginCoin
 {
@@ -27,15 +28,22 @@ namespace MarginCoin
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            //AA new instance of the class for each call
-            services.AddScoped<IBinanceService, BinanceService>();
-            services.AddScoped<IOrderService, OrderService>();
+            // Register configuration options
+            services.Configure<BinanceConfiguration>(Configuration.GetSection("Binance"));
+            services.Configure<CoinMarketCapConfiguration>(Configuration.GetSection("CoinMarketCap"));
+            services.Configure<TradingConfiguration>(Configuration.GetSection("Trading"));
 
-            //Same instance of the class during lifetime
+            // Singleton - same instance during lifetime (state & long-running services)
+            services.AddSingleton<ITradingState, TradingStateService>();
             services.AddSingleton<IMLService, MLService>();
             services.AddSingleton<IWatchDog, WatchDog>();
             services.AddSingleton<IWebSocket, WebSocket>();
-            
+
+            // Scoped - new instance per request
+            services.AddScoped<IBinanceService, BinanceService>();
+            services.AddScoped<IOrderService, OrderService>();
+            services.AddScoped<ISymbolService, SymbolService>();
+
             services.AddSignalR();
 
             services.AddControllers().AddJsonOptions(options =>
@@ -103,12 +111,6 @@ namespace MarginCoin
                 spa.Options.SourcePath = "ClientApp";
 
                 if (env.IsDevelopment())
-                {
-                    //spa.UseAngularCliServer(npmScript: "start");
-                    spa.UseProxyToSpaDevelopmentServer("http://localhost:4201");
-                }
-
-                if (env.IsProduction())
                 {
                     spa.UseProxyToSpaDevelopmentServer("http://localhost:4201");
                 }

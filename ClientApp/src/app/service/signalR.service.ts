@@ -11,13 +11,13 @@ export class SignalRService {
     private hubConnection: signalR.HubConnection;
     public eventMessage: EventEmitter<ServerMsg> = new EventEmitter();
 
-    public startConnection = () => {
+    public startConnection = (): Promise<void> => {
         this.hubConnection = new signalR.HubConnectionBuilder()
             .withUrl(location.origin + '/Signalr')
             .withAutomaticReconnect()
             .build();
 
-        this.hubConnection
+        return this.hubConnection
             .start()
             .then(() => console.log('Connection started'))
             .catch(err => console.log('Error while starting SignalR connection: ' + err))
@@ -88,6 +88,16 @@ export class SignalRService {
                 msgName: BackEndMessage.exportChart,
                 tradeSymbolList: JSON.parse(data)
             };
+            return this.eventMessage.emit(serverMsg);
+        });
+
+        this.hubConnection.on(BackEndMessage.accessFaulty, () => {
+            let serverMsg: ServerMsg = { msgName: BackEndMessage.accessFaulty };
+            return this.eventMessage.emit(serverMsg);
+        });
+
+        this.hubConnection.on(BackEndMessage.badRequest, () => {
+            let serverMsg: ServerMsg = { msgName: BackEndMessage.badRequest };
             return this.eventMessage.emit(serverMsg);
         });
     }

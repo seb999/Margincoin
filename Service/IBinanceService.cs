@@ -7,14 +7,6 @@ namespace MarginCoin.Service
 {
     public interface IBinanceService
     {
-        const string testPublicKey = "HsKWfKtktmw07gqsCyK1TJThULUnAivnFxF13vFUZf4WjLJXsbwmaPOIgw5rNAuQ";  //for https://testnet.binance.vision/
-        const string testSecretKey = "ncSzN6J4Efh8Xb53e1uYkuHCw9VFAemUKjCEPdwY5WtdbMJOAEzEIuP5qMrjKewX";
-        const string prodPublicKey = "gIDNZ9OsVIUbvFEuLgOhZ3XoQRnwrJ8krkp3TAR2dxQxwYErmKC6GOsMy50LYGWy";
-        static string prodSecretKey = Environment.GetEnvironmentVariable("BSK");
-
-        public static string secretKey = "";
-        public static string publicKey = "";
-        public static string host = "";
         string Interval { get; set; }
         string Limit { get; set; } 
 

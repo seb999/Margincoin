@@ -146,9 +146,8 @@ ClientApp/.angular/
 .env.local
 .env.*.local
 *.env
+appsettings.json
 appsettings.*.json
-!appsettings.json
-!appsettings.Development.json
 
 # User-specific secrets
 secrets.json

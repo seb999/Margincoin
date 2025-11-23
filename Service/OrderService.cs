@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using MarginCoin.Class;
 using MarginCoin.Model;
 using MarginCoin.Service;
+using MarginCoin.Configuration;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using MarginCoin.Misc;
@@ -10,23 +11,30 @@ using System.Text.Json;
 using Microsoft.AspNetCore.SignalR;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 public class OrderService : IOrderService
 {
-    private ApplicationDbContext _appDbContext;
-    private IBinanceService _binanceService;
-    private IHubContext<SignalRHub> _hub;
-    private ILogger _logger;
+    private readonly ApplicationDbContext _appDbContext;
+    private readonly IBinanceService _binanceService;
+    private readonly IHubContext<SignalRHub> _hub;
+    private readonly ILogger _logger;
+    private readonly ITradingState _tradingState;
+    private readonly TradingConfiguration _config;
 
     public OrderService(ApplicationDbContext appDbContext,
         IBinanceService binanceService,
         IHubContext<SignalRHub> hub,
-        ILogger<OrderService> logger)
+        ILogger<OrderService> logger,
+        ITradingState tradingState,
+        IOptions<TradingConfiguration> tradingConfig)
     {
         _appDbContext = appDbContext;
         _binanceService = binanceService;
         _hub = hub;
         _logger = logger;
+        _tradingState = tradingState;
+        _config = tradingConfig.Value;
     }
 
     #region trading methods
@@ -127,15 +135,15 @@ public class OrderService : IOrderService
             OpenDate = DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss"),
             OpenPrice = TradeHelper.CalculateAvragePrice(binanceOrder),
             LowPrice = TradeHelper.CalculateAvragePrice(binanceOrder),
-            TakeProfit = TradeHelper.CalculateAvragePrice(binanceOrder) * (1 - (Global.takeProfitPercentage / 100)),
-            StopLose = TradeHelper.CalculateAvragePrice(binanceOrder) * (1 - (Global.stopLossPercentage / 100)),
+            TakeProfit = TradeHelper.CalculateAvragePrice(binanceOrder) * (1 - (_config.TakeProfitPercentage / 100)),
+            StopLose = TradeHelper.CalculateAvragePrice(binanceOrder) * (1 - (_config.StopLossPercentage / 100)),
             ClosePrice = 0,
             HighPrice = 0,
             Volume = symbolSpot.v,
             QuantityBuy = Helper.ToDouble(binanceOrder.executedQty),
             QuantitySell = 0,
             IsClosed = 0,
-            Fee = Global.isProd ? binanceOrder.fills.Sum(p => Helper.ToDouble(p.commission)) : Math.Round((TradeHelper.CalculateAvragePrice(binanceOrder) * Helper.ToDouble(binanceOrder.executedQty)) / 100) * 0.1,
+            Fee = _tradingState.IsProd ? binanceOrder.fills.Sum(p => Helper.ToDouble(p.commission)) : Math.Round((TradeHelper.CalculateAvragePrice(binanceOrder) * Helper.ToDouble(binanceOrder.executedQty)) / 100) * 0.1,
             Symbol = binanceOrder.symbol,
             ATR = symbolCandle.Last().ATR,
             RSI = symbolCandle.Last().Rsi,
@@ -190,8 +198,8 @@ public class OrderService : IOrderService
         dbOrder.Status = binanceOrder.status;
         dbOrder.OpenPrice = orderPrice;
         dbOrder.LowPrice = orderPrice;
-        dbOrder.TakeProfit = orderPrice * (1 - (Global.takeProfitPercentage / 100));
-        dbOrder.StopLose = orderPrice * (1 - (Global.stopLossPercentage / 100));
+        dbOrder.TakeProfit = orderPrice * (1 - (_config.TakeProfitPercentage / 100));
+        dbOrder.StopLose = orderPrice * (1 - (_config.StopLossPercentage / 100));
         dbOrder.QuantityBuy = Helper.ToDouble(binanceOrder.executedQty);
 
         _appDbContext.Order.Update(dbOrder);
@@ -225,8 +233,7 @@ public class OrderService : IOrderService
     {
         //_appDbContext.Entry(dbOrder).Reload();
 
-        //Global.isDbBusy = true;
-        if (!Global.onHold.ContainsKey(dbOrder.Symbol)) Global.onHold.Add(dbOrder.Symbol, true);
+        if (!_tradingState.OnHold.ContainsKey(dbOrder.Symbol)) _tradingState.OnHold.Add(dbOrder.Symbol, true);
         dbOrder.Status = binanceOrder.status;
         dbOrder.ClosePrice = TradeHelper.CalculateAvragePrice(binanceOrder);
         dbOrder.QuantitySell = Helper.ToDouble(binanceOrder.executedQty);
@@ -235,7 +242,6 @@ public class OrderService : IOrderService
         dbOrder.CloseDate = DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss");
         _appDbContext.Order.Update(dbOrder);
         _appDbContext.SaveChanges();
-        //Global.isDbBusy = false;
     }
 
     #endregion
@@ -245,13 +251,13 @@ public class OrderService : IOrderService
     public void BuyLimit(MarketStream symbolSpot, List<Candle> symbolCandleList)
     {
         var (nbrDecimalPrice, nbrDecimalQty) = GetOrderParameters(symbolSpot);
-        var price = Math.Round(symbolSpot.c * (1 + Global.orderOffset / 100), nbrDecimalPrice);
-        var qty = Math.Round(Global.quoteOrderQty / price, nbrDecimalQty);
+        var price = Math.Round(symbolSpot.c * (1 + _config.OrderOffset / 100), nbrDecimalPrice);
+        var qty = Math.Round(_config.QuoteOrderQty / price, nbrDecimalQty);
 
         var myBinanceOrder = _binanceService.BuyLimit(symbolSpot.s, qty, price, MyEnum.TimeInForce.GTC);
         if (myBinanceOrder == null)
         {
-            Global.onHold.Remove(symbolSpot.s);
+            _tradingState.OnHold.Remove(symbolSpot.s);
             return;
         }
 
@@ -270,7 +276,7 @@ public class OrderService : IOrderService
             return;
 
         var (nbrDecimalPrice, nbrDecimalQty) = GetOrderParameters(symbolSpot);
-        var price = Math.Round(symbolSpot.c * (1 - Global.orderOffset / 100), nbrDecimalPrice);
+        var price = Math.Round(symbolSpot.c * (1 - _config.OrderOffset / 100), nbrDecimalPrice);
         var qty = Math.Round(dbOrder.QuantityBuy - dbOrder.QuantitySell, nbrDecimalQty);
 
         var myBinanceOrder = _binanceService.SellLimit(dbOrder.Symbol, qty, price, MyEnum.TimeInForce.GTC);
@@ -289,17 +295,17 @@ public class OrderService : IOrderService
 
     public async Task BuyMarket(MarketStream symbolSpot, List<Candle> symbolCandleList)
     {
-        BinanceOrder myBinanceOrder = _binanceService.BuyMarket(symbolSpot.s, Global.quoteOrderQty);
+        BinanceOrder myBinanceOrder = _binanceService.BuyMarket(symbolSpot.s, _config.QuoteOrderQty);
 
         if (myBinanceOrder == null)
         {
-            Global.onHold.Remove(symbolSpot.s);
+            _tradingState.OnHold.Remove(symbolSpot.s);
             return;
         }
 
         if (myBinanceOrder.status == "EXPIRED")
         {
-            Global.onHold.Remove(symbolSpot.s);
+            _tradingState.OnHold.Remove(symbolSpot.s);
             _logger.LogWarning($"Call {MyEnum.BinanceApiCall.BuyMarket} {symbolSpot.s} Order status Expired");
             return;
         }
@@ -315,7 +321,7 @@ public class OrderService : IOrderService
         {
             SaveBuyOrderDb(symbolSpot, symbolCandleList, myBinanceOrder);
 
-            Global.onHold.Remove(symbolSpot.s);
+            _tradingState.OnHold.Remove(symbolSpot.s);
             myBinanceOrder.price = TradeHelper.CalculateAvragePrice(myBinanceOrder).ToString();
             await _hub.Clients.All.SendAsync("newPendingOrder", JsonSerializer.Serialize(myBinanceOrder));
             await Task.Delay(500);

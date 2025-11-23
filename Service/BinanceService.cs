@@ -9,31 +9,41 @@ using MarginCoin.Misc;
 using System.Linq;
 using System.Text.Json;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.Extensions.Options;
+using MarginCoin.Configuration;
 
 namespace MarginCoin.Service
 {
     public class BinanceService : IBinanceService
     {
         System.Net.HttpStatusCode httpStatusCode;
-        private IHubContext<SignalRHub> _hub;
-        const string testPublicKey = "HsKWfKtktmw07gqsCyK1TJThULUnAivnFxF13vFUZf4WjLJXsbwmaPOIgw5rNAuQ";  //for https://testnet.binance.vision/
-        const string testSecretKey = "ncSzN6J4Efh8Xb53e1uYkuHCw9VFAemUKjCEPdwY5WtdbMJOAEzEIuP5qMrjKewX";
-        const string prodPublicKey = "gIDNZ9OsVIUbvFEuLgOhZ3XoQRnwrJ8krkp3TAR2dxQxwYErmKC6GOsMy50LYGWy";
+        private readonly IHubContext<SignalRHub> _hub;
+        private readonly BinanceConfiguration _binanceConfig;
+        private readonly ITradingState _tradingState;
 
-        static string prodSecretKey = Environment.GetEnvironmentVariable("BSK");
-        public static string secretKey = "";
-        public static string publicKey = "";
-        public static string host = "";
+        private string secretKey = "";
+        private string publicKey = "";
+        private string host = "";
 
         public string Interval { get; set; }
         public string Limit { get; set; }
 
         ILogger _logger;
 
-        public BinanceService(ILogger<BinanceService> logger, IHubContext<SignalRHub> hub)
+        public BinanceService(ILogger<BinanceService> logger, IHubContext<SignalRHub> hub, IOptions<BinanceConfiguration> binanceConfig, ITradingState tradingState)
         {
             _logger = logger;
             _hub = hub;
+            _binanceConfig = binanceConfig.Value;
+            _tradingState = tradingState;
+
+            // Override production secret key with environment variable if it exists
+            var envSecretKey = Environment.GetEnvironmentVariable("BSK");
+            if (!string.IsNullOrEmpty(envSecretKey))
+            {
+                _binanceConfig.Production.SecretKey = envSecretKey;
+            }
+
             httpStatusCode = new System.Net.HttpStatusCode();
         }
 
@@ -347,26 +357,26 @@ namespace MarginCoin.Service
 
         #region Binance API setings
 
-        private static void SetEnv(ref string secretKey, ref string publicKey, ref string host)
+        private void SetEnv(ref string secretKey, ref string publicKey, ref string host)
         {
-            if (Global.isProd)
+            if (_tradingState.IsProd)
             {
-                secretKey = prodSecretKey;
-                publicKey = prodPublicKey;
+                secretKey = _binanceConfig.Production.SecretKey;
+                publicKey = _binanceConfig.Production.PublicKey;
                 host = "https://api3.binance.com";
             }
             else
             {
-                secretKey = testSecretKey;
-                publicKey = testPublicKey;
+                secretKey = _binanceConfig.Test.SecretKey;
+                publicKey = _binanceConfig.Test.PublicKey;
                 host = "https://testnet.binance.vision";
             }
         }
 
-        private static long ServerTime(string apiKey)
+        private long ServerTime(string apiKey)
         {
             string apiUrl;
-            if (Global.isProd)
+            if (_tradingState.IsProd)
             {
                 apiUrl = string.Format("https://api.binance.com/api/v3/time");
             }

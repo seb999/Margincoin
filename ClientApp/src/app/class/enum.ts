@@ -8,4 +8,6 @@ export enum BackEndMessage {
   sellOrderFilled = 'sellOrderFilled',
   buyOrderFilled = 'buyOrderFilled',
   httpRequestError = 'httpRequestError',
+  accessFaulty = 'AccessFaulty',
+  badRequest = 'BadRequest',
 };

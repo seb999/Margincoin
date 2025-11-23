@@ -3,10 +3,12 @@ using MarginCoin.Class;
 using MarginCoin.Misc;
 using MarginCoin.Model;
 using MarginCoin.Service;
+using MarginCoin.Configuration;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -28,18 +30,20 @@ namespace MarginCoin.Controllers
         ////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////------------Global varibles----------//////////////////////////////////////
         ////////////////////////////////////////////////////////////////////////////////////////////////////////
-        #region Global variables
+        #region Dependencies
 
-        private IHubContext<SignalRHub> _hub;
-        private IBinanceService _binanceService;
-        private IMLService _mlService;
-        private IWatchDog _watchDog;
-        private IWebSocket _webSocket;
-        private IOrderService _orderService;
+        private readonly IHubContext<SignalRHub> _hub;
+        private readonly IBinanceService _binanceService;
+        private readonly IMLService _mlService;
+        private readonly IWatchDog _watchDog;
+        private readonly IWebSocket _webSocket;
+        private readonly IOrderService _orderService;
+        private readonly ISymbolService _symbolService;
+        private readonly ITradingState _tradingState;
+        private readonly TradingConfiguration _config;
+        private readonly ApplicationDbContext _appDbContext;
+        private readonly ILogger _logger;
 
-        ActionController actionController;
-        private ApplicationDbContext _appDbContext;
-        private ILogger _logger;
         private List<MarketStream> buffer = new List<MarketStream>();
         private List<MarketStream> marketStreamOnSpot = new List<MarketStream>();
         int nbrUp = 0;
@@ -47,26 +51,6 @@ namespace MarginCoin.Controllers
         int i = 0;
 
         private readonly object candleMatrixLock = new object();
-
-        #endregion  
-
-        ////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /////////////////////////////------------SETTINGS----------/////////////////////////////////////////////
-        ////////////////////////////////////////////////////////////////////////////////////////////////////////
-        #region Settings
-
-        private readonly double orderOffset = 0.05;
-        private readonly string spotTickerTime = "!ticker_4h@arr"; // !ticker@arr  or  !ticker_1h@arr 
-        private readonly string interval = "30m";   //1h seem to give better result
-        private readonly string maxCandle = "50";
-        private readonly int prevCandleCount = 2;
-        private readonly double stopLossPercentage = 2;
-        private readonly double takeProfitPercentage = 0.5;
-        private readonly int maxOpenTrade = 3;
-        //Max amount to invest for each trade
-        private readonly int quoteOrderQty = 1500;
-        //Select short list of symbol or full list(on test server on 6 symbols allowed)
-        private readonly int nbrOfSymbol = 18;   //Not below 10 as we trade later on the 10 best of this list
 
         #endregion
 
@@ -83,31 +67,35 @@ namespace MarginCoin.Controllers
             IOrderService orderService,
             IMLService mLService,
             IWatchDog watchDog,
-            IWebSocket webSocket)
+            IWebSocket webSocket,
+            ISymbolService symbolService,
+            ITradingState tradingState,
+            IOptions<TradingConfiguration> tradingConfig)
         {
             _hub = hub;
-            _binanceService = binanceService;
-            _binanceService.Interval = interval;
-            _binanceService.Limit = maxCandle;
             _appDbContext = appDbContext;
             _logger = logger;
+            _binanceService = binanceService;
             _orderService = orderService;
             _mlService = mLService;
             _watchDog = watchDog;
             _webSocket = webSocket;
-            Global.syncBinanceSymbol = false;
-            Global.nbrOfSymbol = nbrOfSymbol;
-            Global.interval = interval;
-            Global.stopLossPercentage = stopLossPercentage;
-            Global.takeProfitPercentage = takeProfitPercentage;
-            Global.orderOffset = orderOffset;
-            Global.quoteOrderQty = quoteOrderQty;
+            _symbolService = symbolService;
+            _tradingState = tradingState;
+            _config = tradingConfig.Value;
 
-            actionController = new ActionController(_appDbContext);
-            if (Global.SymbolWeTrade.Count == 0)
+            // Configure binance service
+            _binanceService.Interval = _config.Interval;
+            _binanceService.Limit = _config.MaxCandle;
+
+            // Initialize trading state
+            _tradingState.SyncBinanceSymbol = false;
+
+            // Initialize symbol lists if empty
+            if (_tradingState.SymbolWeTrade.Count == 0)
             {
-                Global.SymbolWeTrade = actionController.GetSymbolList();
-                Global.SymbolBaseList = actionController.GetSymbolBaseList();
+                _tradingState.SymbolWeTrade = _symbolService.GetTradingSymbols();
+                _tradingState.SymbolBaseList = _symbolService.GetBaseSymbols();
             }
         }
 
@@ -133,12 +121,12 @@ namespace MarginCoin.Controllers
             {
                 await _webSocket.ws.DisconnectAsync(CancellationToken.None);
                 await _webSocket.ws1.DisconnectAsync(CancellationToken.None);
-                Global.candleMatrix.Clear();
+                _tradingState.ClearCandleMatrix();
                 _logger.LogWarning($"Whatchdog kill all websock and restart it");
             }
 
             //open a webSocket for each symbol in my list
-            foreach (var symbol in Global.SymbolWeTrade)
+            foreach (var symbol in _tradingState.SymbolWeTrade)
             {
                 OpenWebSocketOnSymbol(symbol);
             }
@@ -146,11 +134,11 @@ namespace MarginCoin.Controllers
             //add open order symbol not in SymbolWeTrade list
             foreach (var order in _orderService.GetActiveOrder())
             {
-                if (Global.SymbolWeTrade.SingleOrDefault(p => p.SymbolName == order.Symbol) == null)
+                if (_tradingState.SymbolWeTrade.SingleOrDefault(p => p.SymbolName == order.Symbol) == null)
                 {
-                    var orderSymbol = Global.SymbolBaseList.SingleOrDefault(p => p.SymbolName == order.Symbol);
+                    var orderSymbol = _tradingState.SymbolBaseList.SingleOrDefault(p => p.SymbolName == order.Symbol);
                     OpenWebSocketOnSymbol(orderSymbol);
-                    Global.SymbolWeTrade.Add(orderSymbol);
+                    _tradingState.SymbolWeTrade.Add(orderSymbol);
                 }
             }
 
@@ -175,10 +163,10 @@ namespace MarginCoin.Controllers
             }
             else
             {
-                if (Global.isMarketOrder == true)
+                if (_tradingState.IsMarketOrder == true)
                     _orderService.SellMarket(myOrder, "by user");
                 else
-                    _orderService.SellLimit(myOrder, Global.marketStreamOnSpot.SingleOrDefault(p => p.s == myOrder.Symbol), "by user");
+                    _orderService.SellLimit(myOrder, _tradingState.MarketStreamOnSpot.SingleOrDefault(p => p.s == myOrder.Symbol), "by user");
             }
         }
 
@@ -192,7 +180,7 @@ namespace MarginCoin.Controllers
         [HttpGet("[action]")]
         public void SyncBinanceSymbol()
         {
-            Global.syncBinanceSymbol = true;
+            _tradingState.SyncBinanceSymbol = true;
         }
 
         [HttpGet("[action]")]
@@ -217,8 +205,9 @@ namespace MarginCoin.Controllers
 
         public void OpenWebSocketOnSymbol(Symbol symbol)
         {
-            _binanceService.GetCandles(symbol.SymbolName, ref Global.candleMatrix);
-            _webSocket.ws = new MarketDataWebSocket($"{symbol.SymbolName.ToLower()}@kline_{interval}");
+            var candleMatrix = _tradingState.CandleMatrix;
+            _binanceService.GetCandles(symbol.SymbolName, ref candleMatrix);
+            _webSocket.ws = new MarketDataWebSocket($"{symbol.SymbolName.ToLower()}@kline_{_config.Interval}");
             var onlyOneMessage = new TaskCompletionSource<string>();
 
             _webSocket.ws.OnMessageReceived(
@@ -229,12 +218,12 @@ namespace MarginCoin.Controllers
                     var symbolIndex = 0;
 
                     //get corresponding line in our Matrice
-                    for (int i = 0; i < Global.candleMatrix.Count; i++)
+                    for (int i = 0; i < _tradingState.CandleMatrix.Count; i++)
                     {
-                        if (Global.candleMatrix[i][0].s == stream.k.s)
+                        if (_tradingState.CandleMatrix[i][0].s == stream.k.s)
                         {
                             symbolIndex = i;
-                            UpdateMatrix(stream, Global.candleMatrix[i]);
+                            UpdateMatrix(stream, _tradingState.CandleMatrix[i]);
                             break;
                         }
                     }
@@ -255,7 +244,7 @@ namespace MarginCoin.Controllers
             }
             finally
             {
-                _webSocket.ws = new MarketDataWebSocket($"{symbol.SymbolName.ToLower()}@kline_{interval}");
+                _webSocket.ws = new MarketDataWebSocket($"{symbol.SymbolName.ToLower()}@kline_{_config.Interval}");
             }
         }
 
@@ -268,7 +257,7 @@ namespace MarginCoin.Controllers
                 h = stream.k.h,
                 l = stream.k.l,
                 c = stream.k.c,
-                P = TradeHelper.CalculPourcentChange(stream.k.c, candleList, interval, 2),
+                P = TradeHelper.CalculPourcentChange(stream.k.c, candleList, _config.Interval, 2),
             };
 
             if (!stream.k.x)
@@ -282,7 +271,7 @@ namespace MarginCoin.Controllers
                 candleList.Add(newCandle);
                 Console.WriteLine($"New candle save : {stream.k.s}");
                 _logger.LogWarning($"New candle save : {stream.k.s}");
-                Global.onHold.Remove(stream.k.s);
+                _tradingState.OnHold.Remove(stream.k.s);
             }
 
             //Calculate RSI / MACD / EMA
@@ -291,25 +280,29 @@ namespace MarginCoin.Controllers
             //Calculate the Average True Range ATR
             //Globals.candleMatrix[symbolIndex].ToList().Last().ATR = TradeIndicator.CalculateATR(Globals.candleMatrix[symbolIndex].ToList());
 
-            //Calculate the slope of the MACD historic (derivative) 
-            candleList.ToList().Last().MacdSlope = TradeHelper.CalculateMacdSlope(candleList.ToList(), interval).Slope;
+            //Calculate the slope of the MACD historic (derivative)
+            candleList.ToList().Last().MacdSlope = TradeHelper.CalculateMacdSlope(candleList.ToList(), _config.Interval).Slope;
 
             //We replace old list<candle> for the symbol with this new one
-            for (int i = 0; i < Global.candleMatrix.Count; i++)
+            for (int i = 0; i < _tradingState.CandleMatrix.Count; i++)
             {
-                if (Global.candleMatrix[i][0].s == stream.k.s)
+                if (_tradingState.CandleMatrix[i][0].s == stream.k.s)
                 {
-                    Global.candleMatrix[i] = candleList;
+                    _tradingState.CandleMatrix[i] = candleList;
                 }
             }
             //We order the matrix list
-            //Global.candleMatrix = Global.candleMatrix.OrderByDescending(p => p.Last().MacdSlope).ToList();
-            Global.candleMatrix = Global.candleMatrix.OrderByDescending(p => p.Last().P).ToList();
+            var orderedMatrix = _tradingState.CandleMatrix.OrderByDescending(p => p.Last().P).ToList();
+            _tradingState.CandleMatrix.Clear();
+            foreach (var item in orderedMatrix)
+            {
+                _tradingState.CandleMatrix.Add(item);
+            }
         }
 
         public async Task OpenWebSocketOnSpot()
         {
-            _webSocket.ws1 = new MarketDataWebSocket(spotTickerTime);
+            _webSocket.ws1 = new MarketDataWebSocket(_config.SpotTickerTime);
             var onlyOneMessage = new TaskCompletionSource<string>();
             string dataResult = "";
 
@@ -332,26 +325,25 @@ namespace MarginCoin.Controllers
                          TradeHelper.BufferMarketStream(marketStreamList, ref buffer);
 
                          //Update db symbol table with new coins from Binance
-                         if (Global.syncBinanceSymbol)
+                         if (_tradingState.SyncBinanceSymbol)
                          {
-                             Global.syncBinanceSymbol = false;
-                             ActionController actionController = new ActionController(_appDbContext);
+                             _tradingState.SyncBinanceSymbol = false;
                              //Update list of symbol from binance
-                             actionController.UpdateDbSymbol(buffer.Select(p => p.s).ToList());
+                             _symbolService.SyncBinanceSymbols(buffer.Select(p => p.s).ToList());
                              //Update capitalisation and ranking from CoinMarketCap
-                             actionController.UpdateCoinMarketCap();
+                             _symbolService.UpdateCoinMarketCap();
                          }
 
                          nbrUp = buffer.Count(pred => pred.P >= 0);
                          nbrDown = buffer.Count(pred => pred.P < 0);
 
-                         marketStreamOnSpot = buffer.Where(p => Global.SymbolBaseList.Any(p1 => p1.SymbolName == p.s)).OrderByDescending(p => p.P).ToList();
+                         marketStreamOnSpot = buffer.Where(p => _tradingState.SymbolBaseList.Any(p1 => p1.SymbolName == p.s)).OrderByDescending(p => p.P).ToList();
 
-                         Global.marketStreamOnSpot = marketStreamOnSpot;
+                         _tradingState.MarketStreamOnSpot = marketStreamOnSpot;
 
                          _watchDog.Clear();
 
-                         if (Global.isTradingOpen)
+                         if (_tradingState.IsTradingOpen)
                          {
                              await ProcessMarketMatrix();
                          }
@@ -371,11 +363,11 @@ namespace MarginCoin.Controllers
         {
             foreach (var symbol in marketStreamOnSpot.Take(3))
             {
-                if (Global.SymbolWeTrade.Where(p => p.SymbolName == symbol.s).FirstOrDefault() == null)
+                if (_tradingState.SymbolWeTrade.Where(p => p.SymbolName == symbol.s).FirstOrDefault() == null)
                 {
-                    Symbol hotSymbol = Global.SymbolBaseList.Where(p => p.SymbolName == symbol.s).FirstOrDefault();
+                    Symbol hotSymbol = _tradingState.SymbolBaseList.Where(p => p.SymbolName == symbol.s).FirstOrDefault();
                     OpenWebSocketOnSymbol(hotSymbol);
-                    Global.SymbolWeTrade.Add(hotSymbol);
+                    _tradingState.SymbolWeTrade.Add(hotSymbol);
                 }
             }
         }
@@ -398,9 +390,9 @@ namespace MarginCoin.Controllers
                     ReviewOpenTrade(marketStreamOnSpot, item.Symbol);
                 }
 
-                if (_orderService.GetActiveOrder().Count < maxOpenTrade)
+                if (_orderService.GetActiveOrder().Count < _config.MaxOpenTrades)
                 {
-                    foreach (var symbolCandelList in Global.candleMatrix.Take(10).ToList())
+                    foreach (var symbolCandelList in _tradingState.CandleMatrix.Take(10).ToList())
                     {
                         ReviewSpotMarket(marketStreamOnSpot, symbolCandelList);
                     }
@@ -430,21 +422,21 @@ namespace MarginCoin.Controllers
             }
 
             var activeOrder = _orderService.GetActiveOrder().FirstOrDefault(p => p.Symbol == symbolSpot.s);
-            var symbolCandle = Global.candleMatrix.Where(p => p.Last().s == symbolSpot.s).ToList().FirstOrDefault();
+            var symbolCandle = _tradingState.CandleMatrix.Where(p => p.Last().s == symbolSpot.s).ToList().FirstOrDefault();
             var activeOrderCount = _orderService.GetActiveOrder().Count();
 
-            if (activeOrder == null && activeOrderCount < maxOpenTrade)
+            if (activeOrder == null && activeOrderCount < _config.MaxOpenTrades)
             {
                 if (EnterLongPosition(symbolSpot, symbolCandle))
                 {
-                    if (!Global.onHold.ContainsKey(symbolSpot.s))
+                    if (!_tradingState.OnHold.ContainsKey(symbolSpot.s))
                     {
-                        Global.onHold.Add(symbolSpot.s, true);
+                        _tradingState.OnHold.Add(symbolSpot.s, true);
                     }
 
                     Console.WriteLine($"Opening trade on {symbolSpot.s}");
 
-                    if (Global.isMarketOrder == true)
+                    if (_tradingState.IsMarketOrder == true)
                     {
                         _orderService.BuyMarket(symbolSpot, symbolCandle);
                     }
@@ -455,9 +447,9 @@ namespace MarginCoin.Controllers
                 }
 
 
-                if (Global.testBuyLimit == true)
+                if (_tradingState.TestBuyLimit == true)
                 {
-                    Global.testBuyLimit = false;
+                    _tradingState.TestBuyLimit = false;
                     Console.WriteLine($"Opening trade on {symbolSpot.s}");
                     _orderService.BuyLimit(symbolSpot, symbolCandle);
                 }
@@ -492,7 +484,7 @@ namespace MarginCoin.Controllers
             if (symbolCandles.Count > 2)
             {
                 //Check if previous candles are green
-                for (int i = symbolCandles.Count - prevCandleCount; i < symbolCandles.Count; i++)
+                for (int i = symbolCandles.Count - _config.PrevCandleCount; i < symbolCandles.Count; i++)
                 {
                     if (TradeHelper.CandleColor(symbolCandles[i]) != "green" || symbolCandles[i].c <= symbolCandles[i - 1].c)
                     {
@@ -502,7 +494,7 @@ namespace MarginCoin.Controllers
 
                 //check that it is a strong movement by calculating the % increase on last candles
                 //if I calculate P I get a thread safe error
-                // if (TradeHelper.CalculPourcentChange(symbolCandles, prevCandleCount) < MIN_POURCENT_UP)
+                // if (TradeHelper.CalculPourcentChange(symbolCandles, _config.PrevCandleCount) < MIN_POURCENT_UP)
                 // {
                 //     isLong = false;
                 // }
@@ -516,7 +508,7 @@ namespace MarginCoin.Controllers
             };
 
             //Check the symbol is not on hold
-            if (Global.onHold.ContainsKey(symbolSpot.s) && Global.onHold[symbolSpot.s])
+            if (_tradingState.OnHold.ContainsKey(symbolSpot.s) && _tradingState.OnHold[symbolSpot.s])
             {
                 return false;
             };
@@ -535,7 +527,7 @@ namespace MarginCoin.Controllers
             lock (candleMatrixLock)
             {
                 var activeOrder = _orderService.GetActiveOrder().FirstOrDefault(p => p.Symbol == symbol);
-                var symbolCandle = Global.candleMatrix.FirstOrDefault(p => p.Last().s == symbol)?.Last();
+                var symbolCandle = _tradingState.CandleMatrix.FirstOrDefault(p => p.Last().s == symbol)?.Last();
                 var lastPrice = symbolCandle?.c;
                 var highPrice = symbolCandle?.h;
 
@@ -546,13 +538,13 @@ namespace MarginCoin.Controllers
                 void LogAndSell(string message)
                 {
                     Console.WriteLine($"Close trade: {message}");
-                    if (Global.isMarketOrder)
+                    if (_tradingState.IsMarketOrder)
                     {
                         _orderService.SellMarket(activeOrder, message);
                     }
                     else
                     {
-                        _orderService.SellLimit(activeOrder, Global.marketStreamOnSpot.FirstOrDefault(p => p.s == symbol), message);
+                        _orderService.SellLimit(activeOrder, _tradingState.MarketStreamOnSpot.FirstOrDefault(p => p.s == symbol), message);
                     }
                 }
 
@@ -589,14 +581,14 @@ namespace MarginCoin.Controllers
                     return;
                 }
 
-                if (Global.isDbBusy)
+                if (_tradingState.IsDbBusy)
                     return;
 
                 // Reload only the required properties
                 _appDbContext.Entry(activeOrder).Reload();
-                _orderService.UpdateTakeProfit(Global.candleMatrix.FirstOrDefault(p => p.Last().s == symbol), activeOrder, takeProfitPercentage);
-                _orderService.UpdateStopLoss(Global.candleMatrix.FirstOrDefault(p => p.Last().s == symbol), activeOrder);
-                _orderService.SaveHighLow(Global.candleMatrix.FirstOrDefault(p => p.Last().s == symbol), activeOrder);
+                _orderService.UpdateTakeProfit(_tradingState.CandleMatrix.FirstOrDefault(p => p.Last().s == symbol), activeOrder, _config.TakeProfitPercentage);
+                _orderService.UpdateStopLoss(_tradingState.CandleMatrix.FirstOrDefault(p => p.Last().s == symbol), activeOrder);
+                _orderService.SaveHighLow(_tradingState.CandleMatrix.FirstOrDefault(p => p.Last().s == symbol), activeOrder);
             }
         }
 
@@ -662,7 +654,7 @@ namespace MarginCoin.Controllers
                 {
                     _orderService.UpdateSellOrderDb(dbOrder, myBinanceOrder, "");
                     _orderService.RecycleOrderDb(dbOrder.Id);
-                    Global.onHold.Remove(dbOrder.Symbol);
+                    _tradingState.OnHold.Remove(dbOrder.Symbol);
                 }
             }
 
@@ -703,7 +695,7 @@ namespace MarginCoin.Controllers
                     decimal.TryParse(myBinanceOrder.executedQty, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out decimal executedQty);
                     if (executedQty == 0)
                     {
-                        Global.onHold.Remove(dbOrder.Symbol);
+                        _tradingState.OnHold.Remove(dbOrder.Symbol);
                         _orderService.DeleteOrderDb(dbOrder.Id);
                     }
                     else
@@ -725,7 +717,7 @@ namespace MarginCoin.Controllers
         [HttpGet("[action]")]
         public void TestBinanceBuy()
         {
-            Global.testBuyLimit = true;
+            _tradingState.TestBuyLimit = true;
         }
         #endregion
     }

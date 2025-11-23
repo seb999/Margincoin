@@ -37,6 +37,32 @@
                 "/consoleloggerparameters:NoSummary"
             ],
             "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "npm-start",
+            "type": "shell",
+            "command": "npm start -- --port 4201",
+            "options": {
+                "cwd": "${workspaceFolder}/ClientApp"
+            },
+            "isBackground": true,
+            "problemMatcher": {
+                "owner": "custom",
+                "pattern": {
+                    "regexp": "^$"
+                },
+                "background": {
+                    "activeOnStart": true,
+                    "beginsPattern": "Compiling",
+                    "endsPattern": "Compiled successfully|Application bundle generation complete"
+                }
+            }
+        },
+        {
+            "label": "build-and-spa",
+            "dependsOn": ["npm-start", "build"],
+            "dependsOrder": "parallel",
+            "problemMatcher": []
         }
     ]
 }

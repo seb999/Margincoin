@@ -1,52 +1,77 @@
+<!-- Market Overview -->
+<div class="space-y-4">
+  <!-- Header -->
+  <div class="flex items-center justify-between">
+    <h1 class="text-2xl font-bold text-white">Market Overview</h1>
+    <span class="text-sm text-gray-400">Live USDT pairs</span>
+  </div>
 
-<table class="table table-sm table-dark">
-    <thead class="thead thead-light">
+  <!-- Table -->
+  <div class="overflow-x-auto rounded-lg border border-gray-700">
+    <table class="w-full">
+      <thead class="bg-gray-800">
         <tr>
-            <th scope="col" id="symbol" onClick={this.handleSort} class="tableTh">Name</th>
-            <th scope="col" id="last" onClick={this.handleSort} class="tableTh ">Price</th>
-            <th scope="col" id="volume" onClick={this.handleSort} class="tableTh d-none d-md-table-cell">24h %</th>
-            <th scope="col" id="volume" onClick={this.handleSort} class="tableTh d-none d-md-table-cell">Volume</th>
-            <th scope="col" id="lower" onClick={this.handleSort} class="tableTh d-none d-md-table-cell">Lower</th>
-            <th scope="col" id="higher" onClick={this.handleSort} class="tableTh d-none d-md-table-cell">Higher</th>
-            <th></th>
+          <th class="px-4 py-3 text-left text-xs font-semibold text-gray-400 uppercase tracking-wider">Name</th>
+          <th class="px-4 py-3 text-right text-xs font-semibold text-gray-400 uppercase tracking-wider">Price</th>
+          <th class="px-4 py-3 text-right text-xs font-semibold text-gray-400 uppercase tracking-wider hidden md:table-cell">24h %</th>
+          <th class="px-4 py-3 text-right text-xs font-semibold text-gray-400 uppercase tracking-wider hidden md:table-cell">Volume</th>
+          <th class="px-4 py-3 text-right text-xs font-semibold text-gray-400 uppercase tracking-wider hidden lg:table-cell">24h Low</th>
+          <th class="px-4 py-3 text-right text-xs font-semibold text-gray-400 uppercase tracking-wider hidden lg:table-cell">24h High</th>
+          <th class="px-4 py-3 text-center text-xs font-semibold text-gray-400 uppercase tracking-wider">Action</th>
         </tr>
-    </thead>
-    <tbody>
-        <tr *ngFor="let coin of symbolList$">
-         <td>
-                   <!-- <img src='{{ "assets/images/CoinIcon/" + coin.s.substring(0,coin.s.length-4) + ".png" }}' width="20px"
-                    height="20px" /> -->
-                {{coin.s.substring(0,coin.s.length-4)}}<span style="font-size: x-small;">/USDT</span>
-            </td>
+      </thead>
+      <tbody class="divide-y divide-gray-700">
+        <tr *ngFor="let coin of symbolList$" class="hover:bg-gray-800/50 transition-colors">
+          <!-- Symbol Name -->
+          <td class="px-4 py-3">
+            <div class="flex items-center gap-2">
+              <span class="font-medium text-white">{{coin.s.substring(0,coin.s.length-4)}}</span>
+              <span class="text-xs text-gray-500">/USDT</span>
+            </div>
+          </td>
 
-            <!-- Price -->
-            <td *ngIf="coin.c>=1">{{(coin.c*1).toFixed(2)}}</td>
-            <td *ngIf="coin.c<1">{{(coin.c*1).toFixed(6)}}</td>
+          <!-- Price -->
+          <td class="px-4 py-3 text-right font-mono">
+            <span *ngIf="coin.c>=1" class="text-white">{{(coin.c*1).toFixed(2)}}</span>
+            <span *ngIf="coin.c<1" class="text-white">{{(coin.c*1).toFixed(6)}}</span>
+          </td>
 
-            <!-- 24hr change -->
-            <td [style.color]= coin.color>{{((coin.p/coin.c)*100).toFixed(2)}}</td>
+          <!-- 24hr Change -->
+          <td class="px-4 py-3 text-right font-mono hidden md:table-cell">
+            <span [class]="((coin.p/coin.c)*100) >= 0 ? 'text-green-400' : 'text-red-400'">
+              {{ ((coin.p/coin.c)*100) >= 0 ? '+' : '' }}{{((coin.p/coin.c)*100).toFixed(2)}}%
+            </span>
+          </td>
 
-            <!-- Volume 24hr -->
-            <td>{{(coin.q*1).toFixed(2)}}</td>
+          <!-- Volume -->
+          <td class="px-4 py-3 text-right text-gray-300 hidden md:table-cell">
+            {{(coin.q*1).toFixed(0) | number}}
+          </td>
 
-            <!-- Lower 24 -->
-            <td *ngIf="coin.l>=1">{{(coin.l*1).toFixed(2)}}</td>
-            <td *ngIf="coin.l<1">{{(coin.l*1).toFixed(6)}}</td>
+          <!-- 24h Low -->
+          <td class="px-4 py-3 text-right font-mono text-gray-300 hidden lg:table-cell">
+            <span *ngIf="coin.l>=1">{{(coin.l*1).toFixed(2)}}</span>
+            <span *ngIf="coin.l<1">{{(coin.l*1).toFixed(6)}}</span>
+          </td>
 
-            <!-- Higher 24 -->
-            <td *ngIf="coin.h>=1">{{(coin.h*1).toFixed(2)}}</td>
-            <td *ngIf="coin.h<1">{{(coin.h*1).toFixed(6)}}</td>
+          <!-- 24h High -->
+          <td class="px-4 py-3 text-right font-mono text-gray-300 hidden lg:table-cell">
+            <span *ngIf="coin.h>=1">{{(coin.h*1).toFixed(2)}}</span>
+            <span *ngIf="coin.h<1">{{(coin.h*1).toFixed(6)}}</span>
+          </td>
 
-            <td>
-                <!-- <button class="btn ml-0 pl-0" (click)="redirect(coin.s)"><span style="color:blue"><i
-                            class="far fa-file-alt"></i>trade</span></button> -->
-
-                            <a [routerLink]="['/tradingboard', coin.s]" class="btn ml-0 pl-0"><span style="color:blue"><i
-                                class="far fa-file-alt"></i>trade</span></a>
-            </td>
+          <!-- Action Button -->
+          <td class="px-4 py-3 text-center">
+            <a [routerLink]="['/tradingboard', coin.s]"
+               class="inline-flex items-center px-3 py-1.5 text-xs font-medium text-blue-400 bg-blue-900/30 hover:bg-blue-900/50 rounded-md transition-colors">
+              <i class="fa-solid fa-chart-simple mr-1.5"></i>Trade
+            </a>
+          </td>
         </tr>
-    </tbody>
-</table>
+      </tbody>
+    </table>
+  </div>
+</div>
 
 
 <!-- {

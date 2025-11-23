@@ -100,20 +100,12 @@ export class WalletComponent {
     this.intervalList = this.appSetting.intervalList;
   }
 
-  async ngOnInit() {  
+  async ngOnInit() {
     this.model = this.today();
     this.isTradeOpen = false;
-    this.isProd = await this.tradeService.getActiveServer();
-    // this.orderList = await this.tradeService.getAllOrder(this.model.day + "-" + this.model.month + "-" + this.model.year);
-    // this.isMarketOrder = await this.tradeService.getOrderType();
-    // this.symbolList = await this.tradeService.getSymbolList();
-    // this.symbolPrice = await this.tradeService.getSymbolPrice();
-    // this.logList = await this.tradeService.getLog();
-    // this.myAccount = await this.tradeService.binanceAccount();
-    // this.interval = await this.tradeService.getInterval();
 
-    //Open listener on my API SignalR
-    this.signalRService.startConnection();
+    //Open listener on my API SignalR - must be before API calls to catch errors
+    await this.signalRService.startConnection();
     this.signalRService.openDataListener();
 
     this.signalRService.onMessage().subscribe(async message => {
@@ -186,7 +178,23 @@ export class WalletComponent {
         this.messageError = this.serverMsg.httpError;
         setTimeout(() => { this.showMessageError = false }, 5000);
       }
+
+      if (this.serverMsg.msgName == BackEndMessage.accessFaulty) {
+        this.showMessageError = true;
+        this.messageError = 'Binance API access error - check API keys';
+        setTimeout(() => { this.showMessageError = false }, 10000);
+      }
+
+      if (this.serverMsg.msgName == BackEndMessage.badRequest) {
+        this.showMessageError = true;
+        this.messageError = 'Bad request to Binance API';
+        setTimeout(() => { this.showMessageError = false }, 5000);
+      }
     });
+
+    // Load data after SignalR is set up to catch any errors
+    this.isProd = await this.tradeService.getActiveServer();
+    this.myAccount = await this.tradeService.binanceAccount();
 
     this.calculateProfit();
     this.calculateBalance();
@@ -234,14 +242,14 @@ export class WalletComponent {
 
   calculateProfit() {
     this.totalProfit = 0;
-    if (this.orderList.length > 0) {
+    if (this.orderList?.length > 0) {
       for (let i = 0; i < this.orderList.length; i++) {
         this.totalProfit += this.orderList[i].profit;
       }
     }
 
     this.totalBestProfit = 0;
-    if (this.orderList.length > 0) {
+    if (this.orderList?.length > 0) {
       this.totalBestProfit = this.orderList.map(a => (a.highPrice - a.openPrice) * a.quantityBuy).reduce(function (a, b) {
         if (a != 0) return a + b;
       });
@@ -249,14 +257,26 @@ export class WalletComponent {
   }
 
   calculateBalance() {
+    if (!this.symbolList?.length || !this.myAccount?.balances?.length || !this.symbolPrice?.length) {
+      return;
+    }
     let balance = 0;
-    for (let i = 0; i <= this.symbolList.length; i++) {
+    for (let i = 0; i < this.myAccount.balances.length; i++) {
       let index = this.symbolPrice.findIndex((crypto) => crypto.symbol === this.myAccount.balances[i].asset + "USDT");
       if (index !== -1) {
         balance += parseFloat(this.symbolPrice[index].price) * this.myAccount.balances[i].free;
       }
     }
     this.balance = balance;
+  }
+
+  formatBalance(value: string, asset: string): string {
+    const num = parseFloat(value);
+    if (num === 0) return '-';
+    if (asset === 'USDT') return num.toFixed(2);
+    if (num >= 1) return num.toFixed(4);
+    if (num >= 0.0001) return num.toFixed(6);
+    return num.toFixed(8);
   }
 
   async trade(): Promise<any> {

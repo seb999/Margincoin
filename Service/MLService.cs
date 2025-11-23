@@ -20,18 +20,21 @@ namespace MarginCoin.Service
         private readonly string downloadFolder;
         private readonly string screenShotFolder;
         private readonly string imageFolder;
-        private ILogger _logger;
-        private IHubContext<SignalRHub> _hub;
+        private readonly ILogger _logger;
+        private readonly IHubContext<SignalRHub> _hub;
+        private readonly ITradingState _tradingState;
         private Timer MLTimer = new Timer();
         public List<MLPrediction> MLPredList { get; set; }
 
         private bool isFirstTrigger = false;
 
         public MLService(ILogger<MLService> logger,
-            IHubContext<SignalRHub> hub)
+            IHubContext<SignalRHub> hub,
+            ITradingState tradingState)
         {
             _logger = logger;
             _hub = hub;
+            _tradingState = tradingState;
             MLPredList = new List<MLPrediction>();
 
             downloadFolder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + @"/Downloads";
@@ -55,17 +58,17 @@ namespace MarginCoin.Service
 
         private void MLTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
-            if (!isFirstTrigger && Global.isTradingOpen)
+            if (!isFirstTrigger && _tradingState.IsTradingOpen)
             {
                 _logger.LogWarning($"New call at {DateTime.Now.Minute} for ExportChart UI");
-                _hub.Clients.All.SendAsync("exportChart", JsonSerializer.Serialize(Global.SymbolWeTrade));
+                _hub.Clients.All.SendAsync("exportChart", JsonSerializer.Serialize(_tradingState.SymbolWeTrade));
                 _timeElapseCallDelegate();
             }
             else
             {
                 isFirstTrigger = false;
                 _logger.LogWarning($"Initial call for ExportChart UI");
-                _hub.Clients.All.SendAsync("exportChart", JsonSerializer.Serialize(Global.SymbolWeTrade));
+                _hub.Clients.All.SendAsync("exportChart", JsonSerializer.Serialize(_tradingState.SymbolWeTrade));
                 _timeElapseCallDelegate();
                 MLTimer.Stop();
                 MLTimer.Interval = 900000;

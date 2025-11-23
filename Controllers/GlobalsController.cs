@@ -1,8 +1,8 @@
-using System.Collections.Generic;
 using System.Text.Json;
-using MarginCoin.Model;
+using MarginCoin.Configuration;
+using MarginCoin.Service;
 using Microsoft.AspNetCore.Mvc;
-
+using Microsoft.Extensions.Options;
 
 namespace MarginCoin.Controllers
 {
@@ -10,53 +10,46 @@ namespace MarginCoin.Controllers
     [Route("api/[controller]")]
     public class GlobalsController : ControllerBase
     {
-        private readonly ApplicationDbContext _appDbContext;
+        private readonly ITradingState _tradingState;
+        private readonly ISymbolService _symbolService;
+        private readonly TradingConfiguration _tradingConfig;
 
-        public GlobalsController([FromServices] ApplicationDbContext appDbContext)
+        public GlobalsController(
+            ITradingState tradingState,
+            ISymbolService symbolService,
+            IOptions<TradingConfiguration> tradingConfig)
         {
-             _appDbContext = appDbContext;
+            _tradingState = tradingState;
+            _symbolService = symbolService;
+            _tradingConfig = tradingConfig.Value;
         }
 
-        // Select Binance server - Prod or test
         [HttpGet("[action]")]
-        public bool GetServer()
-        {
-            return Global.isProd;
-        }
+        public bool GetServer() => _tradingState.IsProd;
 
-         // Select Binance server - Prod or test
         [HttpGet("[action]")]
-        public bool GetOrderType()
-        {
-            return Global.isMarketOrder;
-        }
+        public bool GetOrderType() => _tradingState.IsMarketOrder;
 
         [HttpGet("[action]/{isMarketOrder}")]
         public void SetOrderType(bool isMarketOrder)
         {
-            Global.isMarketOrder = isMarketOrder;
+            _tradingState.IsMarketOrder = isMarketOrder;
         }
 
         [HttpGet("[action]/{isProd}")]
         public void SetServer(bool isProd)
         {
-            Global.isProd = isProd;
-            ActionController actionController = new ActionController(_appDbContext);
-            Global.SymbolWeTrade = actionController.GetSymbolList();
+            _tradingState.IsProd = isProd;
+            _tradingState.SymbolWeTrade = _symbolService.GetTradingSymbols();
         }
 
-        // START and STOP the trading
         [HttpGet("[action]/{isOpen}")]
         public void SetTradeParameter(bool isOpen)
         {
-            Global.isTradingOpen = isOpen;
+            _tradingState.IsTradingOpen = isOpen;
         }
 
         [HttpGet("[action]")]
-        public string GetInterval()
-        {
-            return JsonSerializer.Serialize(Global.interval);
-        }
+        public string GetInterval() => JsonSerializer.Serialize(_tradingConfig.Interval);
     }
 }
-
