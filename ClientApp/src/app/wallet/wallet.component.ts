@@ -195,6 +195,8 @@ export class WalletComponent {
     // Load data after SignalR is set up to catch any errors
     this.isProd = await this.tradeService.getActiveServer();
     this.myAccount = await this.tradeService.binanceAccount();
+    this.symbolPrice = await this.tradeService.getSymbolPrice();
+    this.orderList = await this.tradeService.getAllOrder(this.model.day + "-" + this.model.month + "-" + this.model.year);
 
     this.calculateProfit();
     this.calculateBalance();
@@ -257,14 +259,18 @@ export class WalletComponent {
   }
 
   calculateBalance() {
-    if (!this.symbolList?.length || !this.myAccount?.balances?.length || !this.symbolPrice?.length) {
+    if (!this.myAccount?.balances?.length || !this.symbolPrice?.length) {
       return;
     }
     let balance = 0;
-    for (let i = 0; i < this.myAccount.balances.length; i++) {
-      let index = this.symbolPrice.findIndex((crypto) => crypto.symbol === this.myAccount.balances[i].asset + "USDT");
-      if (index !== -1) {
-        balance += parseFloat(this.symbolPrice[index].price) * this.myAccount.balances[i].free;
+    for (const asset of this.myAccount.balances) {
+      if (asset.asset === 'USDT') {
+        balance += parseFloat(asset.free);
+      } else {
+        const price = this.symbolPrice.find(p => p.symbol === asset.asset + 'USDT');
+        if (price) {
+          balance += parseFloat(price.price) * parseFloat(asset.free);
+        }
       }
     }
     this.balance = balance;
@@ -324,7 +330,7 @@ export class WalletComponent {
         this.popupSymbolPrice = parseFloat(this.symbolPrice[index].price);
       }
 
-    this.modalService.open(popupTemplate, { ariaLabelledBy: 'modal-basic-title', size: 'sm' }).result.then((result) => {
+    this.modalService.open(popupTemplate, { ariaLabelledBy: 'modal-basic-title', size: 'lg' }).result.then((result) => {
       if (result == 'sell') {
         this.tradeService.sell(symbol, this.popupQty);
       }

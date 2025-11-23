@@ -141,3 +141,80 @@ code {
 .modal-footer {
   @apply px-4 py-3 border-t border-gray-700 flex justify-end gap-2;
 }
+
+/* ng-bootstrap datepicker styling */
+ngb-datepicker {
+  z-index: 1060 !important;
+  background: #1f2937 !important;
+  border: 1px solid #374151 !important;
+  border-radius: 0.5rem !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5) !important;
+}
+
+ngb-datepicker-navigation {
+  background: #111827 !important;
+  padding: 0.5rem !important;
+}
+
+ngb-datepicker-navigation select {
+  background: #374151 !important;
+  color: #f3f4f6 !important;
+  border: 1px solid #4b5563 !important;
+  border-radius: 0.375rem !important;
+}
+
+.ngb-dp-header {
+  background: #111827 !important;
+  padding-top: 0.25rem !important;
+}
+
+.ngb-dp-weekdays {
+  background: #1f2937 !important;
+  border-bottom: 1px solid #374151 !important;
+}
+
+.ngb-dp-weekday {
+  color: #9ca3af !important;
+  font-weight: 500 !important;
+}
+
+.ngb-dp-day,
+.ngb-dp-week-number,
+.ngb-dp-weekday {
+  width: 2.5rem !important;
+  height: 2.5rem !important;
+}
+
+.ngb-dp-day .btn-light {
+  background: transparent !important;
+  color: #f3f4f6 !important;
+  border-radius: 0.375rem !important;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.ngb-dp-day .btn-light:hover {
+  background: #374151 !important;
+}
+
+.ngb-dp-day .btn-light.bg-primary {
+  background: #2563eb !important;
+  color: white !important;
+}
+
+.ngb-dp-day .btn-light:disabled,
+.ngb-dp-day .btn-light.text-muted {
+  color: #6b7280 !important;
+}
+
+.ngb-dp-arrow-btn {
+  color: #f3f4f6 !important;
+}
+
+.ngb-dp-arrow-btn:hover {
+  background: #374151 !important;
+}
+
+.ngb-dp-navigation-chevron {
+  border-color: #f3f4f6 !important;
+}
