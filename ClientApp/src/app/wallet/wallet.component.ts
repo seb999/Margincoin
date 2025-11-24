@@ -194,6 +194,7 @@ export class WalletComponent {
 
     // Load data after SignalR is set up to catch any errors
     this.isProd = await this.tradeService.getActiveServer();
+    this.interval = await this.tradeService.getInterval();
     this.myAccount = await this.tradeService.binanceAccount();
     this.symbolPrice = await this.tradeService.getSymbolPrice();
     this.orderList = await this.tradeService.getAllOrder(this.model.day + "-" + this.model.month + "-" + this.model.year);
