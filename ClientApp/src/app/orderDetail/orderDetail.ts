@@ -47,6 +47,7 @@ export class OrderDetailComponent {
   public coinData: any;
   public takeProfit: number;
   public takeProfitOffset: number;
+  public popupTitle: string;
 
   public orderModel: Order;
   public orderTemplate: OrderTemplate;

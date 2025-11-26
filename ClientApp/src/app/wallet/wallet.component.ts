@@ -324,6 +324,16 @@ export class WalletComponent {
     this.tradeService.debugBuy();
   }
 
+  async syncBinanceSymbol(): Promise<any> {
+    await this.refreshUI();
+  }
+
+  binanceOrder(orderId: string) {
+    if (orderId) {
+      window.open(`https://www.binance.com/en/my/orders/exchange/tradehistory`, '_blank');
+    }
+  }
+
   async cancelSymbolOrder(symbol): Promise<any> {
     this.tradeService.cancelSymbolOrder(symbol);
   }

@@ -191,7 +191,7 @@ export class TradingboardComponent {
     this.openOrderList = await this.tradingboardHelper.getOpenOrder(this.symbol);
   }
 
-  changetakeProfitOffset(type: string) {
+  changeTakeProfitOffset(type: string) {
     if (type == 'increase') { this.takeProfitOffset = this.takeProfitOffset + 0.001 };
     if (type == 'reduce') { this.takeProfitOffset = this.takeProfitOffset - 0.001 }
   }

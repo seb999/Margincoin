@@ -10,11 +10,13 @@
 html {
   position: relative;
   min-height: 100%;
+  font-size: 16px;
 }
 
 body {
-  @apply bg-gray-900 text-gray-100 font-sans text-sm;
+  @apply bg-gray-900 text-gray-100 font-sans text-base;
   margin-bottom: 30px;
+  font-size: 16px;
 }
 
 /* Links */
@@ -30,6 +32,16 @@ code {
   @apply text-pink-500;
 }
 
+/* General table styling */
+table {
+  font-size: 15px;
+}
+
+table th,
+table td {
+  padding: 10px 8px;
+}
+
 /* Footer */
 .footer {
   @apply fixed left-0 bottom-0 w-full h-8 bg-gray-900 border-t border-gray-700;
@@ -38,36 +50,40 @@ code {
 /* Table styles for dark theme */
 .table-dark {
   @apply bg-gray-800 text-gray-100;
+  font-size: 15px;
 }
 
 .table-dark th {
   @apply bg-gray-900 text-gray-300 font-semibold;
+  font-size: 15px;
+  padding: 12px 8px;
 }
 
 .table-dark td {
   @apply border-gray-700;
+  padding: 10px 8px;
 }
 
 /* Button overrides to match trading theme */
 .btn-primary {
-  @apply bg-blue-600 hover:bg-blue-700 text-white border-blue-700 px-4 py-2 rounded transition-colors;
+  @apply bg-blue-600 hover:bg-blue-700 text-white border-blue-700 px-5 py-2.5 rounded transition-colors text-base;
 }
 
 .btn-success {
-  @apply bg-green-600 hover:bg-green-700 text-white border-green-700 px-4 py-2 rounded transition-colors;
+  @apply bg-green-600 hover:bg-green-700 text-white border-green-700 px-5 py-2.5 rounded transition-colors text-base;
 }
 
 .btn-danger {
-  @apply bg-red-600 hover:bg-red-700 text-white border-red-700 px-4 py-2 rounded transition-colors;
+  @apply bg-red-600 hover:bg-red-700 text-white border-red-700 px-5 py-2.5 rounded transition-colors text-base;
 }
 
 .btn-secondary {
-  @apply bg-gray-600 hover:bg-gray-700 text-white border-gray-700 px-4 py-2 rounded transition-colors;
+  @apply bg-gray-600 hover:bg-gray-700 text-white border-gray-700 px-5 py-2.5 rounded transition-colors text-base;
 }
 
 /* Form controls */
 .form-control {
-  @apply bg-gray-800 border-gray-600 text-gray-100 rounded px-3 py-2 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none;
+  @apply bg-gray-800 border-gray-600 text-gray-100 rounded px-4 py-2.5 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none text-base;
 }
 
 /* Card component */
@@ -106,7 +122,7 @@ code {
 
 /* Badge styles */
 .badge {
-  @apply inline-flex items-center px-2 py-1 rounded-full text-xs font-medium;
+  @apply inline-flex items-center px-2.5 py-1 rounded-full text-sm font-medium;
 }
 
 .badge-success {

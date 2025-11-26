@@ -13,17 +13,18 @@ export const WS_MARKET_ENDPOINT = environment.wsEndPointMarket;
   providers: [WebSocket1Service]
 })
 export class MarketComponent {
-  public symbolList$: Observable<any>;
+  public symbolList$: any[];
   public marketDataListener$: Observable<any>;
   private unsubscribe$: Subject<void>;
 
   constructor(public service$: WebSocket1Service,
-    private httpService: HttpService,) 
+    private httpService: HttpService,)
   {
     this.unsubscribe$ = new Subject<void>();
+    this.symbolList$ = [];
   }
 
-  ngOnDestroy() { 
+  ngOnDestroy() {
     this.service$.close();
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
@@ -47,10 +48,10 @@ export class MarketComponent {
         i++;
         if (i == 30) {
           i = 0;
-          this.symbolList$ = data.filter(function (symbol) {
+          this.symbolList$ = data.filter(function (symbol: any) {
             if (symbol.p < 0) symbol.color = "red";
             if (symbol.p >= 0) symbol.color = "limegreen";
-            return symbol.s.includes("USDT"); 
+            return symbol.s.includes("USDT");
           });
         };
       })

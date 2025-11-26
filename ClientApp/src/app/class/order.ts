@@ -5,6 +5,7 @@ export class Order {
     public amount?: number,
     public quantityBuy?: number,
     public quantitySell?: number,
+    public quantity?: number,
     public openPrice?: number,
     public highPrice?: number,
     public lowPrice?: number,
@@ -17,6 +18,11 @@ export class Order {
     public openDate? : string,
     public closeDate? : string,
     public isClosed?: number,
+    public buyOrderId?: string,
+    public sellOrderId?: string,
+    public type?: string,
+    public rsi?: number,
+    public status?: string,
     )
     {}
 }
