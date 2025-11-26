@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation, ɵCodegenComponentFactoryResolver } from '@angular/core';
+import { Component, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute } from "@angular/router";
 import { WebSocket1Service } from '../service/websocket1.service';
 import { WebSocket2Service } from '../service/websocket2.service';
@@ -199,13 +199,13 @@ export class TradingboardComponent {
   processFormInputChange(formImputChanged) {
     switch (formImputChanged) {
       case 'amount':
-        this.orderModel.quantity = this.orderModel.amount / this.orderModel.openPrice;
+        this.orderModel.quantityBuy = this.orderModel.amount / this.orderModel.openPrice;
         break;
       case 'quantity':
-        this.orderModel.amount = this.orderModel.quantity * this.orderModel.openPrice;
+        this.orderModel.amount = this.orderModel.quantityBuy * this.orderModel.openPrice;
       default:
-        this.orderModel.quantity = this.orderModel.amount / this.orderModel.openPrice;
-        this.orderModel.amount = this.orderModel.quantity * this.orderModel.openPrice;
+        this.orderModel.quantityBuy = this.orderModel.amount / this.orderModel.openPrice;
+        this.orderModel.amount = this.orderModel.quantityBuy * this.orderModel.openPrice;
         break;
     }
   }

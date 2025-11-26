@@ -2,12 +2,14 @@
 export enum BackEndMessage {
   trading = 'trading',
   newPendingOrder = 'newPendingOrder',
-  newOrder = 'newOrder',
-  apiAccessFaulty = 'BinanceAccessFaulty',
-  apiTooManyRequest = 'BinanceTooManyRequest',
-  apiCheckAllowedIP = 'BinanceCheckAllowedIP',
-  sellOrderFilled = 'sellOrderFilled',
-  sellOrderExired = 'sellOrderExired',
+  refreshUI = 'refreshUI',
   exportChart = 'exportChart',
-  webSocketStopped = 'WebSocketStopped'
+  webSocketStopped = 'WebSocketStopped',
+  sellOrderFilled = 'sellOrderFilled',
+  buyOrderFilled = 'buyOrderFilled',
+  httpRequestError = 'httpRequestError',
+  accessFaulty = 'AccessFaulty',
+  badRequest = 'BadRequest',
+  websocketStatus = 'websocketStatus',
+  candleUpdate = 'candleUpdate',
 };

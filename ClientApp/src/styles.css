@@ -1,37 +1,254 @@
-/* You can add global styles to this file, and also import other style files */
-@import "~@angular/material/prebuilt-themes/indigo-pink.css";
-/* Provide sufficient contrast against white background */
-a {
-  color: #0366d6;
-}
+/* Tailwind CSS v3 */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
+/* Angular Material theme */
+@import "@angular/material/prebuilt-themes/indigo-pink.css";
+
+/* Global styles */
 html {
   position: relative;
   min-height: 100%;
 }
 
-code {
-  color: #e01a76;
-}
-
-.btn-primary {
-  color: #fff;
-  background-color: #1b6ec2;
-  border-color: #1861ac;
-}
-
 body {
-  font-weight:500;
-  font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  font-size:14px;
-  background-color:rgb(44, 44, 44);
-  margin-bottom: 30px; /* Margin bottom by footer height */
+  @apply bg-gray-900 text-gray-100 font-sans text-sm;
+  margin-bottom: 30px;
 }
 
+/* Links */
+a {
+  @apply text-blue-400 hover:text-blue-300 transition-colors;
+}
+
+a:not([class]) {
+  text-decoration: none;
+}
+
+code {
+  @apply text-pink-500;
+}
+
+/* Footer */
 .footer {
-  position: fixed;
-  left: 0;
-  bottom: 0;
-  width: 100%;
-  height: 30px;
+  @apply fixed left-0 bottom-0 w-full h-8 bg-gray-900 border-t border-gray-700;
+}
+
+/* Table styles for dark theme */
+.table-dark {
+  @apply bg-gray-800 text-gray-100;
+}
+
+.table-dark th {
+  @apply bg-gray-900 text-gray-300 font-semibold;
+}
+
+.table-dark td {
+  @apply border-gray-700;
+}
+
+/* Button overrides to match trading theme */
+.btn-primary {
+  @apply bg-blue-600 hover:bg-blue-700 text-white border-blue-700 px-4 py-2 rounded transition-colors;
+}
+
+.btn-success {
+  @apply bg-green-600 hover:bg-green-700 text-white border-green-700 px-4 py-2 rounded transition-colors;
+}
+
+.btn-danger {
+  @apply bg-red-600 hover:bg-red-700 text-white border-red-700 px-4 py-2 rounded transition-colors;
+}
+
+.btn-secondary {
+  @apply bg-gray-600 hover:bg-gray-700 text-white border-gray-700 px-4 py-2 rounded transition-colors;
+}
+
+/* Form controls */
+.form-control {
+  @apply bg-gray-800 border-gray-600 text-gray-100 rounded px-3 py-2 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none;
+}
+
+/* Card component */
+.card {
+  @apply bg-gray-800 rounded-lg shadow-lg border border-gray-700;
+}
+
+.card-header {
+  @apply bg-gray-900 px-4 py-3 border-b border-gray-700 font-semibold;
+}
+
+.card-body {
+  @apply p-4;
+}
+
+/* Alert styles */
+.alert {
+  @apply px-4 py-3 rounded-lg mb-4;
+}
+
+.alert-success {
+  @apply bg-green-900/50 border border-green-700 text-green-300;
+}
+
+.alert-danger {
+  @apply bg-red-900/50 border border-red-700 text-red-300;
+}
+
+.alert-warning {
+  @apply bg-yellow-900/50 border border-yellow-700 text-yellow-300;
+}
+
+.alert-info {
+  @apply bg-blue-900/50 border border-blue-700 text-blue-300;
+}
+
+/* Badge styles */
+.badge {
+  @apply inline-flex items-center px-2 py-1 rounded-full text-xs font-medium;
+}
+
+.badge-success {
+  @apply bg-green-900 text-green-300;
+}
+
+.badge-danger {
+  @apply bg-red-900 text-red-300;
+}
+
+.badge-warning {
+  @apply bg-yellow-900 text-yellow-300;
+}
+
+/* Modal backdrop */
+.modal-backdrop {
+  @apply fixed inset-0 bg-black/50 backdrop-blur-sm;
+}
+
+.modal-content {
+  @apply bg-gray-800 rounded-lg shadow-xl border border-gray-700;
+}
+
+.modal-header {
+  @apply px-4 py-3 border-b border-gray-700 flex justify-between items-center;
+}
+
+.modal-body {
+  @apply p-4;
+}
+
+.modal-footer {
+  @apply px-4 py-3 border-t border-gray-700 flex justify-end gap-2;
+}
+
+/* ng-bootstrap datepicker styling */
+ngb-datepicker {
+  z-index: 1060 !important;
+  background: #1f2937 !important;
+  border: 1px solid #374151 !important;
+  border-radius: 0.5rem !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5) !important;
+}
+
+ngb-datepicker-navigation {
+  background: #111827 !important;
+  padding: 0.5rem !important;
+}
+
+ngb-datepicker-navigation select {
+  background: #374151 !important;
+  color: #f3f4f6 !important;
+  border: 1px solid #4b5563 !important;
+  border-radius: 0.375rem !important;
+}
+
+.ngb-dp-header {
+  background: #111827 !important;
+  padding-top: 0.25rem !important;
+}
+
+.ngb-dp-weekdays {
+  background: #1f2937 !important;
+  border-bottom: 1px solid #374151 !important;
+}
+
+.ngb-dp-weekday {
+  color: #9ca3af !important;
+  font-weight: 500 !important;
+}
+
+.ngb-dp-day,
+.ngb-dp-week-number,
+.ngb-dp-weekday {
+  width: 2.5rem !important;
+  height: 2.5rem !important;
+}
+
+.ngb-dp-day .btn-light {
+  background: transparent !important;
+  color: #f3f4f6 !important;
+  border-radius: 0.375rem !important;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.ngb-dp-day .btn-light:hover {
+  background: #374151 !important;
+}
+
+.ngb-dp-day .btn-light.bg-primary {
+  background: #2563eb !important;
+  color: white !important;
+}
+
+.ngb-dp-day .btn-light:disabled,
+.ngb-dp-day .btn-light.text-muted {
+  color: #6b7280 !important;
+}
+
+.ngb-dp-arrow-btn {
+  color: #f3f4f6 !important;
+}
+
+.ngb-dp-arrow-btn:hover {
+  background: #374151 !important;
+}
+
+.ngb-dp-navigation-chevron {
+  border-color: #f3f4f6 !important;
+}
+
+/* Custom scrollbar */
+.scrollbar-thin {
+  scrollbar-width: thin;
+  scrollbar-color: #374151 transparent;
+}
+
+.scrollbar-thin::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background: #374151;
+  border-radius: 3px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb:hover {
+  background: #4b5563;
+}
+
+/* Hide scrollbar but keep functionality */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
 }

@@ -4,6 +4,8 @@ using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using MarginCoin.Model;
 using System.Globalization;
+using MarginCoin.Class;
+using MarginCoin.Misc;
 
 namespace MarginCoin.Controllers
 {
@@ -62,44 +64,5 @@ namespace MarginCoin.Controllers
             return myOrders;
         }
 
-        [HttpPost("[action]")]
-        public bool OpenOrder([FromBody] Order order)
-        {
-            try
-            {
-                order.OpenDate = DateTime.Now.ToString();
-                order.IsClosed = 0;
-                order.TakeProfit = order.OpenPrice* 1.005;
-                order.Fee = Math.Round((order.OpenPrice * order.Quantity) / 100) * 0.1;
-                _appDbContext.Order.Add(order);
-                _appDbContext.SaveChanges(); 
-            }
-            catch (System.Exception)
-            {
-                return false;
-            }
-           
-            return true;
-        }
-
-        [HttpGet("[action]/{id}/{closePrice}")]
-        public bool CloseOrder(int id, double closePrice)
-        {
-             try
-            {
-                Order myOrder = _appDbContext.Order.Where(p=>p.Id == id).Select(p=>p).FirstOrDefault();
-                myOrder.ClosePrice = closePrice;
-                myOrder.Fee = myOrder.Fee + Math.Round((closePrice * myOrder.Quantity) /100) * 0.1;
-                myOrder.IsClosed = 1;
-                myOrder.Profit = Math.Round((closePrice - myOrder.OpenPrice) * myOrder.Quantity);
-                myOrder.CloseDate = DateTime.Now.ToString();
-                _appDbContext.SaveChanges(); 
-            }
-            catch (System.Exception)
-            {
-                return false;
-            }
-            return true;
-        }
     }
 }

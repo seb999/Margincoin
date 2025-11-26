@@ -19,9 +19,11 @@ namespace MarginCoin.Class
         public double Macd { get; set; }
         public double MacdSign { get; set; }
         public double MacdHist { get; set; }
+        public double MacdSlope { get; set; }
         public double Ema { get; set; }
         public double StochSlowK { get; set; }
         public double StochSlowD { get; set; }
+        public double ATR { get; set; }
         public PivotPOint PivotPoint { get; set; }
     }
 

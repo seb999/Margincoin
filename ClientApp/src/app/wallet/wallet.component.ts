@@ -21,8 +21,8 @@ import HC_exporting_offline from "highcharts/modules/offline-exporting";
 import HC_Data from "highcharts/modules/export-data";
 import { AppSetting } from '../app.settings';
 import { BinanceOrder } from '../class/binanceOrder';
-import { FindValueSubscriber } from 'rxjs/internal/operators/find';
 import { BinanceAccount } from '../class/binanceAccount';
+import { TradeService } from '../service/trade.service';
 
 
 HC_HIGHSTOCK(Highcharts);
@@ -60,6 +60,7 @@ export class WalletComponent {
   public pendingOrderList: Order[];
   public myAccount: BinanceAccount;
   public symbolList: any[];
+  public tradeSymbolList: any[];
   public symbolPrice: any[];
   public orderList: Order[];
   public logList: any[];
@@ -69,65 +70,57 @@ export class WalletComponent {
   public serverMsg: ServerMsg;
   public showMessageInfo: boolean = false;
   public showMessageError: boolean = false;
+  public showMessageExport: boolean = false;
   public messageError: string;
-  public interval: string;
+  public messageExport: string;
+  public interval: any;
   public intervalList = [] as any;
-  public tradeOpen: boolean;
+  public isTradeOpen: boolean;
   public popupSymbol: string;
+  public popupSymbolPrice: number;
   public popupQty: number;
+  public popupQuoteQty: number;
   public balance: number;
   public isCollapsed = true;
-
-  color = 'accent';
-  isProd = false;
-  isOnAir = false;
-
-  displaySymbol: string;
-  displayOrder: Order;
+  public slope: any;
+  public isProd = false;
+  public isMarketOrder = false;
+  public color = 'accent';
+  public displaySymbol: string;
+  public myOrder: Order;
+  public websocketStatus: any = null;
+  public lastCandleUpdate: any = null;
 
   constructor(
     public modalService: NgbModal,
     private httpService: HttpService,
+    private tradeService: TradeService,
     private signalRService: SignalRService,
     private orderDetailHelper: OrderDetailHelper,
     private appSetting: AppSetting,
   ) {
     this.intervalList = this.appSetting.intervalList;
-    this.interval = "15m";
   }
 
   async ngOnInit() {
-    this.tradeOpen = false;
     this.model = this.today();
-    this.orderList = await this.getAllOrder(this.model.day + "-" + this.model.month + "-" + this.model.year);
-    this.isProd = await this.getServer();
-    this.isOnAir = await this.getTradingMode();
-    this.symbolList = await this.getSymbolList();
-    this.symbolPrice = await this.getSymbolPrice();
-    this.logList = await this.getLog();
-    this.myAccount = await this.binanceAccount();
-    this.calculateProfit();
-    this.calculateBalance();
+    this.isTradeOpen = false;
 
-    //Open listener on my API SignalR
-    this.signalRService.startConnection();
+    //Open listener on my API SignalR - must be before API calls to catch errors
+    await this.signalRService.startConnection();
     this.signalRService.openDataListener();
 
     this.signalRService.onMessage().subscribe(async message => {
       this.serverMsg = message;
-
       if (this.serverMsg.msgName == BackEndMessage.trading) {
-        this.tradeOpen = true;
+        this.isTradeOpen = true;
         this.showMessageInfo = true;
-
         this.CandleList = this.serverMsg.candleList;
-        console.log(this.CandleList);
         this.orderList.forEach((order, index) => {
           this.CandleList.forEach(candle => {
-
             if (order.symbol === candle.s && !order.isClosed) {
               this.orderList[index].closePrice = candle.c;
-              this.orderList[index].profit = (candle.c - order.openPrice) * order.quantity;
+              this.orderList[index].profit = (candle.c - order.openPrice) * order.quantityBuy;
             }
           });
         });
@@ -138,59 +131,96 @@ export class WalletComponent {
       if (this.serverMsg.msgName == BackEndMessage.newPendingOrder) {
         let binanceOrder = this.serverMsg.order;
         if (this.orderPopOver.isOpen()) {
-          setTimeout(() => { this.openPopOver(this.orderPopOver, binanceOrder); }, 6000);
-          setTimeout(() => { this.closePopOver(this.orderPopOver); }, 11000);
+          setTimeout(() => { this.openPopOver(this.orderPopOver, binanceOrder); }, 7000);
+          setTimeout(() => { 
+            this.closePopOver(this.orderPopOver); 
+            this.refreshUI();
+          }, 11000);
         }
         else {
           this.openPopOver(this.orderPopOver, binanceOrder);
-          setTimeout(() => { this.closePopOver(this.orderPopOver); }, 5000);
+          setTimeout(() => { 
+            this.closePopOver(this.orderPopOver); 
+            this.refreshUI();
+          }, 7000);
         }
       }
 
-      if (this.serverMsg.msgName == BackEndMessage.sellOrderFilled) {
-        this.orderList = await this.getAllOrder(this.model.day + "-" + this.model.month + "-" + this.model.year);
+      if (this.serverMsg.msgName == BackEndMessage.refreshUI) {
+        this.orderList = await this.tradeService.getAllOrder(this.model.day + "-" + this.model.month + "-" + this.model.year);
+        this.calculateProfit();
+        this.refreshUI();
+      }
+
+      if (this.serverMsg.msgName == BackEndMessage.sellOrderFilled 
+        || this.serverMsg.msgName == BackEndMessage.buyOrderFilled) {
+        this.orderList = await this.tradeService.getAllOrder(this.model.day + "-" + this.model.month + "-" + this.model.year);
         let binanceOrder = this.serverMsg.order;
         this.openPopOver(this.orderPopOver, binanceOrder);
         setTimeout(() => {
           this.closePopOver(this.orderPopOver);
           this.refreshUI();
-        }, 5000);
-      }
-
-      if (this.serverMsg.msgName == BackEndMessage.newOrder) {
-        this.orderList = await this.getAllOrder(this.model.day + "-" + this.model.month + "-" + this.model.year);
-        this.calculateProfit();
-        this.refreshUI();
+        }, 7000);
       }
 
       if (this.serverMsg.msgName == BackEndMessage.exportChart) {
-        this.showMessageError = true;
-        this.messageError = "Exporting charts...";
+        this.showMessageExport= true;
+        this.messageExport = "Exporting charts...";
+        this.symbolList = this.serverMsg.tradeSymbolList;
         this.exportChart();
       }
 
       if (this.serverMsg.msgName == BackEndMessage.webSocketStopped) {
+        this.isTradeOpen = true;
         this.trade();
       }
 
-      if (this.serverMsg.msgName == BackEndMessage.apiAccessFaulty
-        || this.serverMsg.msgName == BackEndMessage.apiTooManyRequest
-        || this.serverMsg.msgName == BackEndMessage.apiCheckAllowedIP
-        || this.serverMsg.msgName == BackEndMessage.sellOrderExired) {
+      if (this.serverMsg.msgName == BackEndMessage.httpRequestError) {
         this.showMessageError = true;
-        this.messageError = this.serverMsg.msgName;
-        setTimeout(() => { this.showMessageError = false }, 7000);
+        this.messageError = this.serverMsg.httpError;
+        setTimeout(() => { this.showMessageError = false }, 5000);
+      }
+
+      if (this.serverMsg.msgName == BackEndMessage.accessFaulty) {
+        this.showMessageError = true;
+        this.messageError = 'Binance API access error - check API keys';
+        setTimeout(() => { this.showMessageError = false }, 10000);
+      }
+
+      if (this.serverMsg.msgName == BackEndMessage.badRequest) {
+        this.showMessageError = true;
+        this.messageError = 'Bad request to Binance API';
+        setTimeout(() => { this.showMessageError = false }, 5000);
+      }
+
+      if (this.serverMsg.msgName == BackEndMessage.websocketStatus) {
+        this.websocketStatus = JSON.parse(this.serverMsg.data);
+      }
+
+      if (this.serverMsg.msgName == BackEndMessage.candleUpdate) {
+        this.lastCandleUpdate = JSON.parse(this.serverMsg.data);
+        setTimeout(() => { this.lastCandleUpdate = null }, 2000);
       }
     });
+
+    // Load data after SignalR is set up to catch any errors
+    this.isProd = await this.tradeService.getActiveServer();
+    this.interval = await this.tradeService.getInterval();
+    this.myAccount = await this.tradeService.binanceAccount();
+    this.symbolPrice = await this.tradeService.getSymbolPrice();
+    this.orderList = await this.tradeService.getAllOrder(this.model.day + "-" + this.model.month + "-" + this.model.year);
+
+    this.calculateProfit();
+    this.calculateBalance();
   }
 
   async refreshUI() {
-    this.myAccount = await this.binanceAccount();
-    this.logList = await this.getLog();
+    this.myAccount = await this.tradeService.binanceAccount();
+    this.logList = await this.tradeService.getLog();
   }
 
   async refreshOrderTable() {
-    this.orderList = await this.getAllOrder(this.model.day + "-" + this.model.month + "-" + this.model.year);
+    this.orderList = await this.tradeService.getAllOrder(this.model.day + "-" + this.model.month + "-" + this.model.year);
   }
 
   openPopOver(popover, order: BinanceOrder) {
@@ -199,16 +229,6 @@ export class WalletComponent {
 
   closePopOver(popover) {
     if (popover.isOpen()) popover.close();
-  }
-
-  openPopup(popupTemplate, symbol, availableQty) {
-    this.popupSymbol = symbol;
-    this.popupQty = availableQty;
-    this.modalService.open(popupTemplate, { ariaLabelledBy: 'modal-basic-title', size: 'sm' }).result.then((result) => {
-      if (result == 'sell') {
-        this.sell(symbol, this.popupQty);
-      }
-    }, (reason) => { });
   }
 
   today() {
@@ -220,194 +240,123 @@ export class WalletComponent {
     if (this.model == undefined) {
       return;
     }
-    this.orderList = await this.getAllOrder(this.model.day + "-" + this.model.month + "-" + this.model.year);
+    this.orderList = await this.tradeService.getAllOrder(this.model.day + "-" + this.model.month + "-" + this.model.year);
     this.calculateProfit();
   }
 
   async changeTradeServer() {
-    await this.setServer(this.isProd);
+    await this.tradeService.setServer(this.isProd);
     //this.assetList = await this.binanceAsset();
-    this.myAccount = await this.binanceAccount();
+    this.myAccount = await this.tradeService.binanceAccount();
   }
 
-  async changeTradingMode() {
-    await this.setTradingMode(this.isOnAir);
+  async changeOrderType() {
+    await this.tradeService.setOrderType(this.isMarketOrder);
   }
 
   calculateProfit() {
     this.totalProfit = 0;
-    if (this.orderList.length > 0) {
+    if (this.orderList?.length > 0) {
       for (let i = 0; i < this.orderList.length; i++) {
         this.totalProfit += this.orderList[i].profit;
       }
     }
 
     this.totalBestProfit = 0;
-    if (this.orderList.length > 0) {
-      this.totalBestProfit = this.orderList.map(a => (a.highPrice - a.openPrice) * a.quantity).reduce(function (a, b) {
+    if (this.orderList?.length > 0) {
+      this.totalBestProfit = this.orderList.map(a => (a.highPrice - a.openPrice) * a.quantityBuy).reduce(function (a, b) {
         if (a != 0) return a + b;
       });
     }
   }
 
   calculateBalance() {
+    if (!this.myAccount?.balances?.length || !this.symbolPrice?.length) {
+      return;
+    }
     let balance = 0;
-    for (let i = 0; i <= this.symbolList.length; i++) {
-      let index = this.symbolPrice.findIndex((crypto) => crypto.symbol === this.myAccount.balances[i].asset + "USDT");
-      console.log(index, this.myAccount.balances[i].asset, this.myAccount.balances[i].free)
-      if (index !== -1) {
-        balance += parseFloat(this.symbolPrice[index].price) * this.myAccount.balances[i].free;
+    for (const asset of this.myAccount.balances) {
+      if (asset.asset === 'USDT') {
+        balance += parseFloat(asset.free);
+      } else {
+        const price = this.symbolPrice.find(p => p.symbol === asset.asset + 'USDT');
+        if (price) {
+          balance += parseFloat(price.price) * parseFloat(asset.free);
+        }
       }
     }
-    if (!this.isOnAir) {
-      this.balance = balance + this.totalProfit;
-    }
-    else {
-      this.balance = balance;
-    }
+    this.balance = balance;
   }
 
-  async stopTrade(): Promise<any> {
-    this.tradeOpen = !this.tradeOpen;
-    this.setTradeParam();
-  }
-
-  /////////////////////////////////////////////////////////////
-  /////////////       API calls          //////////////////////
-  /////////////////////////////////////////////////////////////
-  async setServer(isProd): Promise<any> {
-    const httpSetting: HttpSettings = {
-      method: 'GET',
-      url: location.origin + "/api/Globals/SetServer/" + isProd,
-    };
-    return await this.httpService.xhr(httpSetting);
-  }
-
-  async getServer(): Promise<boolean> {
-    const httpSetting: HttpSettings = {
-      method: 'GET',
-      url: location.origin + "/api/Globals/GetServer",
-
-    };
-    return await this.httpService.xhr(httpSetting);
-  }
-
-  async setTradingMode(isFack): Promise<any> {
-    const httpSetting: HttpSettings = {
-      method: 'GET',
-      url: location.origin + "/api/Globals/SetTradingMode/" + isFack,
-    };
-    return await this.httpService.xhr(httpSetting);
-  }
-
-  async getTradingMode(): Promise<boolean> {
-    const httpSetting: HttpSettings = {
-      method: 'GET',
-      url: location.origin + "/api/Globals/GetTradingMode",
-    };
-    return await this.httpService.xhr(httpSetting);
-  }
-
-  async setTradeParam(): Promise<any> {
-    const httpSetting: HttpSettings = {
-      method: 'GET',
-      url: location.origin + "/api/Globals/SetTradeParameter/" + this.tradeOpen,
-    };
-    return await this.httpService.xhr(httpSetting);
-  }
-
-  async getAllOrder(fromDate): Promise<Order[]> {
-    const httpSetting: HttpSettings = {
-      method: 'GET',
-      url: location.origin + "/api/Order/GetAllOrderFromDate/" + fromDate,
-    };
-    return await this.httpService.xhr(httpSetting);
-  }
-
-  async getPendingOrder(): Promise<Order[]> {
-    const httpSetting: HttpSettings = {
-      method: 'GET',
-      url: location.origin + "/api/Order/GetPendingdOrder/",
-    };
-    return await this.httpService.xhr(httpSetting);
-  }
-
-  async closeTrade(orderId, lastPrice): Promise<any> {
-    const httpSetting: HttpSettings = {
-      method: 'GET',
-      url: location.origin + '/api/AutoTrade3/CloseTrade/' + orderId + "/" + lastPrice,
-    };
-    return await this.httpService.xhr(httpSetting);
-  }
-
-  async sell(asset, qty): Promise<any> {
-    let symbol = asset + "USDT";
-    const httpSetting: HttpSettings = {
-      method: 'GET',
-      url: location.origin + '/api/Binance/Sell/' + symbol + "/" + qty
-    };
-    return await this.httpService.xhr(httpSetting);
-  }
-
-  async debugBuy(): Promise<any> {
-    const httpSetting: HttpSettings = {
-      method: 'GET',
-      url: location.origin + '/api/AutoTrade3/TestBinanceBuy/',
-    };
-    return await this.httpService.xhr(httpSetting);
-  }
-
-  async getLog(): Promise<any> {
-    const httpSetting: HttpSettings = {
-      method: 'GET',
-      url: location.origin + '/api/Log/GetLog',
-    };
-    return await this.httpService.xhr(httpSetting);
-  }
-
-  async mlUpdate(): Promise<any> {
-    const httpSetting: HttpSettings = {
-      method: 'GET',
-      url: location.origin + '/api/AutoTrade3/UpdateML',
-    };
-    return await this.httpService.xhr(httpSetting);
-  }
-
-  async binanceAccount(): Promise<any> {
-    const httpSetting: HttpSettings = {
-      method: 'GET',
-      url: location.origin + '/api/Binance/BinanceAccount',
-    };
-    return this.httpService.xhr(httpSetting);
-  }
-
-  async getSymbolList(): Promise<any[]> {
-    const httpSetting: HttpSettings = {
-      method: 'GET',
-      url: location.origin + '/api/AutoTrade3/GetSymbolList',
-    };
-    return await this.httpService.xhr(httpSetting);
-  }
-
-  async getSymbolPrice(): Promise<any[]> {
-    const httpSetting: HttpSettings = {
-      method: 'GET',
-      url: location.origin + '/api/AutoTrade3/GetSymbolPrice',
-    };
-    return await this.httpService.xhr(httpSetting);
+  formatBalance(value: string, asset: string): string {
+    const num = parseFloat(value);
+    if (num === 0) return '-';
+    if (asset === 'USDT') return num.toFixed(2);
+    if (num >= 1) return num.toFixed(4);
+    if (num >= 0.0001) return num.toFixed(6);
+    return num.toFixed(8);
   }
 
   async trade(): Promise<any> {
-    //we allow system to execute orders
-    this.tradeOpen = true;
-    this.setTradeParam();
-
-    //We start trading
+    this.isTradeOpen = true;
+    this.tradeService.setTradeParam(this.isTradeOpen);
     const httpSetting: HttpSettings = {
       method: 'GET',
-      url: location.origin + '/api/AutoTrade3/MonitorMarket',
+      url: location.origin + '/api/AlgoTrade/MonitorMarket',
     };
     return await this.httpService.xhr(httpSetting);
+  }
+
+  async stopTrade(): Promise<any> {
+    this.isTradeOpen = !this.isTradeOpen;
+    this.tradeService.setTradeParam(this.isTradeOpen);
+  }
+  
+  async closeTrade(id, lastPrice): Promise<any> {
+    const httpSetting: HttpSettings = {
+      method: 'GET',
+      url: location.origin + '/api/AlgoTrade/CloseTrade/' + id + "/" + lastPrice,
+    };
+    return await this.httpService.xhr(httpSetting);
+  }
+
+  debugBuy(){
+    this.tradeService.debugBuy();
+  }
+
+  async cancelSymbolOrder(symbol): Promise<any> {
+    this.tradeService.cancelSymbolOrder(symbol);
+  }
+
+  /////////////////////////////////////////////////////////////
+  /////////////       Popup Sell / Buy    //////////////////////
+  /////////////////////////////////////////////////////////////
+
+  openPopup(popupTemplate, symbol, availableQty) {
+    this.popupSymbol = symbol;
+    this.popupQty = availableQty;
+
+    // get symbol price
+    let index = this.symbolPrice.findIndex((crypto) => crypto.symbol === symbol + "USDT");
+      if (index !== -1) {
+        this.popupSymbolPrice = parseFloat(this.symbolPrice[index].price);
+      }
+
+    this.modalService.open(popupTemplate, { ariaLabelledBy: 'modal-basic-title', size: 'lg' }).result.then((result) => {
+      if (result == 'sell') {
+        this.tradeService.sell(symbol, this.popupQty);
+      }
+      if (result == 'buy') {
+        this.tradeService.buy(symbol, this.popupQuoteQty);
+      }
+    }, (reason) => { });
+  }
+
+  onPopupQtyChange(){
+    if(this.popupQty != 0) this.popupQuoteQty = this.popupSymbolPrice / this.popupQty;
+  }
+  onPopupQuoteQtyChange(){
+    if(this.popupSymbolPrice != 0) this.popupQty = this.popupQuoteQty /this.popupSymbolPrice;
   }
 
   /////////////////////////////////////////////////////////////
@@ -415,11 +364,9 @@ export class WalletComponent {
   /////////////////////////////////////////////////////////////
 
   async exportChart() {
-    this.interval = "15m";
-    console.log(this.symbolList);
     for (var i = 0; i < this.symbolList?.length; i++) {
       await new Promise(next => {
-        this.displaySymbol = this.symbolList[i];
+        this.displaySymbol = this.symbolList[i].SymbolName;
         this.displayHighstock();
         setTimeout(() => {
           this.componentRef.chart.exportChartLocal({
@@ -431,20 +378,22 @@ export class WalletComponent {
       });
     }
     setTimeout(() => {
-      this.showMessageError = false
-      this.mlUpdate();
+      this.showMessageExport = false
+      this.tradeService.mlUpdate();
     }, 2000);
   }
 
   async showChart(symbol, orderId) {
     if (orderId != null) {
       this.displaySymbol = symbol;
-      this.displayOrder = await this.orderDetailHelper.getOrder(orderId);
+      this.myOrder = await this.orderDetailHelper.getOrder(orderId);
     }
     else {
       this.displaySymbol = symbol + "USDT";
-      this.displayOrder = null;
+      this.myOrder = null;
     }
+
+    this.slope = await this.tradeService.getSymbolMacdSlope(this.displaySymbol);
     this.displayHighstock();
   }
 
@@ -474,7 +423,7 @@ export class WalletComponent {
   async displayHighstock() {
     let chartHeight = '';
     this.ohlc = null;
-    this.ohlc = await this.orderDetailHelper.getIntradayData(this.displaySymbol, 75, this.interval);
+    this.ohlc = await this.orderDetailHelper.getIntradayData(this.displaySymbol, this.interval, 60);
 
     let chartData = [] as any;
     let volume = [] as any;
@@ -493,8 +442,12 @@ export class WalletComponent {
         ])
     });
 
+    // var macdSlopeP1 = [this.slope.p1.x, this.slope.p1.y ];
+    // var macdSlopeP2 =  [this.slope.p2.x, this.slope.p2.y ];
+
     this.chartOptions = {
       plotOptions: {
+
         //   macd: {   there is a bug here, second drowing not working
         //     zones: [{
         //         value: 0,
@@ -507,7 +460,7 @@ export class WalletComponent {
           upColor: '#41c9ad',
           color: '#cb585f',
           upLineColor: '#41c9ad',
-          lineColor: '#cb585f'
+          lineColor: '#cb585f',
         },
       },
       xAxis: {
@@ -516,12 +469,12 @@ export class WalletComponent {
         plotLines: [{
           color: 'green',
           width: 1,
-          value: this.getOpenDateTimeSpam(this.displayOrder?.openDate),  //display openeing date
+          value: this.getOpenDateTimeSpam(this.myOrder?.openDate),  //display openeing date
         },
         {
           color: 'green',
           width: 1,
-          value: this.getOpenDateTimeSpam(this.displayOrder?.closeDate),  //display openeing date
+          value: this.getOpenDateTimeSpam(this.myOrder?.closeDate),  //display openeing date
         }]
       },
       yAxis:
@@ -536,11 +489,11 @@ export class WalletComponent {
             opposite: true,
             plotLines: [
               {
-                color: '#5CE25C', width: 1, value: this.displayOrder?.openPrice,
+                color: '#5CE25C', width: 1, value: this.myOrder?.openPrice,
                 label: { text: "Open            ", align: 'right' }
               },
               {
-                color: '#FF8901', width: 1, value: this.displayOrder?.closePrice,
+                color: '#FF8901', width: 1, value: this.myOrder?.closePrice,
                 label: { text: "close", align: 'left' }
               },
             ],
@@ -583,4 +536,5 @@ export class WalletComponent {
         }
       ]
   }
+
 }

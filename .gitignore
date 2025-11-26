@@ -1,0 +1,194 @@
+## .NET Core / ASP.NET Core
+*.swp
+*.*~
+project.lock.json
+.DS_Store
+*.pyc
+nupkg/
+
+# Visual Studio Code
+.vscode/
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# Visual Studio
+.vs/
+*.user
+*.userosscache
+*.sln.docstates
+*.suo
+*.userprefs
+
+# Build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+bld/
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+
+# .NET Core
+project.fragment.lock.json
+artifacts/
+
+# StyleCop
+StyleCopReport.xml
+
+# Files built by Visual Studio
+*_i.c
+*_p.c
+*_h.h
+*.ilk
+*.meta
+*.obj
+*.iobj
+*.pch
+*.pdb
+*.ipdb
+*.pgc
+*.pgd
+*.rsp
+*.sbr
+*.tlb
+*.tli
+*.tlh
+*.tmp
+*.tmp_proj
+*_wpftmp.csproj
+*.log
+*.vspscc
+*.vssscc
+.builds
+*.pidb
+*.svclog
+*.scc
+
+# NuGet Packages
+*.nupkg
+*.snupkg
+**/packages/*
+!**/packages/build/
+*.nuget.props
+*.nuget.targets
+
+# Database files
+*.db
+*.db-shm
+*.db-wal
+*.sqlite
+*.sqlite3
+
+# ML Models (large binary files)
+MLModel/*.zip
+*.mlmodel
+
+# Logs
+logs/
+*.log
+*.txt
+
+## Angular / Node.js
+
+# Dependencies
+node_modules/
+jspm_packages/
+bower_components/
+
+# IDEs and editors
+/.idea
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+
+# IDE - VSCode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.history/*
+
+# System Files
+.DS_Store
+Thumbs.db
+
+# Angular build artifacts
+ClientApp/dist/
+ClientApp/.angular/
+ClientApp/tmp/
+ClientApp/out-tsc/
+ClientApp/bazel-out/
+
+# Node
+npm-debug.log
+yarn-error.log
+
+# Angular cache
+.angular/
+ClientApp/.angular/
+
+## Sensitive / Configuration files
+
+# Environment variables and secrets
+.env
+.env.local
+.env.*.local
+*.env
+appsettings.json
+appsettings.*.json
+
+# User-specific secrets
+secrets.json
+*.secret
+
+# API Keys (if accidentally placed in files)
+*apikey*
+*api-key*
+*secret-key*
+
+## macOS specific
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+._*
+
+## Windows specific
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+## Rider
+.idea/
+
+## ReSharper
+_ReSharper*/
+*.[Rr]e[Ss]harper
+*.DotSettings.user
+
+## Test results
+TestResults/
+*.trx
+*.coverage
+
+# Backup files
+*.bak
+*.backup
+*~
+
+# Temporary files
+*.swp
+*.swo
+*~

@@ -11,13 +11,13 @@ export class SignalRService {
     private hubConnection: signalR.HubConnection;
     public eventMessage: EventEmitter<ServerMsg> = new EventEmitter();
 
-    public startConnection = () => {
+    public startConnection = (): Promise<void> => {
         this.hubConnection = new signalR.HubConnectionBuilder()
-          .withUrl(location.origin + '/Signalr')
-          .withAutomaticReconnect()
-          .build();
+            .withUrl(location.origin + '/Signalr')
+            .withAutomaticReconnect()
+            .build();
 
-        this.hubConnection
+        return this.hubConnection
             .start()
             .then(() => console.log('Connection started'))
             .catch(err => console.log('Error while starting SignalR connection: ' + err))
@@ -57,38 +57,47 @@ export class SignalRService {
             return this.eventMessage.emit(serverMsg);
         });
 
-        this.hubConnection.on(BackEndMessage.newOrder, () => {
-            let serverMsg: ServerMsg = { msgName: BackEndMessage.newOrder};
+        this.hubConnection.on(BackEndMessage.buyOrderFilled, (data) => {
+            let serverMsg: ServerMsg = {
+                msgName: BackEndMessage.buyOrderFilled,
+                order: JSON.parse(data)
+            };
             return this.eventMessage.emit(serverMsg);
         });
 
-        this.hubConnection.on(BackEndMessage.apiAccessFaulty, () => {
-            let serverMsg: ServerMsg = { msgName: BackEndMessage.apiAccessFaulty };
+        this.hubConnection.on(BackEndMessage.refreshUI, () => {
+            let serverMsg: ServerMsg = { msgName: BackEndMessage.refreshUI };
             return this.eventMessage.emit(serverMsg);
         });
 
-      this.hubConnection.on(BackEndMessage.webSocketStopped, () => {
-        let serverMsg: ServerMsg = { msgName: BackEndMessage.webSocketStopped };
-        return this.eventMessage.emit(serverMsg);
-      });
-
-        this.hubConnection.on(BackEndMessage.apiTooManyRequest, () => {
-            let serverMsg: ServerMsg = { msgName: BackEndMessage.apiTooManyRequest};
+        this.hubConnection.on(BackEndMessage.webSocketStopped, () => {
+            let serverMsg: ServerMsg = { msgName: BackEndMessage.webSocketStopped };
             return this.eventMessage.emit(serverMsg);
         });
 
-        this.hubConnection.on(BackEndMessage.sellOrderExired, () => {
-            let serverMsg: ServerMsg = { msgName: BackEndMessage.sellOrderExired};
+        this.hubConnection.on(BackEndMessage.httpRequestError, (error) => {
+            console.log(error);
+            let serverMsg: ServerMsg = { 
+                msgName: BackEndMessage.httpRequestError,
+                httpError : error};
             return this.eventMessage.emit(serverMsg);
         });
 
-        this.hubConnection.on(BackEndMessage.apiCheckAllowedIP, () => {
-            let serverMsg: ServerMsg = { msgName: BackEndMessage.apiCheckAllowedIP};
+        this.hubConnection.on(BackEndMessage.exportChart, (data) => {
+            let serverMsg: ServerMsg = {
+                msgName: BackEndMessage.exportChart,
+                tradeSymbolList: JSON.parse(data)
+            };
             return this.eventMessage.emit(serverMsg);
         });
 
-        this.hubConnection.on(BackEndMessage.exportChart, () => {
-            let serverMsg: ServerMsg = { msgName: BackEndMessage.exportChart };
+        this.hubConnection.on(BackEndMessage.accessFaulty, () => {
+            let serverMsg: ServerMsg = { msgName: BackEndMessage.accessFaulty };
+            return this.eventMessage.emit(serverMsg);
+        });
+
+        this.hubConnection.on(BackEndMessage.badRequest, () => {
+            let serverMsg: ServerMsg = { msgName: BackEndMessage.badRequest };
             return this.eventMessage.emit(serverMsg);
         });
     }

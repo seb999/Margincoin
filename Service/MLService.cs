@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.Json;
 using System.Timers;
 using MarginCoin.Misc;
 using MarginCoin.MLClass;
@@ -14,22 +15,26 @@ namespace MarginCoin.Service
 {
     public class MLService : IMLService
     {
+        public delegate void TimeElapseDelegate();
+        private TimeElapseDelegate _timeElapseCallDelegate;
         private readonly string downloadFolder;
         private readonly string screenShotFolder;
         private readonly string imageFolder;
-        private readonly List<int> reccurence;
-        private ILogger _logger;
-        private IHubContext<SignalRHub> _hub;
-        private System.Timers.Timer MLTimer = new System.Timers.Timer();
+        private readonly ILogger _logger;
+        private readonly IHubContext<SignalRHub> _hub;
+        private readonly ITradingState _tradingState;
+        private Timer MLTimer = new Timer();
         public List<MLPrediction> MLPredList { get; set; }
 
         private bool isFirstTrigger = false;
 
         public MLService(ILogger<MLService> logger,
-            IHubContext<SignalRHub> hub)
+            IHubContext<SignalRHub> hub,
+            ITradingState tradingState)
         {
             _logger = logger;
             _hub = hub;
+            _tradingState = tradingState;
             MLPredList = new List<MLPrediction>();
 
             downloadFolder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + @"/Downloads";
@@ -37,10 +42,11 @@ namespace MarginCoin.Service
             imageFolder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + @"/Downloads/MCImage";
         }
 
-        public void InitML()
+        public void InitML(TimeElapseDelegate timeElapseDelegate)
         {
+            _timeElapseCallDelegate = timeElapseDelegate;
             isFirstTrigger = true;
-            MLTimer.Interval = 60000; //every 2 min
+            MLTimer.Interval =  60000;
             MLTimer.Elapsed += new ElapsedEventHandler(MLTimer_Elapsed);
             MLTimer.Start();
         }
@@ -52,19 +58,20 @@ namespace MarginCoin.Service
 
         private void MLTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
-            if (!isFirstTrigger && Globals.isTradingOpen)
+            if (!isFirstTrigger && _tradingState.IsTradingOpen)
             {
                 _logger.LogWarning($"New call at {DateTime.Now.Minute} for ExportChart UI");
-                _hub.Clients.All.SendAsync("exportChart");
+                _hub.Clients.All.SendAsync("exportChart", JsonSerializer.Serialize(_tradingState.SymbolWeTrade));
+                _timeElapseCallDelegate();
             }
             else
             {
-                  isFirstTrigger = false;
-                 _logger.LogWarning($"Initial call for ExportChart UI");
-                _hub.Clients.All.SendAsync("exportChart");
-
+                isFirstTrigger = false;
+                _logger.LogWarning($"Initial call for ExportChart UI");
+                _hub.Clients.All.SendAsync("exportChart", JsonSerializer.Serialize(_tradingState.SymbolWeTrade));
+                _timeElapseCallDelegate();
                 MLTimer.Stop();
-                MLTimer.Interval = 900000; 
+                MLTimer.Interval = 900000;
                 MLTimer.Start();
             }
         }
@@ -88,7 +95,7 @@ namespace MarginCoin.Service
                     //Test image with ML algo and store result in a list
                     ProcessImage(imagePath);
                 }
-                 _logger.LogWarning($"----------------ML Updated---------------------");
+                _logger.LogWarning($"----------------ML Updated---------------------");
             }
             catch (System.Exception e)
             {
@@ -112,7 +119,7 @@ namespace MarginCoin.Service
             {
                 var ttt = img.Width;
                 var ddd = img.Height;
-                Image myImage = img.Clone(x=>x.Crop(new Rectangle(img.Width-200, img.Height-400, 180, 200)));
+                Image myImage = img.Clone(x => x.Crop(new Rectangle(img.Width - 200, img.Height - 400, 180, 200)));
                 myImage.Save(filename);
             }
         }
@@ -144,7 +151,7 @@ namespace MarginCoin.Service
                 PredictedLabel = predictionResult.PredictedLabel
             });
 
-            //File.Copy(imagePath, Path.Combine(imageFolder, Path.GetFileNameWithoutExtension(imagePath) + DateTime.Now.Year + DateTime.Now.Month + DateTime.Now.Day + "-" + DateTime.Now.Hour + DateTime.Now.Minute + Path.GetExtension(imagePath)), true);
+            File.Copy(imagePath, Path.Combine(imageFolder, Path.GetFileNameWithoutExtension(imagePath) + DateTime.Now.Year + DateTime.Now.Month + DateTime.Now.Day + "-" + DateTime.Now.Hour + DateTime.Now.Minute + Path.GetExtension(imagePath)), true);
             File.Delete(imagePath);
         }
     }
