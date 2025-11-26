@@ -88,6 +88,8 @@ export class WalletComponent {
   public color = 'accent';
   public displaySymbol: string;
   public myOrder: Order;
+  public websocketStatus: any = null;
+  public lastCandleUpdate: any = null;
 
   constructor(
     public modalService: NgbModal,
@@ -189,6 +191,15 @@ export class WalletComponent {
         this.showMessageError = true;
         this.messageError = 'Bad request to Binance API';
         setTimeout(() => { this.showMessageError = false }, 5000);
+      }
+
+      if (this.serverMsg.msgName == BackEndMessage.websocketStatus) {
+        this.websocketStatus = JSON.parse(this.serverMsg.data);
+      }
+
+      if (this.serverMsg.msgName == BackEndMessage.candleUpdate) {
+        this.lastCandleUpdate = JSON.parse(this.serverMsg.data);
+        setTimeout(() => { this.lastCandleUpdate = null }, 2000);
       }
     });
 

@@ -8,31 +8,23 @@ namespace MarginCoin.Misc
 {
     public static class TradeIndicator
     {
-        
-        public static List<T> CalculateIndicator<T>(List<T> quotationList) where T : Candle
+        public static void CalculateIndicator<T>(List<T> quotationList) where T : Candle
         {
-             CalculateIndicator(ref quotationList);
+            if (quotationList == null || quotationList.Count < 50) return;
 
-             return quotationList;
-        }      
-        
-        public static void CalculateIndicator<T>(ref List<T> quotationList) where T : Candle
-        {
-            //Sometime linq crash and say that p is null
             try
             {
                 var dataC = quotationList.Select(p => p.c).ToArray();
                 var dataH = quotationList.Select(p => p.h).ToArray();
                 var dataL = quotationList.Select(p => p.l).ToArray();
+
                 int beginIndex;
                 int outNBElements;
                 double[] rsiValues = new double[dataC.Length];
                 double[] emaValues = new double[dataC.Length];
-
                 double[] outMACD = new double[dataC.Length];
                 double[] outMACDSignal = new double[dataC.Length];
                 double[] outMACDHist = new double[dataC.Length];
-                
                 double[] stochSlowKValues = new double[dataC.Length];
                 double[] stochSlowDValues = new double[dataC.Length];
 
@@ -40,7 +32,7 @@ namespace MarginCoin.Misc
                 var statusRsi = Core.Rsi(0, dataC.Length - 1, dataC, 14, out beginIndex, out outNBElements, rsiValues);
                 if (statusRsi == Core.RetCode.Success && outNBElements > 0)
                 {
-                    for (int i = 0; i < quotationList.Count - 14; i++)
+                    for (int i = 0; i < Math.Min(outNBElements, quotationList.Count - 14); i++)
                     {
                         quotationList[i + 14].Rsi = rsiValues[i];
                     }
@@ -50,65 +42,58 @@ namespace MarginCoin.Misc
                 var statusMacd = Core.Macd(0, dataC.Length - 1, dataC, 12, 26, 9, out beginIndex, out outNBElements, outMACD, outMACDSignal, outMACDHist);
                 if (statusMacd == Core.RetCode.Success && outNBElements > 0)
                 {
-                   
                     var macdMax = outMACD.Max();
                     var macdMin = outMACD.Min();
                     var macdSignMax = outMACDSignal.Max();
                     var macdSignMin = outMACDSignal.Min();
-                    for (int i = 0; i < quotationList.Count - 33; i++)
+
+                    var macdRange = macdMax - macdMin;
+                    var macdSignRange = macdSignMax - macdSignMin;
+
+                    for (int i = 0; i < Math.Min(outNBElements, quotationList.Count - 33); i++)
                     {
-                        //MACD normalize
-                        quotationList[i + 33].Macd = ((outMACD[i] - macdMin) / (macdMax - macdMin)) * 100;
-                        quotationList[i + 33].MacdSign = ((outMACDSignal[i] - macdSignMin) / (macdSignMax - macdSignMin)) * 100;
+                        //MACD normalize - avoid division by zero
+                        quotationList[i + 33].Macd = macdRange > 0
+                            ? ((outMACD[i] - macdMin) / macdRange) * 100
+                            : 50;
+                        quotationList[i + 33].MacdSign = macdSignRange > 0
+                            ? ((outMACDSignal[i] - macdSignMin) / macdSignRange) * 100
+                            : 50;
                         quotationList[i + 33].MacdHist = quotationList[i + 33].Macd - quotationList[i + 33].MacdSign;
                     }
                 }
 
-                // //Calculate EMA50
+                //Calculate EMA50
                 var statusEma = Core.Ema(0, dataC.Length - 1, dataC, 50, out beginIndex, out outNBElements, emaValues);
                 if (statusEma == Core.RetCode.Success && outNBElements > 0)
                 {
                     var emaMax = emaValues.Max();
                     var emaMin = emaValues.Min();
-                    for (int i = 0; i < quotationList.Count - 49; i++)
+                    var emaRange = emaMax - emaMin;
+
+                    for (int i = 0; i < Math.Min(outNBElements, quotationList.Count - 49); i++)
                     {
-                        quotationList[i + 49].Ema = ((emaValues[i]- emaMin) / (emaMax - emaMin)) * 100;
+                        quotationList[i + 49].Ema = emaRange > 0
+                            ? ((emaValues[i] - emaMin) / emaRange) * 100
+                            : 50;
                     }
                 }
 
-                 //Calculate Stochiastic
-                var statusStoch = Core.Stoch(0, dataC.Length - 1, dataH,dataL, dataC, 5, 3, 0, 3, 0, out beginIndex, out outNBElements, stochSlowKValues, stochSlowDValues);
+                //Calculate Stochastic
+                var statusStoch = Core.Stoch(0, dataC.Length - 1, dataH, dataL, dataC, 5, 3, 0, 3, 0, out beginIndex, out outNBElements, stochSlowKValues, stochSlowDValues);
                 if (statusStoch == Core.RetCode.Success && outNBElements > 0)
                 {
-                    for (int i = 0; i < quotationList.Count - 8; i++)
+                    for (int i = 0; i < Math.Min(outNBElements, quotationList.Count - 8); i++)
                     {
                         quotationList[i + 8].StochSlowD = stochSlowDValues[i];
                         quotationList[i + 8].StochSlowK = stochSlowKValues[i];
                     }
                 }
-
-                //Pivot
-                // foreach (var (quote, index) in quotationList.Select((v, i)=>(v, i))) {
-                //       if(index == 0)continue;
-                //       var PP = ((quotationList[index-1].h + quotationList[index-1].l + quotationList[index-1].c) / 3);
-                //         quote.PivotPoint = new PivotPOint()
-                //         {
-                //             R1 = 2 * PP - quotationList[index-1].l,
-                //             S1 = 2 * PP - quotationList[index-1].h,
-                //             R2 = PP + quotationList[index-1].h - quotationList[index-1].l,
-                //             S2 = (PP - quotationList[index-1].h + quotationList[index-1].l),
-                //             R3 = (quotationList[index-1].h + 2 * (PP - quotationList[index-1].l)),
-                //             S3 = (quotationList[index-1].l - 2 * (quotationList[index-1].h - PP)),
-                //         };
-                // }
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
-                Console.WriteLine("Indicator calculation failled!");
-            }
-            finally
-            {
-
+                Console.WriteLine($"Indicator calculation failed: {ex.Message}");
+                throw;
             }
         }
 

@@ -24,8 +24,11 @@ namespace MarginCoin.Service
 
        public void Clear()
         {
-            _timer.Stop();
-            _timer.Start();
+            if (_timer != null)
+            {
+                _timer.Stop();
+                _timer.Start();
+            }
         }
 
         private void _timer_Elapsed(object sender, ElapsedEventArgs e)

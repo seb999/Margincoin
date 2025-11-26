@@ -5,6 +5,7 @@ export class ServerMsg {
       public candleList? : any[],
       public order? : any,
       public tradeSymbolList? : string[],
+      public data? : any,
       )
       {}
   }

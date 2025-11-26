@@ -11,33 +11,104 @@ namespace MarginCoin.Misc
 {
     public static class TradeHelper
     {
+        /// <summary>
+        /// Calculate trend score based on multiple technical indicators
+        /// Score ranges from -5 (strong bearish) to +5 (strong bullish)
+        /// </summary>
+        /// <param name="candles">List of candles with calculated indicators</param>
+        /// <param name="useWeighted">If true, gives more weight to trend indicators (EMA, MACD)</param>
+        /// <returns>Integer score representing trend strength and direction</returns>
+        public static int CalculateTrendScore(List<Candle> candles, bool useWeighted = false)
+        {
+            if (candles == null || candles.Count < 2)
+                return 0;
+
+            var current = candles[^1]; // Latest candle
+            var previous = candles[^2]; // Previous candle
+
+            int score = 0;
+
+            if (useWeighted)
+            {
+                // Weighted scoring - trend indicators get more weight
+
+                // Trend indicators (weight: 2)
+                if (current.c > current.Ema) score += 2; else if (current.c < current.Ema) score -= 2;
+                if (current.Macd > current.MacdSign) score += 2; else if (current.Macd < current.MacdSign) score -= 2;
+
+                // Momentum indicators (weight: 1)
+                if (current.MacdHist > previous.MacdHist) score += 1; else if (current.MacdHist < previous.MacdHist) score -= 1;
+                if (current.Rsi > 50) score += 1; else if (current.Rsi < 50) score -= 1;
+                if (current.Rsi > previous.Rsi) score += 1; else if (current.Rsi < previous.Rsi) score -= 1;
+            }
+            else
+            {
+                // Equal weight scoring - all indicators count the same
+
+                // Bullish signals (+1 each)
+                if (current.c > current.Ema) score++;
+                if (current.Macd > current.MacdSign) score++;
+                if (current.MacdHist > previous.MacdHist) score++;
+                if (current.Rsi > 50) score++;
+                if (current.Rsi > previous.Rsi) score++;
+
+                // Bearish signals (-1 each)
+                if (current.c < current.Ema) score--;
+                if (current.Macd < current.MacdSign) score--;
+                if (current.MacdHist < previous.MacdHist) score--;
+                if (current.Rsi < 50) score--;
+                if (current.Rsi < previous.Rsi) score--;
+            }
+
+            return score;
+        }
+
+        /// <summary>
+        /// Get trend direction as string based on trend score
+        /// </summary>
+        /// <param name="candles">List of candles with calculated indicators</param>
+        /// <param name="useWeighted">If true, uses weighted scoring</param>
+        /// <returns>"UP", "DOWN", or "SIDEWAYS"</returns>
+        public static string GetTrendDirection(List<Candle> candles, bool useWeighted = false)
+        {
+            var score = CalculateTrendScore(candles, useWeighted);
+
+            // For weighted scoring, thresholds are higher (max score is ~9)
+            var threshold = useWeighted ? 5 : 3;
+
+            if (score >= threshold) return "UP";
+            if (score <= -threshold) return "DOWN";
+            return "SIDEWAYS";
+        }
 
         public static MacdSlope CalculateMacdSlope(List<Candle> symbolCandles, string tradingInterval)
         {
+            var interval = NumberCandleInInterval(tradingInterval, 1);
+
+            // Validate inputs - need at least 4 + interval candles, and interval must not be zero
+            if (symbolCandles == null || symbolCandles.Count < (4 + interval) || interval == 0)
+            {
+                return new MacdSlope { Slope = 0, P1 = new Point(), P2 = new Point() };
+            }
+
             try
             {
-                MacdSlope mySlope = new MacdSlope();
+                // Calculate the slope for 4 different points using index from end operator
+                var coefficient1 = (symbolCandles[^1].MacdHist - symbolCandles[^(1 + interval)].MacdHist) / interval;
+                var coefficient2 = (symbolCandles[^2].MacdHist - symbolCandles[^(2 + interval)].MacdHist) / interval;
+                var coefficient3 = (symbolCandles[^3].MacdHist - symbolCandles[^(3 + interval)].MacdHist) / interval;
+                var coefficient4 = (symbolCandles[^4].MacdHist - symbolCandles[^(4 + interval)].MacdHist) / interval;
 
-                //We calculate how many candle for 1Hours
-                var interval = TradeHelper.NumberCandleInInterval(tradingInterval, 1);
-
-                //Calculate the slope for 4 differente point
-                var coefficient1 = (symbolCandles[symbolCandles.Count - 1].MacdHist - symbolCandles[symbolCandles.Count - (1 + interval)].MacdHist) / interval;
-                var coefficient2 = (symbolCandles[symbolCandles.Count - 2].MacdHist - symbolCandles[symbolCandles.Count - (2 + interval)].MacdHist) / interval;
-                var coefficient3 = (symbolCandles[symbolCandles.Count - 3].MacdHist - symbolCandles[symbolCandles.Count - (3 + interval)].MacdHist) / interval;
-                var coefficient4 = (symbolCandles[symbolCandles.Count - 4].MacdHist - symbolCandles[symbolCandles.Count - (4 + interval)].MacdHist) / interval;
-
-
-
-                mySlope.Slope = (coefficient1 + coefficient2 + coefficient3 + coefficient4) / 4;
-                mySlope.P2 = new Point() { x = symbolCandles[symbolCandles.Count - 1].t, y = symbolCandles[symbolCandles.Count - 1].MacdHist };
-                mySlope.P1 = new Point() { x = symbolCandles[symbolCandles.Count - 5].t, y = symbolCandles[symbolCandles.Count - 5].MacdHist };
-
-                return mySlope;
+                return new MacdSlope
+                {
+                    Slope = (coefficient1 + coefficient2 + coefficient3 + coefficient4) / 4,
+                    P2 = new Point { x = symbolCandles[^1].t, y = symbolCandles[^1].MacdHist },
+                    P1 = new Point { x = symbolCandles[^5].t, y = symbolCandles[^5].MacdHist }
+                };
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
+                Console.WriteLine($"MACD slope calculation failed: {ex.Message}");
                 throw;
             }
         }
@@ -144,7 +215,7 @@ namespace MarginCoin.Misc
                 };
                 candleList.Add(newCandle);
             }
-            TradeIndicator.CalculateIndicator(ref candleList);
+            TradeIndicator.CalculateIndicator(candleList);
             return candleList;
         }
 

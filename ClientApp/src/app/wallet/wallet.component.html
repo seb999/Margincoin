@@ -52,6 +52,38 @@
       </div>
     </div>
 
+    <!-- WebSocket Status Bar -->
+    <div *ngIf="websocketStatus || lastCandleUpdate" class="bg-gray-800/40 rounded-lg border !border-gray-700/20 p-2">
+      <div class="flex items-center justify-between gap-4 text-xs">
+        <!-- WebSocket Connection Status -->
+        <div *ngIf="websocketStatus" class="flex items-center gap-2">
+          <span class="w-2 h-2 rounded-full bg-green-400 animate-pulse"></span>
+          <span class="text-gray-300">
+            <span *ngIf="websocketStatus.symbol === 'SPOT'" class="font-semibold text-green-400">Market Data Connected</span>
+            <span *ngIf="websocketStatus.symbol !== 'SPOT'">
+              <span class="text-green-400 font-semibold">{{websocketStatus.symbol}}</span> connected
+            </span>
+          </span>
+          <span *ngIf="websocketStatus.totalConnections" class="text-gray-500">
+            • {{websocketStatus.totalConnections}} symbols tracked
+          </span>
+        </div>
+
+        <!-- Latest Candle Update -->
+        <div *ngIf="lastCandleUpdate" class="flex items-center gap-2 animate-pulse">
+          <i class="fa-solid fa-chart-line text-blue-400"></i>
+          <span class="text-gray-300">
+            <span class="font-semibold text-blue-400">{{lastCandleUpdate.symbol}}</span>
+            <span class="text-gray-500">&#64;</span>
+            <span class="font-mono">{{lastCandleUpdate.price}}</span>
+            <span [ngClass]="lastCandleUpdate.change >= 0 ? 'text-green-400' : 'text-red-400'">
+              ({{lastCandleUpdate.change >= 0 ? '+' : ''}}{{lastCandleUpdate.change?.toFixed(2)}}%)
+            </span>
+          </span>
+        </div>
+      </div>
+    </div>
+
     <!-- Control Bar -->
     <div class="bg-gray-800/60 rounded-lg border !border-gray-700/30 p-2">
       <div class="flex items-center justify-between gap-4">

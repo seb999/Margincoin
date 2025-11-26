@@ -10,4 +10,6 @@ export enum BackEndMessage {
   httpRequestError = 'httpRequestError',
   accessFaulty = 'AccessFaulty',
   badRequest = 'BadRequest',
+  websocketStatus = 'websocketStatus',
+  candleUpdate = 'candleUpdate',
 };
