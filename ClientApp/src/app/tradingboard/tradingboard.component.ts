@@ -172,7 +172,7 @@ export class TradingboardComponent {
         this.coinData = data;
         if (this.coinData.p < 0) this.coinData.color = "red";
         if (this.coinData.p >= 0) this.coinData.color = "limegreen";
-        this.coinData.s.includes("USDT");
+        this.coinData.s.includes("USDC");
 
         //re calculate stop loose
         this.takeProfit = this.coinData.c - ((this.coinData.c / 100) * this.takeProfitOffset);

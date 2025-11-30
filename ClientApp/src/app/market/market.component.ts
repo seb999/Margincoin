@@ -51,8 +51,8 @@ export class MarketComponent {
           this.symbolList$ = data.filter(function (symbol: any) {
             if (symbol.p < 0) symbol.color = "red";
             if (symbol.p >= 0) symbol.color = "limegreen";
-            return symbol.s.includes("USDT");
-          });
+            return symbol.s.includes("USDC");
+        });
         };
       })
   };

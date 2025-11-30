@@ -333,10 +333,10 @@ export class WalletComponent {
     }
     let balance = 0;
     for (const asset of this.myAccount.balances) {
-      if (asset.asset === 'USDT') {
+      if (asset.asset === 'USDC') {
         balance += parseFloat(asset.free);
       } else {
-        const price = this.symbolPrice.find(p => p.symbol === asset.asset + 'USDT');
+        const price = this.symbolPrice.find(p => p.symbol === asset.asset + 'USDC');
         if (price) {
           balance += parseFloat(price.price) * parseFloat(asset.free);
         }
@@ -348,7 +348,7 @@ export class WalletComponent {
   formatBalance(value: string, asset: string): string {
     const num = parseFloat(value);
     if (num === 0) return '-';
-    if (asset === 'USDT') return num.toFixed(2);
+    if (asset === 'USDC') return num.toFixed(2);
     if (num >= 1) return num.toFixed(4);
     if (num >= 0.0001) return num.toFixed(6);
     return num.toFixed(8);
@@ -415,13 +415,11 @@ export class WalletComponent {
 
   openPopup(popupTemplate, symbol, availableQty) {
     this.popupSymbol = symbol;
-    this.popupQty = availableQty;
+    this.popupQty = parseFloat(availableQty) || 0;
 
     // get symbol price
-    let index = this.symbolPrice.findIndex((crypto) => crypto.symbol === symbol + "USDT");
-      if (index !== -1) {
-        this.popupSymbolPrice = parseFloat(this.symbolPrice[index].price);
-      }
+    this.popupSymbolPrice = this.getSymbolPriceValue(symbol) ?? 0;
+    this.popupQuoteQty = this.popupQty && this.popupSymbolPrice ? this.popupQty * this.popupSymbolPrice : 0;
 
     this.modalService.open(popupTemplate, { ariaLabelledBy: 'modal-basic-title', size: 'lg' }).result.then((result) => {
       if (result == 'sell') {
@@ -434,10 +432,29 @@ export class WalletComponent {
   }
 
   onPopupQtyChange(){
-    if(this.popupQty != 0) this.popupQuoteQty = this.popupSymbolPrice / this.popupQty;
+    if (this.popupQty && this.popupSymbolPrice) {
+      this.popupQuoteQty = this.popupQty * this.popupSymbolPrice;
+    } else {
+      this.popupQuoteQty = 0;
+    }
   }
   onPopupQuoteQtyChange(){
-    if(this.popupSymbolPrice != 0) this.popupQty = this.popupQuoteQty /this.popupSymbolPrice;
+    if (this.popupSymbolPrice) {
+      this.popupQty = this.popupQuoteQty / this.popupSymbolPrice;
+    } else {
+      this.popupQty = 0;
+    }
+  }
+
+  private getSymbolPriceValue(symbol: string): number | null {
+    if (!this.symbolPrice?.length) return null;
+    const upper = symbol?.toUpperCase();
+    const matchUsdc = this.symbolPrice.find((crypto) => crypto.symbol === `${upper}USDC`);
+    if (matchUsdc) return parseFloat(matchUsdc.price);
+    const fallbackUsdt = this.symbolPrice.find((crypto) => crypto.symbol === `${upper}USDT`);
+    if (fallbackUsdt) return parseFloat(fallbackUsdt.price);
+    const looseMatch = this.symbolPrice.find((crypto) => crypto.symbol.startsWith(upper));
+    return looseMatch ? parseFloat(looseMatch.price) : null;
   }
 
   /////////////////////////////////////////////////////////////
@@ -470,7 +487,7 @@ export class WalletComponent {
       this.myOrder = await this.orderDetailHelper.getOrder(orderId);
     }
     else {
-      this.displaySymbol = symbol + "USDT";
+      this.displaySymbol = symbol + "USDC";
       this.myOrder = null;
     }
 

@@ -9,7 +9,7 @@
         <div class="relative">
           <p class="text-xs text-blue-300/70 uppercase tracking-wider mb-1">Total Balance</p>
           <p class="text-2xl font-bold text-white">{{this.balance?.toFixed(0) || '0'}}</p>
-          <p class="text-xs text-gray-400 mt-1">USDT</p>
+          <p class="text-xs text-gray-400 mt-1">USDC</p>
         </div>
       </div>
       <!-- P&L Card -->
@@ -22,7 +22,7 @@
           <p class="text-2xl font-bold" [ngClass]="(totalProfit ?? 0) >= 0 ? 'text-emerald-400' : 'text-red-400'">
             {{(totalProfit ?? 0) >= 0 ? '+' : ''}}{{(totalProfit ?? 0).toFixed(2)}}
           </p>
-          <p class="text-xs text-gray-400 mt-1">USDT</p>
+          <p class="text-xs text-gray-400 mt-1">USDC</p>
         </div>
       </div>
       <!-- Trades Card -->
@@ -96,10 +96,16 @@
             <span>Start</span>
           </button>
           <button *ngIf="isTradeOpen"
-            class="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-emerald-100 bg-emerald-600/20 border border-emerald-500/30 rounded-lg"
+            class="flex items-center gap-3 px-4 py-2 text-sm font-semibold text-emerald-50 bg-gradient-to-r from-emerald-600 to-green-600 border border-emerald-400/50 rounded-lg shadow-green-500/30 shadow-md"
             disabled>
-            <i class="fa-solid fa-circle text-xs text-emerald-400 animate-pulse"></i>
-            <span>Running</span>
+            <div class="flex items-center gap-2">
+              <i class="fa-solid fa-signal text-sm text-white drop-shadow-[0_0_10px_rgba(190,255,120,1)] animate-pulse"></i>
+              <span>Running</span>
+            </div>
+            <div *ngIf="websocketStatus" class="flex items-center gap-2 text-[10px] text-emerald-50">
+              <span class="w-3 h-3 rounded-full bg-lime-200 animate-ping shadow-[0_0_12px_rgba(190,255,120,1)]"></span>
+              <span>Backend live</span>
+            </div>
           </button>
           <button
             class="flex items-center gap-2 px-3 py-2 text-sm font-medium text-amber-100 bg-gradient-to-r from-amber-600 to-yellow-600 hover:from-amber-700 hover:to-yellow-700 rounded-lg shadow-lg shadow-amber-500/20 transition-all duration-200 hover:scale-105"
@@ -189,8 +195,8 @@
                 [style.border-left-color]="!order.isClosed ? '#f59e0b' : '#10b981'"
                 [style.border-left-width.px]="4">
               <td class="px-3 py-2">
-                <span class="font-semibold text-white text-sm">{{order.symbol.replace('USDT', '')}}</span>
-                <span class="text-gray-500 text-xs">/USDT</span>
+                <span class="font-semibold text-white text-sm">{{order.symbol.replace('USDC', '')}}</span>
+                <span class="text-gray-500 text-xs">/USDC</span>
               </td>
               <td class="px-3 py-2 text-right text-gray-300 font-mono text-sm">
                 <span *ngIf="!order.isClosed" class="text-amber-400">{{(order.quantityBuy*order.openPrice).toFixed(0)}}</span>
@@ -391,7 +397,7 @@
           class="group flex items-center px-3 py-2 hover:bg-gray-700/20 transition-colors">
           <button class="flex-1 flex items-center gap-2" (click)="showChart(asset.asset, null);">
             <div class="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold"
-              [ngClass]="asset?.asset === 'USDT' ? 'bg-emerald-500/20 text-emerald-400' : 'bg-gradient-to-br from-amber-500/20 to-orange-500/20 text-amber-400'">
+              [ngClass]="asset?.asset === 'USDC' ? 'bg-emerald-500/20 text-emerald-400' : 'bg-gradient-to-br from-amber-500/20 to-orange-500/20 text-amber-400'">
               {{asset?.asset?.charAt(0)}}
             </div>
             <span class="font-medium text-white text-sm">{{asset?.asset}}</span>
@@ -478,7 +484,7 @@
       <span class="font-mono text-red-300 text-xs">{{currentOrderSellType || '-'}}</span>
     </div>
     <div class="flex justify-between gap-4">
-      <span class="text-gray-400 text-xs">Total (USDT)</span>
+      <span class="text-gray-400 text-xs">Total (USDC)</span>
       <span class="font-mono font-semibold text-white text-xs">{{currentOrderDetails?.cummulativeQuoteQty}}</span>
     </div>
     <div class="flex justify-between gap-4">
@@ -494,26 +500,26 @@
 
 <!-- Buy/Sell Modal -->
 <ng-template #popupTemplate let-modal>
-  <div class="bg-gray-800 rounded-xl border border-gray-700 shadow-2xl overflow-hidden">
-    <div class="flex items-center justify-between px-5 py-4 bg-gray-900/50 border-b border-gray-700">
+  <div class="bg-gray-900 rounded-xl border border-gray-800 shadow-2xl overflow-hidden">
+    <div class="flex items-center justify-between px-5 py-4 bg-gray-950/60 border-b border-gray-800">
       <div class="flex items-center gap-3">
         <div class="w-10 h-10 rounded-full bg-gradient-to-br from-amber-500/20 to-orange-500/20 flex items-center justify-center">
           <span class="text-lg font-bold text-amber-400">{{this.popupSymbol?.charAt(0)}}</span>
         </div>
         <div>
           <h3 class="text-lg font-semibold text-white">{{this.popupSymbol}}</h3>
-          <p class="text-sm text-gray-400">{{this.popupSymbolPrice}} USDT</p>
+          <p class="text-sm text-gray-400">{{this.popupSymbolPrice}} USDC</p>
         </div>
       </div>
       <button type="button" class="p-2 text-gray-400 hover:text-white hover:bg-gray-700 rounded-lg transition-colors" aria-label="Close" (click)="modal.dismiss('Cross click')">
         <i class="fa-solid fa-xmark"></i>
       </button>
     </div>
-    <div class="p-5 space-y-4">
+    <div class="p-5 space-y-4 bg-gray-900">
       <div class="space-y-3">
         <label class="block text-xs font-medium text-gray-400 uppercase tracking-wider">Quantity</label>
         <div class="flex gap-3">
-          <input class="flex-1 px-4 py-3 text-sm bg-gray-900/50 border border-gray-700 text-white rounded-lg focus:border-red-500/50 focus:ring-2 focus:ring-red-500/20 outline-none transition-all"
+          <input class="flex-1 px-4 py-3 text-sm bg-gray-950 border border-gray-800 text-white rounded-lg focus:border-red-500/50 focus:ring-2 focus:ring-red-500/20 outline-none transition-all"
             name="qty" required [(ngModel)]="this.popupQty" (ngModelChange)="onPopupQtyChange()">
           <button type="submit" class="px-6 py-3 text-sm font-semibold text-white bg-gradient-to-r from-red-500 to-rose-600 hover:from-red-600 hover:to-rose-700 rounded-lg shadow-lg shadow-red-500/20 transition-all"
             (click)="modal.close('sell')">
@@ -522,9 +528,9 @@
         </div>
       </div>
       <div class="space-y-3">
-        <label class="block text-xs font-medium text-gray-400 uppercase tracking-wider">Quote Amount (USDT)</label>
+        <label class="block text-xs font-medium text-gray-400 uppercase tracking-wider">Quote Amount (USDC)</label>
         <div class="flex gap-3">
-          <input class="flex-1 px-4 py-3 text-sm bg-gray-900/50 border border-gray-700 text-white rounded-lg focus:border-emerald-500/50 focus:ring-2 focus:ring-emerald-500/20 outline-none transition-all"
+          <input class="flex-1 px-4 py-3 text-sm bg-gray-950 border border-gray-800 text-white rounded-lg focus:border-emerald-500/50 focus:ring-2 focus:ring-emerald-500/20 outline-none transition-all"
             name="quoteQty" required [(ngModel)]="this.popupQuoteQty" (ngModelChange)="onPopupQuoteQtyChange()">
           <button type="submit" class="px-6 py-3 text-sm font-semibold text-white bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 rounded-lg shadow-lg shadow-emerald-500/20 transition-all"
             (click)="modal.close('buy')">

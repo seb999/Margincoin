@@ -85,7 +85,7 @@ export class TradeService {
   }
 
   async sell(asset, qty): Promise<any> {
-    let symbol = asset + "USDT";
+    let symbol = asset + "USDC";
     const httpSetting: HttpSettings = {
       method: 'GET',
       url: location.origin + '/api/Binance/Sell/' + symbol + "/" + qty
@@ -94,7 +94,7 @@ export class TradeService {
   }
 
   async buy(asset, quoteQty): Promise<any> {
-    let symbol = asset + "USDT";
+    let symbol = asset + "USDC";
     const httpSetting: HttpSettings = {
       method: 'GET',
       url: location.origin + '/api/Binance/Buy/' + symbol + "/" + quoteQty

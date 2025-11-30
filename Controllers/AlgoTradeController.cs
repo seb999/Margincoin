@@ -367,7 +367,7 @@ namespace MarginCoin.Controllers
                          List<MarketStream> marketStreamList = Helper.deserializeHelper<List<MarketStream>>(fullData);
                          dataResult.Clear();  //we clean it immediately to avoid a bug on new data coming
 
-                         marketStreamList = marketStreamList.Where(p => p.s.Contains("USDT")).ToList();
+                        marketStreamList = marketStreamList.Where(p => p.s.Contains("USDC")).ToList();
 
                          TradeHelper.BufferMarketStream(marketStreamList, ref buffer);
 

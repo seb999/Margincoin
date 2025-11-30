@@ -162,7 +162,7 @@ export class OrderDetailComponent {
         this.coinData = data;
         if (this.coinData.p < 0) this.coinData.color = "red";
         if (this.coinData.p >= 0) this.coinData.color = "limegreen";
-        this.coinData.s.includes("USDT");
+        this.coinData.s.includes("USDC");
 
         if (!this.coinData.k.x) {
           this.ohlc.pop();

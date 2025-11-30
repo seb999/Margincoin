@@ -52,25 +52,25 @@ namespace MarginCoin.Controllers
 
             var symbolWeTrade = _tradingState.SymbolWeTrade;
 
-            // Keep only balances for symbols we trade (+ USDT)
+            // Keep only balances for symbols we trade (+ USDC)
             myAccount.balances = myAccount.balances
-                .Where(b => b.asset == "USDT" || symbolWeTrade.Any(s => s.SymbolName.Replace("USDT", "") == b.asset))
+                .Where(b => b.asset == "USDC" || symbolWeTrade.Any(s => s.SymbolName.Replace("USDC", "") == b.asset))
                 .ToList();
 
             // Add missing symbols with zero balance
             foreach (var symbol in symbolWeTrade)
             {
-                var asset = symbol.SymbolName.Replace("USDT", "");
+                var asset = symbol.SymbolName.Replace("USDC", "");
                 if (!myAccount.balances.Any(b => b.asset == asset))
                 {
                     myAccount.balances.Add(new balances { asset = asset, free = "0", locked = "0" });
                 }
             }
 
-            // Order: USDT first, then by rank
+            // Order: USDC first, then by rank
             myAccount.balances = myAccount.balances
-                .OrderByDescending(b => b.asset == "USDT")
-                .ThenBy(b => symbolWeTrade.FirstOrDefault(s => s.SymbolName.Replace("USDT", "") == b.asset)?.Rank ?? int.MaxValue)
+                .OrderByDescending(b => b.asset == "USDC")
+                .ThenBy(b => symbolWeTrade.FirstOrDefault(s => s.SymbolName.Replace("USDC", "") == b.asset)?.Rank ?? int.MaxValue)
                 .ToList();
 
             return myAccount;
@@ -141,7 +141,7 @@ namespace MarginCoin.Controllers
         public async Task CancelSymbolOrder(string symbol)
         {
             System.Net.HttpStatusCode httpStatusCode = System.Net.HttpStatusCode.NoContent;
-            BinanceOrder myBinanceOrder = _binanceService.CancelSymbolOrder(symbol + "USDT");
+            BinanceOrder myBinanceOrder = _binanceService.CancelSymbolOrder(symbol + "USDC");
             if (myBinanceOrder == null) return;
 
             if (httpStatusCode == System.Net.HttpStatusCode.BadRequest)

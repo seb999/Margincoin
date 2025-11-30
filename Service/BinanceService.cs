@@ -53,7 +53,7 @@ namespace MarginCoin.Service
         {
             string apiUrl = $"https://api.binance.com/api/v3/ticker/price";
             List<BinancePrice> symbolPrice = HttpHelper.GetApiData<List<BinancePrice>>(new Uri(apiUrl));
-            symbolPrice = symbolPrice.Where(p => p.symbol.Contains("USDT")).ToList();
+            symbolPrice = symbolPrice.Where(p => p.symbol.Contains("USDC")).ToList();
             return symbolPrice;
         }
 

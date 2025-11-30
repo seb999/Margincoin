@@ -189,7 +189,7 @@ Default trading parameters (configured in AlgoTradeController.cs):
 
 - **Interval:** 30-minute candles
 - **Symbols:** Top 18 by market cap
-- **Order Size:** 1500 USDT per trade
+- **Order Size:** 1500 USDC per trade
 - **Max Open Trades:** 3
 - **Stop Loss:** 2%
 

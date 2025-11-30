@@ -103,7 +103,7 @@ namespace MarginCoin.Service
 
             foreach (var coin in coinQuotation.data.OrderBy(p => p.cmc_rank))
             {
-                var symbol = _dbContext.Symbol.FirstOrDefault(p => p.SymbolName == $"{coin.symbol}USDT");
+                var symbol = _dbContext.Symbol.FirstOrDefault(p => p.SymbolName == $"{coin.symbol}USDC");
                 if (symbol != null)
                 {
                     symbol.Rank = coin.cmc_rank;
