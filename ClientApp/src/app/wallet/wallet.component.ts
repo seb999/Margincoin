@@ -93,6 +93,8 @@ export class WalletComponent {
   public showOnlyRunning: boolean = false;
   public orderPopoverVisible: boolean = false;
   public currentOrderDetails: BinanceOrder | null = null;
+  public currentOrderBuyType: string | null = null;
+  public currentOrderSellType: string | null = null;
 
   get filteredOrderList(): Order[] {
     if (!this.orderList) return [];
@@ -220,8 +222,35 @@ export class WalletComponent {
     this.orderList = await this.tradeService.getAllOrder(this.model.day + "-" + this.model.month + "-" + this.model.year);
   }
 
-  openPopOver(popover: NgbPopover | undefined, order: BinanceOrder) {
-    popover?.open({ order });
+  private setDecisionTypes(reason?: string, side?: string) {
+    const trimmed = reason?.trim() || null;
+    if (!side) {
+      this.currentOrderBuyType = trimmed;
+      this.currentOrderSellType = trimmed;
+    } else if (side === 'BUY') {
+      this.currentOrderBuyType = trimmed;
+    } else if (side === 'SELL') {
+      this.currentOrderSellType = trimmed;
+    }
+  }
+
+  private findOrderReason(binanceOrder: BinanceOrder | null): string | undefined {
+    if (!binanceOrder) return undefined;
+    const orderIdNum = Number(binanceOrder.orderId);
+    const match = this.orderList?.find(o => {
+      const buyId = o.buyOrderId != null ? Number(o.buyOrderId) : null;
+      const sellId = o.sellOrderId != null ? Number(o.sellOrderId) : null;
+      return (buyId != null && !isNaN(orderIdNum) && buyId === orderIdNum) ||
+        (sellId != null && !isNaN(orderIdNum) && sellId === orderIdNum) ||
+        o.symbol === binanceOrder.symbol;
+    });
+    return match?.type;
+  }
+
+  openPopOver(popover: NgbPopover | undefined, order: BinanceOrder, decisionType?: string) {
+    if (!popover) return;
+    const enrichedOrder = { ...order, type: decisionType ?? order.type };
+    popover.open({ order: enrichedOrder });
   }
 
   closePopOver(popover: NgbPopover | undefined) {
@@ -233,19 +262,23 @@ export class WalletComponent {
 
     this.currentOrderDetails = binanceOrder;
     this.orderPopoverVisible = true;
+    const decisionType = this.findOrderReason(binanceOrder);
+    this.setDecisionTypes(decisionType, binanceOrder.side);
 
     // Maintain legacy popover notification when present
     if (this.orderPopOver) {
       if (this.orderPopOver.isOpen()) {
         this.closePopOver(this.orderPopOver);
       }
-      this.openPopOver(this.orderPopOver, binanceOrder);
+      this.openPopOver(this.orderPopOver, binanceOrder, decisionType);
     }
 
     // Auto-close after 15 seconds
     setTimeout(() => {
       this.orderPopoverVisible = false;
       this.currentOrderDetails = null;
+      this.currentOrderBuyType = null;
+      this.currentOrderSellType = null;
       this.closePopOver(this.orderPopOver);
       this.refreshUI();
     }, 15000);
@@ -358,11 +391,15 @@ export class WalletComponent {
       const orderDetails = await this.tradeService.getOrderStatus(symbol, orderIdNum);
       if (orderDetails) {
         this.currentOrderDetails = orderDetails;
+        const decisionType = this.findOrderReason(orderDetails);
+        this.setDecisionTypes(decisionType, orderDetails.side);
         this.orderPopoverVisible = true;
 
         // Auto-close after 15 seconds
         setTimeout(() => {
           this.orderPopoverVisible = false;
+          this.currentOrderBuyType = null;
+          this.currentOrderSellType = null;
         }, 15000);
       }
     }

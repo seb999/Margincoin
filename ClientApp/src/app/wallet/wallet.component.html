@@ -243,15 +243,12 @@
                 </span>
               </td>
               <td class="px-3 py-2">
-                <div class="flex items-center justify-center gap-1 opacity-50 group-hover:opacity-100 transition-opacity">
-                  <button *ngIf="!order.isClosed" class="p-1 text-red-400 hover:text-red-300 hover:bg-red-500/10 rounded transition-all" (click)="closeTrade(order.id, order.closePrice);">
+                <div class="flex items-center justify-center gap-2">
+                  <button *ngIf="!order.isClosed" class="p-1.5 text-red-200 bg-red-500/20 hover:bg-red-500/30 rounded-lg transition-all shadow-sm shadow-red-500/20" (click)="closeTrade(order.id, order.closePrice);">
                     <i class="far fa-trash-alt text-xs"></i>
                   </button>
-                  <a [routerLink]="['/orderDetail', order.id]" target="_blank" class="p-1 text-blue-400 hover:text-blue-300 hover:bg-blue-500/10 rounded transition-all">
+                  <button class="p-1.5 text-amber-100 bg-amber-500/20 hover:bg-amber-500/30 rounded-lg transition-all shadow-sm shadow-amber-500/20" (click)="showChart(order.symbol, order.id);">
                     <i class="fa-solid fa-chart-line text-xs"></i>
-                  </a>
-                  <button class="p-1 text-purple-400 hover:text-purple-300 hover:bg-purple-500/10 rounded transition-all" (click)="showChart(order.symbol, order.id);">
-                    <i class="fa-solid fa-chart-simple text-xs"></i>
                   </button>
                 </div>
               </td>
@@ -438,6 +435,9 @@
       <span>Qty</span><span class="font-mono">{{order?.executedQty || order?.origQty}}</span>
     </div>
     <div class="flex justify-between text-gray-400 text-xs">
+      <span>Decision</span><span class="font-semibold text-amber-300">{{order?.type || '-'}}</span>
+    </div>
+    <div class="flex justify-between text-gray-400 text-xs">
       <span>Status</span><span class="font-semibold text-emerald-400">{{order?.status}}</span>
     </div>
   </div>
@@ -468,6 +468,14 @@
     <div class="flex justify-between gap-4">
       <span class="text-gray-400 text-xs">Quantity</span>
       <span class="font-mono text-gray-300 text-xs">{{currentOrderDetails?.executedQty}}</span>
+    </div>
+    <div class="flex justify-between gap-4">
+      <span class="text-gray-400 text-xs">Buy Type</span>
+      <span class="font-mono text-emerald-300 text-xs">{{currentOrderBuyType || '-'}}</span>
+    </div>
+    <div class="flex justify-between gap-4">
+      <span class="text-gray-400 text-xs">Sell Type</span>
+      <span class="font-mono text-red-300 text-xs">{{currentOrderSellType || '-'}}</span>
     </div>
     <div class="flex justify-between gap-4">
       <span class="text-gray-400 text-xs">Total (USDT)</span>
