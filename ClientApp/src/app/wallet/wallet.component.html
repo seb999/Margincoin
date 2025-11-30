@@ -144,11 +144,20 @@
       <div class="px-3 py-2 bg-gray-900/50 border-b border-gray-700/50 flex items-center justify-between">
         <div class="flex items-center gap-2">
           <h3 class="text-xs font-semibold text-white">Trade History</h3>
-          <span class="px-1.5 py-0.5 text-[10px] font-medium text-gray-400 bg-gray-700/50 rounded-full">{{orderList?.length || 0}}</span>
+          <span class="px-1.5 py-0.5 text-[10px] font-medium text-gray-400 bg-gray-700/50 rounded-full">{{filteredOrderList?.length || 0}}</span>
         </div>
-        <button class="p-1 text-gray-400 hover:text-blue-400 hover:bg-blue-500/10 rounded transition-all" (click)="refreshOrderTable()">
-          <i class="fa fa-arrows-rotate text-xs"></i>
-        </button>
+        <div class="flex items-center gap-1">
+          <button
+            class="px-2 py-1 text-xs font-medium rounded transition-all"
+            [ngClass]="showOnlyRunning ? 'bg-amber-500/20 text-amber-400 border border-amber-500/50' : 'text-gray-400 hover:text-gray-300 hover:bg-gray-700/50'"
+            (click)="toggleTradeFilter()">
+            <i class="fa-solid fa-filter text-[10px] mr-1"></i>
+            {{showOnlyRunning ? 'Active' : 'All'}}
+          </button>
+          <button class="p-1 text-gray-400 hover:text-blue-400 hover:bg-blue-500/10 rounded transition-all" (click)="refreshOrderTable()">
+            <i class="fa fa-arrows-rotate text-xs"></i>
+          </button>
+        </div>
       </div>
       <div class="overflow-x-auto">
         <table class="w-full text-sm">
@@ -170,9 +179,15 @@
             </tr>
           </thead>
           <tbody class="divide-y divide-gray-700/50">
-            <tr *ngFor="let order of orderList"
-                class="group hover:bg-gray-700/30 transition-all duration-150"
-                [ngClass]="{'bg-amber-500/5 border-l-2 border-l-amber-500': order.closeDate == null, 'bg-red-500/5': order.status !== 'FILLED'}">
+            <tr *ngFor="let order of filteredOrderList"
+                class="group hover:bg-gray-700/30 transition-all duration-150 border-l-4"
+                [ngClass]="{
+                  'bg-amber-500/10 border-l-amber-500': !order.isClosed || order.isClosed === 0,
+                  'bg-emerald-500/10 border-l-emerald-500': order.isClosed === 1 || order.isClosed == 1,
+                  'bg-red-500/5': order.status !== 'FILLED'
+                }"
+                [style.border-left-color]="!order.isClosed ? '#f59e0b' : '#10b981'"
+                [style.border-left-width.px]="4">
               <td class="px-3 py-2">
                 <span class="font-semibold text-white text-sm">{{order.symbol.replace('USDT', '')}}</span>
                 <span class="text-gray-500 text-xs">/USDT</span>
@@ -182,10 +197,10 @@
                 <span *ngIf="order.isClosed">{{(order.quantityBuy*order.openPrice).toFixed(0)}}<span class="text-gray-500">/</span>{{(order.quantitySell*order.closePrice).toFixed(0)}}</span>
               </td>
               <td class="px-3 py-2 text-right">
-                <button class="text-blue-400 hover:text-blue-300 font-mono text-sm hover:underline" (click)="binanceOrder(order.buyOrderId)">{{order.openPrice.toFixed(5)}}</button>
+                <button class="text-blue-400 hover:text-blue-300 font-mono text-sm hover:underline" (click)="binanceOrder(order.buyOrderId, order.symbol)">{{order.openPrice.toFixed(5)}}</button>
               </td>
               <td class="px-3 py-2 text-right">
-                <button class="text-blue-400 hover:text-blue-300 font-mono text-sm hover:underline" (click)="binanceOrder(order.sellOrderId)">{{order.closePrice.toFixed(5)}}</button>
+                <button class="text-blue-400 hover:text-blue-300 font-mono text-sm hover:underline" (click)="binanceOrder(order.sellOrderId, order.symbol)">{{order.closePrice.toFixed(5)}}</button>
               </td>
               <td class="px-3 py-2 text-right font-mono text-sm font-semibold">
                 <span *ngIf="order.closePrice==0" class="text-gray-600">--</span>
@@ -242,17 +257,17 @@
               </td>
             </tr>
             <!-- Empty State -->
-            <tr *ngIf="!orderList?.length">
+            <tr *ngIf="!filteredOrderList?.length">
               <td colspan="13" class="px-2 py-8 text-center">
                 <div class="text-gray-500">
                   <i class="fa-solid fa-inbox text-2xl mb-2"></i>
-                  <p class="text-xs">No orders for this date</p>
+                  <p class="text-xs">{{showOnlyRunning ? 'No active trades' : 'No orders for this date'}}</p>
                 </div>
               </td>
             </tr>
           </tbody>
           <!-- Totals Row -->
-          <tfoot *ngIf="orderList?.length">
+          <tfoot *ngIf="filteredOrderList?.length">
             <tr class="bg-gray-900/70 border-t border-gray-700">
               <td class="px-3 py-3" colspan="4"></td>
               <td class="px-3 py-3 text-right text-xs font-semibold text-gray-400 uppercase">Total P&L</td>
@@ -406,24 +421,68 @@
   </div>
 </div>
 
-<!-- Order Popover Template -->
-<ng-template #popTitle let-order="order">
-  <div class="flex items-center gap-2">
-    <span *ngIf="order?.side == 'BUY'" class="px-2 py-0.5 text-xs font-medium bg-emerald-600 text-white rounded">{{order?.side}}</span>
-    <span *ngIf="order?.side == 'SELL'" class="px-2 py-0.5 text-xs font-medium bg-red-600 text-white rounded">{{order?.side}}</span>
-    <span class="font-bold">{{order?.symbol}}</span>
-  </div>
-</ng-template>
-<ng-template #popContent let-order="order">
+<!-- Legacy NgbPopover trigger -->
+<button #p1="ngbPopover" class="hidden" [ngbPopover]="orderPopoverTemplate" triggers="manual" popoverClass="bg-gray-900 text-white border border-gray-700 shadow-lg rounded-lg"></button>
+<ng-template #orderPopoverTemplate let-order="order">
   <div class="space-y-2 text-sm">
-    <div class="flex justify-between"><span class="text-gray-400">QuoteQty</span><span class="font-medium">{{order?.cummulativeQuoteQty}}</span></div>
-    <div class="flex justify-between"><span class="text-gray-400">Status</span><span class="font-medium">{{order?.status}}</span></div>
-    <div class="flex justify-between"><span class="text-gray-400">Price</span><span class="font-medium">{{order?.price}}</span></div>
-    <div class="flex justify-between"><span class="text-gray-400">Quantity</span><span class="font-medium">{{order?.executedQty}}</span></div>
-    <div class="flex justify-between"><span class="text-gray-400">Fee</span><span class="font-medium">{{order?.fee}}</span></div>
+    <div class="flex items-center justify-between">
+      <span class="font-semibold">{{order?.symbol}}</span>
+      <span class="px-2 py-0.5 text-[10px] rounded" [ngClass]="order?.side === 'BUY' ? 'bg-emerald-600 text-white' : 'bg-red-600 text-white'">
+        {{order?.side}}
+      </span>
+    </div>
+    <div class="flex justify-between text-gray-300">
+      <span>Price</span><span class="font-mono">{{order?.price}}</span>
+    </div>
+    <div class="flex justify-between text-gray-300">
+      <span>Qty</span><span class="font-mono">{{order?.executedQty || order?.origQty}}</span>
+    </div>
+    <div class="flex justify-between text-gray-400 text-xs">
+      <span>Status</span><span class="font-semibold text-emerald-400">{{order?.status}}</span>
+    </div>
   </div>
 </ng-template>
-<div class="fixed right-40 bottom-64" [ngbPopover]="popContent" [popoverTitle]="popTitle" triggers="manual" placement="bottom" #p1="ngbPopover"></div>
+
+<!-- Custom Order Popover -->
+<div *ngIf="orderPopoverVisible" class="fixed right-6 bottom-6 z-50 bg-gray-800 border border-gray-700 rounded-lg shadow-2xl overflow-hidden animate-fade-in" style="width: 400px;">
+  <!-- Header -->
+  <div class="flex items-center justify-between px-4 py-3 bg-gray-900/50 border-b border-gray-700">
+    <div class="flex items-center gap-2">
+      <span *ngIf="currentOrderDetails?.side == 'BUY'" class="flex items-center gap-1 px-2 py-0.5 text-xs font-medium bg-emerald-600 text-white rounded">
+        <i class="fa-solid fa-arrow-up text-[10px]"></i>{{currentOrderDetails?.side}}
+      </span>
+      <span *ngIf="currentOrderDetails?.side == 'SELL'" class="flex items-center gap-1 px-2 py-0.5 text-xs font-medium bg-red-600 text-white rounded">
+        <i class="fa-solid fa-arrow-down text-[10px]"></i>{{currentOrderDetails?.side}}
+      </span>
+      <span class="font-bold text-white text-sm">{{currentOrderDetails?.symbol}}</span>
+    </div>
+    <span class="text-xs text-emerald-400">✓ FILLED</span>
+  </div>
+
+  <!-- Content -->
+  <div class="p-4 space-y-3">
+    <div class="flex justify-between gap-4 border-b border-gray-700 pb-2">
+      <span class="text-gray-400 text-xs">Price</span>
+      <span class="font-mono font-semibold text-white text-xs">{{currentOrderDetails?.price}}</span>
+    </div>
+    <div class="flex justify-between gap-4">
+      <span class="text-gray-400 text-xs">Quantity</span>
+      <span class="font-mono text-gray-300 text-xs">{{currentOrderDetails?.executedQty}}</span>
+    </div>
+    <div class="flex justify-between gap-4">
+      <span class="text-gray-400 text-xs">Total (USDT)</span>
+      <span class="font-mono font-semibold text-white text-xs">{{currentOrderDetails?.cummulativeQuoteQty}}</span>
+    </div>
+    <div class="flex justify-between gap-4">
+      <span class="text-gray-400 text-xs">Fee</span>
+      <span class="font-mono text-gray-400 text-xs">{{currentOrderDetails?.fee}}</span>
+    </div>
+    <div class="flex justify-between gap-4 pt-2 border-t border-gray-700">
+      <span class="text-gray-400 text-xs">Status</span>
+      <span class="px-2 py-0.5 text-xs font-medium bg-emerald-500/20 text-emerald-400 rounded">{{currentOrderDetails?.status}}</span>
+    </div>
+  </div>
+</div>
 
 <!-- Buy/Sell Modal -->
 <ng-template #popupTemplate let-modal>

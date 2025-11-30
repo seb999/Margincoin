@@ -161,7 +161,7 @@ namespace MarginCoin.Controllers
         }
 
         [HttpGet("[action]/{id}/{lastPrice}")]
-        public void CloseTrade(int id, double lastPrice)
+        public async Task CloseTrade(int id, double lastPrice)
         {
             Order myOrder = _appDbContext.Order.Where(p => p.Id == id).Select(p => p).FirstOrDefault();
             if (myOrder == null) return;
@@ -175,18 +175,18 @@ namespace MarginCoin.Controllers
             else
             {
                 if (_tradingState.IsMarketOrder == true)
-                    _orderService.SellMarket(myOrder, "by user");
+                    await _orderService.SellMarket(myOrder, "by user");
                 else
-                    _orderService.SellLimit(myOrder, _tradingState.MarketStreamOnSpot.SingleOrDefault(p => p.s == myOrder.Symbol), "by user");
+                    await _orderService.SellLimit(myOrder, _tradingState.AllMarketData.SingleOrDefault(p => p.s == myOrder.Symbol), "by user");
             }
         }
 
-        [HttpGet("[action]")]
-        public string UpdateML()
-        {
-            _mlService.UpdateML();
-            return "";
-        }
+       // [HttpGet("[action]")]
+        // public string UpdateML()
+        // {
+        //     _mlService.UpdateML();
+        //     return "";
+        // }
 
         [HttpGet("[action]")]
         public void SyncBinanceSymbol()
@@ -351,11 +351,11 @@ namespace MarginCoin.Controllers
             _webSocket.ws1.OnMessageReceived(
                  (data) =>
                  {
-                     _logger.LogWarning("!!!CALLBACK TRIGGERED!!! Data: {Data}", data?.Substring(0, Math.Min(100, data?.Length ?? 0)));
+                     _logger.LogWarning("Data: {Data}", data?.Substring(0, Math.Min(100, data?.Length ?? 0)));
                      _logger.LogDebug("Spot WebSocket received data, length: {Length}", data?.Length ?? 0);
                      dataResult.Append(data);
                      var fullData = dataResult.ToString();
-                     _logger.LogDebug("Full data length: {Length}, Contains }]: {Contains}", fullData.Length, fullData.Contains("}]"));
+                     _logger.LogDebug("Full data length: {Length}, Contains }}]: {Contains}", fullData.Length, fullData.Contains("}]"));
 
                      if (fullData.Contains("}]"))
                      {
@@ -383,6 +383,9 @@ namespace MarginCoin.Controllers
 
                          nbrUp = buffer.Count(pred => pred.P >= 0);
                          nbrDown = buffer.Count(pred => pred.P < 0);
+
+                         // Store all market data for later use with active orders
+                         _tradingState.AllMarketData = [.. buffer];
 
                          marketStreamOnSpot = buffer.Where(p => _tradingState.SymbolBaseList.Any(p1 => p1.SymbolName == p.s))
                              .OrderByDescending(p => p.P)
@@ -433,7 +436,7 @@ namespace MarginCoin.Controllers
 
         public async Task UpdateSymbolWeTrade()
         {
-            foreach (var symbol in marketStreamOnSpot.Take(3))
+            foreach (var symbol in _tradingState.AllMarketData.Take(3))
             {
                 if (_tradingState.SymbolWeTrade.Where(p => p.SymbolName == symbol.s).FirstOrDefault() == null)
                 {
@@ -465,18 +468,24 @@ namespace MarginCoin.Controllers
                     //Review open orders
                     foreach (var item in orderService.GetActiveOrder())
                     {
-                        ReviewOpenTrade(marketStreamOnSpot, item.Symbol, orderService, dbContext);
+                        await ReviewOpenTrade(_tradingState.AllMarketData, item.Symbol, orderService, dbContext);
                     }
 
                     if (orderService.GetActiveOrder().Count < _config.MaxOpenTrades)
                     {
                         foreach (var symbolCandelList in _tradingState.CandleMatrix.Take(10).ToList())
                         {
-                            ReviewSpotMarket(marketStreamOnSpot, symbolCandelList, orderService);
+                            await ReviewSpotMarket(_tradingState.AllMarketData, symbolCandelList, orderService);
                         }
                     }
 
-                    await _hub.Clients.All.SendAsync("trading", JsonSerializer.Serialize(marketStreamOnSpot));
+                    // Send market data for active orders to update UI
+                    var activeOrderSymbols = orderService.GetActiveOrder().Select(o => o.Symbol).ToList();
+                    var marketDataForUI = _tradingState.AllMarketData?
+                        .Where(m => activeOrderSymbols.Contains(m.s))
+                        .ToList() ?? [];
+
+                    await _hub.Clients.All.SendAsync("trading", JsonSerializer.Serialize(marketDataForUI));
                     return;
                 }
                 catch (Exception ex)
@@ -491,9 +500,9 @@ namespace MarginCoin.Controllers
             }
         }
 
-        private void ReviewSpotMarket(List<MarketStream> marketStreamList, List<Candle> symbolCandelList, IOrderService orderService)
+        private async Task ReviewSpotMarket(List<MarketStream> marketStreamList, List<Candle> symbolCandelList, IOrderService orderService)
         {
-            var symbolSpot = marketStreamOnSpot.Where(p => p.s == symbolCandelList.Last().s).FirstOrDefault();
+            var symbolSpot = _tradingState.AllMarketData.Where(p => p.s == symbolCandelList.Last().s).FirstOrDefault();
 
             if (symbolSpot == null)
             {
@@ -517,11 +526,11 @@ namespace MarginCoin.Controllers
 
                     if (_tradingState.IsMarketOrder == true)
                     {
-                        orderService.BuyMarket(symbolSpot, symbolCandle);
+                        await orderService.BuyMarket(symbolSpot, symbolCandle);
                     }
                     else
                     {
-                        orderService.BuyLimit(symbolSpot, symbolCandle);
+                        await orderService.BuyLimit(symbolSpot, symbolCandle);
                     }
                 }
 
@@ -530,7 +539,7 @@ namespace MarginCoin.Controllers
                 {
                     _tradingState.TestBuyLimit = false;
                     Console.WriteLine($"Opening trade on {symbolSpot.s}");
-                    orderService.BuyLimit(symbolSpot, symbolCandle);
+                    await orderService.BuyLimit(symbolSpot, symbolCandle);
                 }
 
                 if (symbolSpot.P < 0 && IsShort(symbolSpot, symbolCandle))
@@ -557,12 +566,12 @@ namespace MarginCoin.Controllers
                 return false;
             }
 
-            // TREND SCORE - Primary filter
-            var trendScore = TradeHelper.CalculateTrendScore(symbolCandles, _config.UseWeightedTrendScore);
-            if (trendScore < _config.MinTrendScoreForEntry)
+            // TREND DIRECTION - Primary filter
+            var trendDirection = TradeHelper.GetTrendDirection(symbolCandles, _config.UseWeightedTrendScore);
+            if (trendDirection != MyEnum.TrendDirection.Up)
             {
-                _logger.LogDebug("Entry rejected for {Symbol}: Trend score too low ({Score}, need {Min})",
-                    symbolSpot.s, trendScore, _config.MinTrendScoreForEntry);
+                _logger.LogDebug("Entry rejected for {Symbol}: Trend direction is {Direction}, need Up",
+                    symbolSpot.s, trendDirection);
                 return false;
             }
 
@@ -590,6 +599,8 @@ namespace MarginCoin.Controllers
             }
 
             // AI Veto - Only blocks if strongly bearish
+            // TODO: Re-enable when AI model is ready
+            /*
             var mlPrediction = _mlService.MLPredList.ToList().FirstOrDefault(p => p.Symbol == symbolSpot.s);
             if (mlPrediction != null)
             {
@@ -612,6 +623,8 @@ namespace MarginCoin.Controllers
             {
                 _logger.LogDebug("No ML prediction available for {Symbol}, proceeding with trend score only", symbolSpot.s);
             }
+            */
+            _logger.LogDebug("AI check temporarily disabled for {Symbol}, proceeding with trend score only", symbolSpot.s);
 
             // Check the symbol is not on hold
             if (_tradingState.OnHold.ContainsKey(symbolSpot.s) && _tradingState.OnHold[symbolSpot.s])
@@ -630,48 +643,40 @@ namespace MarginCoin.Controllers
             }
 
             // All checks passed
-            _logger.LogInformation("✓ Entry signal for {Symbol}: Trend score={Score}, RSI={RSI}, Change={Change}%",
-                symbolSpot.s, trendScore, currentRsi, symbolSpot.P);
+            _logger.LogInformation("✓ Entry signal for {Symbol}: Trend={Trend}, RSI={RSI}, Change={Change}%",
+                symbolSpot.s, trendDirection, currentRsi, symbolSpot.P);
             return true;
         }
 
-        private void ReviewOpenTrade(List<MarketStream> marketStreamList, string symbol, IOrderService orderService, ApplicationDbContext dbContext)
+        private async Task ReviewOpenTrade(List<MarketStream> marketStreamList, string symbol, IOrderService orderService, ApplicationDbContext dbContext)
         {
+            Order activeOrder;
+            List<Candle> symbolCandleList;
+            Candle symbolCandle;
+            double? lastPrice;
+            double? highPrice;
+            string sellReason = null;
+
+            // Lock only for reading shared state
             lock (candleMatrixLock)
             {
-                var activeOrder = orderService.GetActiveOrder().FirstOrDefault(p => p.Symbol == symbol);
-                var symbolCandleList = _tradingState.CandleMatrix.FirstOrDefault(p => p.Last().s == symbol);
-                var symbolCandle = symbolCandleList?.Last();
-                var lastPrice = symbolCandle?.c;
-                var highPrice = symbolCandle?.h;
+                activeOrder = orderService.GetActiveOrder().FirstOrDefault(p => p.Symbol == symbol);
+                symbolCandleList = _tradingState.CandleMatrix.FirstOrDefault(p => p.Last().s == symbol);
+                symbolCandle = symbolCandleList?.Last();
+                lastPrice = symbolCandle?.c;
+                highPrice = symbolCandle?.h;
 
                 if (activeOrder == null || symbolCandle == null || symbolCandleList == null)
                     return;
-
-                // Extracted method for logging and selling
-                void LogAndSell(string message)
-                {
-                    _logger.LogInformation("Closing trade for {Symbol}: {Reason}", symbol, message);
-                    if (_tradingState.IsMarketOrder)
-                    {
-                        orderService.SellMarket(activeOrder, message);
-                    }
-                    else
-                    {
-                        orderService.SellLimit(activeOrder, _tradingState.MarketStreamOnSpot.FirstOrDefault(p => p.s == symbol), message);
-                    }
-                }
 
                 // TREND SCORE EXIT - Check for strong trend reversal
                 var trendScore = TradeHelper.CalculateTrendScore(symbolCandleList, _config.UseWeightedTrendScore);
                 if (trendScore <= _config.TrendScoreExitThreshold)
                 {
-                    LogAndSell($"trend reversal (score: {trendScore})");
-                    return;
+                    sellReason = $"trend reversal (score: {trendScore})";
                 }
-
                 // Dynamic stop loss tightening when trend weakens
-                if (_config.EnableDynamicStopLoss && trendScore <= 0 && trendScore > _config.TrendScoreExitThreshold)
+                else if (_config.EnableDynamicStopLoss && trendScore <= 0 && trendScore > _config.TrendScoreExitThreshold)
                 {
                     var tightenedStopLoss = lastPrice.Value * (1 - _config.WeakTrendStopLossPercentage / 100);
                     if (tightenedStopLoss > activeOrder.StopLose)
@@ -683,43 +688,60 @@ namespace MarginCoin.Controllers
                 }
 
                 // Check time and close if necessary
-                TimeSpan span = DateTime.Now.Subtract(DateTime.Parse(activeOrder.OpenDate));
-                if (activeOrder.HighPrice <= activeOrder.OpenPrice && span.TotalMinutes > _config.TimeBasedKillMinutes)
+                if (sellReason == null)
                 {
-                    LogAndSell($"time-based kill (stalled for {span.TotalMinutes:F0} min)");
-                    return;
+                    TimeSpan span = DateTime.Now.Subtract(DateTime.ParseExact(activeOrder.OpenDate, "dd/MM/yyyy HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture));
+                    if (activeOrder.HighPrice <= activeOrder.OpenPrice && span.TotalMinutes > _config.TimeBasedKillMinutes)
+                    {
+                        sellReason = $"time-based kill (stalled for {span.TotalMinutes:F0} min)";
+                    }
                 }
 
                 // Check stop loss
-                if (lastPrice < activeOrder.StopLose)
+                if (sellReason == null && lastPrice < activeOrder.StopLose)
                 {
-                    LogAndSell("stop loss triggered");
-                    return;
+                    sellReason = "stop loss triggered";
                 }
 
                 // Take profit
-                if (lastPrice <= activeOrder.TakeProfit && lastPrice > activeOrder.OpenPrice)
+                if (sellReason == null && lastPrice <= activeOrder.TakeProfit && lastPrice > activeOrder.OpenPrice)
                 {
-                    LogAndSell($"take profit (price: {lastPrice:F2} <= target: {activeOrder.TakeProfit:F2})");
-                    return;
+                    sellReason = $"take profit (price: {lastPrice:F2} <= target: {activeOrder.TakeProfit:F2})";
                 }
 
                 // AI close - strong bearish prediction
-                var mlPrediction = _mlService.MLPredList.FirstOrDefault(p => p.Symbol == activeOrder.Symbol);
-                if (mlPrediction != null && mlPrediction.PredictedLabel == "down" && mlPrediction.Score[0] >= 0.97)
+                if (sellReason == null)
                 {
-                    LogAndSell($"AI exit signal (DOWN with {mlPrediction.Score[0] * 100:F1}% confidence)");
-                    return;
+                    var mlPrediction = _mlService.MLPredList.FirstOrDefault(p => p.Symbol == activeOrder.Symbol);
+                    if (mlPrediction != null && mlPrediction.PredictedLabel == "down" && mlPrediction.Score[0] >= 0.97)
+                    {
+                        sellReason = $"AI exit signal (DOWN with {mlPrediction.Score[0] * 100:F1}% confidence)";
+                    }
                 }
 
-                if (_tradingState.IsDbBusy)
-                    return;
+                // Update order data if not selling
+                if (sellReason == null && !_tradingState.IsDbBusy)
+                {
+                    // Reload only the required properties
+                    dbContext.Entry(activeOrder).Reload();
+                    orderService.UpdateTakeProfit(symbolCandleList, activeOrder, _config.TakeProfitPercentage);
+                    orderService.UpdateStopLoss(symbolCandleList, activeOrder);
+                    orderService.SaveHighLow(symbolCandleList, activeOrder);
+                }
+            }
 
-                // Reload only the required properties
-                dbContext.Entry(activeOrder).Reload();
-                orderService.UpdateTakeProfit(symbolCandleList, activeOrder, _config.TakeProfitPercentage);
-                orderService.UpdateStopLoss(symbolCandleList, activeOrder);
-                orderService.SaveHighLow(symbolCandleList, activeOrder);
+            // Execute sell outside of lock (async operation)
+            if (sellReason != null)
+            {
+                _logger.LogInformation("Closing trade for {Symbol}: {Reason}", symbol, sellReason);
+                if (_tradingState.IsMarketOrder)
+                {
+                    await orderService.SellMarket(activeOrder, sellReason);
+                }
+                else
+                {
+                    await orderService.SellLimit(activeOrder, _tradingState.AllMarketData.FirstOrDefault(p => p.s == symbol), sellReason);
+                }
             }
         }
 

@@ -64,21 +64,21 @@ namespace MarginCoin.Misc
         }
 
         /// <summary>
-        /// Get trend direction as string based on trend score
+        /// Get trend direction based on trend score
         /// </summary>
         /// <param name="candles">List of candles with calculated indicators</param>
         /// <param name="useWeighted">If true, uses weighted scoring</param>
-        /// <returns>"UP", "DOWN", or "SIDEWAYS"</returns>
-        public static string GetTrendDirection(List<Candle> candles, bool useWeighted = false)
+        /// <returns>TrendDirection enum: Up, Down, or Sideways</returns>
+        public static MyEnum.TrendDirection GetTrendDirection(List<Candle> candles, bool useWeighted = false)
         {
             var score = CalculateTrendScore(candles, useWeighted);
 
             // For weighted scoring, thresholds are higher (max score is ~9)
             var threshold = useWeighted ? 5 : 3;
 
-            if (score >= threshold) return "UP";
-            if (score <= -threshold) return "DOWN";
-            return "SIDEWAYS";
+            if (score >= threshold) return MyEnum.TrendDirection.Up;
+            if (score <= -threshold) return MyEnum.TrendDirection.Down;
+            return MyEnum.TrendDirection.Sideways;
         }
 
         public static MacdSlope CalculateMacdSlope(List<Candle> symbolCandles, string tradingInterval)

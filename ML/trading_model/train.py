@@ -281,7 +281,9 @@ def prepare_dataloaders(
     csv_path: str,
     preprocessor: TradingDataPreprocessor = None,
     batch_size: int = 32,
-    val_split: float = 0.2
+    val_split: float = 0.2,
+    max_rows: int = None,
+    lookback: int = 30
 ) -> Tuple[DataLoader, DataLoader, TradingDataPreprocessor]:
     """
     Load data from CSV and create train/val dataloaders
@@ -291,15 +293,28 @@ def prepare_dataloaders(
         preprocessor: Optional preprocessor (creates new if None)
         batch_size: Batch size for dataloaders
         val_split: Validation set fraction
+        max_rows: Maximum number of rows to use (None = all data)
+        lookback: Number of historical bars to use as input
 
     Returns:
         train_loader, val_loader, preprocessor
     """
-    # Load data
-    df = pd.read_csv(csv_path)
+    # Load data (limit rows to save memory)
+    if max_rows:
+        # Read file line count first
+        total_rows = sum(1 for _ in open(csv_path)) - 1  # -1 for header
+        skip_rows = max(0, total_rows - max_rows)
+        if skip_rows > 0:
+            print(f"Loading last {max_rows} rows of {total_rows} total rows (skipping {skip_rows})")
+            df = pd.read_csv(csv_path, skiprows=range(1, skip_rows + 1))
+        else:
+            df = pd.read_csv(csv_path)
+    else:
+        df = pd.read_csv(csv_path)
 
     if preprocessor is None:
-        preprocessor = TradingDataPreprocessor(lookback=50, forward_bars=5, threshold=0.002)
+        # Use lookback parameter (reduced to save memory)
+        preprocessor = TradingDataPreprocessor(lookback=lookback, forward_bars=5, threshold=0.002)
 
     # Create features and labels
     df = preprocessor.create_features(df)
@@ -347,18 +362,21 @@ if __name__ == '__main__':
     print("=" * 50)
 
     # Configuration
-    MODEL_TYPE = 'transformer_lstm'  # or 'lightweight_lstm'
-    DATA_PATH = 'data/training_data.csv'
+    MODEL_TYPE = 'lightweight_lstm'  # Use lighter model to prevent OOM
+    DATA_PATH = '../data/training_data.csv'  # Path relative to trading_model/
     SAVE_DIR = 'checkpoints'
-    BATCH_SIZE = 32
+    BATCH_SIZE = 16  # Reduced to save memory - allows using all data
     EPOCHS = 100
     LEARNING_RATE = 0.001
+    LOOKBACK = 30  # Balance between context and memory
 
-    # Prepare data
+    # Prepare data - use all available data
     train_loader, val_loader, preprocessor = prepare_dataloaders(
         csv_path=DATA_PATH,
         batch_size=BATCH_SIZE,
-        val_split=0.2
+        val_split=0.2,
+        max_rows=None,  # Use all data
+        lookback=LOOKBACK
     )
 
     # Save preprocessor
@@ -370,11 +388,9 @@ if __name__ == '__main__':
     model = create_model(
         model_type=MODEL_TYPE,
         input_size=input_size,
-        hidden_size=128,
-        num_lstm_layers=2,
-        num_transformer_layers=2,
-        num_heads=4,
-        dropout=0.2
+        hidden_size=64,  # Reduced from 128 to save memory
+        num_layers=2,  # For lightweight_lstm
+        dropout=0.3
     )
 
     print(f"\nCreated {MODEL_TYPE} model with {input_size} input features")

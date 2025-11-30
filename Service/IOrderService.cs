@@ -20,8 +20,8 @@ namespace MarginCoin.Service
         public void UpdateBuyOrderDb(Order dbOrder, BinanceOrder binanceOrder);
         public void UpdateSellOrderDb(Order dbOrder, BinanceOrder binanceOrder, string closeType);
         public void RecycleOrderDb(double id);
-        public void BuyLimit(MarketStream symbolSpot, List<Candle> symbolCandleList);
-        public void SellLimit(Order dbOrder, MarketStream symbolSpot, string closeType);
+        public Task BuyLimit(MarketStream symbolSpot, List<Candle> symbolCandleList);
+        public Task SellLimit(Order dbOrder, MarketStream symbolSpot, string closeType);
         public Task SellMarket(Order dbOrder, string closeType);
         public Task BuyMarket(MarketStream symbolSpot, List<Candle> symbolCandleList);
     }

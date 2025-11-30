@@ -49,5 +49,12 @@ namespace MarginCoin.Misc
             BUY,
             SELL
         }
+
+        public enum TrendDirection
+        {
+            Up,
+            Down,
+            Sideways
+        }
     }
 }

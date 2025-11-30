@@ -393,3 +393,18 @@ Console.WriteLine($"ML API healthy: {isHealthy}");
 ## License
 
 Part of MarginCoin trading system.
+
+
+./venv/bin/python trading_model/utils/collect_data.py \
+  --start-date 2024-06-01 \
+  --end-date 2024-12-01 \
+  --symbols BTCUSDT ETHUSDT \
+  --interval 1h \
+  --output data/training_data.csv
+
+
+  ./venv/bin/python trading_model/utils/collect_data.py \
+  --months 12 \
+  --symbols BTCUSDT ETHUSDT BNBUSDT SOLUSDT \
+  --interval 30m \
+  --output data/training_data.csv

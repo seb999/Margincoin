@@ -173,4 +173,12 @@ export class TradeService {
     };
     return await this.httpService.xhr(httpSetting);
   }
+
+  async getOrderStatus(symbol: string, orderId: number): Promise<any> {
+    const httpSetting: HttpSettings = {
+      method: 'GET',
+      url: location.origin + '/api/Binance/GetOrderStatus/' + symbol + '/' + orderId,
+    };
+    return await this.httpService.xhr(httpSetting);
+  }
 }

@@ -17,6 +17,7 @@ namespace MarginCoin.Service
         // Trading data
         List<List<Candle>> CandleMatrix { get; }
         List<MarketStream> MarketStreamOnSpot { get; set; }
+        List<MarketStream> AllMarketData { get; set; }
         Dictionary<string, bool> OnHold { get; }
 
         // Flags
@@ -41,6 +42,7 @@ namespace MarginCoin.Service
             SymbolBaseList = new List<Symbol>();
             CandleMatrix = new List<List<Candle>>();
             MarketStreamOnSpot = new List<MarketStream>();
+            AllMarketData = new List<MarketStream>();
             OnHold = new Dictionary<string, bool>();
         }
 
@@ -51,6 +53,7 @@ namespace MarginCoin.Service
         // Trading data
         public List<List<Candle>> CandleMatrix { get; private set; }
         public List<MarketStream> MarketStreamOnSpot { get; set; }
+        public List<MarketStream> AllMarketData { get; set; }
         public Dictionary<string, bool> OnHold { get; private set; }
 
         // Flags

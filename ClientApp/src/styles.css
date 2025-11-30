@@ -268,3 +268,33 @@ ngb-datepicker-navigation select {
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
 }
+
+/* Popover dark theme for trade notifications */
+.popover {
+  background-color: rgb(31, 41, 55) !important;
+  border: 1px solid rgb(75, 85, 99) !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5) !important;
+}
+
+.popover-header {
+  background-color: rgb(17, 24, 39) !important;
+  color: white !important;
+  border-bottom: 1px solid rgb(75, 85, 99) !important;
+  padding: 12px 16px !important;
+}
+
+.popover-body {
+  background-color: rgb(31, 41, 55) !important;
+  color: white !important;
+  padding: 16px !important;
+}
+
+.bs-popover-top > .arrow::after,
+.bs-popover-auto[x-placement^="top"] > .arrow::after {
+  border-top-color: rgb(31, 41, 55) !important;
+}
+
+.bs-popover-top > .arrow::before,
+.bs-popover-auto[x-placement^="top"] > .arrow::before {
+  border-top-color: rgb(75, 85, 99) !important;
+}

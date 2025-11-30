@@ -5,11 +5,12 @@ This script can be called from C# or run standalone to collect historical data
 
 import pandas as pd
 import requests
-from typing import List, Dict
+from typing import List, Dict, Optional
 import json
-from datetime import datetime
+from datetime import datetime, timedelta
 from pathlib import Path
 import argparse
+import time
 
 
 def collect_from_json_file(json_path: str, output_path: str = None):
@@ -89,14 +90,83 @@ def collect_from_json_file(json_path: str, output_path: str = None):
     return df
 
 
-def collect_from_binance_api(symbols: List[str], interval: str = '30m', limit: int = 1000):
+def collect_from_binance_api(
+    symbols: List[str],
+    interval: str = '30m',
+    start_date: Optional[str] = None,
+    end_date: Optional[str] = None,
+    months: Optional[int] = None
+):
     """
-    Collect historical data directly from Binance API
-    Useful for initial dataset creation
+    Collect historical data directly from Binance API with automatic batching
+    Handles Binance's 1000 candle limit by making multiple requests
 
     Args:
         symbols: List of trading pairs (e.g., ['BTCUSDT', 'ETHUSDT'])
-        interval: Candle interval ('15m', '30m', '1h', etc.)
+        interval: Candle interval ('15m', '30m', '1h', '1d', etc.)
+        start_date: Start date in YYYY-MM-DD format (optional)
+        end_date: End date in YYYY-MM-DD format (optional)
+        months: Number of months of data to fetch (alternative to dates)
+
+    Returns:
+        DataFrame with OHLCV data and calculated indicators
+    """
+    # Calculate date range
+    if start_date and end_date:
+        start_time = int(datetime.strptime(start_date, '%Y-%m-%d').timestamp() * 1000)
+        end_time = int(datetime.strptime(end_date, '%Y-%m-%d').timestamp() * 1000)
+    elif months:
+        end_time = int(datetime.now().timestamp() * 1000)
+        start_time = int((datetime.now() - timedelta(days=months * 30)).timestamp() * 1000)
+    else:
+        # Default: fetch last 1000 candles
+        return collect_from_binance_simple(symbols, interval, 1000)
+
+    print(f"Fetching data from {datetime.fromtimestamp(start_time/1000)} to {datetime.fromtimestamp(end_time/1000)}")
+    print(f"Interval: {interval}")
+
+    all_data = []
+
+    for symbol in symbols:
+        print(f"\n{'='*60}")
+        print(f"Fetching {symbol}...")
+        print(f"{'='*60}")
+
+        symbol_data = fetch_symbol_with_batching(
+            symbol=symbol,
+            interval=interval,
+            start_time=start_time,
+            end_time=end_time
+        )
+
+        all_data.extend(symbol_data)
+
+    # Convert to DataFrame
+    df = pd.DataFrame(all_data)
+
+    if len(df) == 0:
+        print("No data fetched!")
+        return df
+
+    # Sort by symbol and timestamp
+    df = df.sort_values(['symbol', 'timestamp'])
+
+    # Calculate indicators
+    print("\n" + "="*60)
+    print("Calculating technical indicators...")
+    print("="*60)
+    df = calculate_indicators(df)
+
+    return df
+
+
+def collect_from_binance_simple(symbols: List[str], interval: str = '30m', limit: int = 1000):
+    """
+    Simple collection without date ranges (backward compatibility)
+
+    Args:
+        symbols: List of trading pairs
+        interval: Candle interval
         limit: Number of candles to fetch (max 1000)
     """
     all_data = []
@@ -105,7 +175,7 @@ def collect_from_binance_api(symbols: List[str], interval: str = '30m', limit: i
         print(f"Fetching {symbol}...")
 
         try:
-            url = f"https://api.binance.com/api/v3/klines"
+            url = "https://api.binance.com/api/v3/klines"
             params = {
                 'symbol': symbol,
                 'interval': interval,
@@ -120,18 +190,17 @@ def collect_from_binance_api(symbols: List[str], interval: str = '30m', limit: i
             for kline in klines:
                 candle = {
                     'symbol': symbol,
-                    'timestamp': kline[0] / 1000,  # Convert to seconds
+                    'timestamp': kline[0] / 1000,
                     'open': float(kline[1]),
                     'high': float(kline[2]),
                     'low': float(kline[3]),
                     'close': float(kline[4]),
                     'volume': float(kline[5]),
-                    # Indicators will be calculated by preprocessor
                     'rsi': 50,
                     'macd': 0,
                     'macd_signal': 0,
                     'macd_hist': 0,
-                    'ema50': float(kline[4]),  # Use close as placeholder
+                    'ema50': float(kline[4]),
                     'stoch_k': 50,
                     'stoch_d': 50
                 }
@@ -142,14 +211,95 @@ def collect_from_binance_api(symbols: List[str], interval: str = '30m', limit: i
         except Exception as e:
             print(f"  Error fetching {symbol}: {e}")
 
-    # Convert to DataFrame
     df = pd.DataFrame(all_data)
-
-    # Calculate indicators using TA-Lib or pandas
     print("\nCalculating indicators...")
     df = calculate_indicators(df)
 
     return df
+
+
+def fetch_symbol_with_batching(
+    symbol: str,
+    interval: str,
+    start_time: int,
+    end_time: int
+) -> List[Dict]:
+    """
+    Fetch historical data for a symbol with automatic batching
+    Handles Binance's 1000 candle limit per request
+
+    Args:
+        symbol: Trading pair (e.g., 'BTCUSDT')
+        interval: Candle interval
+        start_time: Start timestamp in milliseconds
+        end_time: End timestamp in milliseconds
+
+    Returns:
+        List of candle dictionaries
+    """
+    url = "https://api.binance.com/api/v3/klines"
+    all_candles = []
+    current_start = start_time
+    batch_num = 1
+
+    while current_start < end_time:
+        try:
+            params = {
+                'symbol': symbol,
+                'interval': interval,
+                'startTime': current_start,
+                'endTime': end_time,
+                'limit': 1000
+            }
+
+            print(f"  Batch {batch_num}: Fetching from {datetime.fromtimestamp(current_start/1000)}", end='')
+
+            response = requests.get(url, params=params)
+            response.raise_for_status()
+
+            klines = response.json()
+
+            if len(klines) == 0:
+                print(" - No more data")
+                break
+
+            # Convert to candle format
+            for kline in klines:
+                candle = {
+                    'symbol': symbol,
+                    'timestamp': kline[0] / 1000,
+                    'open': float(kline[1]),
+                    'high': float(kline[2]),
+                    'low': float(kline[3]),
+                    'close': float(kline[4]),
+                    'volume': float(kline[5]),
+                    'rsi': 50,
+                    'macd': 0,
+                    'macd_signal': 0,
+                    'macd_hist': 0,
+                    'ema50': float(kline[4]),
+                    'stoch_k': 50,
+                    'stoch_d': 50
+                }
+                all_candles.append(candle)
+
+            print(f" - Got {len(klines)} candles (Total: {len(all_candles)})")
+
+            # Update start time for next batch (use last candle's close time + 1ms)
+            current_start = klines[-1][6] + 1
+
+            batch_num += 1
+
+            # Rate limiting - Binance allows 1200 requests per minute
+            # Sleep for 0.1s between requests to be safe (600 req/min)
+            time.sleep(0.1)
+
+        except Exception as e:
+            print(f"\n  Error fetching batch: {e}")
+            break
+
+    print(f"  ✓ Total fetched: {len(all_candles)} candles for {symbol}")
+    return all_candles
 
 
 def calculate_indicators(df: pd.DataFrame) -> pd.DataFrame:
@@ -206,19 +356,33 @@ def calculate_indicators(df: pd.DataFrame) -> pd.DataFrame:
         df['stoch_d'] = 50
 
     # Fill NaN values
-    df = df.fillna(method='bfill').fillna(method='ffill').fillna(0)
+    df = df.bfill().ffill().fillna(0)
 
     return df
 
 
 def main():
     """Command-line interface for data collection"""
-    parser = argparse.ArgumentParser(description='Collect trading data for model training')
+    parser = argparse.ArgumentParser(
+        description='Collect trading data for model training',
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="""
+Examples:
+  # Fetch 6 months of data
+  python collect_data.py --source binance --months 6 --symbols BTCUSDT ETHUSDT
+
+  # Fetch specific date range
+  python collect_data.py --source binance --start-date 2024-01-01 --end-date 2024-12-01
+
+  # Fetch from JSON file
+  python collect_data.py --source json --json-path data/export.json
+        """
+    )
 
     parser.add_argument(
         '--source',
         choices=['json', 'binance'],
-        default='json',
+        default='binance',
         help='Data source (json file or binance API)'
     )
 
@@ -239,14 +403,25 @@ def main():
         '--interval',
         type=str,
         default='30m',
-        help='Candle interval (for binance source)'
+        help='Candle interval: 1m, 5m, 15m, 30m, 1h, 4h, 1d (for binance source)'
     )
 
     parser.add_argument(
-        '--limit',
+        '--start-date',
+        type=str,
+        help='Start date in YYYY-MM-DD format (for binance source)'
+    )
+
+    parser.add_argument(
+        '--end-date',
+        type=str,
+        help='End date in YYYY-MM-DD format (for binance source)'
+    )
+
+    parser.add_argument(
+        '--months',
         type=int,
-        default=1000,
-        help='Number of candles per symbol (for binance source)'
+        help='Number of months to fetch (alternative to date range, for binance source)'
     )
 
     parser.add_argument(
@@ -269,7 +444,9 @@ def main():
         df = collect_from_binance_api(
             symbols=args.symbols,
             interval=args.interval,
-            limit=args.limit
+            start_date=args.start_date,
+            end_date=args.end_date,
+            months=args.months
         )
 
         # Save
@@ -277,12 +454,16 @@ def main():
         output_dir.mkdir(parents=True, exist_ok=True)
 
         df.to_csv(args.output, index=False)
-        print(f"\nSaved {len(df)} candles to {args.output}")
+        print(f"\n{'='*60}")
+        print(f"Saved {len(df)} candles to {args.output}")
+        print(f"{'='*60}")
 
     print("\nData collection complete!")
     print(f"Total candles: {len(df)}")
     print(f"Symbols: {df['symbol'].nunique()}")
-    print(f"\nNext step: Run 'python train.py' to train the model")
+    if len(df) > 0:
+        print(f"Date range: {pd.to_datetime(df['timestamp'], unit='s').min()} to {pd.to_datetime(df['timestamp'], unit='s').max()}")
+    print(f"\nNext step: Run 'python trading_model/train.py' to train the model")
 
 
 if __name__ == '__main__':

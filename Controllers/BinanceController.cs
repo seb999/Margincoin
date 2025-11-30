@@ -168,5 +168,20 @@ namespace MarginCoin.Controllers
                 }
             }
         }
+
+        [HttpGet("[action]/{symbol}/{orderId}")]
+        public BinanceOrder GetOrderStatus(string symbol, double orderId)
+        {
+            if (orderId == 0) return null;
+
+            BinanceOrder myBinanceOrder = _binanceService.OrderStatus(symbol, orderId);
+
+            if (myBinanceOrder != null && myBinanceOrder.status == "FILLED")
+            {
+                myBinanceOrder.price = TradeHelper.CalculateAvragePrice(myBinanceOrder).ToString();
+            }
+
+            return myBinanceOrder;
+        }
     }
 }

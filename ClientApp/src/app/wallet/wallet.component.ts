@@ -54,7 +54,7 @@ export class WalletComponent {
 
   model: NgbDateStruct;
 
-  @ViewChild('p1') orderPopOver: any;
+  @ViewChild('p1') orderPopOver?: NgbPopover;
 
   private ohlc = [] as any;
   public pendingOrderList: Order[];
@@ -62,7 +62,7 @@ export class WalletComponent {
   public symbolList: any[];
   public tradeSymbolList: any[];
   public symbolPrice: any[];
-  public orderList: Order[];
+  public orderList: Order[] = [];
   public logList: any[];
   public CandleList: any[];
   public totalProfit: number;
@@ -90,6 +90,17 @@ export class WalletComponent {
   public myOrder: Order;
   public websocketStatus: any = null;
   public lastCandleUpdate: any = null;
+  public showOnlyRunning: boolean = false;
+  public orderPopoverVisible: boolean = false;
+  public currentOrderDetails: BinanceOrder | null = null;
+
+  get filteredOrderList(): Order[] {
+    if (!this.orderList) return [];
+    if (this.showOnlyRunning) {
+      return this.orderList.filter(order => order.isClosed === 0 || !order.isClosed);
+    }
+    return this.orderList;
+  }
 
   constructor(
     public modalService: NgbModal,
@@ -116,34 +127,23 @@ export class WalletComponent {
         this.isTradeOpen = true;
         this.showMessageInfo = true;
         this.CandleList = this.serverMsg.candleList;
-        this.orderList.forEach((order, index) => {
-          this.CandleList.forEach(candle => {
-            if (order.symbol === candle.s && !order.isClosed) {
-              this.orderList[index].closePrice = candle.c;
-              this.orderList[index].profit = (candle.c - order.openPrice) * order.quantityBuy;
-            }
+        if (this.orderList?.length > 0 && this.CandleList?.length > 0) {
+          this.orderList.forEach((order, index) => {
+            this.CandleList.forEach(candle => {
+              if (order.symbol === candle.s && !order.isClosed) {
+                this.orderList[index].closePrice = candle.c;
+                this.orderList[index].profit = (candle.c - order.openPrice) * order.quantityBuy;
+              }
+            });
           });
-        });
+        }
         this.calculateProfit();
         setTimeout(() => { this.showMessageInfo = false }, 700);
       }
 
       if (this.serverMsg.msgName == BackEndMessage.newPendingOrder) {
         let binanceOrder = this.serverMsg.order;
-        if (this.orderPopOver.isOpen()) {
-          setTimeout(() => { this.openPopOver(this.orderPopOver, binanceOrder); }, 7000);
-          setTimeout(() => { 
-            this.closePopOver(this.orderPopOver); 
-            this.refreshUI();
-          }, 11000);
-        }
-        else {
-          this.openPopOver(this.orderPopOver, binanceOrder);
-          setTimeout(() => { 
-            this.closePopOver(this.orderPopOver); 
-            this.refreshUI();
-          }, 7000);
-        }
+        this.showOrderNotification(binanceOrder);
       }
 
       if (this.serverMsg.msgName == BackEndMessage.refreshUI) {
@@ -152,15 +152,12 @@ export class WalletComponent {
         this.refreshUI();
       }
 
-      if (this.serverMsg.msgName == BackEndMessage.sellOrderFilled 
+      if (this.serverMsg.msgName == BackEndMessage.sellOrderFilled
         || this.serverMsg.msgName == BackEndMessage.buyOrderFilled) {
         this.orderList = await this.tradeService.getAllOrder(this.model.day + "-" + this.model.month + "-" + this.model.year);
         let binanceOrder = this.serverMsg.order;
-        this.openPopOver(this.orderPopOver, binanceOrder);
-        setTimeout(() => {
-          this.closePopOver(this.orderPopOver);
-          this.refreshUI();
-        }, 7000);
+        this.showOrderNotification(binanceOrder);
+        this.calculateProfit();
       }
 
       if (this.serverMsg.msgName == BackEndMessage.exportChart) {
@@ -223,12 +220,35 @@ export class WalletComponent {
     this.orderList = await this.tradeService.getAllOrder(this.model.day + "-" + this.model.month + "-" + this.model.year);
   }
 
-  openPopOver(popover, order: BinanceOrder) {
-    popover.open({ order });
+  openPopOver(popover: NgbPopover | undefined, order: BinanceOrder) {
+    popover?.open({ order });
   }
 
-  closePopOver(popover) {
-    if (popover.isOpen()) popover.close();
+  closePopOver(popover: NgbPopover | undefined) {
+    if (popover?.isOpen()) popover.close();
+  }
+
+  showOrderNotification(binanceOrder: BinanceOrder) {
+    if (!binanceOrder) return;
+
+    this.currentOrderDetails = binanceOrder;
+    this.orderPopoverVisible = true;
+
+    // Maintain legacy popover notification when present
+    if (this.orderPopOver) {
+      if (this.orderPopOver.isOpen()) {
+        this.closePopOver(this.orderPopOver);
+      }
+      this.openPopOver(this.orderPopOver, binanceOrder);
+    }
+
+    // Auto-close after 15 seconds
+    setTimeout(() => {
+      this.orderPopoverVisible = false;
+      this.currentOrderDetails = null;
+      this.closePopOver(this.orderPopOver);
+      this.refreshUI();
+    }, 15000);
   }
 
   today() {
@@ -242,6 +262,10 @@ export class WalletComponent {
     }
     this.orderList = await this.tradeService.getAllOrder(this.model.day + "-" + this.model.month + "-" + this.model.year);
     this.calculateProfit();
+  }
+
+  toggleTradeFilter() {
+    this.showOnlyRunning = !this.showOnlyRunning;
   }
 
   async changeTradeServer() {
@@ -328,9 +352,19 @@ export class WalletComponent {
     await this.refreshUI();
   }
 
-  binanceOrder(orderId: string) {
-    if (orderId) {
-      window.open(`https://www.binance.com/en/my/orders/exchange/tradehistory`, '_blank');
+  async binanceOrder(orderId: string, symbol: string) {
+    const orderIdNum = parseFloat(orderId);
+    if (orderId && orderIdNum > 0) {
+      const orderDetails = await this.tradeService.getOrderStatus(symbol, orderIdNum);
+      if (orderDetails) {
+        this.currentOrderDetails = orderDetails;
+        this.orderPopoverVisible = true;
+
+        // Auto-close after 15 seconds
+        setTimeout(() => {
+          this.orderPopoverVisible = false;
+        }, 15000);
+      }
     }
   }
 

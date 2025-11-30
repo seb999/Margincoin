@@ -45,8 +45,9 @@ public class OrderService : IOrderService
         {
             return _appDbContext.Order.Where(p => p.IsClosed == 0).ToList();
         }
-        catch (System.Exception)
+        catch (System.Exception ex)
         {
+            _logger.LogError(ex, "Failed to get active orders");
             return new List<Order>();
         }
     }
@@ -62,11 +63,10 @@ public class OrderService : IOrderService
                 _appDbContext.SaveChanges();
             }
         }
-        catch (System.Exception)
+        catch (System.Exception ex)
         {
-            return;
+            _logger.LogError(ex, "Failed to update take profit for order {OrderId} symbol {Symbol}", dbOrder.Id, dbOrder.Symbol);
         }
-
     }
 
     public void SaveHighLow(List<Candle> symbolCandles, Order dbOrder)
@@ -90,9 +90,9 @@ public class OrderService : IOrderService
             _appDbContext.Order.Update(dbOrder);
             _appDbContext.SaveChanges();
         }
-        catch (System.Exception)
+        catch (System.Exception ex)
         {
-            return;
+            _logger.LogError(ex, "Failed to save high/low for order {OrderId} symbol {Symbol}", dbOrder.Id, dbOrder.Symbol);
         }
     }
 
@@ -112,9 +112,9 @@ public class OrderService : IOrderService
                 _appDbContext.SaveChanges();
             }
         }
-        catch (System.Exception)
+        catch (System.Exception ex)
         {
-            return;
+            _logger.LogError(ex, "Failed to update stop loss for order {OrderId} symbol {Symbol}", dbOrder.Id, dbOrder.Symbol);
         }
     }
 
@@ -124,7 +124,7 @@ public class OrderService : IOrderService
 
     public void SaveBuyOrderDb(MarketStream symbolSpot, List<Candle> symbolCandle, BinanceOrder binanceOrder)
     {
-        Console.WriteLine("Open trade");
+        _logger.LogInformation("Opening trade for {Symbol} - OrderId: {OrderId}", binanceOrder.symbol, binanceOrder.orderId);
         Order myOrder = new Order
         {
             BuyOrderId = binanceOrder.orderId,
@@ -187,7 +187,7 @@ public class OrderService : IOrderService
         }
         catch (Exception ex)
         {
-            Console.WriteLine(ex);
+            _logger.LogError(ex, "Failed to update sell order for {Symbol}", dbOrder.Symbol);
         }
     }
 
@@ -211,11 +211,15 @@ public class OrderService : IOrderService
         try
         {
             Order myOrder = _appDbContext.Order.SingleOrDefault(p => p.Id == id);
-            _appDbContext.Order.Remove(myOrder);
-            _appDbContext.SaveChanges();
+            if (myOrder != null)
+            {
+                _appDbContext.Order.Remove(myOrder);
+                _appDbContext.SaveChanges();
+            }
         }
         catch (System.Exception ex)
         {
+            _logger.LogError(ex, "Failed to delete order {OrderId}", id);
         }
     }
 
@@ -248,7 +252,7 @@ public class OrderService : IOrderService
 
     #region binance order methods
 
-    public void BuyLimit(MarketStream symbolSpot, List<Candle> symbolCandleList)
+    public async Task BuyLimit(MarketStream symbolSpot, List<Candle> symbolCandleList)
     {
         var (nbrDecimalPrice, nbrDecimalQty) = GetOrderParameters(symbolSpot);
         var price = Math.Round(symbolSpot.c * (1 + _config.OrderOffset / 100), nbrDecimalPrice);
@@ -263,13 +267,13 @@ public class OrderService : IOrderService
 
         SaveBuyOrderDb(symbolSpot, symbolCandleList, myBinanceOrder);
 
-        Task.Delay(300);
+        await Task.Delay(300);
         myBinanceOrder.price = TradeHelper.CalculateAvragePrice(myBinanceOrder).ToString();
-        _hub.Clients.All.SendAsync("newPendingOrder", JsonSerializer.Serialize(myBinanceOrder));
-        _hub.Clients.All.SendAsync("refreshUI");
+        await _hub.Clients.All.SendAsync("newPendingOrder", JsonSerializer.Serialize(myBinanceOrder));
+        await _hub.Clients.All.SendAsync("refreshUI");
     }
 
-    public void SellLimit(Order dbOrder, MarketStream symbolSpot, string closeType)
+    public async Task SellLimit(Order dbOrder, MarketStream symbolSpot, string closeType)
     {
         //we exit in the buy order is still pending
         if (dbOrder.Status != "FILLED")
@@ -288,9 +292,9 @@ public class OrderService : IOrderService
         if (myBinanceOrder.status == "FILLED")
             CloseOrderDb(dbOrder, myBinanceOrder);
 
-        Task.Delay(300);
+        await Task.Delay(300);
         myBinanceOrder.price = TradeHelper.CalculateAvragePrice(myBinanceOrder).ToString();
-        _hub.Clients.All.SendAsync("sellOrderFilled", JsonSerializer.Serialize(myBinanceOrder)); 
+        await _hub.Clients.All.SendAsync("sellOrderFilled", JsonSerializer.Serialize(myBinanceOrder));
     }
 
     public async Task BuyMarket(MarketStream symbolSpot, List<Candle> symbolCandleList)
