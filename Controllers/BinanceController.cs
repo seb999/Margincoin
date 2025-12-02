@@ -52,25 +52,11 @@ namespace MarginCoin.Controllers
 
             var symbolWeTrade = _tradingState.SymbolWeTrade;
 
-            // Keep only balances for symbols we trade (+ USDC)
-            myAccount.balances = myAccount.balances
-                .Where(b => b.asset == "USDC" || symbolWeTrade.Any(s => s.SymbolName.Replace("USDC", "") == b.asset))
-                .ToList();
-
-            // Add missing symbols with zero balance
-            foreach (var symbol in symbolWeTrade)
-            {
-                var asset = symbol.SymbolName.Replace("USDC", "");
-                if (!myAccount.balances.Any(b => b.asset == asset))
-                {
-                    myAccount.balances.Add(new balances { asset = asset, free = "0", locked = "0" });
-                }
-            }
-
-            // Order: USDC first, then by rank
+            // Keep all balances; rank known traded symbols first, then by asset name
             myAccount.balances = myAccount.balances
                 .OrderByDescending(b => b.asset == "USDC")
-                .ThenBy(b => symbolWeTrade.FirstOrDefault(s => s.SymbolName.Replace("USDC", "") == b.asset)?.Rank ?? int.MaxValue)
+                .ThenBy(b => symbolWeTrade.FirstOrDefault(s => s.SymbolName.Replace("USDC", "").Replace("USDT", "") == b.asset)?.Rank ?? int.MaxValue)
+                .ThenBy(b => b.asset)
                 .ToList();
 
             return myAccount;

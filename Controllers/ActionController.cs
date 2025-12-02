@@ -48,5 +48,30 @@ namespace MarginCoin.Controllers
         public List<Symbol> GetSymbolList() => _symbolService.GetTradingSymbols();
 
         public List<Symbol> GetSymbolBaseList() => _symbolService.GetBaseSymbols();
+
+        [HttpGet("[action]")]
+        public IEnumerable<object> TrendScores()
+        {
+            var scores = new Dictionary<string, int>();
+            var matrix = _tradingState.CandleMatrix ?? new List<List<Candle>>();
+
+            foreach (var candleList in matrix)
+            {
+                var last = candleList?.LastOrDefault();
+                if (last == null || string.IsNullOrEmpty(last.s)) continue;
+
+                var baseSymbol = last.s.Replace("USDC", "").Replace("USDT", "");
+                var score = TradeHelper.CalculateTrendScore(candleList.ToList(), _tradingConfig.UseWeightedTrendScore);
+                scores[baseSymbol] = score;
+                scores[last.s] = score;
+            }
+
+            return scores.Select(kv => new
+            {
+                symbol = kv.Key.Replace("USDC", "").Replace("USDT", ""),
+                pair = kv.Key,
+                score = kv.Value
+            });
+        }
     }
 }

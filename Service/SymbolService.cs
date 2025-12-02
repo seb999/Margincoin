@@ -59,11 +59,11 @@ namespace MarginCoin.Service
 
             if (_tradingState.IsProd)
             {
-                query = query.Where(p => p.IsOnProd != 0 && p.Rank < maxRank);
+                query = query.Where(p => p.IsOnProd != 0 && p.Capitalisation > 0 && p.Rank<= maxRank);
             }
             else
             {
-                query = query.Where(p => p.IsOnTest != 0 && p.Rank < maxRank);
+                query = query.Where(p => p.IsOnTest != 0 && p.Rank <= maxRank);
             }
 
             return query.OrderBy(p => p.Rank).ToList();

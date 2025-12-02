@@ -238,7 +238,12 @@
               <td class="px-3 py-2 text-xs text-gray-400 hidden xl:table-cell">{{order.openDate}}</td>
               <td class="px-3 py-2 text-xs text-gray-400 hidden xl:table-cell">{{order.closeDate || '-'}}</td>
               <td class="px-3 py-2 text-center hidden lg:table-cell">
-                <span class="px-2 py-0.5 text-xs text-gray-400 bg-gray-700/50 rounded">{{order.type}}</span>
+                <span class="px-2 py-0.5 text-xs text-gray-400 bg-gray-700/50 rounded">
+                  <ng-container *ngIf="order.isClosed || order.isClosed === 1; else noType">
+                    {{order.type || '-'}}
+                  </ng-container>
+                  <ng-template #noType>-</ng-template>
+                </span>
               </td>
               <td class="px-3 py-2 text-right text-xs text-gray-400 font-mono hidden lg:table-cell">{{order.rsi.toFixed(0)}}</td>
               <td class="px-3 py-2 text-center">
@@ -310,15 +315,12 @@
             (click)="debugBuy()">
             <i class="fa-solid fa-cart-plus text-[10px]"></i>Buy
           </button>
-          <button *ngIf="isTradeOpen" class="flex items-center justify-center gap-1.5 px-3 py-2 text-xs font-medium text-blue-300 bg-blue-500/10 hover:bg-blue-500/20 border border-blue-500/30 rounded-lg transition-all hover:scale-[1.02]"
+          <button class="flex items-center justify-center gap-1.5 px-3 py-2 text-xs font-medium text-blue-300 bg-blue-500/10 hover:bg-blue-500/20 border border-blue-500/30 rounded-lg transition-all hover:scale-[1.02]"
             (click)="syncBinanceSymbol()">
             <i class="fa-solid fa-sync text-[10px]"></i>Sync
           </button>
           <button *ngIf="!isTradeOpen" class="flex items-center justify-center gap-1.5 px-3 py-2 text-xs font-medium text-gray-500 bg-gray-800/50 rounded-lg cursor-not-allowed" disabled>
             <i class="fa-solid fa-cart-plus text-[10px]"></i>Buy
-          </button>
-          <button *ngIf="!isTradeOpen" class="flex items-center justify-center gap-1.5 px-3 py-2 text-xs font-medium text-gray-500 bg-gray-800/50 rounded-lg cursor-not-allowed" disabled>
-            <i class="fa-solid fa-sync text-[10px]"></i>Sync
           </button>
         </div>
 
@@ -362,12 +364,13 @@
         </select>
       </div>
       <div class="p-2">
-        <div *ngIf="chartOptions" class="w-full h-72 rounded-lg overflow-hidden">
+        <div *ngIf="chartOptions" class="w-full h-96 rounded-lg overflow-hidden">
           <highcharts-chart #chart constructorType='stockChart' [Highcharts]="highcharts" [options]="chartOptions"
             [callbackFunction]="chartCallback" [update]="updateFlag" style="width: 100%; height: 100%; display: block;">
           </highcharts-chart>
         </div>
-        <div *ngIf="!chartOptions" class="w-full h-72 flex items-center justify-center bg-gray-900/30 rounded-lg">
+        <div *ngIf="chartOptions" class="mt-1 text-[10px] text-gray-500 text-right">Bottom pane: RSI</div>
+        <div *ngIf="!chartOptions" class="w-full h-96 flex items-center justify-center bg-gray-900/30 rounded-lg">
           <div class="text-center text-gray-500">
             <i class="fa-solid fa-chart-area text-2xl mb-2 opacity-50"></i>
             <p class="text-[10px]">Select a symbol</p>
@@ -400,21 +403,33 @@
               [ngClass]="asset?.asset === 'USDC' ? 'bg-emerald-500/20 text-emerald-400' : 'bg-gradient-to-br from-amber-500/20 to-orange-500/20 text-amber-400'">
               {{asset?.asset?.charAt(0)}}
             </div>
-            <span class="font-medium text-white text-sm">{{asset?.asset}}</span>
+            <div class="flex flex-col">
+              <div class="flex items-center gap-2">
+                <span class="font-medium text-white text-sm">{{asset?.asset}}</span>
+                <span class="px-1.5 py-0.5 text-[11px] rounded bg-amber-500/10 text-amber-300" *ngIf="getTrendScoreKey(asset?.asset) !== undefined">
+                  TS {{getTrendScoreKey(asset?.asset)}}
+                </span>
+              </div>
+              <span class="text-[12px] text-white font-mono">
+                {{formatBalance(asset?.free, asset?.asset)}}
+              </span>
+            </div>
           </button>
-          <span class="w-24 text-right text-sm font-mono text-white">{{formatBalance(asset?.free, asset?.asset)}}</span>
-          <span class="w-24 text-right text-sm font-mono" [ngClass]="+asset?.locked > 0 ? 'text-amber-400' : 'text-gray-600'">
+          <span class="w-20 text-right text-sm font-mono" [ngClass]="+asset?.locked > 0 ? 'text-amber-400' : 'text-gray-600'">
             {{+asset?.locked > 0 ? formatBalance(asset?.locked, asset?.asset) : '-'}}
           </span>
-          <div class="w-12 flex items-center justify-end gap-0.5">
-            <button *ngIf="+asset?.locked > 0" class="p-1 text-red-400 hover:text-red-300 hover:bg-red-500/10 rounded transition-all" (click)="cancelSymbolOrder(asset?.asset);">
-              <i class="fa-solid fa-xmark text-[10px]"></i>
-            </button>
-            <button class="p-1 text-gray-500 hover:text-blue-400 hover:bg-blue-500/10 rounded transition-all" (click)="openPopup(popupTemplate, asset?.asset, asset?.free);">
-              <i class="fa-solid fa-arrow-right-arrow-left text-[10px]"></i>
-            </button>
-          </div>
+        <div class="w-28 flex items-center justify-end gap-1.5">
+          <button class="p-1.5 text-blue-300 hover:text-blue-200 hover:bg-blue-500/20 rounded transition-all" (click)="showChart(asset?.asset, null);">
+            <i class="fa-solid fa-chart-line text-[10px]"></i>
+          </button>
+          <button *ngIf="+asset?.locked > 0" class="p-1.5 text-red-400 hover:text-red-300 hover:bg-red-500/10 rounded transition-all" (click)="cancelSymbolOrder(asset?.asset);">
+            <i class="fa-solid fa-xmark text-[10px]"></i>
+          </button>
+          <button class="p-1.5 text-gray-300 hover:text-blue-200 hover:bg-blue-500/20 rounded transition-all" (click)="openPopup(popupTemplate, asset?.asset, asset?.free);">
+            <i class="fa-solid fa-arrow-right-arrow-left text-[10px]"></i>
+          </button>
         </div>
+      </div>
       </div>
       <div *ngIf="!myAccount?.balances?.length" class="px-4 py-6 text-center">
         <i class="fa-solid fa-wallet text-2xl text-gray-600 mb-2"></i>
@@ -439,6 +454,9 @@
     </div>
     <div class="flex justify-between text-gray-300">
       <span>Qty</span><span class="font-mono">{{order?.executedQty || order?.origQty}}</span>
+    </div>
+    <div class="flex justify-between text-gray-400 text-xs">
+      <span>Trend Score</span><span class="font-semibold text-amber-300">{{getTrendScoreKey(order?.symbol) !== undefined ? getTrendScoreKey(order?.symbol) : '-'}}</span>
     </div>
     <div class="flex justify-between text-gray-400 text-xs">
       <span>Decision</span><span class="font-semibold text-amber-300">{{order?.type || '-'}}</span>
@@ -474,6 +492,12 @@
     <div class="flex justify-between gap-4">
       <span class="text-gray-400 text-xs">Quantity</span>
       <span class="font-mono text-gray-300 text-xs">{{currentOrderDetails?.executedQty}}</span>
+    </div>
+    <div class="flex justify-between gap-4">
+      <span class="text-gray-400 text-xs">Trend Score</span>
+      <span class="font-mono text-amber-300 text-xs">
+        {{ currentOrderTrendScore !== null && currentOrderTrendScore !== undefined ? currentOrderTrendScore : '-' }}
+      </span>
     </div>
     <div class="flex justify-between gap-4">
       <span class="text-gray-400 text-xs">Buy Type</span>

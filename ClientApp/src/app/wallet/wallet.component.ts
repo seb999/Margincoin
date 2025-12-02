@@ -81,6 +81,7 @@ export class WalletComponent {
   public popupQty: number;
   public popupQuoteQty: number;
   public balance: number;
+  public portfolioTrendScores: { [symbol: string]: number } = {};
   public isCollapsed = true;
   public slope: any;
   public isProd = false;
@@ -95,6 +96,7 @@ export class WalletComponent {
   public currentOrderDetails: BinanceOrder | null = null;
   public currentOrderBuyType: string | null = null;
   public currentOrderSellType: string | null = null;
+  public currentOrderTrendScore: number | null = null;
 
   get filteredOrderList(): Order[] {
     if (!this.orderList) return [];
@@ -207,6 +209,7 @@ export class WalletComponent {
     this.interval = await this.tradeService.getInterval();
     this.myAccount = await this.tradeService.binanceAccount();
     this.symbolPrice = await this.tradeService.getSymbolPrice();
+    this.portfolioTrendScores = await this.tradeService.getTrendScoresForBalances();
     this.orderList = await this.tradeService.getAllOrder(this.model.day + "-" + this.model.month + "-" + this.model.year);
 
     this.calculateProfit();
@@ -216,6 +219,7 @@ export class WalletComponent {
   async refreshUI() {
     this.myAccount = await this.tradeService.binanceAccount();
     this.logList = await this.tradeService.getLog();
+    this.portfolioTrendScores = await this.tradeService.getTrendScoresForBalances();
   }
 
   async refreshOrderTable() {
@@ -247,6 +251,18 @@ export class WalletComponent {
     return match?.type;
   }
 
+  private findOrderTrendScore(symbol: string, orderId?: number): number | null {
+    if (!this.orderList?.length) return null;
+    const orderIdNum = orderId != null ? Number(orderId) : null;
+    const match = this.orderList.find(o => {
+      const buyId = o.buyOrderId != null ? Number(o.buyOrderId) : null;
+      const sellId = o.sellOrderId != null ? Number(o.sellOrderId) : null;
+      return (orderIdNum != null && !isNaN(orderIdNum) && (buyId === orderIdNum || sellId === orderIdNum)) ||
+        o.symbol === symbol;
+    });
+    return match?.trendScore != null ? Number(match.trendScore) : null;
+  }
+
   openPopOver(popover: NgbPopover | undefined, order: BinanceOrder, decisionType?: string) {
     if (!popover) return;
     const enrichedOrder = { ...order, type: decisionType ?? order.type };
@@ -257,13 +273,17 @@ export class WalletComponent {
     if (popover?.isOpen()) popover.close();
   }
 
-  showOrderNotification(binanceOrder: BinanceOrder) {
+  async showOrderNotification(binanceOrder: BinanceOrder) {
     if (!binanceOrder) return;
+
+    // refresh orders to ensure we can fetch entry trend score for this order
+    this.orderList = await this.tradeService.getAllOrder(this.model.day + "-" + this.model.month + "-" + this.model.year);
 
     this.currentOrderDetails = binanceOrder;
     this.orderPopoverVisible = true;
     const decisionType = this.findOrderReason(binanceOrder);
     this.setDecisionTypes(decisionType, binanceOrder.side);
+    this.currentOrderTrendScore = this.findOrderTrendScore(binanceOrder.symbol, binanceOrder.orderId);
 
     // Maintain legacy popover notification when present
     if (this.orderPopOver) {
@@ -279,6 +299,7 @@ export class WalletComponent {
       this.currentOrderDetails = null;
       this.currentOrderBuyType = null;
       this.currentOrderSellType = null;
+      this.currentOrderTrendScore = null;
       this.closePopOver(this.orderPopOver);
       this.refreshUI();
     }, 15000);
@@ -382,6 +403,7 @@ export class WalletComponent {
   }
 
   async syncBinanceSymbol(): Promise<any> {
+    await this.tradeService.syncBinanceSymbol();
     await this.refreshUI();
   }
 
@@ -393,6 +415,7 @@ export class WalletComponent {
         this.currentOrderDetails = orderDetails;
         const decisionType = this.findOrderReason(orderDetails);
         this.setDecisionTypes(decisionType, orderDetails.side);
+        this.currentOrderTrendScore = this.findOrderTrendScore(orderDetails.symbol, orderDetails.orderId);
         this.orderPopoverVisible = true;
 
         // Auto-close after 15 seconds
@@ -400,6 +423,7 @@ export class WalletComponent {
           this.orderPopoverVisible = false;
           this.currentOrderBuyType = null;
           this.currentOrderSellType = null;
+          this.currentOrderTrendScore = null;
         }, 15000);
       }
     }
@@ -446,6 +470,16 @@ export class WalletComponent {
     }
   }
 
+  private resolveSymbolPair(symbol: string): string {
+    const upper = (symbol || '').toUpperCase();
+    if (upper.endsWith('USDC') || upper.endsWith('USDT')) return upper;
+    const hasUsdc = this.symbolPrice?.some(p => p.symbol === `${upper}USDC`);
+    if (hasUsdc) return `${upper}USDC`;
+    const hasUsdt = this.symbolPrice?.some(p => p.symbol === `${upper}USDT`);
+    if (hasUsdt) return `${upper}USDT`;
+    return `${upper}USDC`;
+  }
+
   private getSymbolPriceValue(symbol: string): number | null {
     if (!this.symbolPrice?.length) return null;
     const upper = symbol?.toUpperCase();
@@ -455,6 +489,20 @@ export class WalletComponent {
     if (fallbackUsdt) return parseFloat(fallbackUsdt.price);
     const looseMatch = this.symbolPrice.find((crypto) => crypto.symbol.startsWith(upper));
     return looseMatch ? parseFloat(looseMatch.price) : null;
+  }
+
+  getAssetValue(symbol: string, amount: string | number): number {
+    const qty = parseFloat(amount as any);
+    if (isNaN(qty) || qty === 0) return 0;
+    const price = this.getSymbolPriceValue(symbol);
+    if (!price) return 0;
+    return qty * price;
+  }
+
+  getTrendScoreKey(symbol: string): number | undefined {
+    if (!this.portfolioTrendScores) return undefined;
+    const upper = (symbol || '').toUpperCase();
+    return this.portfolioTrendScores[upper];
   }
 
   /////////////////////////////////////////////////////////////
@@ -487,7 +535,7 @@ export class WalletComponent {
       this.myOrder = await this.orderDetailHelper.getOrder(orderId);
     }
     else {
-      this.displaySymbol = symbol + "USDC";
+      this.displaySymbol = this.resolveSymbolPair(symbol);
       this.myOrder = null;
     }
 
@@ -543,7 +591,41 @@ export class WalletComponent {
     // var macdSlopeP1 = [this.slope.p1.x, this.slope.p1.y ];
     // var macdSlopeP2 =  [this.slope.p2.x, this.slope.p2.y ];
 
+    const pricePlotLines: Highcharts.YAxisPlotLinesOptions[] = [];
+    if (this.myOrder?.openPrice) {
+      pricePlotLines.push({
+        color: '#5CE25C',
+        width: 1,
+        value: this.myOrder.openPrice,
+        label: {
+          text: 'Entry',
+          align: 'right',
+          y: -4,
+          style: { color: '#5CE25C', backgroundColor: 'rgba(92,226,92,0.1)', padding: '2px', borderRadius: 2 }
+        }
+      });
+    }
+    if (this.myOrder?.closePrice) {
+      pricePlotLines.push({
+        color: '#F59E0B',
+        width: 1,
+        value: this.myOrder.closePrice,
+        label: {
+          text: 'Exit',
+          align: 'left',
+          y: -4,
+          style: { color: '#F59E0B', backgroundColor: 'rgba(245,158,11,0.08)', padding: '2px', borderRadius: 2 }
+        }
+      });
+    }
+
     this.chartOptions = {
+      tooltip: {
+        shared: true,
+        backgroundColor: '#0f172a',
+        borderColor: '#1f2937',
+        style: { color: '#e5e7eb' }
+      },
       plotOptions: {
 
         //   macd: {   there is a bug here, second drowing not working
@@ -564,6 +646,7 @@ export class WalletComponent {
       xAxis: {
         labels: { y: -2 },
         showLastLabel: false,
+        gridLineWidth: 0,
         plotLines: [{
           color: 'green',
           width: 1,
@@ -585,24 +668,17 @@ export class WalletComponent {
             },
             height: '60%',
             opposite: true,
-            plotLines: [
-              {
-                color: '#5CE25C', width: 1, value: this.myOrder?.openPrice,
-                label: { text: "Open            ", align: 'right' }
-              },
-              {
-                color: '#FF8901', width: 1, value: this.myOrder?.closePrice,
-                label: { text: "close", align: 'left' }
-              },
-            ],
+            gridLineWidth: 0.5,
+            gridLineColor: '#2e3544',
+            plotLines: pricePlotLines,
           },
           {
             minorTickInterval: null,
-            labels: { align: 'left', enabled: false },
+            labels: { align: 'left', enabled: true, style: { color: '#9ca3af', fontSize: '9px' } },
             top: '60%',
             height: '40%',
-
-            //offset: -5
+            title: { text: 'MACD', style: { color: '#9ca3af', fontSize: '10px' } },
+            gridLineWidth: 0,
           }
         ],
     }

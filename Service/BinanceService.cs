@@ -62,9 +62,14 @@ namespace MarginCoin.Service
             //Get data from Binance API
             string apiUrl = $"https://api3.binance.com/api/v3/klines?symbol={symbol}&interval={Interval}&limit=100";
             List<List<double>> coinQuotation = HttpHelper.GetApiData<List<List<double>>>(new Uri(apiUrl));
-            List<Candle> candleList = new List<Candle>();
-            candleList = TradeHelper.CreateCandleList(coinQuotation, symbol);
-            candleMatrix.Add(candleList);
+            if (coinQuotation == null || coinQuotation.Count == 0)
+                return;
+
+            var candleList = TradeHelper.CreateCandleList(coinQuotation, symbol);
+            if (candleList?.Count > 0)
+            {
+                candleMatrix.Add(candleList);
+            }
         }
 
         public BinanceTicker Ticker(string symbol)

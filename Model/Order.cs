@@ -25,6 +25,7 @@ namespace MarginCoin.Model
         public double Profit { get; set; }
         public double Fee { get; set; }
         public string Type { get; set; }
+        public double TrendScore { get; set; }
         public string OpenDate { get; set; }
         public string CloseDate { get; set; }
         public double RSI { get; set; }

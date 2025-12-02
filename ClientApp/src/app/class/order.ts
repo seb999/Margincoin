@@ -23,6 +23,7 @@ export class Order {
     public type?: string,
     public rsi?: number,
     public status?: string,
+    public trendScore?: number,
     )
     {}
 }

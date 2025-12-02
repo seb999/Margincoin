@@ -17,6 +17,7 @@ import { HighchartsChartModule } from 'highcharts-angular';
 import { AppSetting } from './app.settings';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { NgbModule, NgbPopover, NgbCollapseModule } from '@ng-bootstrap/ng-bootstrap';
+import { SettingsComponent } from './settings/settings.component';
 
 @NgModule({
   declarations: [
@@ -25,7 +26,8 @@ import { NgbModule, NgbPopover, NgbCollapseModule } from '@ng-bootstrap/ng-boots
     MarketComponent,
     WalletComponent,
     TradingboardComponent,
-    OrderDetailComponent
+    OrderDetailComponent,
+    SettingsComponent
   ],
   imports: [
     MatSlideToggleModule,
@@ -40,6 +42,7 @@ import { NgbModule, NgbPopover, NgbCollapseModule } from '@ng-bootstrap/ng-boots
     { path: 'tradingboard/:symbol', component: TradingboardComponent },
     { path: 'wallet', component: WalletComponent },
     { path: 'orderDetail/:id', component: OrderDetailComponent },
+    { path: 'settings', component: SettingsComponent },
 ])
   ],
   providers: [TradingboardHelper, OrderDetailHelper,  AppSetting ],

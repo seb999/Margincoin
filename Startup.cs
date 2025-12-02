@@ -13,6 +13,7 @@ using MarginCoin.Misc;
 using Serilog;
 using MarginCoin.Service;
 using MarginCoin.Configuration;
+using System.Net.Http;
 
 namespace MarginCoin
 {
@@ -43,6 +44,7 @@ namespace MarginCoin
             services.AddScoped<IBinanceService, BinanceService>();
             services.AddScoped<IOrderService, OrderService>();
             services.AddScoped<ISymbolService, SymbolService>();
+            services.AddScoped<ITradingSettingsService, TradingSettingsService>();
 
             services.AddSignalR();
 
@@ -96,8 +98,7 @@ namespace MarginCoin
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapHub<SignalRHub>("/Signalr");
-
-
+                endpoints.MapControllers();
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller}/{action=Index}/{id?}");
@@ -110,13 +111,36 @@ namespace MarginCoin
 
                 spa.Options.SourcePath = "ClientApp";
 
-                if (env.IsDevelopment())
+                if (env.IsDevelopment() && IsSpaDevServerAvailable())
                 {
                     spa.UseProxyToSpaDevelopmentServer("http://localhost:4201");
                 }
             });
 
+            using (var scope = app.ApplicationServices.CreateScope())
+            {
+                var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+                db.Database.EnsureCreated();
+                var settingsService = scope.ServiceProvider.GetRequiredService<ITradingSettingsService>();
+                settingsService.ApplyOverridesAsync().GetAwaiter().GetResult();
+            }
+        }
 
+        private bool IsSpaDevServerAvailable()
+        {
+            try
+            {
+                using var client = new HttpClient
+                {
+                    Timeout = TimeSpan.FromSeconds(1)
+                };
+                var response = client.GetAsync("http://localhost:4201", HttpCompletionOption.ResponseHeadersRead).GetAwaiter().GetResult();
+                return response.IsSuccessStatusCode;
+            }
+            catch
+            {
+                return false;
+            }
         }
     }
 }

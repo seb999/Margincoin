@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { HttpSettings, HttpService } from '../service/http.service';
 import { Order } from '../class/order';
+import { TrendScore } from '../class/trendScore';
 
 @Injectable({
   providedIn: 'root'
@@ -164,6 +165,25 @@ export class TradeService {
       url: location.origin + '/api/AlgoTrade/GetSymbolPrice',
     };
     return await this.httpService.xhr(httpSetting);
+  }
+
+  async getTrendScoresForBalances(): Promise<{ [symbol: string]: number }> {
+    const httpSetting: HttpSettings = {
+      method: 'GET',
+      url: location.origin + '/api/Action/TrendScores',
+    };
+    const data = await this.httpService.xhr<TrendScore[]>(httpSetting);
+    return (data || []).reduce((acc, curr) => {
+      const base = (curr.symbol || '').toUpperCase();
+      const pair = (curr.pair || '').toUpperCase();
+      if (base) acc[base] = curr.score;
+      if (pair) acc[pair] = curr.score;
+      if (pair.endsWith('USDC') || pair.endsWith('USDT')) {
+        const noQuote = pair.replace('USDC', '').replace('USDT', '');
+        acc[noQuote] = curr.score;
+      }
+      return acc;
+    }, {});
   }
 
   async cancelSymbolOrder(symbol): Promise<any[]> {

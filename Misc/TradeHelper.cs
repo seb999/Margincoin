@@ -197,9 +197,13 @@ namespace MarginCoin.Misc
 
         public static List<Candle> CreateCandleList(List<List<double>> coinQuotation, string symbol)
         {
+            if (coinQuotation == null || coinQuotation.Count == 0)
+                return new List<Candle>();
+
             List<Candle> candleList = new List<Candle>();
             foreach (var item in coinQuotation)
             {
+                if (item == null || item.Count < 7) continue;
                 Candle newCandle = new Candle()
                 {
                     s = symbol,

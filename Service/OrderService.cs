@@ -125,6 +125,7 @@ public class OrderService : IOrderService
     public void SaveBuyOrderDb(MarketStream symbolSpot, List<Candle> symbolCandle, BinanceOrder binanceOrder)
     {
         _logger.LogInformation("Opening trade for {Symbol} - OrderId: {OrderId}", binanceOrder.symbol, binanceOrder.orderId);
+        var entryTrendScore = TradeHelper.CalculateTrendScore(symbolCandle, _config.UseWeightedTrendScore);
         Order myOrder = new Order
         {
             BuyOrderId = binanceOrder.orderId,
@@ -153,6 +154,7 @@ public class OrderService : IOrderService
             MACD = symbolCandle.Last().Macd,
             MACDSign = symbolCandle.Last().MacdSign,
             MACDHist = symbolCandle.Last().MacdHist,
+            TrendScore = entryTrendScore,
         };
 
         _appDbContext.Order.Add(myOrder);

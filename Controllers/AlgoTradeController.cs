@@ -191,7 +191,19 @@ namespace MarginCoin.Controllers
         [HttpGet("[action]")]
         public void SyncBinanceSymbol()
         {
-            _tradingState.SyncBinanceSymbol = true;
+            var allSymbols = _binanceService.GetSymbolPrice()
+                ?.Select(p => p.symbol)
+                .Where(s => s.Contains("USDC") || s.Contains("USDT"))
+                .ToList();
+
+            if (allSymbols?.Any() == true)
+            {
+                _symbolService.SyncBinanceSymbols(allSymbols);
+                _symbolService.UpdateCoinMarketCap();
+                // Refresh in-memory symbol lists
+                _tradingState.SymbolBaseList = _symbolService.GetBaseSymbols();
+                _tradingState.SymbolWeTrade = _symbolService.GetTradingSymbols();
+            }
         }
 
         [HttpGet("[action]")]
@@ -371,18 +383,8 @@ namespace MarginCoin.Controllers
 
                          TradeHelper.BufferMarketStream(marketStreamList, ref buffer);
 
-                         //Update db symbol table with new coins from Binance
-                         if (_tradingState.SyncBinanceSymbol)
-                         {
-                             _tradingState.SyncBinanceSymbol = false;
-                             //Update list of symbol from binance
-                             _symbolService.SyncBinanceSymbols(buffer.Select(p => p.s).ToList());
-                             //Update capitalisation and ranking from CoinMarketCap
-                             _symbolService.UpdateCoinMarketCap();
-                         }
-
-                         nbrUp = buffer.Count(pred => pred.P >= 0);
-                         nbrDown = buffer.Count(pred => pred.P < 0);
+                        nbrUp = buffer.Count(pred => pred.P >= 0);
+                        nbrDown = buffer.Count(pred => pred.P < 0);
 
                          // Store all market data for later use with active orders
                          _tradingState.AllMarketData = [.. buffer];
@@ -552,9 +554,17 @@ namespace MarginCoin.Controllers
         private bool EnterLongPosition(MarketStream symbolSpot, List<Candle> symbolCandles)
         {
             // Basic validation
-            if (symbolSpot.P < 0)
+            var entryTrendScore = TradeHelper.CalculateTrendScore(symbolCandles, _config.UseWeightedTrendScore);
+
+            // if (symbolSpot.P < 0)
+            // {
+            //     _logger.LogDebug("Entry rejected for {Symbol}: Negative price change {Change}%", symbolSpot.s, symbolSpot.P);
+            //     return false;
+            // }
+
+            if (entryTrendScore < _config.MinTrendScoreForEntry)
             {
-                _logger.LogDebug("Entry rejected for {Symbol}: Negative price change {Change}%", symbolSpot.s, symbolSpot.P);
+                _logger.LogDebug("Entry rejected for {Symbol}: Trend score {Score} below threshold {Threshold}", symbolSpot.s, entryTrendScore, _config.MinTrendScoreForEntry);
                 return false;
             }
 
