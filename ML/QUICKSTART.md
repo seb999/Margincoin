@@ -21,7 +21,10 @@ Your Python environment is ready at `ML/venv/`
 
 ```bash
 cd ML
-source activate.sh
+python -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+pyhton /trading_model/train.py
 ```
 
 Or manually:
@@ -31,9 +34,21 @@ source venv/bin/activate
 
 ### 2. Collect Training Data
 
-**Option A: Fetch from Binance (Recommended for testing)**
+**RECOMMENDED: Fetch multi-year data from Binance**
 
-Fetch 6 months of data:
+Collect 5 years of data covering both bull and bear markets. The training script automatically handles class imbalance using weighted loss:
+
+```bash
+# Fetch 5 years of data from Binance (covers both bull and bear markets)
+./venv/bin/python trading_model/utils/collect_data.py \
+  --start-date 2020-01-01 \
+  --end-date 2025-01-01 \
+  --symbols BTCUSDT ETHUSDT BNBUSDT SOLUSDT \
+  --interval 30m \
+  --output data/training_data.csv
+```
+
+**Alternative: Quick test with 6 months (not recommended for production)**
 ```bash
 ./venv/bin/python trading_model/utils/collect_data.py \
   --months 6 \
@@ -42,15 +57,7 @@ Fetch 6 months of data:
   --output data/training_data.csv
 ```
 
-Fetch specific date range:
-```bash
-./venv/bin/python trading_model/utils/collect_data.py \
-  --start-date 2024-06-01 \
-  --end-date 2025-01-01 \
-  --symbols BTCUSDT ETHUSDT \
-  --interval 30m \
-  --output data/training_data.csv
-```
+**Note:** The model uses class-weighted loss to automatically handle imbalanced data. You don't need to manually balance the dataset.
 
 **Option B: Export from C# Application**
 

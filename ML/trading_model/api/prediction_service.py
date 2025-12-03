@@ -101,16 +101,32 @@ async def load_model():
         # Create model with same architecture
         input_size = len(preprocessor.feature_columns)
 
-        # Try to infer model type from checkpoint
-        # (You can add model_type to checkpoint during training to make this cleaner)
+        # Prefer metadata stored in checkpoint, fall back to legacy defaults
+        model_type = checkpoint.get('model_type', 'transformer_lstm')
+        legacy_default_kwargs = {
+            'transformer_lstm': {
+                'hidden_size': 128,
+                'num_lstm_layers': 2,
+                'num_transformer_layers': 2,
+                'num_heads': 4,
+                'dropout': 0.2
+            },
+            'lightweight_lstm': {
+                'hidden_size': 64,
+                'num_layers': 2,
+                'dropout': 0.2
+            }
+        }
+        model_kwargs = checkpoint.get(
+            'model_kwargs',
+            legacy_default_kwargs.get(model_type, {})
+        )
+        logger.info(f"Loading model_type={model_type} with kwargs={model_kwargs}")
+
         model = create_model(
-            model_type='transformer_lstm',  # or load from checkpoint metadata
+            model_type=model_type,
             input_size=input_size,
-            hidden_size=128,
-            num_lstm_layers=2,
-            num_transformer_layers=2,
-            num_heads=4,
-            dropout=0.2
+            **model_kwargs
         )
 
         model.load_state_dict(checkpoint['model_state_dict'])

@@ -1,12 +1,13 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Serilog;
+using Serilog.Debugging;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace MarginCoin
 {
@@ -14,12 +15,42 @@ namespace MarginCoin
     {
         public static void Main(string[] args)
         {
-            Log.Logger = new LoggerConfiguration()
-               .MinimumLevel.Warning()
-               .WriteTo.Console()
-               .WriteTo.Seq("http://localhost:5004")
-               .WriteTo.File("logs/.txt", shared: true, rollingInterval: RollingInterval.Day )
-               .CreateLogger();
+            // Capture Serilog internal sink errors to stderr for diagnostics
+            SelfLog.Enable(message => Console.Error.WriteLine($"[SerilogSelfLog] {message}"));
+
+            var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production";
+            var configuration = new ConfigurationBuilder()
+                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+                .AddJsonFile($"appsettings.{environment}.json", optional: true, reloadOnChange: true)
+                .AddEnvironmentVariables()
+                .Build();
+
+            var seqUrl = configuration["Seq:Url"] ?? Environment.GetEnvironmentVariable("SEQ_URL");
+
+            var loggerConfig = new LoggerConfiguration()
+                .MinimumLevel.Warning()
+                .WriteTo.Console()
+                .WriteTo.File("logs/.txt", shared: true, rollingInterval: RollingInterval.Day);
+
+            if (!string.IsNullOrWhiteSpace(seqUrl))
+            {
+                loggerConfig.WriteTo.Seq(seqUrl);
+            }
+
+            Log.Logger = loggerConfig.CreateLogger();
+
+            // Log any unhandled application-level exceptions
+            AppDomain.CurrentDomain.UnhandledException += (sender, eventArgs) =>
+            {
+                Log.Fatal(eventArgs.ExceptionObject as Exception, "Unhandled exception");
+            };
+
+            // Log any unobserved task exceptions before process exits
+            TaskScheduler.UnobservedTaskException += (sender, eventArgs) =>
+            {
+                Log.Fatal(eventArgs.Exception, "Unobserved task exception");
+                eventArgs.SetObserved();
+            };
 
             try
             {

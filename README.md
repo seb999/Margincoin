@@ -198,7 +198,7 @@ Default trading parameters (configured in AlgoTradeController.cs):
 Logs are written to:
 - Console (development)
 - File: `logs/` directory with daily rolling
-- Seq (if configured): http://localhost:5004
+- Seq (optional): set `Seq:Url` in configuration or `SEQ_URL` env var (e.g. `http://localhost:5004`)
 
 ## Troubleshooting
 

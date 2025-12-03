@@ -97,6 +97,9 @@ export class WalletComponent {
   public currentOrderBuyType: string | null = null;
   public currentOrderSellType: string | null = null;
   public currentOrderTrendScore: number | null = null;
+  private lastStreamAt: number = Date.now();
+  private streamWatchdog: any;
+  private readonly streamStaleThresholdMs = 30000;
 
   get filteredOrderList(): Order[] {
     if (!this.orderList) return [];
@@ -125,10 +128,13 @@ export class WalletComponent {
     await this.signalRService.startConnection();
     this.signalRService.openDataListener();
 
+    this.startStreamWatchdog();
+
     this.signalRService.onMessage().subscribe(async message => {
       this.serverMsg = message;
       if (this.serverMsg.msgName == BackEndMessage.trading) {
         this.isTradeOpen = true;
+        this.markStreamHeartbeat();
         this.showMessageInfo = true;
         this.CandleList = this.serverMsg.candleList;
         if (this.orderList?.length > 0 && this.CandleList?.length > 0) {
@@ -196,10 +202,12 @@ export class WalletComponent {
 
       if (this.serverMsg.msgName == BackEndMessage.websocketStatus) {
         this.websocketStatus = JSON.parse(this.serverMsg.data);
+        this.markStreamHeartbeat();
       }
 
       if (this.serverMsg.msgName == BackEndMessage.candleUpdate) {
         this.lastCandleUpdate = JSON.parse(this.serverMsg.data);
+        this.markStreamHeartbeat();
         setTimeout(() => { this.lastCandleUpdate = null }, 2000);
       }
     });
@@ -226,6 +234,12 @@ export class WalletComponent {
     this.orderList = await this.tradeService.getAllOrder(this.model.day + "-" + this.model.month + "-" + this.model.year);
   }
 
+  ngOnDestroy(): void {
+    if (this.streamWatchdog) {
+      clearInterval(this.streamWatchdog);
+    }
+  }
+
   private setDecisionTypes(reason?: string, side?: string) {
     const trimmed = reason?.trim() || null;
     if (!side) {
@@ -235,6 +249,23 @@ export class WalletComponent {
       this.currentOrderBuyType = trimmed;
     } else if (side === 'SELL') {
       this.currentOrderSellType = trimmed;
+    }
+  }
+
+  private startStreamWatchdog() {
+    this.streamWatchdog = setInterval(() => {
+      const elapsed = Date.now() - this.lastStreamAt;
+      if (elapsed > this.streamStaleThresholdMs) {
+        this.showMessageError = true;
+        this.messageError = `No market data received for ${Math.floor(elapsed / 1000)}s. Check backend stream or websocket connection.`;
+      }
+    }, 5000);
+  }
+
+  private markStreamHeartbeat() {
+    this.lastStreamAt = Date.now();
+    if (this.showMessageError && this.messageError?.includes('No market data received')) {
+      this.showMessageError = false;
     }
   }
 

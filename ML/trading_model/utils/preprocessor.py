@@ -175,6 +175,7 @@ class TradingDataPreprocessor:
     def create_sequences(self, df: pd.DataFrame, feature_columns: List[str] = None) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
         """
         Create sliding window sequences for LSTM/Transformer
+        Memory-optimized version using preallocated arrays
 
         Args:
             df: DataFrame with features and labels
@@ -195,24 +196,31 @@ class TradingDataPreprocessor:
         if missing_cols:
             raise ValueError(f"Missing columns in DataFrame: {missing_cols}")
 
-        X, y_class, y_reg = [], [], []
+        # Preallocate arrays for memory efficiency
+        n_samples = len(df) - self.lookback - self.forward_bars
+        n_features = len(feature_columns)
 
-        # Create sequences with sliding window
-        for i in range(self.lookback, len(df) - self.forward_bars):
-            # Get sequence of features
-            sequence = df[feature_columns].iloc[i - self.lookback:i].values
+        if n_samples <= 0:
+            raise ValueError(f"Not enough data. Need at least {self.lookback + self.forward_bars} rows")
 
-            # Verify sequence shape
-            if sequence.shape[0] != self.lookback:
-                continue
+        # Convert DataFrame to numpy once (much faster)
+        feature_data = df[feature_columns].values.astype(np.float32)
+        label_data = df['label_encoded'].values.astype(np.int64)
+        return_data = df['forward_return'].values.astype(np.float32)
 
-            X.append(sequence)
+        # Preallocate output arrays
+        X = np.zeros((n_samples, self.lookback, n_features), dtype=np.float32)
+        y_class = np.zeros(n_samples, dtype=np.int64)
+        y_reg = np.zeros(n_samples, dtype=np.float32)
 
-            # Get labels from current timestep
-            y_class.append(df['label_encoded'].iloc[i])
-            y_reg.append(df['forward_return'].iloc[i])
+        # Fill arrays efficiently using numpy slicing
+        for idx in range(n_samples):
+            i = idx + self.lookback
+            X[idx] = feature_data[i - self.lookback:i]
+            y_class[idx] = label_data[i]
+            y_reg[idx] = return_data[i]
 
-        return np.array(X, dtype=np.float32), np.array(y_class, dtype=np.int64), np.array(y_reg, dtype=np.float32)
+        return X, y_class, y_reg
 
     def fit_scaler(self, X: np.ndarray) -> None:
         """

@@ -139,6 +139,12 @@ namespace MarginCoin.Controllers
             //open a webSocket for each symbol in my list
             foreach (var symbol in _tradingState.SymbolWeTrade)
             {
+                if (symbol == null || string.IsNullOrWhiteSpace(symbol.SymbolName))
+                {
+                    _logger.LogWarning("Skipped websocket open for missing symbol in SymbolWeTrade list");
+                    continue;
+                }
+
                 await OpenWebSocketOnSymbol(symbol);
             }
 
@@ -148,6 +154,12 @@ namespace MarginCoin.Controllers
                 if (_tradingState.SymbolWeTrade.SingleOrDefault(p => p.SymbolName == order.Symbol) == null)
                 {
                     var orderSymbol = _tradingState.SymbolBaseList.SingleOrDefault(p => p.SymbolName == order.Symbol);
+                    if (orderSymbol == null)
+                    {
+                        _logger.LogWarning("Cannot open websocket for order {OrderId} because symbol {Symbol} was not found in base list", order.Id, order.Symbol);
+                        continue;
+                    }
+
                     await OpenWebSocketOnSymbol(orderSymbol);
                     _tradingState.SymbolWeTrade.Add(orderSymbol);
                 }
@@ -228,6 +240,12 @@ namespace MarginCoin.Controllers
 
         public async Task OpenWebSocketOnSymbol(Symbol symbol)
         {
+            if (symbol == null || string.IsNullOrWhiteSpace(symbol.SymbolName))
+            {
+                _logger.LogWarning("OpenWebSocketOnSymbol called with null/empty symbol");
+                return;
+            }
+
             // Check if WebSocket already exists for this symbol
             if (_webSocket.HasSymbolWebSocket(symbol.SymbolName))
             {
@@ -443,6 +461,12 @@ namespace MarginCoin.Controllers
                 if (_tradingState.SymbolWeTrade.Where(p => p.SymbolName == symbol.s).FirstOrDefault() == null)
                 {
                     Symbol hotSymbol = _tradingState.SymbolBaseList.Where(p => p.SymbolName == symbol.s).FirstOrDefault();
+                    if (hotSymbol == null)
+                    {
+                        _logger.LogWarning("Cannot open websocket for hot symbol {Symbol} because it was not found in base list", symbol.s);
+                        continue;
+                    }
+
                     await OpenWebSocketOnSymbol(hotSymbol);
                     _tradingState.SymbolWeTrade.Add(hotSymbol);
                 }
@@ -465,7 +489,7 @@ namespace MarginCoin.Controllers
 
                 try
                 {
-                    await ReviewPendingOrder(dbContext);
+                    await ReviewPendingOrder(orderService, dbContext);
 
                     //Review open orders
                     foreach (var item in orderService.GetActiveOrder())
@@ -760,7 +784,7 @@ namespace MarginCoin.Controllers
             return true;
         }
 
-        private async Task ReviewPendingOrder(ApplicationDbContext dbContext)
+        private async Task ReviewPendingOrder(IOrderService orderService, ApplicationDbContext dbContext)
         {
             if (i < 5)
             {
@@ -770,13 +794,13 @@ namespace MarginCoin.Controllers
             else
             {
                 i = 0;
-                CheckSellOrder(dbContext);
-                await CheckBuyOrder(dbContext);
+                CheckSellOrder(orderService, dbContext);
+                await CheckBuyOrder(orderService, dbContext);
                 return;
             }
         }
 
-        private void CheckSellOrder(ApplicationDbContext dbContext)
+        private void CheckSellOrder(IOrderService orderService, ApplicationDbContext dbContext)
         {
             //1 read on local db pending order buy or sell
             var dbOrderList = dbContext.Order.Where(p => p.Status != "FILLED" && p.Side == "SELL" && p.SellOrderId != 0).Select(p => p).ToList();
@@ -803,20 +827,20 @@ namespace MarginCoin.Controllers
 
                 if (orderStatus == "PARTIALLY_FILLED")
                 {
-                    _orderService.UpdateSellOrderDb(dbOrder, myBinanceOrder, "");
+                    orderService.UpdateSellOrderDb(dbOrder, myBinanceOrder, "");
                 }
 
                 if (orderStatus == "FILLED")
                 {
-                    _orderService.CloseOrderDb(dbOrder, myBinanceOrder);
+                    orderService.CloseOrderDb(dbOrder, myBinanceOrder);
                 }
 
                 if (orderStatus == "CANCELED"
                 || orderStatus == "REJECTED"
                 || orderStatus == "EXPIRED")
                 {
-                    _orderService.UpdateSellOrderDb(dbOrder, myBinanceOrder, "");
-                    _orderService.RecycleOrderDb(dbOrder.Id);
+                    orderService.UpdateSellOrderDb(dbOrder, myBinanceOrder, "");
+                    orderService.RecycleOrderDb(dbOrder.Id);
                     _tradingState.OnHold.Remove(dbOrder.Symbol);
                 }
             }
@@ -825,7 +849,7 @@ namespace MarginCoin.Controllers
             return;
         }
 
-        private async Task CheckBuyOrder(ApplicationDbContext dbContext)
+        private async Task CheckBuyOrder(IOrderService orderService, ApplicationDbContext dbContext)
         {
             //1 read on local db pending order buy or sell
             var dbOrderList = dbContext.Order.Where(p => p.Status != "FILLED" && p.Side == "BUY").Select(p => p).ToList();
@@ -850,7 +874,7 @@ namespace MarginCoin.Controllers
 
                 if (orderStatus == "FILLED" || orderStatus == "PARTIALLY_FILLED")
                 {
-                    _orderService.UpdateBuyOrderDb(dbOrder, myBinanceOrder);
+                    orderService.UpdateBuyOrderDb(dbOrder, myBinanceOrder);
                 }
 
                 if (orderStatus == "CANCELED" || orderStatus == "REJECTED" || orderStatus == "EXPIRED")
@@ -859,12 +883,12 @@ namespace MarginCoin.Controllers
                     if (executedQty == 0)
                     {
                         _tradingState.OnHold.Remove(dbOrder.Symbol);
-                        _orderService.DeleteOrderDb(dbOrder.Id);
+                        orderService.DeleteOrderDb(dbOrder.Id);
                     }
                     else
                     {
-                        _orderService.UpdateBuyOrderDb(dbOrder, myBinanceOrder);
-                        _orderService.RecycleOrderDb(dbOrder.Id);
+                        orderService.UpdateBuyOrderDb(dbOrder, myBinanceOrder);
+                        orderService.RecycleOrderDb(dbOrder.Id);
                     }
                 }
             }

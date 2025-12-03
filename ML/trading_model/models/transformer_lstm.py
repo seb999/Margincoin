@@ -251,8 +251,14 @@ def create_model(model_type: str, input_size: int, **kwargs) -> nn.Module:
         PyTorch model
     """
     if model_type == 'transformer_lstm':
-        return TransformerLSTMModel(input_size=input_size, **kwargs)
+        model = TransformerLSTMModel(input_size=input_size, **kwargs)
     elif model_type == 'lightweight_lstm':
-        return LightweightLSTM(input_size=input_size, **kwargs)
+        model = LightweightLSTM(input_size=input_size, **kwargs)
     else:
         raise ValueError(f"Unknown model type: {model_type}")
+
+    # Attach metadata so checkpoints carry architecture info
+    model.model_type = model_type
+    model.model_kwargs = kwargs
+    model.model_input_size = input_size
+    return model
