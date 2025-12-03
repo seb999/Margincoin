@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { HttpSettings, HttpService } from '../service/http.service';
 import { Order } from '../class/order';
 import { TrendScore } from '../class/trendScore';
+import { AiPrediction } from '../class/aiPrediction';
 
 @Injectable({
   providedIn: 'root'
@@ -184,6 +185,38 @@ export class TradeService {
       }
       return acc;
     }, {});
+  }
+
+  async getAiSignalsForBalances(): Promise<{ [symbol: string]: AiPrediction }> {
+    const httpSetting: HttpSettings = {
+      method: 'GET',
+      url: location.origin + '/api/AI/Signals',
+    };
+    const data = await this.httpService.xhr<AiPrediction[]>(httpSetting);
+    return (data || []).reduce((acc, curr) => {
+      const base = (curr.symbol || '').toUpperCase();
+      const pair = (curr.pair || '').toUpperCase();
+      if (base) acc[base] = curr;
+      if (pair) acc[pair] = curr;
+      if (pair.endsWith('USDC') || pair.endsWith('USDT')) {
+        const noQuote = pair.replace('USDC', '').replace('USDT', '');
+        if (noQuote) acc[noQuote] = curr;
+      }
+      return acc;
+    }, {});
+  }
+
+  async getAiHealth(): Promise<boolean> {
+    const httpSetting: HttpSettings = {
+      method: 'GET',
+      url: location.origin + '/api/AI/Health',
+    };
+    try {
+      await this.httpService.xhr(httpSetting);
+      return true;
+    } catch {
+      return false;
+    }
   }
 
   async cancelSymbolOrder(symbol): Promise<any[]> {

@@ -34,9 +34,13 @@ namespace MarginCoin
             services.Configure<CoinMarketCapConfiguration>(Configuration.GetSection("CoinMarketCap"));
             services.Configure<TradingConfiguration>(Configuration.GetSection("Trading"));
 
+            // HttpClient for ML prediction service
+            services.AddHttpClient();
+
             // Singleton - same instance during lifetime (state & long-running services)
             services.AddSingleton<ITradingState, TradingStateService>();
-            services.AddSingleton<IMLService, MLService>();
+            services.AddSingleton<LSTMPredictionService>();
+            services.AddSingleton<IMLService>(sp => sp.GetRequiredService<LSTMPredictionService>());
             services.AddSingleton<IWatchDog, WatchDog>();
             services.AddSingleton<IWebSocket, WebSocket>();
 

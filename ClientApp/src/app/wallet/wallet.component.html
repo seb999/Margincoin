@@ -121,6 +121,11 @@
             <i class="fa-solid fa-exclamation-triangle text-[10px]"></i>
             {{messageError}}
           </span>
+          <span *ngIf="aiServiceHealthy === false"
+            class="flex items-center gap-2 px-3 py-1.5 text-xs font-medium text-amber-200 bg-amber-500/10 border border-amber-500/30 rounded-full">
+            <i class="fa-solid fa-robot text-[10px]"></i>
+            AI service offline
+          </span>
           <span *ngIf="showMessageExport"
             class="flex items-center gap-2 px-3 py-1.5 text-xs font-medium text-blue-300 bg-blue-500/10 border border-blue-500/30 rounded-full">
             <i class="fa-solid fa-download text-[10px]"></i>
@@ -414,6 +419,10 @@
                 <span class="font-medium text-white text-sm">{{asset?.asset}}</span>
                 <span class="px-1.5 py-0.5 text-[11px] rounded bg-amber-500/10 text-amber-300" *ngIf="getTrendScoreKey(asset?.asset) !== undefined">
                   TS {{getTrendScoreKey(asset?.asset)}}
+                </span>
+                <span class="px-1.5 py-0.5 text-[11px] rounded" *ngIf="getAiPrediction(asset?.asset) as ai"
+                  [ngClass]="getAiBadgeClass(ai?.prediction)">
+                  AI {{formatAiBadge(ai)}}
                 </span>
               </div>
               <span class="text-[12px] text-white font-mono">

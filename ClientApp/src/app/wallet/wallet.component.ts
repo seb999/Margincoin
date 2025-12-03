@@ -23,6 +23,7 @@ import { AppSetting } from '../app.settings';
 import { BinanceOrder } from '../class/binanceOrder';
 import { BinanceAccount } from '../class/binanceAccount';
 import { TradeService } from '../service/trade.service';
+import { AiPrediction } from '../class/aiPrediction';
 
 
 HC_HIGHSTOCK(Highcharts);
@@ -82,6 +83,7 @@ export class WalletComponent {
   public popupQuoteQty: number;
   public balance: number;
   public portfolioTrendScores: { [symbol: string]: number } = {};
+  public portfolioAiSignals: { [symbol: string]: AiPrediction } = {};
   public isCollapsed = true;
   public slope: any;
   public isProd = false;
@@ -97,9 +99,12 @@ export class WalletComponent {
   public currentOrderBuyType: string | null = null;
   public currentOrderSellType: string | null = null;
   public currentOrderTrendScore: number | null = null;
+  public aiServiceHealthy: boolean = true;
   private lastStreamAt: number = Date.now();
   private streamWatchdog: any;
   private readonly streamStaleThresholdMs = 30000;
+  private aiHealthTimer: any;
+  private readonly aiHealthIntervalMs = 30000;
 
   get filteredOrderList(): Order[] {
     if (!this.orderList) return [];
@@ -129,6 +134,7 @@ export class WalletComponent {
     this.signalRService.openDataListener();
 
     this.startStreamWatchdog();
+    this.startAiHealthWatchdog();
 
     this.signalRService.onMessage().subscribe(async message => {
       this.serverMsg = message;
@@ -218,6 +224,7 @@ export class WalletComponent {
     this.myAccount = await this.tradeService.binanceAccount();
     this.symbolPrice = await this.tradeService.getSymbolPrice();
     this.portfolioTrendScores = await this.tradeService.getTrendScoresForBalances();
+    await this.loadAiSignals();
     this.orderList = await this.tradeService.getAllOrder(this.model.day + "-" + this.model.month + "-" + this.model.year);
 
     this.calculateProfit();
@@ -228,6 +235,7 @@ export class WalletComponent {
     this.myAccount = await this.tradeService.binanceAccount();
     this.logList = await this.tradeService.getLog();
     this.portfolioTrendScores = await this.tradeService.getTrendScoresForBalances();
+    await this.loadAiSignals();
   }
 
   async refreshOrderTable() {
@@ -237,6 +245,9 @@ export class WalletComponent {
   ngOnDestroy(): void {
     if (this.streamWatchdog) {
       clearInterval(this.streamWatchdog);
+    }
+    if (this.aiHealthTimer) {
+      clearInterval(this.aiHealthTimer);
     }
   }
 
@@ -266,6 +277,19 @@ export class WalletComponent {
     this.lastStreamAt = Date.now();
     if (this.showMessageError && this.messageError?.includes('No market data received')) {
       this.showMessageError = false;
+    }
+  }
+
+  private startAiHealthWatchdog() {
+    this.checkAiHealth();
+    this.aiHealthTimer = setInterval(() => this.checkAiHealth(), this.aiHealthIntervalMs);
+  }
+
+  private async checkAiHealth() {
+    try {
+      this.aiServiceHealthy = await this.tradeService.getAiHealth();
+    } catch {
+      this.aiServiceHealthy = false;
     }
   }
 
@@ -534,6 +558,45 @@ export class WalletComponent {
     if (!this.portfolioTrendScores) return undefined;
     const upper = (symbol || '').toUpperCase();
     return this.portfolioTrendScores[upper];
+  }
+
+  private async loadAiSignals() {
+    try {
+      this.portfolioAiSignals = await this.tradeService.getAiSignalsForBalances();
+      this.aiServiceHealthy = true;
+    } catch {
+      this.aiServiceHealthy = false;
+    }
+  }
+
+  getAiPrediction(symbol: string): AiPrediction | undefined {
+    if (!this.portfolioAiSignals) return undefined;
+    const upper = (symbol || '').toUpperCase();
+    return this.portfolioAiSignals[upper];
+  }
+
+  getAiBadgeClass(prediction?: string): string {
+    const direction = (prediction || '').toLowerCase();
+    if (direction === 'up') return 'bg-emerald-500/20 text-emerald-300';
+    if (direction === 'down') return 'bg-red-500/20 text-red-300';
+    return 'bg-sky-500/20 text-sky-200';
+  }
+
+  formatAiBadge(pred?: AiPrediction): string {
+    if (!pred) return '-';
+    const direction = (pred.prediction || '').toLowerCase();
+    const arrow = direction === 'up' ? '↑' : direction === 'down' ? '↓' : '→';
+    const confidence = this.getAiConfidence(direction, pred);
+    const percent = confidence != null ? Math.round(confidence * 100) : null;
+    return percent !== null ? `${arrow}${percent}%` : arrow;
+  }
+
+  private getAiConfidence(direction: string, pred: AiPrediction): number | null {
+    if (pred?.confidence != null) return pred.confidence;
+    if (direction === 'up' && pred?.upProbability != null) return pred.upProbability;
+    if (direction === 'down' && pred?.downProbability != null) return pred.downProbability;
+    if (direction === 'sideways' && pred?.sidewaysProbability != null) return pred.sidewaysProbability;
+    return null;
   }
 
   /////////////////////////////////////////////////////////////
