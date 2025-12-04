@@ -15,8 +15,8 @@ import logging
 import sys
 sys.path.append(str(Path(__file__).parent.parent))
 
-from models.transformer_lstm import create_model
-from utils.preprocessor import TradingDataPreprocessor, prepare_data_from_candles
+from trading_model.models.transformer_lstm import create_model
+from trading_model.utils.preprocessor import TradingDataPreprocessor, prepare_data_from_candles
 
 # Setup logging
 logging.basicConfig(level=logging.INFO)
@@ -83,8 +83,9 @@ async def load_model():
         device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
         logger.info(f"Using device: {device}")
 
-        # Load preprocessor
-        preprocessor_path = Path('checkpoints/preprocessor.pkl')
+        # Load preprocessor (relative to script's parent directory)
+        base_path = Path(__file__).parent.parent
+        preprocessor_path = base_path / 'checkpoints' / 'preprocessor.pkl'
         if not preprocessor_path.exists():
             raise FileNotFoundError(f"Preprocessor not found at {preprocessor_path}")
 
@@ -92,7 +93,7 @@ async def load_model():
         logger.info(f"Loaded preprocessor with {len(preprocessor.feature_columns)} features")
 
         # Load model checkpoint
-        checkpoint_path = Path('checkpoints/best_model.pt')
+        checkpoint_path = base_path / 'checkpoints' / 'best_model.pt'
         if not checkpoint_path.exists():
             raise FileNotFoundError(f"Model checkpoint not found at {checkpoint_path}")
 
@@ -216,15 +217,26 @@ async def predict(request: PredictionRequest):
             if hasattr(model, 'attention'):  # TransformerLSTM
                 class_logits, reg_pred, attn_weights = model(X)
 
-                # Process attention weights (average across heads and get last timestep importance)
-                attn_mean = attn_weights.mean(dim=1)[0, -1, :].cpu().numpy()  # (seq_len,)
+                # Process attention weights
+                # attn_weights shape: (batch, seq_len, seq_len) from MultiheadAttention
+                # Get the attention pattern for the last timestep (what it attends to)
+                if len(attn_weights.shape) == 3:  # (batch, seq, seq)
+                    attn_mean = attn_weights[0, -1, :].cpu().numpy()  # (seq_len,)
+                elif len(attn_weights.shape) == 4:  # (batch, heads, seq, seq)
+                    attn_mean = attn_weights.mean(dim=1)[0, -1, :].cpu().numpy()  # (seq_len,)
+                else:
+                    logger.warning(f"Unexpected attention weight shape: {attn_weights.shape}")
+                    attn_mean = None
 
                 # Find top 5 most important timesteps
-                top_indices = np.argsort(attn_mean)[-5:]
-                attention_summary = {
-                    f"t-{preprocessor.lookback - idx}": float(attn_mean[idx])
-                    for idx in top_indices
-                }
+                if attn_mean is not None:
+                    top_indices = np.argsort(attn_mean)[-5:]
+                    attention_summary = {
+                        f"t-{preprocessor.lookback - idx}": float(attn_mean[idx])
+                        for idx in top_indices
+                    }
+                else:
+                    attention_summary = None
             else:  # LightweightLSTM
                 class_logits, reg_pred = model(X)
                 attention_summary = None

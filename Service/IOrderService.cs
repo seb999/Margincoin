@@ -14,15 +14,15 @@ namespace MarginCoin.Service
         public List<Order> GetActiveOrder();
         public void UpdateTakeProfit(List<Candle> symbolCandle, Order activeOrder, double takeProfitPercentage);
         public void UpdateStopLoss(List<Candle> symbolCandles, Order activeOrder);
-        public void SaveBuyOrderDb(MarketStream symbolSpot, List<Candle> symbolCandle, BinanceOrder binanceOrder);
+        public void SaveBuyOrderDb(MarketStream symbolSpot, List<Candle> symbolCandle, BinanceOrder binanceOrder, double aiScore = 0, string aiPrediction = "");
         public void CloseOrderDb(Order dbOrder, BinanceOrder binanceOrder);
         public void DeleteOrderDb(double id);
         public void UpdateBuyOrderDb(Order dbOrder, BinanceOrder binanceOrder);
         public void UpdateSellOrderDb(Order dbOrder, BinanceOrder binanceOrder, string closeType);
         public void RecycleOrderDb(double id);
-        public Task BuyLimit(MarketStream symbolSpot, List<Candle> symbolCandleList);
+        public Task BuyLimit(MarketStream symbolSpot, List<Candle> symbolCandleList, double aiScore = 0, string aiPrediction = "");
         public Task SellLimit(Order dbOrder, MarketStream symbolSpot, string closeType);
         public Task SellMarket(Order dbOrder, string closeType);
-        public Task BuyMarket(MarketStream symbolSpot, List<Candle> symbolCandleList);
+        public Task BuyMarket(MarketStream symbolSpot, List<Candle> symbolCandleList, double aiScore = 0, string aiPrediction = "");
     }
 }

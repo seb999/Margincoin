@@ -28,13 +28,20 @@ namespace MarginCoin
             var seqUrl = configuration["Seq:Url"] ?? Environment.GetEnvironmentVariable("SEQ_URL");
 
             var loggerConfig = new LoggerConfiguration()
-                .MinimumLevel.Warning()
+                .ReadFrom.Configuration(configuration)
                 .WriteTo.Console()
                 .WriteTo.File("logs/.txt", shared: true, rollingInterval: RollingInterval.Day);
 
             if (!string.IsNullOrWhiteSpace(seqUrl))
             {
-                loggerConfig.WriteTo.Seq(seqUrl);
+                try
+                {
+                    loggerConfig.WriteTo.Seq(seqUrl);
+                }
+                catch (Exception ex)
+                {
+                    Console.Error.WriteLine($"Failed to configure Seq logging: {ex.Message}");
+                }
             }
 
             Log.Logger = loggerConfig.CreateLogger();

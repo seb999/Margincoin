@@ -99,6 +99,8 @@ export class WalletComponent {
   public currentOrderBuyType: string | null = null;
   public currentOrderSellType: string | null = null;
   public currentOrderTrendScore: number | null = null;
+  public currentOrderAIScore: number | null = null;
+  public currentOrderAIPrediction: string | null = null;
   public aiServiceHealthy: boolean = true;
   private lastStreamAt: number = Date.now();
   private streamWatchdog: any;
@@ -318,6 +320,32 @@ export class WalletComponent {
     return match?.trendScore != null ? Number(match.trendScore) : null;
   }
 
+  private findOrderAIData(symbol: string, orderId?: number): { score: number | null, prediction: string | null } {
+    if (!this.orderList?.length) return { score: null, prediction: null };
+    const orderIdNum = orderId != null ? Number(orderId) : null;
+    const match = this.orderList.find(o => {
+      const buyId = o.buyOrderId != null ? Number(o.buyOrderId) : null;
+      const sellId = o.sellOrderId != null ? Number(o.sellOrderId) : null;
+      return (orderIdNum != null && !isNaN(orderIdNum) && (buyId === orderIdNum || sellId === orderIdNum)) ||
+        o.symbol === symbol;
+    });
+    return {
+      score: match?.aiScore != null ? Number(match.aiScore) : null,
+      prediction: match?.aiPrediction ?? null
+    };
+  }
+
+  formatAIScore(score: number | null, prediction: string | null): string {
+    if (score == null || !prediction || score === 0) return '-';
+    const arrow = prediction === 'up' ? '↑' : (prediction === 'down' ? '↓' : '•');
+    return `${arrow}${(score * 100).toFixed(1)}%`;
+  }
+
+  getAIScoreClass(score: number | null, prediction: string | null): string {
+    if (score == null || !prediction || score === 0) return 'text-gray-400';
+    return prediction === 'up' ? 'text-emerald-400' : (prediction === 'down' ? 'text-red-400' : 'text-amber-400');
+  }
+
   openPopOver(popover: NgbPopover | undefined, order: BinanceOrder, decisionType?: string) {
     if (!popover) return;
     const enrichedOrder = { ...order, type: decisionType ?? order.type };
@@ -339,6 +367,9 @@ export class WalletComponent {
     const decisionType = this.findOrderReason(binanceOrder);
     this.setDecisionTypes(decisionType, binanceOrder.side);
     this.currentOrderTrendScore = this.findOrderTrendScore(binanceOrder.symbol, binanceOrder.orderId);
+    const aiData = this.findOrderAIData(binanceOrder.symbol, binanceOrder.orderId);
+    this.currentOrderAIScore = aiData.score;
+    this.currentOrderAIPrediction = aiData.prediction;
 
     // Maintain legacy popover notification when present
     if (this.orderPopOver) {
@@ -355,6 +386,8 @@ export class WalletComponent {
       this.currentOrderBuyType = null;
       this.currentOrderSellType = null;
       this.currentOrderTrendScore = null;
+      this.currentOrderAIScore = null;
+      this.currentOrderAIPrediction = null;
       this.closePopOver(this.orderPopOver);
       this.refreshUI();
     }, 15000);
@@ -457,6 +490,10 @@ export class WalletComponent {
     this.tradeService.debugBuy();
   }
 
+  openSeq() {
+    window.open('http://localhost:5341', '_blank');
+  }
+
   async syncBinanceSymbol(): Promise<any> {
     await this.tradeService.syncBinanceSymbol();
     await this.refreshUI();
@@ -471,6 +508,9 @@ export class WalletComponent {
         const decisionType = this.findOrderReason(orderDetails);
         this.setDecisionTypes(decisionType, orderDetails.side);
         this.currentOrderTrendScore = this.findOrderTrendScore(orderDetails.symbol, orderDetails.orderId);
+        const aiData = this.findOrderAIData(orderDetails.symbol, orderDetails.orderId);
+        this.currentOrderAIScore = aiData.score;
+        this.currentOrderAIPrediction = aiData.prediction;
         this.orderPopoverVisible = true;
 
         // Auto-close after 15 seconds
@@ -479,6 +519,8 @@ export class WalletComponent {
           this.currentOrderBuyType = null;
           this.currentOrderSellType = null;
           this.currentOrderTrendScore = null;
+          this.currentOrderAIScore = null;
+          this.currentOrderAIPrediction = null;
         }, 15000);
       }
     }

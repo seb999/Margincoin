@@ -24,6 +24,8 @@ export class Order {
     public rsi?: number,
     public status?: string,
     public trendScore?: number,
+    public aiScore?: number,
+    public aiPrediction?: string,
     )
     {}
 }

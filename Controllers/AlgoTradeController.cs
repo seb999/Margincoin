@@ -550,13 +550,30 @@ namespace MarginCoin.Controllers
 
                     Console.WriteLine($"Opening trade on {symbolSpot.s}");
 
+                    // Get AI prediction safely - defaults to empty if not available
+                    double aiScore = 0;
+                    string aiPrediction = "";
+                    try
+                    {
+                        var mlPrediction = _mlService?.MLPredList?.FirstOrDefault(p => p.Symbol == symbolSpot.s);
+                        if (mlPrediction != null && mlPrediction.Score != null && mlPrediction.Score.Length > 0)
+                        {
+                            aiScore = mlPrediction.Confidence;
+                            aiPrediction = mlPrediction.PredictedLabel?.ToLower() ?? "";
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogWarning(ex, "Failed to get AI prediction for {Symbol}, continuing with order", symbolSpot.s);
+                    }
+
                     if (_tradingState.IsMarketOrder == true)
                     {
-                        await orderService.BuyMarket(symbolSpot, symbolCandle);
+                        await orderService.BuyMarket(symbolSpot, symbolCandle, aiScore, aiPrediction);
                     }
                     else
                     {
-                        await orderService.BuyLimit(symbolSpot, symbolCandle);
+                        await orderService.BuyLimit(symbolSpot, symbolCandle, aiScore, aiPrediction);
                     }
                 }
 
@@ -565,7 +582,25 @@ namespace MarginCoin.Controllers
                 {
                     _tradingState.TestBuyLimit = false;
                     Console.WriteLine($"Opening trade on {symbolSpot.s}");
-                    await orderService.BuyLimit(symbolSpot, symbolCandle);
+
+                    // Get AI prediction safely for test buy
+                    double aiScore = 0;
+                    string aiPrediction = "";
+                    try
+                    {
+                        var mlPrediction = _mlService?.MLPredList?.FirstOrDefault(p => p.Symbol == symbolSpot.s);
+                        if (mlPrediction != null && mlPrediction.Score != null && mlPrediction.Score.Length > 0)
+                        {
+                            aiScore = mlPrediction.Confidence;
+                            aiPrediction = mlPrediction.PredictedLabel?.ToLower() ?? "";
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogWarning(ex, "Failed to get AI prediction for {Symbol}, continuing with order", symbolSpot.s);
+                    }
+
+                    await orderService.BuyLimit(symbolSpot, symbolCandle, aiScore, aiPrediction);
                 }
 
                 if (symbolSpot.P < 0 && IsShort(symbolSpot, symbolCandle))

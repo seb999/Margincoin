@@ -122,7 +122,7 @@ public class OrderService : IOrderService
 
     #region order check/update/delete
 
-    public void SaveBuyOrderDb(MarketStream symbolSpot, List<Candle> symbolCandle, BinanceOrder binanceOrder)
+    public void SaveBuyOrderDb(MarketStream symbolSpot, List<Candle> symbolCandle, BinanceOrder binanceOrder, double aiScore = 0, string aiPrediction = "")
     {
         _logger.LogInformation("Opening trade for {Symbol} - OrderId: {OrderId}", binanceOrder.symbol, binanceOrder.orderId);
         var entryTrendScore = TradeHelper.CalculateTrendScore(symbolCandle, _config.UseWeightedTrendScore);
@@ -155,6 +155,8 @@ public class OrderService : IOrderService
             MACDSign = symbolCandle.Last().MacdSign,
             MACDHist = symbolCandle.Last().MacdHist,
             TrendScore = entryTrendScore,
+            AIScore = aiScore,
+            AIPrediction = aiPrediction,
         };
 
         _appDbContext.Order.Add(myOrder);
@@ -254,7 +256,7 @@ public class OrderService : IOrderService
 
     #region binance order methods
 
-    public async Task BuyLimit(MarketStream symbolSpot, List<Candle> symbolCandleList)
+    public async Task BuyLimit(MarketStream symbolSpot, List<Candle> symbolCandleList, double aiScore = 0, string aiPrediction = "")
     {
         var (nbrDecimalPrice, nbrDecimalQty) = GetOrderParameters(symbolSpot);
         var price = Math.Round(symbolSpot.c * (1 + _config.OrderOffset / 100), nbrDecimalPrice);
@@ -267,7 +269,7 @@ public class OrderService : IOrderService
             return;
         }
 
-        SaveBuyOrderDb(symbolSpot, symbolCandleList, myBinanceOrder);
+        SaveBuyOrderDb(symbolSpot, symbolCandleList, myBinanceOrder, aiScore, aiPrediction);
 
         await Task.Delay(300);
         myBinanceOrder.price = TradeHelper.CalculateAvragePrice(myBinanceOrder).ToString();
@@ -299,7 +301,7 @@ public class OrderService : IOrderService
         await _hub.Clients.All.SendAsync("sellOrderFilled", JsonSerializer.Serialize(myBinanceOrder));
     }
 
-    public async Task BuyMarket(MarketStream symbolSpot, List<Candle> symbolCandleList)
+    public async Task BuyMarket(MarketStream symbolSpot, List<Candle> symbolCandleList, double aiScore = 0, string aiPrediction = "")
     {
         BinanceOrder myBinanceOrder = _binanceService.BuyMarket(symbolSpot.s, _config.QuoteOrderQty);
 
@@ -325,7 +327,7 @@ public class OrderService : IOrderService
 
         if (myBinanceOrder.status == "FILLED")
         {
-            SaveBuyOrderDb(symbolSpot, symbolCandleList, myBinanceOrder);
+            SaveBuyOrderDb(symbolSpot, symbolCandleList, myBinanceOrder, aiScore, aiPrediction);
 
             _tradingState.OnHold.Remove(symbolSpot.s);
             myBinanceOrder.price = TradeHelper.CalculateAvragePrice(myBinanceOrder).ToString();

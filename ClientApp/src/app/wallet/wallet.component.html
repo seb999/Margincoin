@@ -309,7 +309,7 @@
       <div class="p-3 space-y-3">
         <div class="grid grid-cols-2 gap-2">
           <button class="flex items-center justify-center gap-1.5 px-3 py-2 text-xs font-medium text-white bg-gray-700/80 hover:bg-gray-600 rounded-lg transition-all hover:scale-[1.02]"
-            (click)="isCollapsed = !isCollapsed">
+            (click)="openSeq()">
             <i class="fa fa-terminal text-[10px]"></i>Logs
           </button>
           <button class="flex items-center justify-center gap-1.5 px-3 py-2 text-xs font-medium text-white bg-gray-700/80 hover:bg-gray-600 rounded-lg transition-all hover:scale-[1.02]"
@@ -417,17 +417,19 @@
             <div class="flex flex-col">
               <div class="flex items-center gap-2">
                 <span class="font-medium text-white text-sm">{{asset?.asset}}</span>
-                <span class="px-1.5 py-0.5 text-[11px] rounded bg-amber-500/10 text-amber-300" *ngIf="getTrendScoreKey(asset?.asset) !== undefined">
-                  TS {{getTrendScoreKey(asset?.asset)}}
-                </span>
-                <span class="px-1.5 py-0.5 text-[11px] rounded" *ngIf="getAiPrediction(asset?.asset) as ai"
-                  [ngClass]="getAiBadgeClass(ai?.prediction)">
-                  AI {{formatAiBadge(ai)}}
+                <span class="text-[11px] text-white font-mono">
+                  {{formatBalance(asset?.free, asset?.asset)}}
                 </span>
               </div>
-              <span class="text-[12px] text-white font-mono">
-                {{formatBalance(asset?.free, asset?.asset)}}
-              </span>
+              <div class="flex items-center gap-2">
+                <span class="text-[10px] text-amber-300" *ngIf="getTrendScoreKey(asset?.asset) !== undefined">
+                  TS:{{getTrendScoreKey(asset?.asset)}}
+                </span>
+                <span class="text-[10px]" *ngIf="getAiPrediction(asset?.asset) as ai"
+                  [ngClass]="getAiBadgeClass(ai?.prediction)">
+                  AI:{{formatAiBadge(ai)}}
+                </span>
+              </div>
             </div>
           </button>
           <span class="w-20 text-right text-sm font-mono" [ngClass]="+asset?.locked > 0 ? 'text-amber-400' : 'text-gray-600'">
@@ -512,6 +514,12 @@
       <span class="text-gray-400 text-xs">Trend Score</span>
       <span class="font-mono text-amber-300 text-xs">
         {{ currentOrderTrendScore !== null && currentOrderTrendScore !== undefined ? currentOrderTrendScore : '-' }}
+      </span>
+    </div>
+    <div class="flex justify-between gap-4">
+      <span class="text-gray-400 text-xs">AI Score</span>
+      <span class="font-mono text-xs" [ngClass]="getAIScoreClass(currentOrderAIScore, currentOrderAIPrediction)">
+        {{ formatAIScore(currentOrderAIScore, currentOrderAIPrediction) }}
       </span>
     </div>
     <div class="flex justify-between gap-4">
