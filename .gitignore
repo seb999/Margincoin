@@ -96,6 +96,9 @@ logs/
 *.log
 *.txt
 
+# Allow ML requirements file to be tracked
+!ML/requirements.txt
+
 ## Angular / Node.js
 
 # Dependencies
