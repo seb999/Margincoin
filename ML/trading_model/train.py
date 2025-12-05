@@ -5,7 +5,7 @@ Training pipeline for LSTM/Transformer trading model
 import torch
 import torch.nn as nn
 import torch.optim as optim
-from torch.utils.data import Dataset, DataLoader, random_split
+from torch.utils.data import Dataset, DataLoader, random_split, WeightedRandomSampler
 import numpy as np
 import pandas as pd
 from pathlib import Path
@@ -20,22 +20,39 @@ from utils.preprocessor import TradingDataPreprocessor
 class FocalLoss(nn.Module):
     """Focal Loss for multi-class classification to focus on hard examples"""
 
-    def __init__(self, gamma: float = 1.5, weight: torch.Tensor = None, reduction: str = 'mean'):
+    def __init__(
+        self,
+        gamma: float = 1.5,
+        weight: torch.Tensor = None,
+        reduction: str = 'mean',
+        label_smoothing: float = 0.0
+    ):
         super().__init__()
         self.gamma = gamma
         self.weight = weight
         self.reduction = reduction
+        self.label_smoothing = label_smoothing
 
     def forward(self, logits: torch.Tensor, targets: torch.Tensor) -> torch.Tensor:
         log_probs = nn.functional.log_softmax(logits, dim=1)
         probs = log_probs.exp()
         focal_factor = (1 - probs) ** self.gamma
-        loss = -focal_factor * log_probs
+
+        # Label smoothing: soften targets to reduce overconfidence
+        num_classes = logits.size(1)
+        smooth = self.label_smoothing
+        with torch.no_grad():
+            true_dist = torch.zeros_like(log_probs)
+            true_dist.scatter_(1, targets.unsqueeze(1), 1.0)
+            if smooth > 0:
+                true_dist = true_dist * (1.0 - smooth) + smooth / num_classes
+
+        loss = -true_dist * focal_factor * log_probs
 
         if self.weight is not None:
-            loss = loss * self.weight
+            loss = loss * self.weight.view(1, -1)
 
-        loss = loss.gather(1, targets.unsqueeze(1)).squeeze(1)
+        loss = loss.sum(dim=1)
 
         if self.reduction == 'mean':
             return loss.mean()
@@ -69,12 +86,17 @@ class TradingModelTrainer:
         self,
         model: nn.Module,
         device: str = 'cuda' if torch.cuda.is_available() else 'cpu',
-        learning_rate: float = 0.001,
+        learning_rate: float = 0.0003,
         weight_decay: float = 1e-5,
         use_amp: bool = True,  # Mixed precision training
         gradient_accumulation_steps: int = 1,  # Simulate larger batches
         use_focal_loss: bool = True,
-        focal_gamma: float = 1.5
+        focal_gamma: float = 1.5,
+        label_smoothing: float = 0.05,
+        warmup_epochs: int = 5,
+        min_learning_rate: float = 5e-5,
+        scheduler_patience: int = 4,
+        scheduler_factor: float = 0.7
     ):
         self.model = model.to(device)
         self.device = device
@@ -82,6 +104,10 @@ class TradingModelTrainer:
         self.gradient_accumulation_steps = gradient_accumulation_steps
         self.use_focal_loss = use_focal_loss
         self.focal_gamma = focal_gamma
+        self.label_smoothing = label_smoothing
+        self.warmup_epochs = warmup_epochs
+        self.base_learning_rate = learning_rate
+        self.min_learning_rate = min_learning_rate
 
         self.optimizer = optim.AdamW(
             model.parameters(),
@@ -93,8 +119,10 @@ class TradingModelTrainer:
         self.scheduler = optim.lr_scheduler.ReduceLROnPlateau(
             self.optimizer,
             mode='min',
-            patience=5,
-            factor=0.5
+            patience=scheduler_patience,
+            factor=scheduler_factor,
+            min_lr=self.min_learning_rate,
+            threshold=1e-4
         )
 
         # Mixed precision scaler
@@ -127,11 +155,8 @@ class TradingModelTrainer:
         Calculate class weights from training data to handle imbalance.
         Uses inverse frequency with smoothing and normalization for stability.
         """
-        all_labels = []
-        for _, y_class, _ in train_loader:
-            all_labels.extend(y_class.cpu().numpy())
-
-        all_labels = np.array(all_labels, dtype=np.int64)
+        # Use underlying dataset labels to avoid distortion from any sampler
+        all_labels = train_loader.dataset.y_class.cpu().numpy().astype(np.int64)
         if all_labels.size == 0:
             raise ValueError("Training loader contains no labels")
 
@@ -159,9 +184,16 @@ class TradingModelTrainer:
 
         # Create weighted loss (Focal or CrossEntropy)
         if self.use_focal_loss:
-            self.criterion_class = FocalLoss(gamma=self.focal_gamma, weight=self.class_weights)
+            self.criterion_class = FocalLoss(
+                gamma=self.focal_gamma,
+                weight=self.class_weights,
+                label_smoothing=self.label_smoothing
+            )
         else:
-            self.criterion_class = nn.CrossEntropyLoss(weight=self.class_weights)
+            self.criterion_class = nn.CrossEntropyLoss(
+                weight=self.class_weights,
+                label_smoothing=self.label_smoothing
+            )
 
         print(f"\nClass distribution in training data (N={len(all_labels)}):")
         for i, count in enumerate(class_counts):
@@ -307,7 +339,7 @@ class TradingModelTrainer:
         val_loader: DataLoader,
         epochs: int = 100,
         save_dir: str = 'checkpoints',
-        early_stopping_patience: int = 15
+        early_stopping_patience: int = 12
     ) -> Dict:
         """
         Full training loop with validation and checkpointing
@@ -332,19 +364,30 @@ class TradingModelTrainer:
         print(f"Training on device: {self.device}")
         print(f"Mixed precision (AMP): {'Enabled' if self.use_amp else 'Disabled'}")
         print(f"Model parameters: {sum(p.numel() for p in self.model.parameters()):,}")
+        print(f"Base LR: {self.base_learning_rate} (warmup_epochs={self.warmup_epochs}, min_lr={self.min_learning_rate})")
+        print(f"Label smoothing: {self.label_smoothing}")
+        print(f"Classification loss: {'Focal' if self.use_focal_loss else 'CrossEntropy'}")
 
         # Calculate class weights to handle imbalanced data
         self.set_class_weights(train_loader)
 
         for epoch in range(1, epochs + 1):
+            # Warmup to base LR over initial epochs to avoid collapsing LR too early
+            if self.warmup_epochs > 0 and epoch <= self.warmup_epochs:
+                warmup_frac = epoch / float(self.warmup_epochs)
+                warmup_lr = max(self.min_learning_rate, self.base_learning_rate * warmup_frac)
+                for param_group in self.optimizer.param_groups:
+                    param_group['lr'] = warmup_lr
+
             # Train
             train_loss = self.train_epoch(train_loader)
 
             # Validate
             val_metrics = self.validate(val_loader)
 
-            # Update scheduler with val loss (minimization)
-            self.scheduler.step(val_metrics['loss'])
+            # Update scheduler with val loss (minimization) after warmup
+            if not (self.warmup_epochs > 0 and epoch <= self.warmup_epochs):
+                self.scheduler.step(val_metrics['loss'])
 
             # Record history
             self.history['train_loss'].append(train_loss)
@@ -440,7 +483,8 @@ def prepare_dataloaders(
     val_split: float = 0.2,
     max_rows: int = None,
     lookback: int = 30,
-    num_workers: int = 0
+    num_workers: int = 0,
+    use_weighted_sampler: bool = True
 ) -> Tuple[DataLoader, DataLoader, TradingDataPreprocessor]:
     """
     Load data from CSV and create train/val dataloaders
@@ -569,10 +613,23 @@ def prepare_dataloaders(
     val_dataset = TradingDataset(X_val, y_class_val, y_reg_val)
 
     # Create dataloaders with GPU optimizations
+    train_sampler = None
+    if use_weighted_sampler:
+        class_counts = np.bincount(y_class_train, minlength=3).astype(np.float64)
+        class_weights = 1.0 / (class_counts + 1e-6)
+        sample_weights = class_weights[y_class_train]
+        train_sampler = WeightedRandomSampler(
+            weights=torch.DoubleTensor(sample_weights),
+            num_samples=len(sample_weights),
+            replacement=True
+        )
+        print(f"  ✓ Using WeightedRandomSampler to balance classes during training")
+
     train_loader = DataLoader(
         train_dataset,
         batch_size=batch_size,
-        shuffle=True,
+        shuffle=(train_sampler is None),
+        sampler=train_sampler,
         num_workers=num_workers,
         pin_memory=True  # Faster GPU transfer
     )
@@ -608,9 +665,12 @@ if __name__ == '__main__':
     BATCH_SIZE = 256  # Larger batch for RTX 5090
     GRADIENT_ACCUM_STEPS = 1  # No need with 33GB VRAM
     EPOCHS = 200  # More epochs with early stopping
-    LEARNING_RATE = 0.0002
+    LEARNING_RATE = 0.0003
+    WARMUP_EPOCHS = 5
+    MIN_LR = 5e-5
     LOOKBACK = 50  # Start with 50, can increase later
     NUM_WORKERS = 8  # Use 8 workers to feed GPU faster
+    LABEL_SMOOTHING = 0.05
 
     print("\n" + "="*60)
     print("LOADING DATA...")
@@ -628,7 +688,8 @@ if __name__ == '__main__':
             val_split=0.2,
             max_rows=None,  # Use all 69K rows
             lookback=LOOKBACK,
-            num_workers=NUM_WORKERS
+            num_workers=NUM_WORKERS,
+            use_weighted_sampler=True
         )
         print("✓ Data loaded successfully!")
     except Exception as e:
@@ -695,7 +756,12 @@ if __name__ == '__main__':
             learning_rate=LEARNING_RATE,
             gradient_accumulation_steps=GRADIENT_ACCUM_STEPS,
             use_focal_loss=True,
-            focal_gamma=1.5
+            focal_gamma=1.5,
+            label_smoothing=LABEL_SMOOTHING,
+            warmup_epochs=WARMUP_EPOCHS,
+            min_learning_rate=MIN_LR,
+            scheduler_patience=4,
+            scheduler_factor=0.7
         )
         print(f"✓ Trainer initialized")
         print(f"  Effective batch size: {BATCH_SIZE * GRADIENT_ACCUM_STEPS}")
@@ -715,7 +781,7 @@ if __name__ == '__main__':
             val_loader=val_loader,
             epochs=EPOCHS,
             save_dir=SAVE_DIR,
-            early_stopping_patience=25
+            early_stopping_patience=12
         )
         print("\n" + "="*60)
         print("TRAINING COMPLETE!")

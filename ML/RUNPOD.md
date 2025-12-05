@@ -30,7 +30,7 @@ python trading_model/utils/collect_data.py \
 
 ### 5. Connect to the pod and clone ML
 ```bash
-scp -P 43201 -i Copenhagen2025 -r \
-root@194.26.196.6:/workspace/MarginCoin/ML/trading_model/checkpoints \
+scp -P 47337 -i Helsinki2025 -r \
+root@149.36.1.233:/workspace/MarginCoin/ML/trading_model/checkpoints \
 ./checkpoints
 ```
