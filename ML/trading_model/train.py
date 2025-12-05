@@ -90,7 +90,7 @@ class TradingModelTrainer:
         weight_decay: float = 1e-5,
         use_amp: bool = True,  # Mixed precision training
         gradient_accumulation_steps: int = 1,  # Simulate larger batches
-        use_focal_loss: bool = True,
+        use_focal_loss: bool = False,
         focal_gamma: float = 1.5,
         label_smoothing: float = 0.02,
         warmup_epochs: int = 5,
@@ -167,17 +167,11 @@ class TradingModelTrainer:
         eps = 1e-6
         smoothed_counts = class_counts + eps
 
-        # Inverse frequency weighting, normalized so mean weight == 1
+        # Inverse frequency weighting (softened and capped) to avoid over-biasing
         inv_freq = 1.0 / smoothed_counts
-        weights = inv_freq * (smoothed_counts.mean())
-
-        # Apply sqrt to soften the weighting (prevents over-compensation)
-        weights = np.sqrt(weights)
-
-        # Mild boost to reduce bias without overcorrecting
-        weights[0] *= 1.05  # DOWN
-        weights[1] *= 1.15  # SIDEWAYS
-        weights[2] *= 1.05  # UP
+        weights = inv_freq / inv_freq.mean()  # mean=1 baseline
+        weights = np.power(weights, 0.5)      # soften imbalance response
+        weights = np.clip(weights, 0.6, 1.6)  # cap extremes
 
         # Convert to tensor
         self.class_weights = torch.FloatTensor(weights).to(self.device)
@@ -484,7 +478,7 @@ def prepare_dataloaders(
     max_rows: int = None,
     lookback: int = 30,
     num_workers: int = 0,
-    use_weighted_sampler: bool = True
+    use_weighted_sampler: bool = False
 ) -> Tuple[DataLoader, DataLoader, TradingDataPreprocessor]:
     """
     Load data from CSV and create train/val dataloaders
@@ -755,7 +749,7 @@ if __name__ == '__main__':
             model=model,
             learning_rate=LEARNING_RATE,
             gradient_accumulation_steps=GRADIENT_ACCUM_STEPS,
-            use_focal_loss=True,
+            use_focal_loss=False,
             focal_gamma=1.5,
             label_smoothing=LABEL_SMOOTHING,
             warmup_epochs=WARMUP_EPOCHS,
