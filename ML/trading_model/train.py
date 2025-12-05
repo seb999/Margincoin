@@ -484,17 +484,30 @@ def prepare_dataloaders(
     print("  ✓ Preprocessor created")
     sys.stdout.flush()
 
-    # Chronological split BEFORE labels/sequences to avoid leakage
-    split_idx = int(len(df) * (1 - val_split))
-    train_df_raw = df.iloc[:split_idx].copy()
-    val_df_raw = df.iloc[split_idx:].copy()
+    # Per-symbol chronological split to avoid symbol imbalance
+    # Split each symbol's data chronologically, then combine
+    train_dfs = []
+    val_dfs = []
+
+    print("  Splitting data per-symbol chronologically:")
+    for symbol in df['symbol'].unique():
+        symbol_df = df[df['symbol'] == symbol].copy()
+        split_idx = int(len(symbol_df) * (1 - val_split))
+
+        train_dfs.append(symbol_df.iloc[:split_idx])
+        val_dfs.append(symbol_df.iloc[split_idx:])
+
+        print(f"    {symbol}: {split_idx} train, {len(symbol_df) - split_idx} val")
+
+    train_df_raw = pd.concat(train_dfs, ignore_index=True)
+    val_df_raw = pd.concat(val_dfs, ignore_index=True)
 
     min_needed = preprocessor.lookback + preprocessor.forward_bars
     if len(val_df_raw) < min_needed:
         raise ValueError(f"Validation split too small for lookback={preprocessor.lookback} "
                          f"and forward_bars={preprocessor.forward_bars} (need >= {min_needed} rows)")
 
-    print(f"  Train rows: {len(train_df_raw)}, Val rows: {len(val_df_raw)}")
+    print(f"  Total: Train rows: {len(train_df_raw)}, Val rows: {len(val_df_raw)}")
     sys.stdout.flush()
 
     # Build sequences per symbol to avoid mixing windows across symbols
