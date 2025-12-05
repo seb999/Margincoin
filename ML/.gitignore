@@ -8,7 +8,7 @@ __pycache__/
 
 # Model checkpoints and data
 checkpoints/
-data/
+# data/ - commented out to allow pushing training data
 *.pt
 *.pkl
 *.pth
