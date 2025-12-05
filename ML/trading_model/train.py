@@ -167,11 +167,8 @@ class TradingModelTrainer:
         eps = 1e-6
         smoothed_counts = class_counts + eps
 
-        # Inverse frequency weighting (softened and capped) to avoid over-biasing
-        inv_freq = 1.0 / smoothed_counts
-        weights = inv_freq / inv_freq.mean()  # mean=1 baseline
-        weights = np.power(weights, 0.5)      # soften imbalance response
-        weights = np.clip(weights, 0.6, 1.6)  # cap extremes
+        # Use uniform weights for now to avoid over-biasing any class
+        weights = np.ones_like(smoothed_counts)
 
         # Convert to tensor
         self.class_weights = torch.FloatTensor(weights).to(self.device)
