@@ -92,10 +92,10 @@ class TradingModelTrainer:
         gradient_accumulation_steps: int = 1,  # Simulate larger batches
         use_focal_loss: bool = False,
         focal_gamma: float = 1.5,
-        label_smoothing: float = 0.02,
+        label_smoothing: float = 0.01,
         warmup_epochs: int = 5,
         min_learning_rate: float = 1e-4,
-        scheduler_patience: int = 3,
+        scheduler_patience: int = 5,
         scheduler_factor: float = 0.8
     ):
         self.model = model.to(device)
@@ -167,8 +167,11 @@ class TradingModelTrainer:
         eps = 1e-6
         smoothed_counts = class_counts + eps
 
-        # Use uniform weights for now to avoid over-biasing any class
-        weights = np.ones_like(smoothed_counts)
+        # Mild inverse-frequency weights to gently balance classes without over-biasing
+        inv_freq = 1.0 / smoothed_counts
+        weights = inv_freq / inv_freq.mean()  # mean=1 baseline
+        weights = np.power(weights, 0.3)      # very soft adjustment
+        weights = np.clip(weights, 0.7, 1.3)  # cap extremes
 
         # Convert to tensor
         self.class_weights = torch.FloatTensor(weights).to(self.device)
@@ -475,7 +478,7 @@ def prepare_dataloaders(
     max_rows: int = None,
     lookback: int = 30,
     num_workers: int = 0,
-    use_weighted_sampler: bool = False
+    use_weighted_sampler: bool = True
 ) -> Tuple[DataLoader, DataLoader, TradingDataPreprocessor]:
     """
     Load data from CSV and create train/val dataloaders
@@ -608,13 +611,16 @@ def prepare_dataloaders(
     if use_weighted_sampler:
         class_counts = np.bincount(y_class_train, minlength=3).astype(np.float64)
         class_weights = 1.0 / (class_counts + 1e-6)
+        class_weights = class_weights / class_weights.mean()
+        class_weights = np.power(class_weights, 0.3)  # gentle balancing
+        class_weights = np.clip(class_weights, 0.7, 1.3)
         sample_weights = class_weights[y_class_train]
         train_sampler = WeightedRandomSampler(
             weights=torch.DoubleTensor(sample_weights),
             num_samples=len(sample_weights),
             replacement=True
         )
-        print(f"  ✓ Using WeightedRandomSampler to balance classes during training")
+        print(f"  ✓ Using WeightedRandomSampler (soft) to balance classes during training")
 
     train_loader = DataLoader(
         train_dataset,
@@ -661,7 +667,7 @@ if __name__ == '__main__':
     MIN_LR = 1e-4
     LOOKBACK = 50  # Start with 50, can increase later
     NUM_WORKERS = 8  # Use 8 workers to feed GPU faster
-    LABEL_SMOOTHING = 0.02
+    LABEL_SMOOTHING = 0.01
 
     print("\n" + "="*60)
     print("LOADING DATA...")
@@ -680,7 +686,7 @@ if __name__ == '__main__':
             max_rows=None,  # Use all 69K rows
             lookback=LOOKBACK,
             num_workers=NUM_WORKERS,
-            use_weighted_sampler=False
+            use_weighted_sampler=True
         )
         print("✓ Data loaded successfully!")
     except Exception as e:
@@ -751,7 +757,7 @@ if __name__ == '__main__':
             label_smoothing=LABEL_SMOOTHING,
             warmup_epochs=WARMUP_EPOCHS,
             min_learning_rate=MIN_LR,
-            scheduler_patience=3,
+            scheduler_patience=5,
             scheduler_factor=0.8
         )
         print(f"✓ Trainer initialized")
@@ -772,7 +778,7 @@ if __name__ == '__main__':
             val_loader=val_loader,
             epochs=EPOCHS,
             save_dir=SAVE_DIR,
-            early_stopping_patience=12
+            early_stopping_patience=30
         )
         print("\n" + "="*60)
         print("TRAINING COMPLETE!")
