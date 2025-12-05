@@ -680,7 +680,7 @@ if __name__ == '__main__':
             max_rows=None,  # Use all 69K rows
             lookback=LOOKBACK,
             num_workers=NUM_WORKERS,
-            use_weighted_sampler=True
+            use_weighted_sampler=False
         )
         print("✓ Data loaded successfully!")
     except Exception as e:
