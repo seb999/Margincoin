@@ -23,7 +23,7 @@ pip install -r requirements.txt
 python trading_model/utils/collect_data.py \
   --start-date 2020-01-01 \
   --end-date 2025-12-04 \
-  --symbols BTCUSDC ETHUSDC BNBUSDC SOLUSDC ADAUSDC \
+  --symbols BTCUSDC ETHUSDC BNBUSDC SOLUSDC ADAUSDC XRPUSDC \
   --interval 1h \
   --output data/training_data.csv
 ```
