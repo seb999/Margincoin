@@ -92,11 +92,11 @@ class TradingModelTrainer:
         gradient_accumulation_steps: int = 1,  # Simulate larger batches
         use_focal_loss: bool = True,
         focal_gamma: float = 1.5,
-        label_smoothing: float = 0.05,
+        label_smoothing: float = 0.02,
         warmup_epochs: int = 5,
-        min_learning_rate: float = 5e-5,
-        scheduler_patience: int = 4,
-        scheduler_factor: float = 0.7
+        min_learning_rate: float = 1e-4,
+        scheduler_patience: int = 3,
+        scheduler_factor: float = 0.8
     ):
         self.model = model.to(device)
         self.device = device
@@ -230,7 +230,7 @@ class TradingModelTrainer:
                 loss_reg = self.criterion_reg(reg_pred, y_reg_batch)
 
                 # Combined loss (classification weighted higher)
-                loss = (loss_class + 0.3 * loss_reg) / self.gradient_accumulation_steps
+                loss = (loss_class + 0.15 * loss_reg) / self.gradient_accumulation_steps
 
             # Mixed precision backward pass
             if self.use_amp:
@@ -287,7 +287,7 @@ class TradingModelTrainer:
                 # Loss
                 loss_class = self.criterion_class(class_logits, y_class_batch)
                 loss_reg = self.criterion_reg(reg_pred, y_reg_batch)
-                loss = loss_class + 0.3 * loss_reg
+                loss = loss_class + 0.15 * loss_reg
 
             total_loss += loss.item()
             n_batches += 1
@@ -667,10 +667,10 @@ if __name__ == '__main__':
     EPOCHS = 200  # More epochs with early stopping
     LEARNING_RATE = 0.0003
     WARMUP_EPOCHS = 5
-    MIN_LR = 5e-5
+    MIN_LR = 1e-4
     LOOKBACK = 50  # Start with 50, can increase later
     NUM_WORKERS = 8  # Use 8 workers to feed GPU faster
-    LABEL_SMOOTHING = 0.05
+    LABEL_SMOOTHING = 0.02
 
     print("\n" + "="*60)
     print("LOADING DATA...")
@@ -760,8 +760,8 @@ if __name__ == '__main__':
             label_smoothing=LABEL_SMOOTHING,
             warmup_epochs=WARMUP_EPOCHS,
             min_learning_rate=MIN_LR,
-            scheduler_patience=4,
-            scheduler_factor=0.7
+            scheduler_patience=3,
+            scheduler_factor=0.8
         )
         print(f"✓ Trainer initialized")
         print(f"  Effective batch size: {BATCH_SIZE * GRADIENT_ACCUM_STEPS}")
