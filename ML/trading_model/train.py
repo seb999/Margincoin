@@ -497,28 +497,49 @@ def prepare_dataloaders(
     print(f"  Train rows: {len(train_df_raw)}, Val rows: {len(val_df_raw)}")
     sys.stdout.flush()
 
-    # Create features and labels separately per split
-    print("  Step 3/5: Creating features and labels (train)...")
+    # Build sequences per symbol to avoid mixing windows across symbols
+    def build_sequences(split_df: pd.DataFrame, split_name: str):
+        feature_cols_local = preprocessor.get_feature_columns()
+        preprocessor.feature_columns = feature_cols_local  # ensure set for downstream use
+
+        X_list, y_class_list, y_reg_list = [], [], []
+        for symbol, sym_df_raw in split_df.groupby('symbol'):
+            sym_df = preprocessor.create_features(sym_df_raw)
+            sym_df = preprocessor.create_labels(sym_df)
+            try:
+                X_sym, y_class_sym, y_reg_sym = preprocessor.create_sequences(sym_df, feature_cols_local)
+                X_list.append(X_sym)
+                y_class_list.append(y_class_sym)
+                y_reg_list.append(y_reg_sym)
+            except ValueError:
+                # Not enough data for this symbol; skip
+                print(f"    Skipping {symbol} in {split_name} (not enough rows for lookback/forward)")
+                continue
+
+        if not X_list:
+            raise ValueError(f"No sequences could be created for {split_name}. "
+                             f"Need at least one symbol with >= {preprocessor.lookback + preprocessor.forward_bars} rows.")
+
+        return (
+            np.concatenate(X_list, axis=0),
+            np.concatenate(y_class_list, axis=0),
+            np.concatenate(y_reg_list, axis=0)
+        )
+
+    print("  Step 3/5: Creating features, labels, and sequences (train)...")
     sys.stdout.flush()
-    train_df = preprocessor.create_features(train_df_raw)
-    train_df = preprocessor.create_labels(train_df)
-    print("  ✓ Train features/labels created")
+    X_train_raw, y_class_train, y_reg_train = build_sequences(train_df_raw, "train")
+    print(f"  ✓ Train sequences created: {len(X_train_raw)}")
     sys.stdout.flush()
 
-    print("  Step 4/5: Creating features and labels (val)...")
+    print("  Step 4/5: Creating features, labels, and sequences (val)...")
     sys.stdout.flush()
-    val_df = preprocessor.create_features(val_df_raw)
-    val_df = preprocessor.create_labels(val_df)
-    print("  ✓ Val features/labels created")
+    X_val_raw, y_class_val, y_reg_val = build_sequences(val_df_raw, "val")
+    print(f"  ✓ Val sequences created: {len(X_val_raw)}")
     sys.stdout.flush()
 
-    # Create sequences per split to keep history/labels inside split
-    print("  Step 5/5: Creating sequences and scaling...")
+    print("  Step 5/5: Scaling features...")
     sys.stdout.flush()
-    feature_cols = preprocessor.get_feature_columns()
-
-    X_train_raw, y_class_train, y_reg_train = preprocessor.create_sequences(train_df, feature_cols)
-    X_val_raw, y_class_val, y_reg_val = preprocessor.create_sequences(val_df, feature_cols)
 
     print(f"  ✓ Created sequences (train={len(X_train_raw)}, val={len(X_val_raw)})")
     print(f"    Train label distribution: DOWN={np.sum(y_class_train==0)}, SIDEWAYS={np.sum(y_class_train==1)}, UP={np.sum(y_class_train==2)}")

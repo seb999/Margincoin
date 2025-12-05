@@ -28,6 +28,8 @@ namespace MarginCoin.Model
         public double TrendScore { get; set; }
         public double AIScore { get; set; }
         public string AIPrediction { get; set; }
+        public double ExitAIScore { get; set; }
+        public string ExitAIPrediction { get; set; }
         public string OpenDate { get; set; }
         public string CloseDate { get; set; }
         public double RSI { get; set; }

@@ -1,0 +1,562 @@
+<div class="container-fluid mt-4">
+  <!-- Header -->
+  <div class="row mb-4">
+    <div class="col-12">
+      <h2 class="mb-3">
+        <i class="fas fa-brain"></i> AI Model Performance Analytics
+      </h2>
+      <p class="text-muted">
+        Analyze your ML model's prediction accuracy and trading performance to decide if it's ready for automated trading.
+      </p>
+    </div>
+  </div>
+
+  <!-- Period Selector -->
+  <div class="row mb-4">
+    <div class="col-md-4">
+      <label for="periodSelect" class="form-label">Analysis Period:</label>
+      <select
+        id="periodSelect"
+        class="form-select"
+        [(ngModel)]="selectedPeriod"
+        (change)="onPeriodChange()">
+        <option *ngFor="let option of periodOptions" [value]="option.value">
+          {{ option.label }}
+        </option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="text-center my-5">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Loading analytics...</span>
+    </div>
+    <p class="mt-3">Loading AI performance data...</p>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="errorMessage && !isLoading" class="alert alert-danger" role="alert">
+    <i class="fas fa-exclamation-triangle"></i> {{ errorMessage }}
+  </div>
+
+  <!-- Main Content -->
+  <div *ngIf="!isLoading && !errorMessage">
+
+    <!-- Tabs -->
+    <ul class="nav nav-tabs mb-4">
+      <li class="nav-item">
+        <a
+          class="nav-link"
+          [class.active]="selectedTab === 'overview'"
+          (click)="selectTab('overview')"
+          style="cursor: pointer;">
+          <i class="fas fa-chart-line"></i> Overview
+        </a>
+      </li>
+      <li class="nav-item">
+        <a
+          class="nav-link"
+          [class.active]="selectedTab === 'accuracy'"
+          (click)="selectTab('accuracy')"
+          style="cursor: pointer;">
+          <i class="fas fa-bullseye"></i> Accuracy Analysis
+        </a>
+      </li>
+      <li class="nav-item">
+        <a
+          class="nav-link"
+          [class.active]="selectedTab === 'predictions'"
+          (click)="selectTab('predictions')"
+          style="cursor: pointer;">
+          <i class="fas fa-list"></i> Recent Predictions
+        </a>
+      </li>
+      <li class="nav-item">
+        <a
+          class="nav-link"
+          [class.active]="selectedTab === 'recommendations'"
+          (click)="selectTab('recommendations')"
+          style="cursor: pointer;">
+          <i class="fas fa-lightbulb"></i> Recommendations
+        </a>
+      </li>
+    </ul>
+
+    <!-- Overview Tab -->
+    <div *ngIf="selectedTab === 'overview' && performanceMetrics">
+
+      <!-- Key Metrics Cards -->
+      <div class="row mb-4">
+        <div class="col-md-3">
+          <div class="card bg-primary text-white">
+            <div class="card-body">
+              <h6 class="card-subtitle mb-2">Total Trades</h6>
+              <h2 class="card-title">{{ performanceMetrics.totalOrders }}</h2>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card bg-success text-white">
+            <div class="card-body">
+              <h6 class="card-subtitle mb-2">Win Rate</h6>
+              <h2 class="card-title">{{ formatPercent(performanceMetrics.winRate) }}</h2>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card bg-info text-white">
+            <div class="card-body">
+              <h6 class="card-subtitle mb-2">Profitable Trades</h6>
+              <h2 class="card-title">{{ performanceMetrics.profitableOrders }}</h2>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card bg-danger text-white">
+            <div class="card-body">
+              <h6 class="card-subtitle mb-2">Losing Trades</h6>
+              <h2 class="card-title">{{ performanceMetrics.losingOrders }}</h2>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Entry Predictions -->
+      <div class="row mb-4">
+        <div class="col-md-6">
+          <div class="card">
+            <div class="card-header bg-success text-white">
+              <h5 class="mb-0"><i class="fas fa-sign-in-alt"></i> Entry Predictions (UP)</h5>
+            </div>
+            <div class="card-body">
+              <table class="table table-sm">
+                <tbody>
+                  <tr>
+                    <td>Total Predictions</td>
+                    <td class="text-end"><strong>{{ performanceMetrics.entryPredictions.upPredictionCount }}</strong></td>
+                  </tr>
+                  <tr>
+                    <td>Profitable</td>
+                    <td class="text-end text-success"><strong>{{ performanceMetrics.entryPredictions.upPredictionProfitable }}</strong></td>
+                  </tr>
+                  <tr class="table-primary">
+                    <td><strong>Accuracy</strong></td>
+                    <td class="text-end" [class]="getAccuracyColor(performanceMetrics.entryPredictions.upPredictionAccuracy)">
+                      <strong>{{ getAccuracyIcon(performanceMetrics.entryPredictions.upPredictionAccuracy) }}
+                      {{ formatPercent(performanceMetrics.entryPredictions.upPredictionAccuracy) }}</strong>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Exit Predictions -->
+        <div class="col-md-6">
+          <div class="card">
+            <div class="card-header bg-danger text-white">
+              <h5 class="mb-0"><i class="fas fa-sign-out-alt"></i> Exit Predictions (DOWN)</h5>
+            </div>
+            <div class="card-body">
+              <table class="table table-sm">
+                <tbody>
+                  <tr>
+                    <td>Total Predictions</td>
+                    <td class="text-end"><strong>{{ performanceMetrics.exitPredictions.downExitCount }}</strong></td>
+                  </tr>
+                  <tr>
+                    <td>UP Exits</td>
+                    <td class="text-end"><strong>{{ performanceMetrics.exitPredictions.upExitCount }}</strong></td>
+                  </tr>
+                  <tr class="table-primary">
+                    <td><strong>Exit Effectiveness</strong></td>
+                    <td class="text-end" [class]="getAccuracyColor(performanceMetrics.exitPredictions.downExitAccuracy)">
+                      <strong>{{ getAccuracyIcon(performanceMetrics.exitPredictions.downExitAccuracy) }}
+                      {{ formatPercent(performanceMetrics.exitPredictions.downExitAccuracy) }}</strong>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Confidence Analysis -->
+      <div class="row mb-4">
+        <div class="col-12">
+          <div class="card">
+            <div class="card-header">
+              <h5 class="mb-0"><i class="fas fa-chart-bar"></i> Performance by Confidence Level</h5>
+            </div>
+            <div class="card-body">
+              <div class="table-responsive">
+                <table class="table table-striped">
+                  <thead>
+                    <tr>
+                      <th>Confidence Level</th>
+                      <th class="text-end">Trades</th>
+                      <th class="text-end">Accuracy</th>
+                      <th class="text-end">Avg Profit</th>
+                      <th class="text-end">Total Profit</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><span class="badge bg-success">High (70-100%)</span></td>
+                      <td class="text-end">{{ performanceMetrics.confidenceAnalysis.highConfidenceEntry.count }}</td>
+                      <td class="text-end" [class]="getAccuracyColor(performanceMetrics.confidenceAnalysis.highConfidenceEntry.accuracy)">
+                        {{ formatPercent(performanceMetrics.confidenceAnalysis.highConfidenceEntry.accuracy) }}
+                      </td>
+                      <td class="text-end" [class]="getProfitColor(performanceMetrics.confidenceAnalysis.highConfidenceEntry.avgProfit)">
+                        {{ formatNumber(performanceMetrics.confidenceAnalysis.highConfidenceEntry.avgProfit) }}
+                      </td>
+                      <td class="text-end" [class]="getProfitColor(performanceMetrics.confidenceAnalysis.highConfidenceEntry.totalProfit || 0)">
+                        {{ formatNumber(performanceMetrics.confidenceAnalysis.highConfidenceEntry.totalProfit || 0) }}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td><span class="badge bg-warning">Medium (50-70%)</span></td>
+                      <td class="text-end">{{ performanceMetrics.confidenceAnalysis.mediumConfidenceEntry.count }}</td>
+                      <td class="text-end" [class]="getAccuracyColor(performanceMetrics.confidenceAnalysis.mediumConfidenceEntry.accuracy)">
+                        {{ formatPercent(performanceMetrics.confidenceAnalysis.mediumConfidenceEntry.accuracy) }}
+                      </td>
+                      <td class="text-end" [class]="getProfitColor(performanceMetrics.confidenceAnalysis.mediumConfidenceEntry.avgProfit)">
+                        {{ formatNumber(performanceMetrics.confidenceAnalysis.mediumConfidenceEntry.avgProfit) }}
+                      </td>
+                      <td class="text-end" [class]="getProfitColor(performanceMetrics.confidenceAnalysis.mediumConfidenceEntry.totalProfit || 0)">
+                        {{ formatNumber(performanceMetrics.confidenceAnalysis.mediumConfidenceEntry.totalProfit || 0) }}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td><span class="badge bg-secondary">Low (0-50%)</span></td>
+                      <td class="text-end">{{ performanceMetrics.confidenceAnalysis.lowConfidenceEntry.count }}</td>
+                      <td class="text-end" [class]="getAccuracyColor(performanceMetrics.confidenceAnalysis.lowConfidenceEntry.accuracy)">
+                        {{ formatPercent(performanceMetrics.confidenceAnalysis.lowConfidenceEntry.accuracy) }}
+                      </td>
+                      <td class="text-end" [class]="getProfitColor(performanceMetrics.confidenceAnalysis.lowConfidenceEntry.avgProfit)">
+                        {{ formatNumber(performanceMetrics.confidenceAnalysis.lowConfidenceEntry.avgProfit) }}
+                      </td>
+                      <td class="text-end" [class]="getProfitColor(performanceMetrics.confidenceAnalysis.lowConfidenceEntry.totalProfit || 0)">
+                        {{ formatNumber(performanceMetrics.confidenceAnalysis.lowConfidenceEntry.totalProfit || 0) }}
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Profit by Prediction -->
+      <div class="row mb-4" *ngIf="performanceMetrics.profitByPrediction?.length > 0">
+        <div class="col-12">
+          <div class="card">
+            <div class="card-header">
+              <h5 class="mb-0"><i class="fas fa-dollar-sign"></i> Profit by Prediction Type</h5>
+            </div>
+            <div class="card-body">
+              <div class="table-responsive">
+                <table class="table table-striped">
+                  <thead>
+                    <tr>
+                      <th>Prediction</th>
+                      <th class="text-end">Count</th>
+                      <th class="text-end">Win Rate</th>
+                      <th class="text-end">Avg Profit</th>
+                      <th class="text-end">Total Profit</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let item of performanceMetrics.profitByPrediction">
+                      <td><span class="badge" [class]="getPredictionBadgeClass(item.prediction)">{{ item.prediction?.toUpperCase() }}</span></td>
+                      <td class="text-end">{{ item.count }}</td>
+                      <td class="text-end">{{ formatPercent(item.winRate) }}</td>
+                      <td class="text-end" [class]="getProfitColor(item.avgProfit)">{{ formatNumber(item.avgProfit) }}</td>
+                      <td class="text-end" [class]="getProfitColor(item.totalProfit)"><strong>{{ formatNumber(item.totalProfit) }}</strong></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Accuracy Tab -->
+    <div *ngIf="selectedTab === 'accuracy' && predictionAccuracy">
+      <div class="row mb-4">
+        <div class="col-md-6">
+          <div class="card">
+            <div class="card-header bg-primary text-white">
+              <h5 class="mb-0">Entry Accuracy Details</h5>
+            </div>
+            <div class="card-body">
+              <h6>UP Predictions:</h6>
+              <table class="table table-sm">
+                <tr>
+                  <td>Total</td>
+                  <td class="text-end">{{ predictionAccuracy.entryAccuracy.upPrediction.total }}</td>
+                </tr>
+                <tr class="table-success">
+                  <td>Correct</td>
+                  <td class="text-end">{{ predictionAccuracy.entryAccuracy.upPrediction.correct }}</td>
+                </tr>
+                <tr class="table-danger">
+                  <td>Incorrect</td>
+                  <td class="text-end">{{ predictionAccuracy.entryAccuracy.upPrediction.incorrect }}</td>
+                </tr>
+                <tr class="table-primary">
+                  <td><strong>Accuracy</strong></td>
+                  <td class="text-end" [class]="getAccuracyColor(predictionAccuracy.entryAccuracy.upPrediction.accuracy)">
+                    <strong>{{ formatPercent(predictionAccuracy.entryAccuracy.upPrediction.accuracy) }}</strong>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Avg Profit (when correct)</td>
+                  <td class="text-end text-success">{{ formatNumber(predictionAccuracy.entryAccuracy.upPrediction.avgProfitWhenCorrect) }}</td>
+                </tr>
+                <tr>
+                  <td>Avg Loss (when incorrect)</td>
+                  <td class="text-end text-danger">{{ formatNumber(predictionAccuracy.entryAccuracy.upPrediction.avgLossWhenIncorrect) }}</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <div class="card">
+            <div class="card-header bg-danger text-white">
+              <h5 class="mb-0">Exit Accuracy Details</h5>
+            </div>
+            <div class="card-body">
+              <h6>DOWN Exit Predictions:</h6>
+              <table class="table table-sm">
+                <tr>
+                  <td>Total</td>
+                  <td class="text-end">{{ predictionAccuracy.exitAccuracy.downPrediction.total }}</td>
+                </tr>
+                <tr class="table-success">
+                  <td>Good Exits (saved profit)</td>
+                  <td class="text-end">{{ predictionAccuracy.exitAccuracy.downPrediction.correct }}</td>
+                </tr>
+                <tr class="table-danger">
+                  <td>Bad Exits (missed gain)</td>
+                  <td class="text-end">{{ predictionAccuracy.exitAccuracy.downPrediction.incorrect }}</td>
+                </tr>
+                <tr class="table-primary">
+                  <td><strong>Effectiveness</strong></td>
+                  <td class="text-end" [class]="getAccuracyColor(predictionAccuracy.exitAccuracy.downPrediction.accuracy)">
+                    <strong>{{ formatPercent(predictionAccuracy.exitAccuracy.downPrediction.accuracy) }}</strong>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Avg Profit on Exit</td>
+                  <td class="text-end" [class]="getProfitColor(predictionAccuracy.exitAccuracy.downPrediction.avgProfitWhenCorrect)">
+                    {{ formatNumber(predictionAccuracy.exitAccuracy.downPrediction.avgProfitWhenCorrect) }}
+                  </td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Symbol Performance -->
+      <div class="row" *ngIf="predictionAccuracy.symbolPerformance?.length > 0">
+        <div class="col-12">
+          <div class="card">
+            <div class="card-header">
+              <h5 class="mb-0"><i class="fas fa-coins"></i> Top Performing Symbols</h5>
+            </div>
+            <div class="card-body">
+              <div class="table-responsive">
+                <table class="table table-striped">
+                  <thead>
+                    <tr>
+                      <th>Symbol</th>
+                      <th class="text-end">Trades</th>
+                      <th class="text-end">Accuracy</th>
+                      <th class="text-end">Avg Confidence</th>
+                      <th class="text-end">Total Profit</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let symbol of predictionAccuracy.symbolPerformance">
+                      <td><strong>{{ symbol.symbol }}</strong></td>
+                      <td class="text-end">{{ symbol.totalOrders }}</td>
+                      <td class="text-end" [class]="getAccuracyColor(symbol.accuracy)">{{ formatPercent(symbol.accuracy) }}</td>
+                      <td class="text-end">{{ formatNumber(symbol.avgConfidence, 3) }}</td>
+                      <td class="text-end" [class]="getProfitColor(symbol.totalProfit)"><strong>{{ formatNumber(symbol.totalProfit) }}</strong></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recent Predictions Tab -->
+    <div *ngIf="selectedTab === 'predictions'">
+      <div class="row">
+        <div class="col-12">
+          <div class="card">
+            <div class="card-header">
+              <h5 class="mb-0"><i class="fas fa-list"></i> Recent Predictions vs Actual Outcomes</h5>
+            </div>
+            <div class="card-body">
+              <div class="table-responsive">
+                <table class="table table-sm table-hover">
+                  <thead>
+                    <tr>
+                      <th>Order</th>
+                      <th>Symbol</th>
+                      <th>Entry Pred</th>
+                      <th>Entry Conf</th>
+                      <th>Exit Pred</th>
+                      <th>Exit Conf</th>
+                      <th class="text-end">Profit</th>
+                      <th class="text-end">%</th>
+                      <th class="text-center">Correct?</th>
+                      <th>Close Reason</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let pred of recentPredictions">
+                      <td>{{ pred.orderId }}</td>
+                      <td><strong>{{ pred.symbol }}</strong></td>
+                      <td><span class="badge" [class]="getPredictionBadgeClass(pred.entryPrediction)">{{ pred.entryPrediction?.toUpperCase() }}</span></td>
+                      <td><span class="badge" [class]="getConfidenceBadgeClass(pred.entryConfidence)">{{ formatNumber(pred.entryConfidence, 2) }}</span></td>
+                      <td>
+                        <span *ngIf="pred.exitPrediction" class="badge" [class]="getPredictionBadgeClass(pred.exitPrediction)">{{ pred.exitPrediction?.toUpperCase() }}</span>
+                        <span *ngIf="!pred.exitPrediction" class="text-muted">-</span>
+                      </td>
+                      <td>
+                        <span *ngIf="pred.exitConfidence > 0" class="badge" [class]="getConfidenceBadgeClass(pred.exitConfidence)">{{ formatNumber(pred.exitConfidence, 2) }}</span>
+                        <span *ngIf="pred.exitConfidence === 0" class="text-muted">-</span>
+                      </td>
+                      <td class="text-end" [class]="getProfitColor(pred.profit)"><strong>{{ formatNumber(pred.profit) }}</strong></td>
+                      <td class="text-end" [class]="getProfitColor(pred.profitPercent)">{{ formatNumber(pred.profitPercent, 2) }}%</td>
+                      <td class="text-center" [class]="getCorrectnessClass(pred.entryWasCorrect)">
+                        <strong>{{ getCorrectnessIcon(pred.entryWasCorrect) }}</strong>
+                      </td>
+                      <td><small>{{ pred.closeReason }}</small></td>
+                    </tr>
+                    <tr *ngIf="recentPredictions.length === 0">
+                      <td colspan="10" class="text-center text-muted">No prediction data available</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recommendations Tab -->
+    <div *ngIf="selectedTab === 'recommendations' && recommendations">
+      <div class="row mb-4">
+        <div class="col-12">
+          <div class="card">
+            <div class="card-header bg-info text-white">
+              <h5 class="mb-0"><i class="fas fa-lightbulb"></i> AI Trading Recommendations</h5>
+            </div>
+            <div class="card-body">
+              <div class="row mb-3">
+                <div class="col-md-3">
+                  <strong>Analysis Period:</strong><br>
+                  {{ recommendations.daysPeriod }} days
+                </div>
+                <div class="col-md-3">
+                  <strong>Total Trades:</strong><br>
+                  {{ recommendations.totalTrades }}
+                </div>
+                <div class="col-md-3">
+                  <strong>Overall Accuracy:</strong><br>
+                  <span [class]="getAccuracyColor(recommendations.overallAccuracy)">
+                    <strong>{{ formatPercent(recommendations.overallAccuracy) }}</strong>
+                  </span>
+                </div>
+                <div class="col-md-3">
+                  <strong>Average Profit:</strong><br>
+                  <span [class]="getProfitColor(recommendations.averageProfit)">
+                    <strong>{{ formatNumber(recommendations.averageProfit) }}</strong>
+                  </span>
+                </div>
+              </div>
+
+              <hr>
+
+              <h6 class="mb-3">Recommendations:</h6>
+              <div *ngFor="let rec of recommendations.recommendations" class="alert" [class]="getRecommendationClass(rec)" role="alert">
+                {{ rec }}
+              </div>
+
+              <hr>
+
+              <h6 class="mb-3">Suggested Configuration:</h6>
+              <div class="card">
+                <div class="card-body">
+                  <table class="table table-sm mb-0">
+                    <tr>
+                      <td><strong>Enable AI Trading:</strong></td>
+                      <td>
+                        <span *ngIf="recommendations.suggestedConfig.enableAI" class="badge bg-success">YES</span>
+                        <span *ngIf="!recommendations.suggestedConfig.enableAI" class="badge bg-danger">NO</span>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td><strong>Minimum AI Score (MinAIScore):</strong></td>
+                      <td><code>{{ recommendations.suggestedConfig.minAIScore }}</code></td>
+                    </tr>
+                    <tr>
+                      <td><strong>AI Veto Confidence:</strong></td>
+                      <td><code>{{ recommendations.suggestedConfig.aiVetoConfidence }}</code></td>
+                    </tr>
+                  </table>
+                </div>
+              </div>
+
+              <div class="alert alert-warning mt-3" role="alert">
+                <i class="fas fa-info-circle"></i>
+                <strong>Note:</strong> Update these values in <code>appsettings.json</code> under <code>TradingConfiguration</code>.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- No Data Message -->
+    <div *ngIf="performanceMetrics?.totalOrders === 0" class="alert alert-info" role="alert">
+      <h4 class="alert-heading"><i class="fas fa-info-circle"></i> No AI Data Available</h4>
+      <p>
+        Your system hasn't collected enough trading data with AI predictions yet.
+        To start analyzing AI performance:
+      </p>
+      <ol>
+        <li>Enable AI predictions in your trading configuration</li>
+        <li>Let the system trade for at least 1-2 weeks</li>
+        <li>Collect at least 30-50 trades with AI predictions</li>
+        <li>Return here to analyze the AI model's performance</li>
+      </ol>
+      <hr>
+      <p class="mb-0">
+        <strong>Current Status:</strong> {{ performanceMetrics.totalOrders }} trades with AI predictions found.
+        <span *ngIf="performanceMetrics.totalOrders < 30" class="text-warning">
+          <br>(Recommend {{ 30 - performanceMetrics.totalOrders }} more trades for reliable analysis)
+        </span>
+      </p>
+    </div>
+
+  </div>
+</div>

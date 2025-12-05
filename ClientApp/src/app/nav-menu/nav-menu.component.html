@@ -37,6 +37,12 @@
           </a>
           <a
             class="px-4 py-2 rounded-md text-sm font-medium text-gray-300 hover:text-white hover:bg-gray-800 transition-colors"
+            [routerLink]="['/ai-analytics']"
+            routerLinkActive="bg-gray-800 text-white">
+            <i class="fa-solid fa-brain mr-2"></i>AI Analytics
+          </a>
+          <a
+            class="px-4 py-2 rounded-md text-sm font-medium text-gray-300 hover:text-white hover:bg-gray-800 transition-colors"
             [routerLink]="['/settings']"
             routerLinkActive="bg-gray-800 text-white">
             <i class="fa-solid fa-gear mr-2"></i>Settings
@@ -63,6 +69,13 @@
             routerLinkActive="bg-gray-800 text-white"
             (click)="collapse()">
             <i class="fa-solid fa-wallet mr-2"></i>Wallet
+          </a>
+          <a
+            class="px-4 py-2 rounded-md text-sm font-medium text-gray-300 hover:text-white hover:bg-gray-800 transition-colors"
+            [routerLink]="['/ai-analytics']"
+            routerLinkActive="bg-gray-800 text-white"
+            (click)="collapse()">
+            <i class="fa-solid fa-brain mr-2"></i>AI Analytics
           </a>
           <a
             class="px-4 py-2 rounded-md text-sm font-medium text-gray-300 hover:text-white hover:bg-gray-800 transition-colors"

@@ -1,0 +1,118 @@
+/* Card styling */
+.card {
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  border-radius: 8px;
+  margin-bottom: 1rem;
+}
+
+.card-header {
+  border-radius: 8px 8px 0 0;
+  font-weight: 600;
+}
+
+/* Metric cards */
+.card-body h2 {
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin: 0;
+}
+
+.card-body h6 {
+  opacity: 0.9;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 0.5px;
+}
+
+/* Table styling */
+.table {
+  margin-bottom: 0;
+}
+
+.table-striped tbody tr:hover {
+  background-color: rgba(0,0,0,0.02);
+}
+
+/* Badge styling */
+.badge {
+  font-size: 0.85rem;
+  padding: 0.35em 0.65em;
+}
+
+/* Tab styling */
+.nav-tabs .nav-link {
+  color: #6c757d;
+}
+
+.nav-tabs .nav-link.active {
+  font-weight: 600;
+  border-bottom: 3px solid #0d6efd;
+}
+
+.nav-tabs .nav-link:hover {
+  border-color: #e9ecef #e9ecef #dee2e6;
+}
+
+/* Icon spacing */
+.fas, .far {
+  margin-right: 0.5rem;
+}
+
+/* Alert styling */
+.alert {
+  border-left: 4px solid;
+}
+
+.alert-success {
+  border-left-color: #198754;
+}
+
+.alert-warning {
+  border-left-color: #ffc107;
+}
+
+.alert-danger {
+  border-left-color: #dc3545;
+}
+
+.alert-info {
+  border-left-color: #0dcaf0;
+}
+
+/* Responsive table */
+@media (max-width: 768px) {
+  .table-responsive {
+    font-size: 0.85rem;
+  }
+}
+
+/* Loading spinner */
+.spinner-border {
+  width: 3rem;
+  height: 3rem;
+}
+
+/* Correctness icons */
+.text-success {
+  color: #198754 !important;
+}
+
+.text-danger {
+  color: #dc3545 !important;
+}
+
+.text-warning {
+  color: #ffc107 !important;
+}
+
+.text-muted {
+  color: #6c757d !important;
+}
+
+/* Code blocks */
+code {
+  background-color: #f8f9fa;
+  padding: 0.2em 0.4em;
+  border-radius: 3px;
+  font-size: 87.5%;
+}

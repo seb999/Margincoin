@@ -2,6 +2,13 @@
 
 namespace MarginCoin.Service
 {
+    public interface IWatchDog
+    {
+        bool IsWebsocketSpotDown { get; set; }
+        void InitWatchDog(WatchDog.MyMethod myMethod);
+        void Clear();
+    }
+
     public class WatchDog : IWatchDog
     {
         public delegate void MyMethod();

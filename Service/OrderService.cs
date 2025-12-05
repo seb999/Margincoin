@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using MarginCoin.Class;
 using MarginCoin.Model;
-using MarginCoin.Service;
 using MarginCoin.Configuration;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
@@ -13,8 +12,28 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
-public class OrderService : IOrderService
+namespace MarginCoin.Service
 {
+    public interface IOrderService
+    {
+        void SaveHighLow(List<Candle> symbolCandles, Order activeOrder);
+        List<Order> GetActiveOrder();
+        void UpdateTakeProfit(List<Candle> symbolCandle, Order activeOrder, double takeProfitPercentage);
+        void UpdateStopLoss(List<Candle> symbolCandles, Order activeOrder);
+        void SaveBuyOrderDb(MarketStream symbolSpot, List<Candle> symbolCandle, BinanceOrder binanceOrder, double aiScore = 0, string aiPrediction = "");
+        void CloseOrderDb(Order dbOrder, BinanceOrder binanceOrder, double exitAiScore = 0, string exitAiPrediction = "");
+        void DeleteOrderDb(double id);
+        void UpdateBuyOrderDb(Order dbOrder, BinanceOrder binanceOrder);
+        void UpdateSellOrderDb(Order dbOrder, BinanceOrder binanceOrder, string closeType);
+        void RecycleOrderDb(double id);
+        Task BuyLimit(MarketStream symbolSpot, List<Candle> symbolCandleList, double aiScore = 0, string aiPrediction = "");
+        Task SellLimit(Order dbOrder, MarketStream symbolSpot, string closeType, double exitAiScore = 0, string exitAiPrediction = "");
+        Task SellMarket(Order dbOrder, string closeType, double exitAiScore = 0, string exitAiPrediction = "");
+        Task BuyMarket(MarketStream symbolSpot, List<Candle> symbolCandleList, double aiScore = 0, string aiPrediction = "");
+    }
+
+    public class OrderService : IOrderService
+    {
     private readonly ApplicationDbContext _appDbContext;
     private readonly IBinanceService _binanceService;
     private readonly IHubContext<SignalRHub> _hub;
@@ -237,7 +256,7 @@ public class OrderService : IOrderService
         _appDbContext.SaveChanges();
     }
 
-    public void CloseOrderDb(Order dbOrder, BinanceOrder binanceOrder)
+    public void CloseOrderDb(Order dbOrder, BinanceOrder binanceOrder, double exitAiScore = 0, string exitAiPrediction = "")
     {
         //_appDbContext.Entry(dbOrder).Reload();
 
@@ -248,6 +267,11 @@ public class OrderService : IOrderService
         dbOrder.Profit = Math.Round((dbOrder.ClosePrice - dbOrder.OpenPrice) * dbOrder.QuantitySell);
         dbOrder.IsClosed = 1;
         dbOrder.CloseDate = DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss");
+
+        // Store exit AI prediction values
+        dbOrder.ExitAIScore = exitAiScore;
+        dbOrder.ExitAIPrediction = exitAiPrediction;
+
         _appDbContext.Order.Update(dbOrder);
         _appDbContext.SaveChanges();
     }
@@ -277,7 +301,7 @@ public class OrderService : IOrderService
         await _hub.Clients.All.SendAsync("refreshUI");
     }
 
-    public async Task SellLimit(Order dbOrder, MarketStream symbolSpot, string closeType)
+    public async Task SellLimit(Order dbOrder, MarketStream symbolSpot, string closeType, double exitAiScore = 0, string exitAiPrediction = "")
     {
         //we exit in the buy order is still pending
         if (dbOrder.Status != "FILLED")
@@ -294,7 +318,7 @@ public class OrderService : IOrderService
         SaveSellOrderDb(dbOrder, myBinanceOrder, closeType);
 
         if (myBinanceOrder.status == "FILLED")
-            CloseOrderDb(dbOrder, myBinanceOrder);
+            CloseOrderDb(dbOrder, myBinanceOrder, exitAiScore, exitAiPrediction);
 
         await Task.Delay(300);
         myBinanceOrder.price = TradeHelper.CalculateAvragePrice(myBinanceOrder).ToString();
@@ -337,7 +361,7 @@ public class OrderService : IOrderService
         }
     }
 
-    public async Task SellMarket(Order dbOrder, string closeType)
+    public async Task SellMarket(Order dbOrder, string closeType, double exitAiScore = 0, string exitAiPrediction = "")
     {
         BinanceOrder myBinanceOrder = _binanceService.SellMarket(dbOrder.Symbol, dbOrder.QuantityBuy - dbOrder.QuantitySell);
 
@@ -360,7 +384,7 @@ public class OrderService : IOrderService
         if (myBinanceOrder.status == MyEnum.OrderStatus.FILLED.ToString())
         {
             SaveSellOrderDb(dbOrder, myBinanceOrder, closeType);
-            CloseOrderDb(dbOrder, myBinanceOrder);
+            CloseOrderDb(dbOrder, myBinanceOrder, exitAiScore, exitAiPrediction);
             await Task.Delay(500);
             await _hub.Clients.All.SendAsync("sellOrderFilled", JsonSerializer.Serialize(myBinanceOrder));
         }
@@ -380,4 +404,5 @@ public class OrderService : IOrderService
 
     #endregion
 
+}
 }

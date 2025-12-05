@@ -4,6 +4,18 @@ using Binance.Spot;
 
 namespace MarginCoin.Service
 {
+    public interface IWebSocket
+    {
+        Dictionary<string, MarketDataWebSocket> SymbolWebSockets { get; }
+        MarketDataWebSocket ws1 { get; set; }
+
+        void AddSymbolWebSocket(string symbolName, MarketDataWebSocket webSocket);
+        MarketDataWebSocket GetSymbolWebSocket(string symbolName);
+        bool HasSymbolWebSocket(string symbolName);
+        void RemoveSymbolWebSocket(string symbolName);
+        void ClearSymbolWebSockets();
+    }
+
     public class WebSocket : IWebSocket
     {
         public Dictionary<string, MarketDataWebSocket> SymbolWebSockets { get; } = new Dictionary<string, MarketDataWebSocket>();

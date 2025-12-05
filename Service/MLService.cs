@@ -13,9 +13,19 @@ using SixLabors.ImageSharp.Processing;
 
 namespace MarginCoin.Service
 {
+    public delegate void TimeElapseDelegate();
+
+    public interface IMLService
+    {
+        List<MLPrediction> MLPredList { get; set; }
+        void InitML(TimeElapseDelegate dddd);
+        void StopML();
+        void UpdateML();
+        void CleanImageFolder();
+    }
+
     public class MLService : IMLService
     {
-        public delegate void TimeElapseDelegate();
         private TimeElapseDelegate _timeElapseCallDelegate;
         private readonly string downloadFolder;
         private readonly string screenShotFolder;

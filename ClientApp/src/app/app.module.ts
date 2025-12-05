@@ -18,6 +18,7 @@ import { AppSetting } from './app.settings';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { NgbModule, NgbPopover, NgbCollapseModule } from '@ng-bootstrap/ng-bootstrap';
 import { SettingsComponent } from './settings/settings.component';
+import { AIAnalyticsComponent } from './ai-analytics/ai-analytics.component';
 
 @NgModule({
   declarations: [
@@ -27,7 +28,8 @@ import { SettingsComponent } from './settings/settings.component';
     WalletComponent,
     TradingboardComponent,
     OrderDetailComponent,
-    SettingsComponent
+    SettingsComponent,
+    AIAnalyticsComponent
   ],
   imports: [
     MatSlideToggleModule,
@@ -43,6 +45,7 @@ import { SettingsComponent } from './settings/settings.component';
     { path: 'wallet', component: WalletComponent },
     { path: 'orderDetail/:id', component: OrderDetailComponent },
     { path: 'settings', component: SettingsComponent },
+    { path: 'ai-analytics', component: AIAnalyticsComponent },
 ])
   ],
   providers: [TradingboardHelper, OrderDetailHelper,  AppSetting ],

@@ -42,9 +42,9 @@ Collect 5 years of data covering both bull and bear markets. The training script
 # Fetch 5 years of data from Binance (covers both bull and bear markets)
 ./venv/bin/python trading_model/utils/collect_data.py \
   --start-date 2020-01-01 \
-  --end-date 2025-01-01 \
-  --symbols BTCUSDT ETHUSDT BNBUSDT SOLUSDT \
-  --interval 30m \
+  --end-date 2025-12-04 \
+  --symbols BTCUSDC ETHUSDC BNBUSDC SOLUSDC ADAUSDC \
+  --interval 1h \
   --output data/training_data.csv
 ```
 
@@ -52,7 +52,7 @@ Collect 5 years of data covering both bull and bear markets. The training script
 ```bash
 ./venv/bin/python trading_model/utils/collect_data.py \
   --months 6 \
-  --symbols BTCUSDT ETHUSDT BNBUSDT \
+  --symbols BTCUSDC ETHUSDC BNBUSDC \
   --interval 30m \
   --output data/training_data.csv
 ```

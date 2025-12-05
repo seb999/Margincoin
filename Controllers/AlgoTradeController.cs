@@ -186,10 +186,27 @@ namespace MarginCoin.Controllers
             }
             else
             {
+                // Get current AI prediction for manual close
+                double exitAiScore = 0;
+                string exitAiPrediction = "";
+                try
+                {
+                    var mlPrediction = _mlService?.MLPredList?.FirstOrDefault(p => p.Symbol == myOrder.Symbol);
+                    if (mlPrediction != null && mlPrediction.Score != null && mlPrediction.Score.Length > 0)
+                    {
+                        exitAiScore = mlPrediction.Confidence;
+                        exitAiPrediction = mlPrediction.PredictedLabel?.ToLower() ?? "";
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogWarning(ex, "Failed to get exit AI prediction for manual close {Symbol}", myOrder.Symbol);
+                }
+
                 if (_tradingState.IsMarketOrder == true)
-                    await _orderService.SellMarket(myOrder, "by user");
+                    await _orderService.SellMarket(myOrder, "by user", exitAiScore, exitAiPrediction);
                 else
-                    await _orderService.SellLimit(myOrder, _tradingState.AllMarketData.SingleOrDefault(p => p.s == myOrder.Symbol), "by user");
+                    await _orderService.SellLimit(myOrder, _tradingState.AllMarketData.SingleOrDefault(p => p.s == myOrder.Symbol), "by user", exitAiScore, exitAiPrediction);
             }
         }
 
@@ -803,13 +820,31 @@ namespace MarginCoin.Controllers
             if (sellReason != null)
             {
                 _logger.LogInformation("Closing trade for {Symbol}: {Reason}", symbol, sellReason);
+
+                // Get current AI prediction at exit
+                double exitAiScore = 0;
+                string exitAiPrediction = "";
+                try
+                {
+                    var mlPrediction = _mlService?.MLPredList?.FirstOrDefault(p => p.Symbol == symbol);
+                    if (mlPrediction != null && mlPrediction.Score != null && mlPrediction.Score.Length > 0)
+                    {
+                        exitAiScore = mlPrediction.Confidence;
+                        exitAiPrediction = mlPrediction.PredictedLabel?.ToLower() ?? "";
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogWarning(ex, "Failed to get exit AI prediction for {Symbol}", symbol);
+                }
+
                 if (_tradingState.IsMarketOrder)
                 {
-                    await orderService.SellMarket(activeOrder, sellReason);
+                    await orderService.SellMarket(activeOrder, sellReason, exitAiScore, exitAiPrediction);
                 }
                 else
                 {
-                    await orderService.SellLimit(activeOrder, _tradingState.AllMarketData.FirstOrDefault(p => p.s == symbol), sellReason);
+                    await orderService.SellLimit(activeOrder, _tradingState.AllMarketData.FirstOrDefault(p => p.s == symbol), sellReason, exitAiScore, exitAiPrediction);
                 }
             }
         }
@@ -867,7 +902,24 @@ namespace MarginCoin.Controllers
 
                 if (orderStatus == "FILLED")
                 {
-                    orderService.CloseOrderDb(dbOrder, myBinanceOrder);
+                    // Get current AI prediction for filled sell order
+                    double exitAiScore = 0;
+                    string exitAiPrediction = "";
+                    try
+                    {
+                        var mlPrediction = _mlService?.MLPredList?.FirstOrDefault(p => p.Symbol == dbOrder.Symbol);
+                        if (mlPrediction != null && mlPrediction.Score != null && mlPrediction.Score.Length > 0)
+                        {
+                            exitAiScore = mlPrediction.Confidence;
+                            exitAiPrediction = mlPrediction.PredictedLabel?.ToLower() ?? "";
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogWarning(ex, "Failed to get exit AI prediction for {Symbol}", dbOrder.Symbol);
+                    }
+
+                    orderService.CloseOrderDb(dbOrder, myBinanceOrder, exitAiScore, exitAiPrediction);
                 }
 
                 if (orderStatus == "CANCELED"
