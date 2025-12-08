@@ -5,6 +5,26 @@
   max-height: 31px;
 }
 
+.compact-stat-card {
+  min-height: 44px;
+  padding: 0.3rem 0.5rem;
+  display: flex;
+  align-items: center;
+}
+
+@media (min-width: 640px) {
+  .compact-stat-card {
+    min-height: 52px;
+  }
+}
+
+.stat-card-content {
+  display: grid;
+  gap: 0;
+  line-height: 1.1;
+  width: 100%;
+}
+
 
 
   /* .my-custom-scrollbar {
