@@ -102,6 +102,7 @@ export class WalletComponent {
   public currentOrderAIScore: number | null = null;
   public currentOrderAIPrediction: string | null = null;
   public aiServiceHealthy: boolean = true;
+  public activeSidePanel: 'chart' | 'portfolio' = 'portfolio';
   private lastStreamAt: number = Date.now();
   private streamWatchdog: any;
   private readonly streamStaleThresholdMs = 30000;
@@ -666,6 +667,7 @@ export class WalletComponent {
   }
 
   async showChart(symbol, orderId) {
+    this.activeSidePanel = 'chart';
     if (orderId != null) {
       this.displaySymbol = symbol;
       this.myOrder = await this.orderDetailHelper.getOrder(orderId);
@@ -813,7 +815,7 @@ export class WalletComponent {
             labels: { align: 'left', enabled: true, style: { color: '#9ca3af', fontSize: '9px' } },
             top: '60%',
             height: '40%',
-            title: { text: 'MACD', style: { color: '#9ca3af', fontSize: '10px' } },
+            title: { text: '', style: { color: '#9ca3af', fontSize: '10px' } },
             gridLineWidth: 0,
           }
         ],

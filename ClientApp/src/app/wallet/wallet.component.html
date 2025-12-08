@@ -2,7 +2,7 @@
   <!-- Main Column -->
   <div class="col-span-12 lg:col-span-9 space-y-3">
     <!-- Stats Cards Row -->
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-2">
+    <div class="grid grid-cols-2 md:grid-cols-5 gap-2">
       <!-- Balance Card -->
       <div class="relative overflow-hidden bg-gradient-to-br from-blue-600/20 to-indigo-600/10 rounded-lg border !border-blue-500/10 compact-stat-card">
         <div class="absolute top-0 right-0 w-14 h-14 bg-blue-500/10 rounded-full -mr-8 -mt-8"></div>
@@ -50,6 +50,29 @@
           </div>
         </div>
       </div>
+
+      <!-- Settings Card -->
+      <div class="relative overflow-hidden bg-gradient-to-br from-indigo-600/20 to-purple-600/10 rounded-lg border !border-indigo-500/10 compact-stat-card">
+        <div class="absolute top-0 right-0 w-14 h-14 bg-indigo-500/10 rounded-full -mr-8 -mt-8"></div>
+        <div class="relative stat-card-content">
+          <p class="text-xs text-indigo-300/70 uppercase tracking-wider mb-0.5">Settings</p>
+          <div class="flex flex-col gap-1">
+            <div class="flex items-center gap-2">
+              <mat-slide-toggle [(ngModel)]="isMarketOrder" [color]="color" (change)="changeOrderType()"></mat-slide-toggle>
+              <span class="text-xs font-medium" [ngClass]="isMarketOrder ? 'text-blue-400' : 'text-gray-300'">
+                {{ isMarketOrder ? 'Market' : 'Limit' }}
+              </span>
+            </div>
+            <div class="flex items-center gap-2">
+              <mat-slide-toggle [(ngModel)]="isProd" [color]="color" (change)="changeTradeServer()"></mat-slide-toggle>
+              <span class="text-xs font-semibold px-2 py-0.5 rounded"
+                [ngClass]="isProd ? 'text-red-300 bg-red-500/20' : 'text-emerald-300 bg-emerald-500/20'">
+                {{ isProd ? 'PROD' : 'TEST' }}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- WebSocket Status Bar -->
@@ -88,75 +111,54 @@
     <div class="bg-gray-800/60 rounded-lg border !border-gray-700/30 p-2">
       <div class="flex items-center justify-between gap-4">
         <!-- Left: Trading Controls -->
-        <div class="flex items-center gap-2 w-full flex-nowrap overflow-x-auto">
-          <div class="flex items-center gap-2">
-            <button *ngIf="!isTradeOpen"
-              class="group flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 rounded-lg shadow-lg shadow-green-500/25 transition-all duration-200 hover:scale-105 hover:shadow-green-500/40"
-              (click)="trade()">
-              <i class="fa-solid fa-play text-xs"></i>
-              <span>Start</span>
-            </button>
-            <button *ngIf="isTradeOpen"
-              class="flex items-center gap-3 px-4 py-2 text-sm font-semibold text-emerald-50 bg-gradient-to-r from-emerald-600 to-green-600 border border-emerald-400/50 rounded-lg shadow-green-500/30 shadow-md"
-              disabled>
-              <div class="flex items-center gap-2">
-                <i class="fa-solid fa-signal text-sm text-white drop-shadow-[0_0_10px_rgba(190,255,120,1)] animate-pulse"></i>
-                <span>Running</span>
-              </div>
-              <div *ngIf="websocketStatus" class="flex items-center gap-2 text-[10px] text-emerald-50">
-                <span class="w-3 h-3 rounded-full bg-lime-200 animate-ping shadow-[0_0_12px_rgba(190,255,120,1)]"></span>
-                <span>Backend live</span>
-              </div>
-            </button>
-            <button
-              class="flex items-center gap-2 px-3 py-2 text-sm font-medium text-amber-100 bg-gradient-to-r from-amber-600 to-yellow-600 hover:from-amber-700 hover:to-yellow-700 rounded-lg shadow-lg shadow-amber-500/20 transition-all duration-200 hover:scale-105"
-              (click)="stopTrade()">
-              <i class="fa-solid fa-pause text-xs"></i>
-            </button>
-          </div>
-
-          <!-- Quick actions ribbon -->
-          <div class="flex items-center gap-2 w-full flex-nowrap overflow-x-auto min-w-0">
-            <button class="flex items-center gap-1.5 px-3 py-2 text-xs font-medium text-white bg-gray-700/80 hover:bg-gray-600 rounded-lg transition-all hover:scale-[1.02]"
-              (click)="openSeq()">
-              <i class="fa-solid fa-clipboard-list text-[10px]"></i>Logs
-            </button>
-            <button class="flex items-center gap-1.5 px-3 py-2 text-xs font-medium text-white bg-gray-700/80 hover:bg-gray-600 rounded-lg transition-all hover:scale-[1.02]"
-              (click)="clearChart()">
-              <i class="fa-solid fa-eraser text-[10px]"></i>Clear
-            </button>
-            <button *ngIf="isTradeOpen" class="flex items-center gap-1.5 px-3 py-2 text-xs font-medium text-white bg-gray-700/80 hover:bg-gray-600 rounded-lg transition-all hover:scale-[1.02]"
-              (click)="debugBuy()">
-              <i class="fa-solid fa-cart-plus text-[10px]"></i>Buy
-            </button>
-            <button class="flex items-center gap-1.5 px-3 py-2 text-xs font-medium text-white bg-gray-700/80 hover:bg-gray-600 rounded-lg transition-all hover:scale-[1.02]"
-              (click)="syncBinanceSymbol()">
-              <i class="fa-solid fa-sync text-[10px]"></i>Sync
-            </button>
-            <button *ngIf="!isTradeOpen" class="flex items-center gap-1.5 px-3 py-2 text-xs font-medium text-gray-500 bg-gray-800/50 rounded-lg cursor-not-allowed" disabled>
-              <i class="fa-solid fa-cart-plus text-[10px]"></i>Buy
-            </button>
-            <div class="flex items-center gap-2 ml-auto">
-              <div class="flex items-center gap-2 px-3 py-1.5 bg-gray-900/20 rounded-lg">
-                <span class="text-[11px] text-gray-400">Order</span>
-                <mat-slide-toggle [(ngModel)]="isMarketOrder" [color]="color" (change)="changeOrderType()"></mat-slide-toggle>
-                <span class="text-[11px] font-medium" [ngClass]="isMarketOrder ? 'text-blue-400' : 'text-gray-400'">{{ isMarketOrder ? 'Market' : 'Limit' }}</span>
-              </div>
-              <div class="flex items-center gap-2 px-3 py-1.5 bg-gray-900/20 rounded-lg">
-                <span class="text-[11px] text-gray-400">Env</span>
-                <mat-slide-toggle [(ngModel)]="isProd" [color]="color" (change)="changeTradeServer()"></mat-slide-toggle>
-                <span class="text-[11px] font-semibold px-2 py-0.5 rounded"
-                  [ngClass]="isProd ? 'text-red-300 bg-red-500/20' : 'text-emerald-300 bg-emerald-500/20'">
-                  {{ isProd ? 'PROD' : 'TEST' }}
-                </span>
-              </div>
+        <div class="flex items-center gap-2">
+          <button *ngIf="!isTradeOpen"
+            class="group flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 rounded-lg shadow-lg shadow-green-500/25 transition-all duration-200 hover:scale-105 hover:shadow-green-500/40"
+            (click)="trade()">
+            <i class="fa-solid fa-play text-xs"></i>
+            <span>Start</span>
+          </button>
+          <button *ngIf="isTradeOpen"
+            class="flex items-center gap-3 px-4 py-2 text-sm font-semibold text-emerald-50 bg-gradient-to-r from-emerald-600 to-green-600 border border-emerald-400/50 rounded-lg shadow-green-500/30 shadow-md"
+            disabled>
+            <div class="flex items-center gap-2">
+              <i class="fa-solid fa-signal text-sm text-white drop-shadow-[0_0_10px_rgba(190,255,120,1)] animate-pulse"></i>
+              <span>Running</span>
             </div>
-          </div>
+            <div *ngIf="websocketStatus" class="flex items-center gap-2 text-[10px] text-emerald-50">
+              <span class="w-3 h-3 rounded-full bg-lime-200 animate-ping shadow-[0_0_12px_rgba(190,255,120,1)]"></span>
+              <span>Backend live</span>
+            </div>
+          </button>
+          <button
+            class="flex items-center gap-2 px-3 py-2 text-sm font-medium text-amber-100 bg-gradient-to-r from-amber-600 to-yellow-600 hover:from-amber-700 hover:to-yellow-700 rounded-lg shadow-lg shadow-amber-500/20 transition-all duration-200 hover:scale-105"
+            (click)="stopTrade()">
+            <i class="fa-solid fa-pause text-xs"></i>
+          </button>
         </div>
 
-        <!-- Center: Status Badges -->
-        <div class="flex items-center gap-2 flex-1 justify-center"></div>
-
+        <!-- Right: Quick actions -->
+        <div class="flex items-center gap-2">
+          <button class="flex items-center gap-1.5 px-3 py-2 text-xs font-medium text-white bg-gray-700/80 hover:bg-gray-600 rounded-lg transition-all hover:scale-[1.02]"
+            (click)="openSeq()">
+            <i class="fa-solid fa-clipboard-list text-[10px]"></i>Logs
+          </button>
+          <button class="flex items-center gap-1.5 px-3 py-2 text-xs font-medium text-white bg-gray-700/80 hover:bg-gray-600 rounded-lg transition-all hover:scale-[1.02]"
+            (click)="clearChart()">
+            <i class="fa-solid fa-eraser text-[10px]"></i>Clear
+          </button>
+          <button class="flex items-center gap-1.5 px-3 py-2 text-xs font-medium text-white bg-gray-700/80 hover:bg-gray-600 rounded-lg transition-all hover:scale-[1.02]"
+            (click)="syncBinanceSymbol()">
+            <i class="fa-solid fa-sync text-[10px]"></i>Sync
+          </button>
+          <button *ngIf="isTradeOpen" class="flex items-center gap-1.5 px-3 py-2 text-xs font-medium text-white bg-gray-700/80 hover:bg-gray-600 rounded-lg transition-all hover:scale-[1.02]"
+            (click)="debugBuy()">
+            <i class="fa-solid fa-cart-plus text-[10px]"></i>Buy
+          </button>
+          <button *ngIf="!isTradeOpen" class="flex items-center gap-1.5 px-3 py-2 text-xs font-medium text-gray-500 bg-gray-800/50 rounded-lg cursor-not-allowed" disabled>
+            <i class="fa-solid fa-cart-plus text-[10px]"></i>Buy
+          </button>
+        </div>
       </div>
     </div>
 
@@ -344,12 +346,28 @@
       </div>
     </div>
 
-    <!-- Chart Card -->
+    <!-- Chart / Portfolio Tabs -->
     <div class="bg-gray-800/60 rounded-lg border !border-gray-700/30 overflow-hidden">
-      <div class="px-4 py-2.5 bg-gray-900/40 border-b !border-gray-700/30 flex items-center justify-between">
+      <!-- Tab Navigation -->
+      <div class="flex items-center bg-gray-900/40 border-b !border-gray-700/30">
+        <button class="relative px-4 py-2.5 text-xs font-semibold transition-all flex-1"
+          [ngClass]="activeSidePanel === 'portfolio' ? 'text-purple-200 bg-gray-800/60' : 'text-gray-400 hover:text-gray-200 hover:bg-gray-700/20'"
+          (click)="activeSidePanel = 'portfolio'">
+          <i class="fa-solid fa-wallet text-[10px] mr-1.5"></i>Portfolio
+          <div *ngIf="activeSidePanel === 'portfolio'" class="absolute bottom-0 left-0 right-0 h-0.5 bg-purple-500"></div>
+        </button>
+        <button class="relative px-4 py-2.5 text-xs font-semibold transition-all flex-1"
+          [ngClass]="activeSidePanel === 'chart' ? 'text-blue-200 bg-gray-800/60' : 'text-gray-400 hover:text-gray-200 hover:bg-gray-700/20'"
+          (click)="activeSidePanel = 'chart'">
+          <i class="fa-solid fa-chart-line text-[10px] mr-1.5"></i>Chart
+          <div *ngIf="activeSidePanel === 'chart'" class="absolute bottom-0 left-0 right-0 h-0.5 bg-blue-500"></div>
+        </button>
+      </div>
+
+      <!-- Tab Content Header -->
+      <div *ngIf="activeSidePanel === 'chart'" class="px-3 py-2 bg-gray-900/20 border-b !border-gray-700/30 flex items-center justify-between">
         <div class="flex items-center gap-2">
-          <i class="fa-solid fa-chart-line text-blue-400 text-xs"></i>
-          <span class="text-sm font-semibold text-white">{{this.displaySymbol || 'Chart'}}</span>
+          <span class="text-sm font-semibold text-white">{{this.displaySymbol || 'Select a symbol'}}</span>
           <span *ngIf="this.slope?.slope" class="text-[10px] px-1.5 py-0.5 rounded font-medium"
             [ngClass]="this.slope?.slope >= 0 ? 'text-emerald-300 bg-emerald-500/20' : 'text-red-300 bg-red-500/20'">
             {{this.slope?.slope >= 0 ? '↑' : '↓'}}{{(this.slope?.slope >= 0 ? this.slope?.slope : -this.slope?.slope).toFixed(2)}}
@@ -360,89 +378,79 @@
           <option *ngFor="let item of intervalList" [value]="item.value">{{ item.value }}</option>
         </select>
       </div>
-      <div class="p-2">
+      <div *ngIf="activeSidePanel === 'portfolio'" class="px-3 py-2 bg-gray-900/20 border-b !border-gray-700/30 flex items-center justify-between">
+        <span class="text-[10px] text-gray-500 bg-gray-700/50 px-2 py-0.5 rounded-full">{{myAccount?.balances?.length || 0}} assets</span>
+        <button class="p-1 text-gray-400 hover:text-blue-400 hover:bg-blue-500/10 rounded transition-all" (click)="refreshUI()">
+          <i class="fa fa-arrows-rotate text-xs"></i>
+        </button>
+      </div>
+      <div *ngIf="activeSidePanel === 'chart'">
         <div *ngIf="chartOptions" class="w-full h-96 rounded-lg overflow-hidden">
           <highcharts-chart #chart constructorType='stockChart' [Highcharts]="highcharts" [options]="chartOptions"
             [callbackFunction]="chartCallback" [update]="updateFlag" style="width: 100%; height: 100%; display: block;">
           </highcharts-chart>
         </div>
-        <div *ngIf="chartOptions" class="mt-1 text-[10px] text-gray-500 text-right">Bottom pane: RSI</div>
-        <div *ngIf="!chartOptions" class="w-full h-96 flex items-center justify-center bg-gray-900/30 rounded-lg">
+        <div *ngIf="chartOptions" class="px-2 pb-2 text-[10px] text-gray-500 text-right">Bottom pane: RSI</div>
+        <div *ngIf="!chartOptions" class="w-full h-96 flex items-center justify-center bg-gray-900/30 rounded-lg m-2">
           <div class="text-center text-gray-500">
             <i class="fa-solid fa-chart-area text-2xl mb-2 opacity-50"></i>
             <p class="text-[10px]">Select a symbol</p>
           </div>
         </div>
       </div>
-    </div>
-
-    <!-- Portfolio Card -->
-    <div class="bg-gray-800/60 rounded-lg border !border-gray-700/30 overflow-hidden">
-      <div class="px-3 py-2 bg-gray-900/40 border-b !border-gray-700/30 flex items-center justify-between">
-        <div class="flex items-center gap-2">
-          <i class="fa-solid fa-wallet text-purple-400 text-xs"></i>
-          <h3 class="text-xs font-semibold text-gray-300 uppercase tracking-wider">Portfolio</h3>
+      <div *ngIf="activeSidePanel === 'portfolio'" class="p-2">
+        <!-- Column Headers -->
+        <div class="flex items-center px-3 py-2 bg-gray-800/50 border-b border-gray-700/30 text-xs font-semibold text-gray-500 uppercase gap-2">
+          <span class="flex-1">Asset</span>
+          <span class="w-24 text-right">Free</span>
+          <span class="w-24 text-right">Locked</span>
         </div>
-        <div class="flex items-center gap-2">
-          <span class="text-[10px] text-gray-500 bg-gray-700/50 px-2 py-0.5 rounded-full">{{myAccount?.balances?.length || 0}} assets</span>
-          <button class="px-2 py-1 text-[10px] font-semibold text-blue-300 bg-blue-500/10 hover:bg-blue-500/20 border border-blue-500/30 rounded transition-all"
-            (click)="refreshUI()">
-            <i class="fa-solid fa-rotate text-[10px] mr-1"></i>Refresh
-          </button>
-        </div>
-      </div>
-      <!-- Column Headers -->
-      <div class="flex items-center px-3 py-2 bg-gray-800/50 border-b border-gray-700/30 text-xs font-semibold text-gray-500 uppercase">
-        <span class="flex-1">Asset</span>
-        <span class="w-24 text-right">Free</span>
-        <span class="w-24 text-right">Locked</span>
-        <span class="w-12"></span>
-      </div>
-      <div class="divide-y divide-gray-700/30 max-h-64 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-700">
-        <div *ngFor="let asset of myAccount?.balances"
-          class="group flex items-center px-3 py-2 hover:bg-gray-700/20 transition-colors">
-          <button class="flex-1 flex items-center gap-2" (click)="showChart(asset.asset, null);">
-            <div class="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold"
-              [ngClass]="asset?.asset === 'USDC' ? 'bg-emerald-500/20 text-emerald-400' : 'bg-gradient-to-br from-amber-500/20 to-orange-500/20 text-amber-400'">
-              {{asset?.asset?.charAt(0)}}
-            </div>
-            <div class="flex flex-col">
-              <div class="flex items-center gap-2">
-                <span class="font-medium text-white text-sm">{{asset?.asset}}</span>
-                <span class="text-[11px] text-white font-mono">
-                  {{formatBalance(asset?.free, asset?.asset)}}
-                </span>
+        <div class="divide-y divide-gray-700/30 max-h-96 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-700">
+          <div *ngFor="let asset of myAccount?.balances"
+            class="group flex items-center px-3 py-2 hover:bg-gray-700/20 transition-colors">
+            <button class="flex-1 flex items-center gap-2" (click)="showChart(asset.asset, null); activeSidePanel = 'chart';">
+              <div class="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold"
+                [ngClass]="asset?.asset === 'USDC' ? 'bg-emerald-500/20 text-emerald-400' : 'bg-gradient-to-br from-amber-500/20 to-orange-500/20 text-amber-400'">
+                {{asset?.asset?.charAt(0)}}
               </div>
-              <div class="flex items-center gap-2">
-                <span class="text-[10px] text-amber-300" *ngIf="getTrendScoreKey(asset?.asset) !== undefined">
-                  TS:{{getTrendScoreKey(asset?.asset)}}
-                </span>
-                <span class="text-[10px]" *ngIf="getAiPrediction(asset?.asset) as ai"
-                  [ngClass]="getAiBadgeClass(ai?.prediction)">
-                  AI:{{formatAiBadge(ai)}}
-                </span>
+              <div class="flex flex-col">
+                <div class="flex items-center gap-2">
+                  <span class="font-medium text-white text-sm">{{asset?.asset}}</span>
+                  <span class="text-[11px] text-white font-mono">
+                    {{formatBalance(asset?.free, asset?.asset)}}
+                  </span>
+                </div>
+                <div class="flex items-center gap-2">
+                  <span class="text-[10px] text-amber-300" *ngIf="getTrendScoreKey(asset?.asset) !== undefined">
+                    TS:{{getTrendScoreKey(asset?.asset)}}
+                  </span>
+                  <span class="text-[10px]" *ngIf="getAiPrediction(asset?.asset) as ai"
+                    [ngClass]="getAiBadgeClass(ai?.prediction)">
+                    AI:{{formatAiBadge(ai)}}
+                  </span>
+                </div>
               </div>
-            </div>
-          </button>
-          <span class="w-20 text-right text-sm font-mono" [ngClass]="+asset?.locked > 0 ? 'text-amber-400' : 'text-gray-600'">
-            {{+asset?.locked > 0 ? formatBalance(asset?.locked, asset?.asset) : '-'}}
-          </span>
-        <div class="w-28 flex items-center justify-end gap-1.5">
-          <button class="p-1.5 text-blue-300 hover:text-blue-200 hover:bg-blue-500/20 rounded transition-all" (click)="showChart(asset?.asset, null);">
-            <i class="fa-solid fa-chart-line text-[10px]"></i>
-          </button>
-          <button *ngIf="+asset?.locked > 0" class="p-1.5 text-red-400 hover:text-red-300 hover:bg-red-500/10 rounded transition-all" (click)="cancelSymbolOrder(asset?.asset);">
-            <i class="fa-solid fa-xmark text-[10px]"></i>
-          </button>
-          <button class="p-1.5 text-gray-300 hover:text-blue-200 hover:bg-blue-500/20 rounded transition-all" (click)="openPopup(popupTemplate, asset?.asset, asset?.free);">
-            <i class="fa-solid fa-arrow-right-arrow-left text-[10px]"></i>
-          </button>
+            </button>
+            <span class="w-20 text-right text-sm font-mono" [ngClass]="+asset?.locked > 0 ? 'text-amber-400' : 'text-gray-600'">
+              {{+asset?.locked > 0 ? formatBalance(asset?.locked, asset?.asset) : '-'}}
+            </span>
+          <div class="w-28 flex items-center justify-end gap-1.5">
+            <button class="p-1.5 text-blue-300 hover:text-blue-200 hover:bg-blue-500/20 rounded transition-all" (click)="showChart(asset?.asset, null); activeSidePanel = 'chart';">
+              <i class="fa-solid fa-chart-line text-[10px]"></i>
+            </button>
+            <button *ngIf="+asset?.locked > 0" class="p-1.5 text-red-400 hover:text-red-300 hover:bg-red-500/10 rounded transition-all" (click)="cancelSymbolOrder(asset?.asset);">
+              <i class="fa-solid fa-xmark text-[10px]"></i>
+            </button>
+            <button class="p-1.5 text-gray-300 hover:text-blue-200 hover:bg-blue-500/20 rounded transition-all" (click)="openPopup(popupTemplate, asset?.asset, asset?.free);">
+              <i class="fa-solid fa-arrow-right-arrow-left text-[10px]"></i>
+            </button>
+          </div>
+          </div>
         </div>
-      </div>
-      </div>
-      <div *ngIf="!myAccount?.balances?.length" class="px-4 py-6 text-center">
-        <i class="fa-solid fa-wallet text-2xl text-gray-600 mb-2"></i>
-        <p class="text-[10px] text-gray-500">No assets found</p>
+        <div *ngIf="!myAccount?.balances?.length" class="px-4 py-6 text-center">
+          <i class="fa-solid fa-wallet text-2xl text-gray-600 mb-2"></i>
+          <p class="text-[10px] text-gray-500">No assets found</p>
+        </div>
       </div>
     </div>
   </div>
