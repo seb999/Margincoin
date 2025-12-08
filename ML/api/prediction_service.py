@@ -3,16 +3,23 @@ FastAPI service for real-time trading predictions
 Provides HTTP endpoint for C# application to get ML predictions
 """
 
-from fastapi import FastAPI, HTTPException
-from pydantic import BaseModel, Field
-from typing import List, Dict, Optional
-import torch
-import numpy as np
+from contextlib import asynccontextmanager
 from pathlib import Path
 import logging
+import sys
+from typing import List, Dict, Optional
+
+from fastapi import FastAPI, HTTPException
+from pydantic import BaseModel, Field, ConfigDict
+import numpy as np
+
+# Ensure compatibility with PyTorch's NumPy expectations
+if not hasattr(np, "_ARRAY_API"):
+    np._ARRAY_API = None
+
+import torch
 
 # Add parent directory to path
-import sys
 sys.path.append(str(Path(__file__).parent.parent))
 
 from trading_model.models.transformer_lstm import create_model
@@ -22,13 +29,6 @@ from trading_model.utils.preprocessor import TradingDataPreprocessor, prepare_da
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# Initialize FastAPI app
-app = FastAPI(
-    title="Trading ML Prediction Service",
-    description="LSTM/Transformer model for cryptocurrency trading predictions",
-    version="1.0.0"
-)
-
 # Global model and preprocessor (loaded on startup)
 model = None
 preprocessor = None
@@ -37,6 +37,9 @@ device = None
 
 class CandleData(BaseModel):
     """Single candle data point"""
+
+    model_config = ConfigDict(populate_by_name=True)  # Allow both 'macd_signal' and 'macdSign'
+
     open: float
     high: float
     low: float
@@ -50,14 +53,11 @@ class CandleData(BaseModel):
     stoch_k: Optional[float] = Field(default=50, alias='stochSlowK')
     stoch_d: Optional[float] = Field(default=50, alias='stochSlowD')
 
-    class Config:
-        populate_by_name = True  # Allow both 'macd_signal' and 'macdSign'
-
 
 class PredictionRequest(BaseModel):
     """Request format for predictions"""
     symbol: str
-    candles: List[CandleData] = Field(..., min_items=50, description="Minimum 50 candles required")
+    candles: List[CandleData] = Field(..., min_length=50, description="Minimum 50 candles required")
 
 
 class PredictionResponse(BaseModel):
@@ -71,7 +71,6 @@ class PredictionResponse(BaseModel):
     attention_summary: Optional[Dict[str, float]] = None  # Which timeframes were most important
 
 
-@app.on_event("startup")
 async def load_model():
     """Load model and preprocessor on startup"""
     global model, preprocessor, device
@@ -134,13 +133,29 @@ async def load_model():
         model = model.to(device)
         model.eval()
 
-        logger.info(f"Model loaded successfully!")
+        logger.info("Model loaded successfully!")
         logger.info(f"  Validation accuracy: {checkpoint.get('val_accuracy', 'N/A')}")
         logger.info(f"  Validation F1: {checkpoint.get('val_f1', 'N/A')}")
 
     except Exception as e:
         logger.error(f"Failed to load model: {e}")
         raise
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """Lifespan handler to load model on startup without deprecated events."""
+    await load_model()
+    yield
+
+
+# Initialize FastAPI app
+app = FastAPI(
+    title="Trading ML Prediction Service",
+    description="LSTM/Transformer model for cryptocurrency trading predictions",
+    version="1.0.0",
+    lifespan=lifespan
+)
 
 
 @app.get("/")

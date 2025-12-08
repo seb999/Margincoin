@@ -16,7 +16,7 @@ namespace MarginCoin
         public static void Main(string[] args)
         {
             // Capture Serilog internal sink errors to stderr for diagnostics
-            SelfLog.Enable(message => Console.Error.WriteLine($"[SerilogSelfLog] {message}"));
+            SelfLog.Enable(message => Console.Error.WriteLine($"[SerilogSelfLog] Serilog Docker SEQ not running"));
 
             var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production";
             var configuration = new ConfigurationBuilder()

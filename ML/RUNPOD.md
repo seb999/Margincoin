@@ -15,6 +15,11 @@ git sparse-checkout set ML
 git checkout main
 ```
 
+## Create a SSH root password by calling this script on the pod
+```bash
+wget https://raw.githubusercontent.com/justinwlin/Runpod-SSH-Password/main/passwordrunpod.sh && chmod +x passwordrunpod.sh && ./passwordrunpod.sh
+```
+
 ### 4. Train
 
 ```bash
@@ -31,6 +36,6 @@ python trading_model/utils/collect_data.py \
 ### 5. Connect to the pod and clone ML
 ```bash
 scp -P 47337 -i Helsinki2025 -r \
-root@149.36.1.233:/workspace/MarginCoin/ML/trading_model/checkpoints \
+root@149.36.1.233:/workspace/Margincoin/ML/trading_model/checkpoints \
 ./checkpoints
 ```
