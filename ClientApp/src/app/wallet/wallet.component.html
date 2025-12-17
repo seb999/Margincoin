@@ -140,22 +140,33 @@
         <!-- Right: Quick actions -->
         <div class="flex items-center gap-2">
           <button class="flex items-center gap-1.5 px-3 py-2 text-xs font-medium text-white bg-gray-700/80 hover:bg-gray-600 rounded-lg transition-all hover:scale-[1.02]"
-            (click)="openSeq()">
+            (click)="openSeq()"
+            title="Open Seq logs viewer"
+            aria-label="Open logs">
             <i class="fa-solid fa-clipboard-list text-[10px]"></i>Logs
           </button>
           <button class="flex items-center gap-1.5 px-3 py-2 text-xs font-medium text-white bg-gray-700/80 hover:bg-gray-600 rounded-lg transition-all hover:scale-[1.02]"
-            (click)="clearChart()">
+            (click)="clearChart()"
+            title="Clear chart data"
+            aria-label="Clear chart">
             <i class="fa-solid fa-eraser text-[10px]"></i>Clear
           </button>
           <button class="flex items-center gap-1.5 px-3 py-2 text-xs font-medium text-white bg-gray-700/80 hover:bg-gray-600 rounded-lg transition-all hover:scale-[1.02]"
-            (click)="syncBinanceSymbol()">
+            (click)="syncBinanceSymbol()"
+            title="Sync symbols from Binance"
+            aria-label="Sync symbols">
             <i class="fa-solid fa-sync text-[10px]"></i>Sync
           </button>
           <button *ngIf="isTradeOpen" class="flex items-center gap-1.5 px-3 py-2 text-xs font-medium text-white bg-gray-700/80 hover:bg-gray-600 rounded-lg transition-all hover:scale-[1.02]"
-            (click)="debugBuy()">
+            (click)="debugBuy()"
+            title="Debug buy order"
+            aria-label="Debug buy">
             <i class="fa-solid fa-cart-plus text-[10px]"></i>Buy
           </button>
-          <button *ngIf="!isTradeOpen" class="flex items-center gap-1.5 px-3 py-2 text-xs font-medium text-gray-500 bg-gray-800/50 rounded-lg cursor-not-allowed" disabled>
+          <button *ngIf="!isTradeOpen" class="flex items-center gap-1.5 px-3 py-2 text-xs font-medium text-gray-500 bg-gray-800/50 rounded-lg cursor-not-allowed"
+            disabled
+            title="Start trading to enable buy"
+            aria-label="Buy (disabled)">
             <i class="fa-solid fa-cart-plus text-[10px]"></i>Buy
           </button>
         </div>
@@ -188,7 +199,10 @@
             <i class="fa-solid fa-filter text-[10px] mr-1"></i>
             {{showOnlyRunning ? 'Active' : 'All'}}
           </button>
-          <button class="p-1 text-gray-400 hover:text-blue-400 hover:bg-blue-500/10 rounded transition-all" (click)="refreshOrderTable()">
+          <button class="p-1 text-gray-400 hover:text-blue-400 hover:bg-blue-500/10 rounded transition-all"
+            (click)="refreshOrderTable()"
+            title="Refresh trade history"
+            aria-label="Refresh orders">
             <i class="fa fa-arrows-rotate text-xs"></i>
           </button>
         </div>
@@ -214,14 +228,13 @@
           </thead>
           <tbody class="divide-y divide-gray-700/50">
             <tr *ngFor="let order of filteredOrderList"
-                class="group hover:bg-gray-700/30 transition-all duration-150 border-l-4"
+                class="group hover:bg-gray-700/30 transition-all duration-150"
                 [ngClass]="{
-                  'bg-amber-500/10 border-l-amber-500': !order.isClosed || order.isClosed === 0,
-                  'bg-emerald-500/10 border-l-emerald-500': order.isClosed === 1 || order.isClosed == 1,
-                  'bg-red-500/5': order.status !== 'FILLED'
+                  'bg-amber-500/10 border-l-[6px] border-l-amber-400': !order.isClosed || order.isClosed === 0,
+                  'bg-emerald-500/10 border-l-[6px] border-l-emerald-400': order.isClosed === 1 || order.isClosed == 1,
+                  'bg-red-500/5 border-l-[6px]': order.status !== 'FILLED'
                 }"
-                [style.border-left-color]="!order.isClosed ? '#f59e0b' : '#10b981'"
-                [style.border-left-width.px]="4">
+                [style.border-left-color]="!order.isClosed ? '#fbbf24' : '#34d399'">
               <td class="px-3 py-2">
                 <span class="font-semibold text-white text-sm">{{order.symbol.replace('USDC', '')}}</span>
                 <span class="text-gray-500 text-xs">/USDC</span>
@@ -283,10 +296,17 @@
               </td>
               <td class="px-3 py-2">
                 <div class="flex items-center justify-center gap-2">
-                  <button *ngIf="!order.isClosed" class="p-1.5 text-red-200 bg-red-500/20 hover:bg-red-500/30 rounded-lg transition-all shadow-sm shadow-red-500/20" (click)="closeTrade(order.id, order.closePrice);">
+                  <button *ngIf="!order.isClosed"
+                    class="p-1.5 text-red-200 bg-red-500/20 hover:bg-red-500/30 rounded-lg transition-all shadow-sm shadow-red-500/20"
+                    (click)="closeTrade(order.id, order.closePrice);"
+                    title="Close trade"
+                    aria-label="Close trade">
                     <i class="far fa-trash-alt text-xs"></i>
                   </button>
-                  <button class="p-1.5 text-amber-100 bg-amber-500/20 hover:bg-amber-500/30 rounded-lg transition-all shadow-sm shadow-amber-500/20" (click)="showChart(order.symbol, order.id);">
+                  <button class="p-1.5 text-amber-100 bg-amber-500/20 hover:bg-amber-500/30 rounded-lg transition-all shadow-sm shadow-amber-500/20"
+                    (click)="showChart(order.symbol, order.id);"
+                    title="View chart for this trade"
+                    aria-label="View chart">
                     <i class="fa-solid fa-chart-line text-xs"></i>
                   </button>
                 </div>
@@ -294,10 +314,11 @@
             </tr>
             <!-- Empty State -->
             <tr *ngIf="!filteredOrderList?.length">
-              <td colspan="13" class="px-2 py-8 text-center">
-                <div class="text-gray-500">
-                  <i class="fa-solid fa-inbox text-2xl mb-2"></i>
-                  <p class="text-xs">{{showOnlyRunning ? 'No active trades' : 'No orders for this date'}}</p>
+              <td colspan="13" class="px-2 py-12 text-center">
+                <div class="flex flex-col items-center gap-2 text-gray-500">
+                  <i class="fa-solid fa-inbox text-3xl opacity-50"></i>
+                  <p class="text-sm font-medium">{{showOnlyRunning ? 'No active trades' : 'No orders for this date'}}</p>
+                  <p class="text-xs text-gray-600">{{showOnlyRunning ? 'All positions are closed' : 'Try selecting a different date'}}</p>
                 </div>
               </td>
             </tr>
@@ -380,7 +401,10 @@
       </div>
       <div *ngIf="activeSidePanel === 'portfolio'" class="px-3 py-2 bg-gray-900/20 border-b !border-gray-700/30 flex items-center justify-between">
         <span class="text-[10px] text-gray-500 bg-gray-700/50 px-2 py-0.5 rounded-full">{{myAccount?.balances?.length || 0}} assets</span>
-        <button class="p-1 text-gray-400 hover:text-blue-400 hover:bg-blue-500/10 rounded transition-all" (click)="refreshUI()">
+        <button class="p-1 text-gray-400 hover:text-blue-400 hover:bg-blue-500/10 rounded transition-all"
+          (click)="refreshUI()"
+          title="Refresh portfolio"
+          aria-label="Refresh portfolio">
           <i class="fa fa-arrows-rotate text-xs"></i>
         </button>
       </div>
@@ -392,9 +416,10 @@
         </div>
         <div *ngIf="chartOptions" class="px-2 pb-2 text-[10px] text-gray-500 text-right">Bottom pane: RSI</div>
         <div *ngIf="!chartOptions" class="w-full h-96 flex items-center justify-center bg-gray-900/30 rounded-lg m-2">
-          <div class="text-center text-gray-500">
-            <i class="fa-solid fa-chart-area text-2xl mb-2 opacity-50"></i>
-            <p class="text-[10px]">Select a symbol</p>
+          <div class="flex flex-col items-center gap-2 text-gray-500">
+            <i class="fa-solid fa-chart-area text-3xl opacity-50"></i>
+            <p class="text-sm font-medium">No chart selected</p>
+            <p class="text-xs text-gray-600">Click on a symbol to view its chart</p>
           </div>
         </div>
       </div>
@@ -421,12 +446,14 @@
                   </span>
                 </div>
                 <div class="flex items-center gap-2">
-                  <span class="text-[10px] text-amber-300" *ngIf="getTrendScoreKey(asset?.asset) !== undefined">
+                  <span class="text-[10px] px-1.5 py-0.5 rounded-full"
+                    *ngIf="getTrendScoreKey(asset?.asset) !== undefined"
+                    [ngClass]="getTrendScoreBadgeClass(getTrendScoreKey(asset?.asset))">
                     TS:{{getTrendScoreKey(asset?.asset)}}
                   </span>
-                  <span class="text-[10px]" *ngIf="getAiPrediction(asset?.asset) as ai"
+                  <span class="text-[10px] px-1.5 py-0.5 rounded-full" *ngIf="getAiPrediction(asset?.asset) as ai"
                     [ngClass]="getAiBadgeClass(ai?.prediction)">
-                    AI:{{formatAiBadge(ai)}}
+                    AI:{{aiServiceHealthy ? formatAiBadge(ai) : '-'}}
                   </span>
                 </div>
               </div>
@@ -435,21 +462,34 @@
               {{+asset?.locked > 0 ? formatBalance(asset?.locked, asset?.asset) : '-'}}
             </span>
           <div class="w-28 flex items-center justify-end gap-1.5">
-            <button class="p-1.5 text-blue-300 hover:text-blue-200 hover:bg-blue-500/20 rounded transition-all" (click)="showChart(asset?.asset, null); activeSidePanel = 'chart';">
+            <button class="p-1.5 text-blue-300 hover:text-blue-200 hover:bg-blue-500/20 rounded transition-all"
+              (click)="showChart(asset?.asset, null); activeSidePanel = 'chart';"
+              title="View {{asset?.asset}} chart"
+              aria-label="View chart">
               <i class="fa-solid fa-chart-line text-[10px]"></i>
             </button>
-            <button *ngIf="+asset?.locked > 0" class="p-1.5 text-red-400 hover:text-red-300 hover:bg-red-500/10 rounded transition-all" (click)="cancelSymbolOrder(asset?.asset);">
+            <button *ngIf="+asset?.locked > 0"
+              class="p-1.5 text-red-400 hover:text-red-300 hover:bg-red-500/10 rounded transition-all"
+              (click)="cancelSymbolOrder(asset?.asset);"
+              title="Cancel pending order"
+              aria-label="Cancel order">
               <i class="fa-solid fa-xmark text-[10px]"></i>
             </button>
-            <button class="p-1.5 text-gray-300 hover:text-blue-200 hover:bg-blue-500/20 rounded transition-all" (click)="openPopup(popupTemplate, asset?.asset, asset?.free);">
+            <button class="p-1.5 text-gray-300 hover:text-blue-200 hover:bg-blue-500/20 rounded transition-all"
+              (click)="openPopup(popupTemplate, asset?.asset, asset?.free);"
+              title="Trade {{asset?.asset}}"
+              aria-label="Trade asset">
               <i class="fa-solid fa-arrow-right-arrow-left text-[10px]"></i>
             </button>
           </div>
           </div>
         </div>
-        <div *ngIf="!myAccount?.balances?.length" class="px-4 py-6 text-center">
-          <i class="fa-solid fa-wallet text-2xl text-gray-600 mb-2"></i>
-          <p class="text-[10px] text-gray-500">No assets found</p>
+        <div *ngIf="!myAccount?.balances?.length" class="px-4 py-12 text-center">
+          <div class="flex flex-col items-center gap-2 text-gray-500">
+            <i class="fa-solid fa-wallet text-3xl opacity-50"></i>
+            <p class="text-sm font-medium">No assets found</p>
+            <p class="text-xs text-gray-600">Your portfolio is empty</p>
+          </div>
         </div>
       </div>
     </div>

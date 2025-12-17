@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
@@ -8,6 +9,7 @@ using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using MarginCoin.Class;
 using MarginCoin.MLClass;
+using MarginCoin.Misc;
 using Microsoft.Extensions.Logging;
 using static MarginCoin.Service.MLService;
 
@@ -24,10 +26,28 @@ namespace MarginCoin.Service
         private readonly string _apiBaseUrl;
 
         // Cache for predictions to avoid overwhelming the API
-        private readonly Dictionary<string, (MLPrediction prediction, DateTime timestamp)> _predictionCache;
+        private readonly ConcurrentDictionary<string, (MLPrediction prediction, DateTime timestamp)> _predictionCache;
+        private readonly ConcurrentDictionary<string, MLPrediction> _predictionStore;
         private readonly TimeSpan _cacheExpiry = TimeSpan.FromSeconds(30);
 
-        public List<MLPrediction> MLPredList { get; set; }
+        public List<MLPrediction> MLPredList
+        {
+            get => _predictionStore.Values.ToList();
+            set
+            {
+                _predictionStore.Clear();
+
+                if (value == null)
+                {
+                    return;
+                }
+
+                foreach (var prediction in value.Where(p => p?.Symbol != null))
+                {
+                    _predictionStore[prediction.Symbol] = prediction;
+                }
+            }
+        }
 
         public LSTMPredictionService(ILogger<LSTMPredictionService> logger, IHttpClientFactory httpClientFactory)
         {
@@ -36,8 +56,8 @@ namespace MarginCoin.Service
             _httpClient.Timeout = TimeSpan.FromSeconds(10);
 
             _apiBaseUrl = Environment.GetEnvironmentVariable("ML_API_URL") ?? "http://localhost:8000";
-            _predictionCache = new Dictionary<string, (MLPrediction, DateTime)>();
-            MLPredList = new List<MLPrediction>();
+            _predictionCache = new ConcurrentDictionary<string, (MLPrediction, DateTime)>();
+            _predictionStore = new ConcurrentDictionary<string, MLPrediction>();
 
             _logger.LogInformation($"LSTM Prediction Service initialized with API: {_apiBaseUrl}");
         }
@@ -129,10 +149,13 @@ namespace MarginCoin.Service
                 }
 
                 // Convert to MLPrediction format
+                var parsedDirection = MyEnum.PredictionDirection.Sideway;
+                PredictionDirectionExtensions.TryParse(result.Prediction, out parsedDirection);
+
                 var prediction = new MLPrediction
                 {
                     Symbol = symbol,
-                    PredictedLabel = result.Prediction.ToLower(),
+                    PredictedLabel = parsedDirection.ToLabel(),
                     Score = new[]
                     {
                         (float)result.Probabilities.Down,
@@ -188,7 +211,7 @@ namespace MarginCoin.Service
             return new MLPrediction
             {
                 Symbol = symbol,
-                PredictedLabel = "sideways",
+                PredictedLabel = MyEnum.PredictionDirection.Off.ToLabel(),
                 Score = new[] { 0.33f, 0.34f, 0.33f },  // Neutral probabilities
                 Confidence = 0.34,
                 ExpectedReturn = 0,
@@ -202,17 +225,24 @@ namespace MarginCoin.Service
         /// </summary>
         private void UpdatePredictionList(MLPrediction prediction)
         {
-            var existing = MLPredList.FirstOrDefault(p => p.Symbol == prediction.Symbol);
-            if (existing != null)
-            {
-                MLPredList.Remove(existing);
-            }
-            MLPredList.Add(prediction);
+            _predictionStore[prediction.Symbol] = prediction;
 
             // Keep only recent predictions (last 100)
-            if (MLPredList.Count > 100)
+            if (_predictionStore.Count <= 100)
             {
-                MLPredList = MLPredList.OrderByDescending(p => p.Timestamp).Take(100).ToList();
+                return;
+            }
+
+            var latestPredictions = _predictionStore.Values
+                .OrderByDescending(p => p.Timestamp)
+                .Take(100)
+                .ToList();
+
+            _predictionStore.Clear();
+
+            foreach (var pred in latestPredictions)
+            {
+                _predictionStore[pred.Symbol] = pred;
             }
         }
 

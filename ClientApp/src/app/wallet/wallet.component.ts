@@ -1,4 +1,4 @@
-import { Component, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Component, OnDestroy, ViewChild, ViewEncapsulation } from '@angular/core';
 import { NumericLiteral } from 'typescript';
 import { Order } from '../class/order';
 import { HttpSettings, HttpService } from '../service/http.service';
@@ -43,7 +43,7 @@ HC_exporting_offline(Highcharts);
   encapsulation: ViewEncapsulation.None,
 })
 
-export class WalletComponent {
+export class WalletComponent implements OnDestroy {
 
   highcharts: typeof Highcharts = Highcharts;
   chartOptions: Highcharts.Options;
@@ -210,7 +210,13 @@ export class WalletComponent {
       }
 
       if (this.serverMsg.msgName == BackEndMessage.websocketStatus) {
-        this.websocketStatus = JSON.parse(this.serverMsg.data);
+        try {
+          this.websocketStatus = typeof this.serverMsg.data === 'string'
+            ? JSON.parse(this.serverMsg.data)
+            : this.serverMsg.data;
+        } catch {
+          this.websocketStatus = null;
+        }
         this.markStreamHeartbeat();
       }
 
@@ -603,11 +609,31 @@ export class WalletComponent {
     return this.portfolioTrendScores[upper];
   }
 
+  getTrendScoreBadgeClass(trendScore: number | undefined): string {
+    if (trendScore === undefined || trendScore === null) return 'bg-gray-500/20 text-gray-300';
+    // Red background if trend score is below the minimum entry threshold (3)
+    if (trendScore < 3) return 'bg-red-500/20 text-red-300';
+    // Green background if trend score meets or exceeds the minimum entry threshold
+    return 'bg-emerald-500/20 text-emerald-300';
+  }
+
   private async loadAiSignals() {
     try {
-      this.portfolioAiSignals = await this.tradeService.getAiSignalsForBalances();
-      this.aiServiceHealthy = true;
+      const signals = await this.tradeService.getAiSignalsForBalances();
+      const hasRealPredictions = Object.values(signals || {}).some(p =>
+        p &&
+        p.trendScore != null &&
+        p.confidence != null
+      );
+      if (hasRealPredictions) {
+        this.portfolioAiSignals = signals;
+        this.aiServiceHealthy = true;
+      } else {
+        this.portfolioAiSignals = {};
+        this.aiServiceHealthy = false;
+      }
     } catch {
+      this.portfolioAiSignals = {};
       this.aiServiceHealthy = false;
     }
   }
@@ -626,7 +652,7 @@ export class WalletComponent {
   }
 
   formatAiBadge(pred?: AiPrediction): string {
-    if (!pred) return '-';
+    if (!this.aiServiceHealthy || !pred || pred.confidence == null || pred.trendScore == null) return '-';
     const direction = (pred.prediction || '').toLowerCase();
     const arrow = direction === 'up' ? '↑' : direction === 'down' ? '↓' : '→';
     const confidence = this.getAiConfidence(direction, pred);

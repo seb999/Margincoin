@@ -1,3 +1,5 @@
+using System;
+
 namespace MarginCoin.Misc
 {
     public static class MyEnum
@@ -55,6 +57,37 @@ namespace MarginCoin.Misc
             Up,
             Down,
             Sideways
+        }
+
+        public enum PredictionDirection
+        {
+            Up,
+            Down,
+            Sideway,
+            Off
+        }
+    }
+
+    public static class PredictionDirectionExtensions
+    {
+        public static string ToLabel(this MyEnum.PredictionDirection direction)
+        {
+            return direction switch
+            {
+                MyEnum.PredictionDirection.Sideway => "sideways",
+                _ => direction.ToString().ToLowerInvariant()
+            };
+        }
+
+        public static bool TryParse(string value, out MyEnum.PredictionDirection direction)
+        {
+            if (string.Equals(value, "sideways", StringComparison.OrdinalIgnoreCase))
+            {
+                direction = MyEnum.PredictionDirection.Sideway;
+                return true;
+            }
+
+            return Enum.TryParse(value, true, out direction);
         }
     }
 }

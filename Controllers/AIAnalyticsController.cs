@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using MarginCoin.Misc;
 using MarginCoin.Model;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -14,6 +15,9 @@ namespace MarginCoin.Controllers
     {
         private readonly ApplicationDbContext _dbContext;
         private readonly ILogger<AIAnalyticsController> _logger;
+        private static readonly string PredictionUpLabel = MyEnum.PredictionDirection.Up.ToLabel();
+        private static readonly string PredictionDownLabel = MyEnum.PredictionDirection.Down.ToLabel();
+        private static readonly string PredictionSidewayLabel = MyEnum.PredictionDirection.Sideway.ToLabel();
 
         public AIAnalyticsController(ApplicationDbContext dbContext, ILogger<AIAnalyticsController> logger)
         {
@@ -54,29 +58,29 @@ namespace MarginCoin.Controllers
                 entryPredictions = new
                 {
                     // When AI predicted UP at entry, how many were profitable?
-                    upPredictionAccuracy = CalculateAccuracy(closedOrders, "up"),
-                    upPredictionCount = closedOrders.Count(o => o.AIPrediction == "up"),
-                    upPredictionProfitable = closedOrders.Count(o => o.AIPrediction == "up" && o.Profit > 0),
+                    upPredictionAccuracy = CalculateAccuracy(closedOrders, PredictionUpLabel),
+                    upPredictionCount = closedOrders.Count(o => o.AIPrediction == PredictionUpLabel),
+                    upPredictionProfitable = closedOrders.Count(o => o.AIPrediction == PredictionUpLabel && o.Profit > 0),
 
                     // When AI predicted DOWN at entry (shouldn't happen, but track it)
-                    downPredictionAccuracy = CalculateAccuracy(closedOrders, "down"),
-                    downPredictionCount = closedOrders.Count(o => o.AIPrediction == "down"),
+                    downPredictionAccuracy = CalculateAccuracy(closedOrders, PredictionDownLabel),
+                    downPredictionCount = closedOrders.Count(o => o.AIPrediction == PredictionDownLabel),
 
                     // Sideways predictions
-                    sidewaysPredictionAccuracy = CalculateAccuracy(closedOrders, "sideways"),
-                    sidewaysPredictionCount = closedOrders.Count(o => o.AIPrediction == "sideways"),
+                    sidewaysPredictionAccuracy = CalculateAccuracy(closedOrders, PredictionSidewayLabel),
+                    sidewaysPredictionCount = closedOrders.Count(o => o.AIPrediction == PredictionSidewayLabel),
                 },
 
                 // Exit Prediction Analysis
                 exitPredictions = new
                 {
                     // When AI predicted DOWN at exit, was it correct?
-                    downExitAccuracy = CalculateExitAccuracy(closedOrders, "down"),
-                    downExitCount = closedOrders.Count(o => !string.IsNullOrEmpty(o.ExitAIPrediction) && o.ExitAIPrediction == "down"),
+                    downExitAccuracy = CalculateExitAccuracy(closedOrders, PredictionDownLabel),
+                    downExitCount = closedOrders.Count(o => !string.IsNullOrEmpty(o.ExitAIPrediction) && o.ExitAIPrediction == PredictionDownLabel),
 
                     // Other exit predictions
-                    upExitCount = closedOrders.Count(o => !string.IsNullOrEmpty(o.ExitAIPrediction) && o.ExitAIPrediction == "up"),
-                    sidewaysExitCount = closedOrders.Count(o => !string.IsNullOrEmpty(o.ExitAIPrediction) && o.ExitAIPrediction == "sideways"),
+                    upExitCount = closedOrders.Count(o => !string.IsNullOrEmpty(o.ExitAIPrediction) && o.ExitAIPrediction == PredictionUpLabel),
+                    sidewaysExitCount = closedOrders.Count(o => !string.IsNullOrEmpty(o.ExitAIPrediction) && o.ExitAIPrediction == PredictionSidewayLabel),
                 },
 
                 // Confidence Analysis
@@ -148,15 +152,15 @@ namespace MarginCoin.Controllers
                 {
                     upPrediction = new
                     {
-                        total = orders.Count(o => o.AIPrediction == "up"),
-                        correct = orders.Count(o => o.AIPrediction == "up" && o.Profit > 0),
-                        incorrect = orders.Count(o => o.AIPrediction == "up" && o.Profit <= 0),
-                        accuracy = CalculateAccuracy(orders, "up"),
-                        avgProfitWhenCorrect = orders.Where(o => o.AIPrediction == "up" && o.Profit > 0).Any()
-                            ? orders.Where(o => o.AIPrediction == "up" && o.Profit > 0).Average(o => o.Profit)
+                        total = orders.Count(o => o.AIPrediction == PredictionUpLabel),
+                        correct = orders.Count(o => o.AIPrediction == PredictionUpLabel && o.Profit > 0),
+                        incorrect = orders.Count(o => o.AIPrediction == PredictionUpLabel && o.Profit <= 0),
+                        accuracy = CalculateAccuracy(orders, PredictionUpLabel),
+                        avgProfitWhenCorrect = orders.Where(o => o.AIPrediction == PredictionUpLabel && o.Profit > 0).Any()
+                            ? orders.Where(o => o.AIPrediction == PredictionUpLabel && o.Profit > 0).Average(o => o.Profit)
                             : 0,
-                        avgLossWhenIncorrect = orders.Where(o => o.AIPrediction == "up" && o.Profit <= 0).Any()
-                            ? orders.Where(o => o.AIPrediction == "up" && o.Profit <= 0).Average(o => o.Profit)
+                        avgLossWhenIncorrect = orders.Where(o => o.AIPrediction == PredictionUpLabel && o.Profit <= 0).Any()
+                            ? orders.Where(o => o.AIPrediction == PredictionUpLabel && o.Profit <= 0).Average(o => o.Profit)
                             : 0
                     }
                 },
@@ -166,12 +170,12 @@ namespace MarginCoin.Controllers
                 {
                     downPrediction = new
                     {
-                        total = orders.Count(o => o.ExitAIPrediction == "down"),
+                        total = orders.Count(o => o.ExitAIPrediction == PredictionDownLabel),
                         // Good exits: predicted down and we had profit OR predicted down and stopped further loss
-                        goodExits = orders.Count(o => o.ExitAIPrediction == "down" && o.Profit > 0),
-                        badExits = orders.Count(o => o.ExitAIPrediction == "down" && o.Profit <= 0),
-                        avgProfitOnExit = orders.Where(o => o.ExitAIPrediction == "down").Any()
-                            ? orders.Where(o => o.ExitAIPrediction == "down").Average(o => o.Profit)
+                        goodExits = orders.Count(o => o.ExitAIPrediction == PredictionDownLabel && o.Profit > 0),
+                        badExits = orders.Count(o => o.ExitAIPrediction == PredictionDownLabel && o.Profit <= 0),
+                        avgProfitOnExit = orders.Where(o => o.ExitAIPrediction == PredictionDownLabel).Any()
+                            ? orders.Where(o => o.ExitAIPrediction == PredictionDownLabel).Average(o => o.Profit)
                             : 0
                     }
                 },
@@ -239,9 +243,9 @@ namespace MarginCoin.Controllers
                     profitPercent = o.OpenPrice > 0 ? Math.Round((o.ClosePrice - o.OpenPrice) / o.OpenPrice * 100, 2) : 0,
 
                     // Analysis
-                    entryWasCorrect = (o.AIPrediction == "up" && o.Profit > 0) || (o.AIPrediction == "down" && o.Profit < 0),
+                    entryWasCorrect = (o.AIPrediction == PredictionUpLabel && o.Profit > 0) || (o.AIPrediction == PredictionDownLabel && o.Profit < 0),
                     exitWasCorrect = string.IsNullOrEmpty(o.ExitAIPrediction) ? (bool?)null :
-                                     (o.ExitAIPrediction == "down" && o.Profit > 0), // Exited before further loss
+                                     (o.ExitAIPrediction == PredictionDownLabel && o.Profit > 0), // Exited before further loss
 
                     closeReason = o.Type
                 })
@@ -269,7 +273,7 @@ namespace MarginCoin.Controllers
                 return Ok(new { message = "Not enough data for recommendations" });
             }
 
-            var overallAccuracy = CalculateAccuracy(orders, "up");
+            var overallAccuracy = CalculateAccuracy(orders, PredictionUpLabel);
             var highConfResult = AnalyzeByConfidence(orders, 0.7, 1.0, true);
             var highConfAccuracy = (double)((dynamic)highConfResult).accuracy;
             var avgProfit = orders.Average(o => o.Profit);
@@ -297,7 +301,7 @@ namespace MarginCoin.Controllers
             }
 
             // Recommendation 3: Exit signals
-            var exitOrders = orders.Where(o => !string.IsNullOrEmpty(o.ExitAIPrediction) && o.ExitAIPrediction == "down").ToList();
+            var exitOrders = orders.Where(o => !string.IsNullOrEmpty(o.ExitAIPrediction) && o.ExitAIPrediction == PredictionDownLabel).ToList();
             if (exitOrders.Any())
             {
                 var exitEffectiveness = (double)exitOrders.Count(o => o.Profit > 0) / exitOrders.Count;
@@ -349,9 +353,9 @@ namespace MarginCoin.Controllers
             if (!filtered.Any()) return 0;
 
             var correct = filtered.Count(o =>
-                (prediction == "up" && o.Profit > 0) ||
-                (prediction == "down" && o.Profit < 0) ||
-                (prediction == "sideways" && Math.Abs(o.Profit) < 10)); // Small profit/loss for sideways
+                (prediction == PredictionUpLabel && o.Profit > 0) ||
+                (prediction == PredictionDownLabel && o.Profit < 0) ||
+                (prediction == PredictionSidewayLabel && Math.Abs(o.Profit) < 10)); // Small profit/loss for sideways
 
             return (double)correct / filtered.Count;
         }
@@ -399,27 +403,27 @@ namespace MarginCoin.Controllers
                 // UP → DOWN (reversal detected)
                 upToDown = new
                 {
-                    count = withExitPrediction.Count(o => o.AIPrediction == "up" && o.ExitAIPrediction == "down"),
-                    avgProfit = withExitPrediction.Where(o => o.AIPrediction == "up" && o.ExitAIPrediction == "down").Any()
-                        ? withExitPrediction.Where(o => o.AIPrediction == "up" && o.ExitAIPrediction == "down").Average(o => o.Profit)
+                    count = withExitPrediction.Count(o => o.AIPrediction == PredictionUpLabel && o.ExitAIPrediction == PredictionDownLabel),
+                    avgProfit = withExitPrediction.Where(o => o.AIPrediction == PredictionUpLabel && o.ExitAIPrediction == PredictionDownLabel).Any()
+                        ? withExitPrediction.Where(o => o.AIPrediction == PredictionUpLabel && o.ExitAIPrediction == PredictionDownLabel).Average(o => o.Profit)
                         : 0
                 },
 
                 // UP → UP (continued confidence)
                 upToUp = new
                 {
-                    count = withExitPrediction.Count(o => o.AIPrediction == "up" && o.ExitAIPrediction == "up"),
-                    avgProfit = withExitPrediction.Where(o => o.AIPrediction == "up" && o.ExitAIPrediction == "up").Any()
-                        ? withExitPrediction.Where(o => o.AIPrediction == "up" && o.ExitAIPrediction == "up").Average(o => o.Profit)
+                    count = withExitPrediction.Count(o => o.AIPrediction == PredictionUpLabel && o.ExitAIPrediction == PredictionUpLabel),
+                    avgProfit = withExitPrediction.Where(o => o.AIPrediction == PredictionUpLabel && o.ExitAIPrediction == PredictionUpLabel).Any()
+                        ? withExitPrediction.Where(o => o.AIPrediction == PredictionUpLabel && o.ExitAIPrediction == PredictionUpLabel).Average(o => o.Profit)
                         : 0
                 },
 
                 // UP → SIDEWAYS
                 upToSideways = new
                 {
-                    count = withExitPrediction.Count(o => o.AIPrediction == "up" && o.ExitAIPrediction == "sideways"),
-                    avgProfit = withExitPrediction.Where(o => o.AIPrediction == "up" && o.ExitAIPrediction == "sideways").Any()
-                        ? withExitPrediction.Where(o => o.AIPrediction == "up" && o.ExitAIPrediction == "sideways").Average(o => o.Profit)
+                    count = withExitPrediction.Count(o => o.AIPrediction == PredictionUpLabel && o.ExitAIPrediction == PredictionSidewayLabel),
+                    avgProfit = withExitPrediction.Where(o => o.AIPrediction == PredictionUpLabel && o.ExitAIPrediction == PredictionSidewayLabel).Any()
+                        ? withExitPrediction.Where(o => o.AIPrediction == PredictionUpLabel && o.ExitAIPrediction == PredictionSidewayLabel).Average(o => o.Profit)
                         : 0
                 }
             };

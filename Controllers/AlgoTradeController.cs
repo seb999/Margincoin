@@ -46,6 +46,10 @@ namespace MarginCoin.Controllers
         private readonly ApplicationDbContext _appDbContext;
         private readonly ILogger _logger;
         private readonly IServiceScopeFactory _serviceScopeFactory;
+        private readonly LSTMPredictionService _predictionService;
+        private static readonly string PredictionUpLabel = MyEnum.PredictionDirection.Up.ToLabel();
+        private static readonly string PredictionDownLabel = MyEnum.PredictionDirection.Down.ToLabel();
+        private static readonly string PredictionSidewayLabel = MyEnum.PredictionDirection.Sideway.ToLabel();
 
         private List<MarketStream> buffer = new List<MarketStream>();
         private List<MarketStream> marketStreamOnSpot = new List<MarketStream>();
@@ -54,6 +58,7 @@ namespace MarginCoin.Controllers
         int i = 0;
 
         private readonly object candleMatrixLock = new object();
+        private readonly Dictionary<string, int> _lastTrendScores = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
 
         #endregion
 
@@ -74,7 +79,8 @@ namespace MarginCoin.Controllers
             ISymbolService symbolService,
             ITradingState tradingState,
             IOptions<TradingConfiguration> tradingConfig,
-            IServiceScopeFactory serviceScopeFactory)
+            IServiceScopeFactory serviceScopeFactory,
+            LSTMPredictionService predictionService)
         {
             _hub = hub;
             _appDbContext = appDbContext;
@@ -88,6 +94,7 @@ namespace MarginCoin.Controllers
             _tradingState = tradingState;
             _config = tradingConfig.Value;
             _serviceScopeFactory = serviceScopeFactory;
+            _predictionService = predictionService;
 
             // Configure binance service
             _binanceService.Interval = _config.Interval;
@@ -195,7 +202,7 @@ namespace MarginCoin.Controllers
                     if (mlPrediction != null && mlPrediction.Score != null && mlPrediction.Score.Length > 0)
                     {
                         exitAiScore = mlPrediction.Confidence;
-                        exitAiPrediction = mlPrediction.PredictedLabel?.ToLower() ?? "";
+                        exitAiPrediction = mlPrediction.PredictedLabel ?? string.Empty;
                     }
                 }
                 catch (Exception ex)
@@ -306,7 +313,8 @@ namespace MarginCoin.Controllers
                 {
                     symbol = symbol.SymbolName,
                     status = "connected",
-                    totalConnections = _webSocket.SymbolWebSockets.Count
+                    totalConnections = _webSocket.SymbolWebSockets.Count,
+                    interval = _config.Interval
                 }));
             }
             catch (Exception ex)
@@ -319,6 +327,10 @@ namespace MarginCoin.Controllers
         {
             // Validate inputs
             if (stream?.k == null || candleList == null) return;
+
+            bool trendScoreChanged = false;
+            List<Candle> candleSnapshot = null;
+            string symbolKey = stream.k.s;
 
             lock (candleMatrixLock)
             {
@@ -361,6 +373,15 @@ namespace MarginCoin.Controllers
                 // Only re-sort when candle closes (not on every tick)
                 if (stream.k.x)
                 {
+                    // Track trend score changes so we can trigger AI inference on change
+                    var trendScore = TradeHelper.CalculateTrendScore(candleList, _config.UseWeightedTrendScore);
+                    if (!_lastTrendScores.TryGetValue(symbolKey, out var previousScore) || previousScore != trendScore)
+                    {
+                        _lastTrendScores[symbolKey] = trendScore;
+                        trendScoreChanged = true;
+                        candleSnapshot = candleList.ToList();
+                    }
+
                     var orderedMatrix = _tradingState.CandleMatrix
                         .OrderByDescending(p => p.Count > 0 ? p[^1].P : 0)
                         .ToList();
@@ -379,6 +400,21 @@ namespace MarginCoin.Controllers
                         change = newCandle.P
                     }));
                 }
+            }
+
+            if (trendScoreChanged && candleSnapshot?.Count >= 50 && _predictionService != null)
+            {
+                _ = Task.Run(async () =>
+                {
+                    try
+                    {
+                        await _predictionService.PredictAsync(symbolKey, candleSnapshot);
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogDebug(ex, "AI prediction trigger failed for {Symbol}", symbolKey);
+                    }
+                });
             }
         }
 
@@ -459,7 +495,8 @@ namespace MarginCoin.Controllers
                 {
                     symbol = "SPOT",
                     status = "connected",
-                    message = "Market data streaming active"
+                    message = "Market data streaming active",
+                    interval = _config.Interval
                 }));
 
                 // Keep connection alive - do NOT disconnect
@@ -664,15 +701,15 @@ namespace MarginCoin.Controllers
             // Check if there are enough candles to perform consecutive green candle analysis
             if (symbolCandles.Count > _config.PrevCandleCount)
             {
-                // Check if previous candles are green (consecutive bullish candles)
-                for (int i = symbolCandles.Count - _config.PrevCandleCount; i < symbolCandles.Count; i++)
-                {
-                    if (TradeHelper.CandleColor(symbolCandles[i]) != "green" || symbolCandles[i].c <= symbolCandles[i - 1].c)
-                    {
-                        _logger.LogDebug("Entry rejected for {Symbol}: Not enough consecutive green candles", symbolSpot.s);
-                        return false;
-                    }
-                }
+                // // Check if previous candles are green (consecutive bullish candles)
+                // for (int i = symbolCandles.Count - _config.PrevCandleCount; i < symbolCandles.Count; i++)
+                // {
+                //     if (TradeHelper.CandleColor(symbolCandles[i]) != "green" || symbolCandles[i].c <= symbolCandles[i - 1].c)
+                //     {
+                //         _logger.LogDebug("Entry rejected for {Symbol}: Not enough consecutive green candles", symbolSpot.s);
+                //         return false;
+                //     }
+                // }
 
                 // Strong movement validation - check percentage increase
                 var percentChange = TradeHelper.CalculPourcentChange(symbolCandles, _config.PrevCandleCount);
@@ -691,7 +728,7 @@ namespace MarginCoin.Controllers
             if (mlPrediction != null)
             {
                 // Strong bearish signal from AI - veto the trade
-                if (mlPrediction.PredictedLabel == "down" && mlPrediction.Score[0] >= _config.AIVetoConfidence)
+                if (mlPrediction.PredictedLabel == PredictionDownLabel && mlPrediction.Score[0] >= _config.AIVetoConfidence)
                 {
                     _logger.LogInformation("Entry vetoed by AI for {Symbol}: Predicted DOWN with {Confidence}% confidence",
                         symbolSpot.s, mlPrediction.Score[0] * 100);
@@ -699,7 +736,7 @@ namespace MarginCoin.Controllers
                 }
 
                 // Optional: Weak AI confirmation (if available and predicts up, nice bonus but not required)
-                if (mlPrediction.PredictedLabel == "up" && mlPrediction.Score[1] >= _config.MinAIScore)
+                if (mlPrediction.PredictedLabel == PredictionUpLabel && mlPrediction.Score[1] >= _config.MinAIScore)
                 {
                     _logger.LogDebug("AI confirms entry for {Symbol} with {Confidence}% confidence",
                         symbolSpot.s, mlPrediction.Score[1] * 100);
@@ -799,10 +836,10 @@ namespace MarginCoin.Controllers
                 if (sellReason == null)
                 {
                     var mlPrediction = _mlService.MLPredList.FirstOrDefault(p => p.Symbol == activeOrder.Symbol);
-                    if (mlPrediction != null && mlPrediction.PredictedLabel == "down" && mlPrediction.Score[0] >= 0.97)
-                    {
-                        sellReason = $"AI exit signal (DOWN with {mlPrediction.Score[0] * 100:F1}% confidence)";
-                    }
+                if (mlPrediction != null && mlPrediction.PredictedLabel == PredictionDownLabel && mlPrediction.Score[0] >= 0.97)
+                {
+                    sellReason = $"AI exit signal (DOWN with {mlPrediction.Score[0] * 100:F1}% confidence)";
+                }
                 }
 
                 // Update order data if not selling
@@ -830,7 +867,7 @@ namespace MarginCoin.Controllers
                     if (mlPrediction != null && mlPrediction.Score != null && mlPrediction.Score.Length > 0)
                     {
                         exitAiScore = mlPrediction.Confidence;
-                        exitAiPrediction = mlPrediction.PredictedLabel?.ToLower() ?? "";
+                        exitAiPrediction = mlPrediction.PredictedLabel ?? string.Empty;
                     }
                 }
                 catch (Exception ex)
@@ -911,7 +948,7 @@ namespace MarginCoin.Controllers
                         if (mlPrediction != null && mlPrediction.Score != null && mlPrediction.Score.Length > 0)
                         {
                             exitAiScore = mlPrediction.Confidence;
-                            exitAiPrediction = mlPrediction.PredictedLabel?.ToLower() ?? "";
+                            exitAiPrediction = mlPrediction.PredictedLabel ?? string.Empty;
                         }
                     }
                     catch (Exception ex)

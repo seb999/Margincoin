@@ -100,5 +100,21 @@ export class SignalRService {
             let serverMsg: ServerMsg = { msgName: BackEndMessage.badRequest };
             return this.eventMessage.emit(serverMsg);
         });
+
+        this.hubConnection.on(BackEndMessage.websocketStatus, (data) => {
+            let serverMsg: ServerMsg = {
+                msgName: BackEndMessage.websocketStatus,
+                data
+            };
+            return this.eventMessage.emit(serverMsg);
+        });
+
+        this.hubConnection.on(BackEndMessage.candleUpdate, (data) => {
+            let serverMsg: ServerMsg = {
+                msgName: BackEndMessage.candleUpdate,
+                data
+            };
+            return this.eventMessage.emit(serverMsg);
+        });
     }
 }
