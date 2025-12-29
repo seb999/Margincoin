@@ -367,20 +367,25 @@ namespace MarginCoin.Controllers
                         TradeHelper.CalculateMacdSlope(candleList, _config.Interval).Slope;
                 }
 
+                // Calculate Trend Score on every tick (very cheap: O(1) comparisons only)
+                // This ensures portfolio always shows current TS and system is ready immediately
+                var trendScore = TradeHelper.CalculateTrendScore(candleList, _config.UseWeightedTrendScore);
+
+                // Track TS changes to trigger AI predictions only when score actually changes
+                if (!_lastTrendScores.TryGetValue(symbolKey, out var previousScore) || previousScore != trendScore)
+                {
+                    _lastTrendScores[symbolKey] = trendScore;
+                    trendScoreChanged = true;
+                    candleSnapshot = candleList.ToList();
+                    _logger.LogDebug("TS changed for {Symbol}: {Previous} → {New}", symbolKey, previousScore, trendScore);
+                }
+
                 // Note: candleList is already a reference to the list in _tradingState.CandleMatrix
                 // so modifications are already persisted. No need to replace.
 
                 // Only re-sort when candle closes (not on every tick)
                 if (stream.k.x)
                 {
-                    // Track trend score changes so we can trigger AI inference on change
-                    var trendScore = TradeHelper.CalculateTrendScore(candleList, _config.UseWeightedTrendScore);
-                    if (!_lastTrendScores.TryGetValue(symbolKey, out var previousScore) || previousScore != trendScore)
-                    {
-                        _lastTrendScores[symbolKey] = trendScore;
-                        trendScoreChanged = true;
-                        candleSnapshot = candleList.ToList();
-                    }
 
                     var orderedMatrix = _tradingState.CandleMatrix
                         .OrderByDescending(p => p.Count > 0 ? p[^1].P : 0)
@@ -434,8 +439,7 @@ namespace MarginCoin.Controllers
             _webSocket.ws1.OnMessageReceived(
                  (data) =>
                  {
-                     _logger.LogWarning("Data: {Data}", data?.Substring(0, Math.Min(100, data?.Length ?? 0)));
-                     _logger.LogDebug("Spot WebSocket received data, length: {Length}", data?.Length ?? 0);
+                     _logger.LogWarning("Spot WebSocket received data, length: {Length}", data?.Length ?? 0);
                      dataResult.Append(data);
                      var fullData = dataResult.ToString();
                      _logger.LogDebug("Full data length: {Length}, Contains }}]: {Contains}", fullData.Length, fullData.Contains("}]"));
@@ -847,9 +851,9 @@ namespace MarginCoin.Controllers
                 {
                     // Reload only the required properties
                     dbContext.Entry(activeOrder).Reload();
-                    orderService.UpdateTakeProfit(symbolCandleList, activeOrder, _config.TakeProfitPercentage);
+                    // Use atomic update to prevent race conditions between HighPrice and TakeProfit
+                    orderService.UpdateOrderPriceTracking(symbolCandleList, activeOrder, _config.TakeProfitPercentage);
                     orderService.UpdateStopLoss(symbolCandleList, activeOrder);
-                    orderService.SaveHighLow(symbolCandleList, activeOrder);
                 }
             }
 

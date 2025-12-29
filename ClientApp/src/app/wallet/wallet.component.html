@@ -229,12 +229,15 @@
           <tbody class="divide-y divide-gray-700/50">
             <tr *ngFor="let order of filteredOrderList"
                 class="group hover:bg-gray-700/30 transition-all duration-150"
+                [style.border-left]="
+                  order.status !== 'FILLED' ? '4px solid #ef4444' :
+                  (!order.isClosed || order.isClosed === 0) ? '4px solid #f59e0b' :
+                  '4px solid #10b981'"
                 [ngClass]="{
-                  'bg-amber-500/10 border-l-[6px] border-l-amber-400': !order.isClosed || order.isClosed === 0,
-                  'bg-emerald-500/10 border-l-[6px] border-l-emerald-400': order.isClosed === 1 || order.isClosed == 1,
-                  'bg-red-500/5 border-l-[6px]': order.status !== 'FILLED'
-                }"
-                [style.border-left-color]="!order.isClosed ? '#fbbf24' : '#34d399'">
+                  'bg-red-500/5': order.status !== 'FILLED',
+                  'bg-amber-500/5': order.status === 'FILLED' && (!order.isClosed || order.isClosed === 0),
+                  'bg-emerald-500/5': order.isClosed === 1 || order.isClosed == 1
+                }">
               <td class="px-3 py-2">
                 <span class="font-semibold text-white text-sm">{{order.symbol.replace('USDC', '')}}</span>
                 <span class="text-gray-500 text-xs">/USDC</span>

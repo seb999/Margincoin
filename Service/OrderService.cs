@@ -6,6 +6,7 @@ using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using MarginCoin.Misc;
 using System;
+using System.Globalization;
 using System.Text.Json;
 using Microsoft.AspNetCore.SignalR;
 using System.Threading.Tasks;
@@ -19,6 +20,7 @@ namespace MarginCoin.Service
         void SaveHighLow(List<Candle> symbolCandles, Order activeOrder);
         List<Order> GetActiveOrder();
         void UpdateTakeProfit(List<Candle> symbolCandle, Order activeOrder, double takeProfitPercentage);
+        void UpdateOrderPriceTracking(List<Candle> symbolCandles, Order activeOrder, double takeProfitPercentage);
         void UpdateStopLoss(List<Candle> symbolCandles, Order activeOrder);
         void SaveBuyOrderDb(MarketStream symbolSpot, List<Candle> symbolCandle, BinanceOrder binanceOrder, double aiScore = 0, string aiPrediction = "");
         void CloseOrderDb(Order dbOrder, BinanceOrder binanceOrder, double exitAiScore = 0, string exitAiPrediction = "");
@@ -73,11 +75,17 @@ namespace MarginCoin.Service
 
     public void UpdateTakeProfit(List<Candle> symbolCandles, Order dbOrder, double takeProfitPercentage)
     {
+        // Deprecated: Use UpdateOrderPriceTracking instead for atomic updates
+        // Keeping for backward compatibility but logging warning
+        _logger.LogWarning("UpdateTakeProfit called directly - consider using UpdateOrderPriceTracking for atomic updates");
+
         try
         {
-            if (symbolCandles.Last().c > dbOrder.HighPrice)
+            var currentHigh = Math.Max(symbolCandles.Last().c, symbolCandles.Last().h);
+            if (currentHigh > dbOrder.HighPrice)
             {
-                dbOrder.TakeProfit = dbOrder.HighPrice * (1 - (takeProfitPercentage / 100));
+                dbOrder.HighPrice = currentHigh;
+                dbOrder.TakeProfit = currentHigh * (1 - (takeProfitPercentage / 100));
                 _appDbContext.Order.Update(dbOrder);
                 _appDbContext.SaveChanges();
             }
@@ -90,20 +98,26 @@ namespace MarginCoin.Service
 
     public void SaveHighLow(List<Candle> symbolCandles, Order dbOrder)
     {
+        // Deprecated: Use UpdateOrderPriceTracking instead for atomic updates
+        // Keeping for backward compatibility but logging warning
+        _logger.LogWarning("SaveHighLow called directly - consider using UpdateOrderPriceTracking for atomic updates");
+
         try
         {
-            dbOrder.ClosePrice = symbolCandles.Last().c;
+            var lastCandle = symbolCandles.Last();
+            dbOrder.ClosePrice = lastCandle.c;
 
-            //Update High
-            if (symbolCandles.Last().c > dbOrder.HighPrice)
+            // Use candle high (h) for more accurate peak tracking
+            var currentHigh = Math.Max(lastCandle.c, lastCandle.h);
+            if (currentHigh > dbOrder.HighPrice)
             {
-                dbOrder.HighPrice = symbolCandles.Last().c;
+                dbOrder.HighPrice = currentHigh;
             }
 
-            //Update Low
-            if (symbolCandles.Last().c < dbOrder.LowPrice)
+            // Update Low
+            if (lastCandle.c < dbOrder.LowPrice)
             {
-                dbOrder.LowPrice = symbolCandles.Last().c;
+                dbOrder.LowPrice = lastCandle.c;
             }
 
             _appDbContext.Order.Update(dbOrder);
@@ -112,6 +126,44 @@ namespace MarginCoin.Service
         catch (System.Exception ex)
         {
             _logger.LogError(ex, "Failed to save high/low for order {OrderId} symbol {Symbol}", dbOrder.Id, dbOrder.Symbol);
+        }
+    }
+
+    public void UpdateOrderPriceTracking(List<Candle> symbolCandles, Order dbOrder, double takeProfitPercentage)
+    {
+        try
+        {
+            var lastCandle = symbolCandles.Last();
+
+            // Always update close price
+            dbOrder.ClosePrice = lastCandle.c;
+
+            // Use candle high (h) for accurate peak tracking - prevents missing intra-candle highs
+            var currentHigh = Math.Max(lastCandle.c, lastCandle.h);
+
+            // Update HighPrice and TakeProfit atomically when new high is reached
+            if (currentHigh > dbOrder.HighPrice)
+            {
+                dbOrder.HighPrice = currentHigh;
+                dbOrder.TakeProfit = currentHigh * (1 - (takeProfitPercentage / 100));
+                _logger.LogDebug("Updated HighPrice to {High} and TakeProfit to {TP} for {Symbol}",
+                    currentHigh, dbOrder.TakeProfit, dbOrder.Symbol);
+            }
+
+            // Update LowPrice
+            if (lastCandle.c < dbOrder.LowPrice)
+            {
+                dbOrder.LowPrice = lastCandle.c;
+            }
+
+            // Single atomic save - prevents race conditions
+            _appDbContext.Order.Update(dbOrder);
+            _appDbContext.SaveChanges();
+        }
+        catch (System.Exception ex)
+        {
+            _logger.LogError(ex, "Failed to update order price tracking for {OrderId} symbol {Symbol}",
+                dbOrder.Id, dbOrder.Symbol);
         }
     }
 
@@ -145,6 +197,7 @@ namespace MarginCoin.Service
     {
         _logger.LogInformation("Opening trade for {Symbol} - OrderId: {OrderId}", binanceOrder.symbol, binanceOrder.orderId);
         var entryTrendScore = TradeHelper.CalculateTrendScore(symbolCandle, _config.UseWeightedTrendScore);
+        var openPrice = TradeHelper.CalculateAvragePrice(binanceOrder);
         Order myOrder = new Order
         {
             BuyOrderId = binanceOrder.orderId,
@@ -153,12 +206,12 @@ namespace MarginCoin.Service
             Side = binanceOrder.side,
             OrderDate = DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss"),
             OpenDate = DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss"),
-            OpenPrice = TradeHelper.CalculateAvragePrice(binanceOrder),
-            LowPrice = TradeHelper.CalculateAvragePrice(binanceOrder),
-            TakeProfit = TradeHelper.CalculateAvragePrice(binanceOrder) * (1 - (_config.TakeProfitPercentage / 100)),
-            StopLose = TradeHelper.CalculateAvragePrice(binanceOrder) * (1 - (_config.StopLossPercentage / 100)),
+            OpenPrice = openPrice,
+            LowPrice = openPrice,
+            TakeProfit = openPrice * (1 - (_config.TakeProfitPercentage / 100)),
+            StopLose = openPrice * (1 - (_config.StopLossPercentage / 100)),
             ClosePrice = 0,
-            HighPrice = 0,
+            HighPrice = openPrice,
             Volume = symbolSpot.v,
             QuantityBuy = Helper.ToDouble(binanceOrder.executedQty),
             QuantitySell = 0,
@@ -282,6 +335,16 @@ namespace MarginCoin.Service
 
     public async Task BuyLimit(MarketStream symbolSpot, List<Candle> symbolCandleList, double aiScore = 0, string aiPrediction = "")
     {
+        // Check available USDC balance before placing order
+        var availableBalance = GetAvailableUSDCBalance();
+        if (availableBalance < _config.QuoteOrderQty)
+        {
+            _logger.LogWarning("Insufficient USDC balance for {Symbol}. Required: {Required} USDC, Available: {Available} USDC. Skipping trade.",
+                symbolSpot.s, _config.QuoteOrderQty, availableBalance);
+            _tradingState.OnHold.Remove(symbolSpot.s);
+            return;
+        }
+
         var (nbrDecimalPrice, nbrDecimalQty) = GetOrderParameters(symbolSpot);
         var price = Math.Round(symbolSpot.c * (1 + _config.OrderOffset / 100), nbrDecimalPrice);
         var qty = Math.Round(_config.QuoteOrderQty / price, nbrDecimalQty);
@@ -327,6 +390,16 @@ namespace MarginCoin.Service
 
     public async Task BuyMarket(MarketStream symbolSpot, List<Candle> symbolCandleList, double aiScore = 0, string aiPrediction = "")
     {
+        // Check available USDC balance before placing order
+        var availableBalance = GetAvailableUSDCBalance();
+        if (availableBalance < _config.QuoteOrderQty)
+        {
+            _logger.LogWarning("Insufficient USDC balance for {Symbol}. Required: {Required} USDC, Available: {Available} USDC. Skipping trade.",
+                symbolSpot.s, _config.QuoteOrderQty, availableBalance);
+            _tradingState.OnHold.Remove(symbolSpot.s);
+            return;
+        }
+
         BinanceOrder myBinanceOrder = _binanceService.BuyMarket(symbolSpot.s, _config.QuoteOrderQty);
 
         if (myBinanceOrder == null)
@@ -400,6 +473,33 @@ namespace MarginCoin.Service
         var nbrDecimalPrice = Helper.GetNumberDecimal(ticker.symbols[0].filters[0].tickSize);
         var nbrDecimalQty = Helper.GetNumberDecimal(ticker.symbols[0].filters[1].stepSize);
         return (nbrDecimalPrice, nbrDecimalQty);
+    }
+
+    private double GetAvailableUSDCBalance()
+    {
+        try
+        {
+            var account = _binanceService.Account();
+            if (account?.balances == null)
+            {
+                _logger.LogWarning("Failed to retrieve account balance - account or balances is null");
+                return 0;
+            }
+
+            var usdcBalance = account.balances.FirstOrDefault(b => b.asset == "USDC");
+            if (usdcBalance != null && double.TryParse(usdcBalance.free, NumberStyles.Any, CultureInfo.InvariantCulture, out double balance))
+            {
+                return balance;
+            }
+
+            _logger.LogWarning("USDC balance not found in account");
+            return 0;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to retrieve USDC balance");
+            return 0;
+        }
     }
 
     #endregion
