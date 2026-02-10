@@ -1,88 +1,278 @@
-<div class="max-w-4xl mx-auto p-4 space-y-4">
+<div class="max-w-6xl mx-auto p-4 space-y-4">
   <div class="flex items-center justify-between">
-    <h1 class="text-lg font-semibold text-white">Trading Settings</h1>
-    <button class="px-3 py-1.5 text-xs font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-lg shadow" (click)="load()">
+    <div>
+      <h1 class="text-lg font-semibold text-[#EAECEF]">Trading Settings</h1>
+      <p class="text-xs text-[#848E9C] mt-1">Runtime settings can be adjusted without restart. Static settings require editing appsettings.json.</p>
+    </div>
+    <button class="px-3 py-1.5 text-xs font-semibold text-[#0B0E11] bg-[#FCD535] hover:bg-[#F0B90B] rounded transition-colors" (click)="load()">
       Reload
     </button>
   </div>
 
-  <div *ngIf="error" class="px-3 py-2 text-sm text-red-200 bg-red-500/10 border border-red-500/40 rounded">
+  <div *ngIf="error" class="px-3 py-2 text-sm text-[#F6465D] bg-[#2B1215] border border-[#5E3A3A] rounded">
     {{error}}
   </div>
-  <div *ngIf="message" class="px-3 py-2 text-sm text-emerald-200 bg-emerald-500/10 border border-emerald-500/40 rounded">
+  <div *ngIf="message" class="px-3 py-2 text-sm text-[#0ECB81] bg-[#0E2419] border border-[#2B4A3D] rounded">
     {{message}}
   </div>
 
-  <div *ngIf="settings" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-    <div class="bg-gray-900/70 border border-gray-800 rounded-lg p-4 space-y-3">
-      <h3 class="text-xs uppercase tracking-wider text-gray-400">Core</h3>
-      <label class="block text-sm text-gray-200">Interval
-        <input class="mt-1 w-full px-3 py-2 rounded bg-gray-800 border border-gray-700 text-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
-               [(ngModel)]="settings.interval">
-      </label>
-      <label class="block text-sm text-gray-200">Order Size (Quote)
-        <input type="number" class="mt-1 w-full px-3 py-2 rounded bg-gray-800 border border-gray-700 text-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
-               [(ngModel)]="settings.quoteOrderQty">
-      </label>
-      <div class="grid grid-cols-2 gap-3">
-        <label class="block text-sm text-gray-200">Max Open Trades
-          <input type="number" class="mt-1 w-full px-3 py-2 rounded bg-gray-800 border border-gray-700 text-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
+  <!-- Runtime Settings (Editable) -->
+  <div *ngIf="settings" class="space-y-4">
+    <div class="flex items-center gap-2">
+      <h2 class="text-md font-semibold text-[#EAECEF]">Runtime Settings</h2>
+      <span class="px-2 py-0.5 text-xs font-medium bg-[#0E2419] text-[#0ECB81] rounded border border-[#2B4A3D]">Editable</span>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div class="bg-[#181A20] border border-[#2B3139] rounded p-4 space-y-3">
+        <h3 class="text-xs uppercase tracking-wider text-[#848E9C]">Core Trading</h3>
+        <label class="block text-sm text-[#EAECEF]">Order Size (Quote)
+          <span class="ml-1 text-[#848E9C]" title="How much quote currency (USDC) to spend per entry.">?</span>
+          <input type="number" class="mt-1 w-full px-3 py-2 rounded bg-[#0B0E11] border border-[#2B3139] text-[#EAECEF] focus:border-[#FCD535] focus:outline-none transition-colors"
+                 [(ngModel)]="settings.quoteOrderQty">
+        </label>
+        <label class="block text-sm text-[#EAECEF]">Max Open Trades
+          <span class="ml-1 text-[#848E9C]" title="Maximum simultaneous positions allowed.">?</span>
+          <input type="number" class="mt-1 w-full px-3 py-2 rounded bg-[#0B0E11] border border-[#2B3139] text-[#EAECEF] focus:border-[#FCD535] focus:outline-none transition-colors"
                  [(ngModel)]="settings.maxOpenTrades">
         </label>
-        <label class="block text-sm text-gray-200">Symbols Traded
-          <input type="number" class="mt-1 w-full px-3 py-2 rounded bg-gray-800 border border-gray-700 text-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
-                 [(ngModel)]="settings.numberOfSymbols">
+      </div>
+
+      <div class="bg-[#181A20] border border-[#2B3139] rounded p-4 space-y-3">
+        <h3 class="text-xs uppercase tracking-wider text-[#848E9C]">Risk Management</h3>
+        <div class="grid grid-cols-2 gap-3">
+          <label class="block text-sm text-[#EAECEF]">Stop Loss (%)
+            <span class="ml-1 text-[#848E9C]" title="Initial stop loss distance from entry price.">?</span>
+            <input type="number" step="0.1" class="mt-1 w-full px-3 py-2 rounded bg-[#0B0E11] border border-[#2B3139] text-[#EAECEF] focus:border-[#F6465D] focus:outline-none transition-colors"
+                   [(ngModel)]="settings.stopLossPercentage">
+          </label>
+          <label class="block text-sm text-[#EAECEF]">Take Profit (%)
+            <span class="ml-1 text-[#848E9C]" title="Distance below high-water mark where partial/exit is set.">?</span>
+            <input type="number" step="0.1" class="mt-1 w-full px-3 py-2 rounded bg-[#0B0E11] border border-[#2B3139] text-[#EAECEF] focus:border-[#0ECB81] focus:outline-none transition-colors"
+                   [(ngModel)]="settings.takeProfitPercentage">
+          </label>
+        </div>
+        <label class="block text-sm text-[#EAECEF]">Time Based Kill (minutes)
+          <span class="ml-1 text-[#848E9C]" title="Auto-exit if price never moves above entry after this many minutes.">?</span>
+          <input type="number" class="mt-1 w-full px-3 py-2 rounded bg-[#0B0E11] border border-[#2B3139] text-[#EAECEF] focus:border-[#FCD535] focus:outline-none transition-colors"
+                 [(ngModel)]="settings.timeBasedKillMinutes">
         </label>
       </div>
-    </div>
 
-    <div class="bg-gray-900/70 border border-gray-800 rounded-lg p-4 space-y-3">
-      <h3 class="text-xs uppercase tracking-wider text-gray-400">Risk</h3>
-      <div class="grid grid-cols-2 gap-3">
-        <label class="block text-sm text-gray-200">Stop Loss (%)
-          <input type="number" step="0.1" class="mt-1 w-full px-3 py-2 rounded bg-gray-800 border border-gray-700 text-white focus:border-red-500 focus:ring-2 focus:ring-red-500/20"
-                 [(ngModel)]="settings.stopLossPercentage">
+      <div class="bg-[#181A20] border border-[#2B3139] rounded p-4 space-y-3">
+        <h3 class="text-xs uppercase tracking-wider text-[#848E9C]">Dynamic Stop Loss</h3>
+        <label class="inline-flex items-center gap-2 text-sm text-[#EAECEF]">
+          <input type="checkbox" class="w-4 h-4 text-[#0ECB81] rounded border-[#2B3139] bg-[#0B0E11]" [(ngModel)]="settings.enableDynamicStopLoss">
+          Enable Dynamic Stop Loss
+          <span class="text-[#848E9C] text-xs" title="Enables trailing stop loss and weak trend tightening.">?</span>
         </label>
-        <label class="block text-sm text-gray-200">Take Profit Trail (%)
-          <input type="number" step="0.1" class="mt-1 w-full px-3 py-2 rounded bg-gray-800 border border-gray-700 text-white focus:border-green-500 focus:ring-2 focus:ring-green-500/20"
-                 [(ngModel)]="settings.takeProfitPercentage">
+        <label class="block text-sm text-[#EAECEF]">Trailing Stop (%)
+          <span class="ml-1 text-[#848E9C]" title="Stop loss trails this % below the highest price reached. Locks in profits as price rises.">?</span>
+          <input type="number" step="0.1" class="mt-1 w-full px-3 py-2 rounded bg-[#0B0E11] border border-[#2B3139] text-[#EAECEF] focus:border-[#0ECB81] focus:outline-none transition-colors"
+                 [(ngModel)]="settings.trailingStopPercentage">
+        </label>
+        <label class="block text-sm text-[#EAECEF]">Weak Trend Stop Loss (%)
+          <span class="ml-1 text-[#848E9C]" title="Percentage to tighten stop loss when trend weakens (separate from trailing).">?</span>
+          <input type="number" step="0.1" class="mt-1 w-full px-3 py-2 rounded bg-[#0B0E11] border border-[#2B3139] text-[#EAECEF] focus:border-[#FCD535] focus:outline-none transition-colors"
+                 [(ngModel)]="settings.weakTrendStopLossPercentage">
         </label>
       </div>
-      <label class="block text-sm text-gray-200">Order Offset (%)
-        <input type="number" step="0.01" class="mt-1 w-full px-3 py-2 rounded bg-gray-800 border border-gray-700 text-white focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20"
-               [(ngModel)]="settings.orderOffset">
-      </label>
-      <label class="block text-sm text-gray-200">Time Based Kill (minutes)
-        <input type="number" class="mt-1 w-full px-3 py-2 rounded bg-gray-800 border border-gray-700 text-white focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20"
-               [(ngModel)]="settings.timeBasedKillMinutes">
-      </label>
-    </div>
 
-    <div class="bg-gray-900/70 border border-gray-800 rounded-lg p-4 space-y-3">
-      <h3 class="text-xs uppercase tracking-wider text-gray-400">Entry Filters</h3>
-      <label class="block text-sm text-gray-200">Min Move Up (%)
-        <input type="number" step="0.01" class="mt-1 w-full px-3 py-2 rounded bg-gray-800 border border-gray-700 text-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
-               [(ngModel)]="settings.minPercentageUp">
-      </label>
-      <div class="grid grid-cols-2 gap-3">
-        <label class="block text-sm text-gray-200">RSI Min
-          <input type="number" class="mt-1 w-full px-3 py-2 rounded bg-gray-800 border border-gray-700 text-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
-                 [(ngModel)]="settings.minRSI">
+      <div class="bg-[#181A20] border border-[#2B3139] rounded p-4 space-y-3">
+        <h3 class="text-xs uppercase tracking-wider text-[#848E9C]">Aggressive Replacement</h3>
+        <label class="inline-flex items-center gap-2 text-sm text-[#EAECEF]">
+          <input type="checkbox" class="w-4 h-4 text-[#0ECB81] rounded border-[#2B3139] bg-[#0B0E11]" [(ngModel)]="settings.enableAggressiveReplacement">
+          Enable Aggressive Replacement
+          <span class="text-[#848E9C] text-xs" title="When at max trades, allow closing the weakest position to enter a stronger surge candidate.">?</span>
         </label>
-        <label class="block text-sm text-gray-200">RSI Max
-          <input type="number" class="mt-1 w-full px-3 py-2 rounded bg-gray-800 border border-gray-700 text-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
-                 [(ngModel)]="settings.maxRSI">
+        <div class="grid grid-cols-2 gap-3">
+          <label class="block text-sm text-[#EAECEF]">Surge Threshold
+            <span class="ml-1 text-[#848E9C]" title="Minimum surge score before a new symbol can trigger replacement.">?</span>
+            <input type="number" step="0.1" class="mt-1 w-full px-3 py-2 rounded bg-[#0B0E11] border border-[#2B3139] text-[#EAECEF] focus:border-[#FCD535] focus:outline-none transition-colors"
+                   [(ngModel)]="settings.surgeScoreThreshold">
+          </label>
+          <label class="block text-sm text-[#EAECEF]">Gap (ratio)
+            <span class="ml-1 text-[#848E9C]" title="How much stronger the new surge must be versus the weakest open trade (e.g., 0.25 = 25% better).">?</span>
+            <input type="number" step="0.05" class="mt-1 w-full px-3 py-2 rounded bg-[#0B0E11] border border-[#2B3139] text-[#EAECEF] focus:border-[#FCD535] focus:outline-none transition-colors"
+                   [(ngModel)]="settings.replacementScoreGap">
+          </label>
+        </div>
+        <div class="grid grid-cols-3 gap-3">
+          <label class="block text-sm text-[#EAECEF]">Cooldown (s)
+            <span class="ml-1 text-[#848E9C]" title="Minimum seconds between replacements involving the same symbols.">?</span>
+            <input type="number" class="mt-1 w-full px-3 py-2 rounded bg-[#0B0E11] border border-[#2B3139] text-[#EAECEF] focus:border-[#FCD535] focus:outline-none transition-colors"
+                   [(ngModel)]="settings.replacementCooldownSeconds">
+          </label>
+          <label class="block text-sm text-[#EAECEF]">Max/Hour
+            <span class="ml-1 text-[#848E9C]" title="Hard cap on replacements per rolling hour.">?</span>
+            <input type="number" class="mt-1 w-full px-3 py-2 rounded bg-[#0B0E11] border border-[#2B3139] text-[#EAECEF] focus:border-[#FCD535] focus:outline-none transition-colors"
+                   [(ngModel)]="settings.maxReplacementsPerHour">
+          </label>
+          <label class="block text-sm text-[#EAECEF]">Depth
+            <span class="ml-1 text-[#848E9C]" title="How many top-ranked symbols to scan for surges.">?</span>
+            <input type="number" class="mt-1 w-full px-3 py-2 rounded bg-[#0B0E11] border border-[#2B3139] text-[#EAECEF] focus:border-[#FCD535] focus:outline-none transition-colors"
+                   [(ngModel)]="settings.maxCandidateDepth">
+          </label>
+        </div>
+      </div>
+
+      <div class="bg-[#181A20] border border-[#2B3139] rounded p-4 space-y-3">
+        <h3 class="text-xs uppercase tracking-wider text-[#848E9C]">AI/ML Features</h3>
+        <label class="inline-flex items-center gap-2 text-sm text-[#EAECEF]">
+          <input type="checkbox" class="w-4 h-4 text-[#0ECB81] rounded border-[#2B3139] bg-[#0B0E11]" [(ngModel)]="settings.enableMLPredictions">
+          Enable LSTM ML Predictions
+          <span class="text-[#848E9C] text-xs" title="Uses LSTM neural network for price predictions. Requires ML service running on localhost:5000.">?</span>
         </label>
+        <label class="inline-flex items-center gap-2 text-sm text-[#EAECEF]">
+          <input type="checkbox" class="w-4 h-4 text-[#0ECB81] rounded border-[#2B3139] bg-[#0B0E11]" [(ngModel)]="settings.enableOpenAISignals">
+          Enable OpenAI Signals
+          <span class="text-[#848E9C] text-xs" title="Uses OpenAI API for advanced trading signal analysis. Requires OpenAI service running on localhost:8000.">?</span>
+        </label>
+        <div class="text-xs text-[#848E9C] mt-2 p-2 bg-[#0B0E11] rounded border border-[#2B3139]">
+          <strong>Note:</strong> Disabling these features will skip AI analysis and prevent connection errors if services are not running.
+        </div>
       </div>
     </div>
   </div>
 
-  <div class="flex items-center justify-end gap-3">
-    <button class="px-4 py-2 text-sm font-semibold text-white bg-gray-700 hover:bg-gray-600 rounded-lg" (click)="load()" [disabled]="saving">
-      Reset
+  <!-- Static Settings (Read-Only) -->
+  <div *ngIf="staticConfig" class="space-y-4">
+    <div class="flex items-center gap-2">
+      <h2 class="text-md font-semibold text-[#EAECEF]">Static Configuration</h2>
+      <span class="px-2 py-0.5 text-xs font-medium bg-[#2B3139] text-[#848E9C] rounded border border-[#2B3139]">Read-Only</span>
+      <span class="text-xs text-[#848E9C]">(Edit appsettings.json to change)</span>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div class="bg-[#181A20] border border-[#2B3139] rounded p-4 space-y-3 opacity-75">
+        <h3 class="text-xs uppercase tracking-wider text-[#848E9C]">Basic Settings</h3>
+        <div class="space-y-2 text-sm">
+          <div class="flex justify-between"><span class="text-[#848E9C]">Interval:</span><span class="text-[#EAECEF] font-mono">{{staticConfig.interval}}</span></div>
+          <div class="flex justify-between"><span class="text-[#848E9C]">Max Candles:</span><span class="text-[#EAECEF] font-mono">{{staticConfig.maxCandle}}</span></div>
+          <div class="flex justify-between"><span class="text-[#848E9C]">Number of Symbols:</span><span class="text-[#EAECEF] font-mono">{{staticConfig.numberOfSymbols}}</span></div>
+          <div class="flex justify-between"><span class="text-[#848E9C]">Order Offset (%):</span><span class="text-[#EAECEF] font-mono">{{staticConfig.orderOffset}}</span></div>
+          <div class="flex justify-between"><span class="text-[#848E9C]">Prev Candle Count:</span><span class="text-[#EAECEF] font-mono">{{staticConfig.prevCandleCount}}</span></div>
+        </div>
+      </div>
+
+      <div class="bg-[#181A20] border border-[#2B3139] rounded p-4 space-y-3 opacity-75">
+        <h3 class="text-xs uppercase tracking-wider text-[#848E9C]">Entry Logic</h3>
+        <div class="space-y-2 text-sm">
+          <div class="flex justify-between"><span class="text-[#848E9C]">Min Consecutive Up:</span><span class="text-[#EAECEF] font-mono">{{staticConfig.minConsecutiveUpSymbols}}</span></div>
+          <div class="flex justify-between"><span class="text-[#848E9C]">Max Spread Override (%):</span><span class="text-[#EAECEF] font-mono">{{staticConfig.maxSpreadOverride}}</span></div>
+          <div class="flex justify-between"><span class="text-[#848E9C]">Min AI Score:</span><span class="text-[#EAECEF] font-mono">{{staticConfig.minAIScore}}</span></div>
+          <div class="flex justify-between"><span class="text-[#848E9C]">Min Percentage Up (%):</span><span class="text-[#EAECEF] font-mono">{{staticConfig.minPercentageUp}}</span></div>
+          <div class="flex justify-between"><span class="text-[#848E9C]">RSI Range:</span><span class="text-[#EAECEF] font-mono">{{staticConfig.minRSI}} - {{staticConfig.maxRSI}}</span></div>
+        </div>
+      </div>
+
+      <div class="bg-[#181A20] border border-[#2B3139] rounded p-4 space-y-3 opacity-75">
+        <h3 class="text-xs uppercase tracking-wider text-[#848E9C]">Trend Analysis</h3>
+        <div class="space-y-2 text-sm">
+          <div class="flex justify-between"><span class="text-[#848E9C]">Min Trend Score Entry:</span><span class="text-[#EAECEF] font-mono">{{staticConfig.minTrendScoreForEntry}}</span></div>
+          <div class="flex justify-between"><span class="text-[#848E9C]">Trend Exit Threshold:</span><span class="text-[#EAECEF] font-mono">{{staticConfig.trendScoreExitThreshold}}</span></div>
+          <div class="flex justify-between"><span class="text-[#848E9C]">Weighted Trend Score:</span><span class="text-[#EAECEF] font-mono">{{staticConfig.useWeightedTrendScore ? 'Yes' : 'No'}}</span></div>
+          <div class="flex justify-between"><span class="text-[#848E9C]">AI Veto Confidence:</span><span class="text-[#EAECEF] font-mono">{{staticConfig.aiVetoConfidence}}</span></div>
+        </div>
+      </div>
+
+      <div class="bg-[#181A20] border border-[#2B3139] rounded p-4 space-y-3 opacity-75">
+        <h3 class="text-xs uppercase tracking-wider text-[#848E9C]">Advanced</h3>
+        <div class="space-y-2 text-sm">
+          <div class="flex justify-between"><span class="text-[#848E9C]">Spot Ticker Stream:</span><span class="text-[#EAECEF] font-mono text-xs">{{staticConfig.spotTickerTime}}</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Action Buttons -->
+  <div class="flex items-center justify-between gap-3 border-t border-[#2B3139] pt-4">
+    <button class="px-4 py-2 text-sm font-semibold text-[#474D57] bg-[#181A20] hover:bg-[#2B3139] border border-[#2B3139] rounded transition-colors" (click)="loadDiagnostics()">
+      Memory Diagnostics
     </button>
-    <button class="px-4 py-2 text-sm font-semibold text-white bg-emerald-600 hover:bg-emerald-700 rounded-lg shadow" (click)="save()" [disabled]="saving">
-      {{ saving ? 'Saving...' : 'Save' }}
+    <div class="flex gap-3">
+      <button class="px-4 py-2 text-sm font-semibold text-[#EAECEF] bg-[#2B3139] hover:bg-[#474D57] rounded transition-colors" (click)="load()" [disabled]="saving">
+        Reset
+      </button>
+      <button class="px-4 py-2 text-sm font-semibold text-[#0B0E11] bg-[#FCD535] hover:bg-[#F0B90B] rounded transition-colors disabled:opacity-50 disabled:cursor-not-allowed" (click)="save()" [disabled]="saving">
+        {{ saving ? 'Saving...' : 'Save Runtime Settings' }}
+      </button>
+    </div>
+  </div>
+
+  <!-- Memory Diagnostics Panel -->
+  <div *ngIf="showDiagnostics && diagnostics" class="bg-[#181A20] border border-[#2B3139] rounded p-4 space-y-4">
+    <div class="flex items-center justify-between">
+      <h2 class="text-md font-semibold text-[#EAECEF]">Memory Diagnostics</h2>
+      <button class="text-xs text-[#848E9C] hover:text-[#EAECEF]" (click)="showDiagnostics = false">Close</button>
+    </div>
+    <div class="text-xs text-[#848E9C]">Last updated: {{diagnostics.timestamp | date:'short'}}</div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div class="bg-[#0B0E11] border border-[#2B3139] rounded p-3 space-y-2">
+        <h3 class="text-xs uppercase tracking-wider text-[#848E9C]">Collections</h3>
+        <div class="space-y-1 text-sm">
+          <div class="flex justify-between">
+            <span class="text-[#848E9C]">Candle Matrix Symbols:</span>
+            <span class="text-[#EAECEF] font-mono">{{diagnostics.collections.candleMatrix.symbolCount}}</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-[#848E9C]">Total Candles:</span>
+            <span class="text-[#EAECEF] font-mono">{{diagnostics.collections.candleMatrix.totalCandles}}</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-[#848E9C]">Avg Candles/Symbol:</span>
+            <span class="text-[#EAECEF] font-mono">{{diagnostics.collections.candleMatrix.avgCandlesPerSymbol}}</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-[#848E9C]">Market Data:</span>
+            <span class="text-[#EAECEF] font-mono">{{diagnostics.collections.allMarketData.count}}</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-[#848E9C]">Market Stream OnSpot:</span>
+            <span class="text-[#EAECEF] font-mono">{{diagnostics.collections.marketStreamOnSpot.count}}</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-[#848E9C]">OnHold Symbols:</span>
+            <span class="text-[#EAECEF] font-mono">{{diagnostics.collections.onHold.count}}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-[#0B0E11] border border-[#2B3139] rounded p-3 space-y-2">
+        <h3 class="text-xs uppercase tracking-wider text-[#848E9C]">Memory</h3>
+        <div class="space-y-1 text-sm">
+          <div class="flex justify-between">
+            <span class="text-[#848E9C]">Managed Memory:</span>
+            <span class="text-[#EAECEF] font-mono">{{diagnostics.memory.managedMemoryMB}} MB</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-[#848E9C]">GC Gen0 Collections:</span>
+            <span class="text-[#EAECEF] font-mono">{{diagnostics.memory.gcCollections.gen0}}</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-[#848E9C]">GC Gen1 Collections:</span>
+            <span class="text-[#EAECEF] font-mono">{{diagnostics.memory.gcCollections.gen1}}</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-[#848E9C]">GC Gen2 Collections:</span>
+            <span class="text-[#EAECEF] font-mono">{{diagnostics.memory.gcCollections.gen2}}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="diagnostics.collections.onHold.symbols.length > 0" class="bg-[#0B0E11] border border-[#2B3139] rounded p-3">
+      <h3 class="text-xs uppercase tracking-wider text-[#848E9C] mb-2">OnHold Symbols</h3>
+      <div class="flex flex-wrap gap-2">
+        <span *ngFor="let symbol of diagnostics.collections.onHold.symbols" class="px-2 py-1 text-xs bg-[#181A20] border border-[#2B3139] text-[#EAECEF] rounded font-mono">
+          {{symbol}}
+        </span>
+      </div>
+    </div>
+
+    <button class="w-full px-4 py-2 text-sm font-semibold text-[#EAECEF] bg-[#2B3139] hover:bg-[#474D57] rounded transition-colors" (click)="loadDiagnostics()">
+      Refresh Diagnostics
     </button>
   </div>
 </div>

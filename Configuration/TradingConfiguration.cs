@@ -1,21 +1,18 @@
 namespace MarginCoin.Configuration
 {
     /// <summary>
-    /// Single source of truth for all trading configuration settings.
-    /// Configured via appsettings.json
+    /// Static trading configuration from appsettings.json.
+    /// These settings require application restart to change and should be modified carefully.
+    /// For runtime-adjustable settings, see RuntimeTradingSettings (stored in database).
     /// </summary>
     public class TradingConfiguration
     {
-        // Basic Trading Settings
+        // Basic Trading Settings (Static)
         public string Interval { get; set; } = "30m";
         public string MaxCandle { get; set; } = "50";
-        public int NumberOfSymbols { get; set; } = 18;
-        public int MaxOpenTrades { get; set; } = 3;
-        public double QuoteOrderQty { get; set; } = 1500;
-        public double StopLossPercentage { get; set; } = 2;
-        public double TakeProfitPercentage { get; set; } = 0.5;
+        public int NumberOfSymbols { get; set; } = 5;
         public double OrderOffset { get; set; } = 0.05;
-        public string SpotTickerTime { get; set; } = "!ticker_4h@arr";
+        public string SpotTickerTime { get; set; } = "!miniTicker@arr";
         public int PrevCandleCount { get; set; } = 2;
 
         // Entry Logic Configuration
@@ -80,22 +77,29 @@ namespace MarginCoin.Configuration
         /// </summary>
         public double AIVetoConfidence { get; set; } = 0.70;
 
-        // Exit Logic Configuration
+        // Advanced Configuration (Static - requires restart)
         /// <summary>
-        /// Minutes to wait before killing a trade that hasn't gone above entry price
-        /// Used to cut losses on stalled positions
+        /// Enable/disable ML prediction calls entirely.
         /// </summary>
-        public int TimeBasedKillMinutes { get; set; } = 15;
+        public bool EnableMLPredictions { get; set; } = false;
+
+        // OpenAI Configuration
+        /// <summary>
+        /// Enable/disable OpenAI-powered trading signals
+        /// </summary>
+        public bool EnableOpenAISignals { get; set; } = true;
 
         /// <summary>
-        /// If true, tighten stop loss when trend score weakens (becomes 0 or negative)
+        /// Minimum OpenAI confidence level required for entry (0.0 - 1.0)
+        /// Higher value = more selective trades based on AI confidence
         /// </summary>
-        public bool EnableDynamicStopLoss { get; set; } = true;
+        public double MinOpenAIConfidence { get; set; } = 0.7;
 
         /// <summary>
-        /// Percentage to tighten stop loss when trend weakens (e.g., 0.5 = 0.5% from current price)
-        /// Only applies if EnableDynamicStopLoss is true
+        /// Minimum OpenAI trading score required for entry (-10 to +10)
+        /// Positive scores indicate buy signals, negative indicate sell
+        /// Recommended: 6 for strong buy signals
         /// </summary>
-        public double WeakTrendStopLossPercentage { get; set; } = 0.5;
+        public int MinOpenAIScore { get; set; } = 6;
     }
 }

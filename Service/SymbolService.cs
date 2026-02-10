@@ -12,8 +12,7 @@ namespace MarginCoin.Service
 {
     public interface ISymbolService
     {
-        List<Symbol> GetTradingSymbols();
-        List<Symbol> GetBaseSymbols();
+        List<Symbol> GetTopSymbols(int count);
         void SyncBinanceSymbols(List<string> symbolList);
         void UpdateCoinMarketCap();
     }
@@ -21,52 +20,25 @@ namespace MarginCoin.Service
     public class SymbolService : ISymbolService
     {
         private readonly ApplicationDbContext _dbContext;
-        private readonly TradingConfiguration _tradingConfig;
         private readonly CoinMarketCapConfiguration _cmcConfig;
-        private readonly ITradingState _tradingState;
 
         public SymbolService(
             ApplicationDbContext dbContext,
-            IOptions<TradingConfiguration> tradingConfig,
-            IOptions<CoinMarketCapConfiguration> cmcConfig,
-            ITradingState tradingState)
+            IOptions<CoinMarketCapConfiguration> cmcConfig)
         {
             _dbContext = dbContext;
-            _tradingConfig = tradingConfig.Value;
             _cmcConfig = cmcConfig.Value;
-            _tradingState = tradingState;
         }
 
         /// <summary>
-        /// Get list of symbols to trade based on current environment (prod/test)
+        /// Get top N symbols by market cap rank
         /// </summary>
-        public List<Symbol> GetTradingSymbols()
+        public List<Symbol> GetTopSymbols(int count)
         {
-            return GetSymbols(_tradingConfig.NumberOfSymbols);
-        }
-
-        /// <summary>
-        /// Get base list of top 100 symbols for monitoring
-        /// </summary>
-        public List<Symbol> GetBaseSymbols()
-        {
-            return GetSymbols(100);
-        }
-
-        private List<Symbol> GetSymbols(int maxRank)
-        {
-            var query = _dbContext.Symbol.AsQueryable();
-
-            if (_tradingState.IsProd)
-            {
-                query = query.Where(p => p.IsOnProd != 0 && p.Capitalisation > 0 && p.Rank<= maxRank);
-            }
-            else
-            {
-                query = query.Where(p => p.IsOnTest != 0 && p.Rank <= maxRank);
-            }
-
-            return query.OrderBy(p => p.Rank).ToList();
+            return _dbContext.Symbol
+                .Where(p => p.Rank.HasValue && p.Rank <= count)
+                .OrderBy(p => p.Rank)
+                .ToList();
         }
 
         /// <summary>
@@ -79,7 +51,7 @@ namespace MarginCoin.Service
                 var existing = _dbContext.Symbol.FirstOrDefault(p => p.SymbolName == symbolName);
                 if (existing == null)
                 {
-                    _dbContext.Symbol.Add(new Symbol { IsOnProd = 1, SymbolName = symbolName });
+                    _dbContext.Symbol.Add(new Symbol { SymbolName = symbolName });
                 }
             }
             _dbContext.SaveChanges();

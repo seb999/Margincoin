@@ -42,13 +42,15 @@ namespace MarginCoin.Service
     private readonly ILogger _logger;
     private readonly ITradingState _tradingState;
     private readonly TradingConfiguration _config;
+    private readonly ITradingSettingsService _settingsService;
 
     public OrderService(ApplicationDbContext appDbContext,
         IBinanceService binanceService,
         IHubContext<SignalRHub> hub,
         ILogger<OrderService> logger,
         ITradingState tradingState,
-        IOptions<TradingConfiguration> tradingConfig)
+        IOptions<TradingConfiguration> tradingConfig,
+        ITradingSettingsService settingsService)
     {
         _appDbContext = appDbContext;
         _binanceService = binanceService;
@@ -56,6 +58,12 @@ namespace MarginCoin.Service
         _logger = logger;
         _tradingState = tradingState;
         _config = tradingConfig.Value;
+        _settingsService = settingsService;
+    }
+
+    private RuntimeTradingSettings GetRuntimeSettings()
+    {
+        return _settingsService.GetRuntimeSettingsAsync().GetAwaiter().GetResult();
     }
 
     #region trading methods
@@ -171,16 +179,43 @@ namespace MarginCoin.Service
     {
         try
         {
+            var runtime = GetRuntimeSettings();
+            if (!runtime.EnableDynamicStopLoss)
+            {
+                return;
+            }
+
             // Calculate the current market price
             Candle lastCandle = symbolCandles.Select(p => p).LastOrDefault();
 
-            //If price up 0.4% we move the stop lose to open price
-            if (lastCandle.c > dbOrder.OpenPrice * 1.004)
+            // Trailing stop loss: continuously adjust stop loss based on highest price reached
+            // The stop loss trails below the high price by the TrailingStopPercentage
+            var trailingStopPrice = dbOrder.HighPrice * (1 - runtime.TrailingStopPercentage / 100);
+
+            // Calculate current profit metrics for logging
+            var currentPrice = lastCandle?.c ?? 0;
+            var currentProfit = (currentPrice - dbOrder.OpenPrice) * dbOrder.QuantityBuy;
+            var currentProfitPct = ((currentPrice - dbOrder.OpenPrice) / dbOrder.OpenPrice) * 100;
+            var maxPotentialProfit = (dbOrder.HighPrice - dbOrder.OpenPrice) * dbOrder.QuantityBuy;
+            var maxPotentialProfitPct = ((dbOrder.HighPrice - dbOrder.OpenPrice) / dbOrder.OpenPrice) * 100;
+
+            // Only move stop loss UP, never down (this locks in profits)
+            if (trailingStopPrice > dbOrder.StopLose)
             {
-                // Update the stop loss price of the active order
-                dbOrder.StopLose = dbOrder.OpenPrice;
+                var oldStopLoss = dbOrder.StopLose;
+                dbOrder.StopLose = trailingStopPrice;
                 _appDbContext.Order.Update(dbOrder);
                 _appDbContext.SaveChanges();
+
+                _logger.LogInformation(
+                    "Trailing stop loss updated for {Symbol} - OrderId: {OrderId}. " +
+                    "Entry: {Entry:F2}, Current: {Current:F2}, High: {High:F2} | " +
+                    "Stop: {OldStop:F2} → {NewStop:F2} ({TrailingPct}% trail) | " +
+                    "Current P/L: {CurrentProfit:F2} ({CurrentProfitPct:F2}%), Max P/L: {MaxProfit:F2} ({MaxProfitPct:F2}%)",
+                    dbOrder.Symbol, dbOrder.Id,
+                    dbOrder.OpenPrice, currentPrice, dbOrder.HighPrice,
+                    oldStopLoss, trailingStopPrice, runtime.TrailingStopPercentage,
+                    currentProfit, currentProfitPct, maxPotentialProfit, maxPotentialProfitPct);
             }
         }
         catch (System.Exception ex)
@@ -196,6 +231,7 @@ namespace MarginCoin.Service
     public void SaveBuyOrderDb(MarketStream symbolSpot, List<Candle> symbolCandle, BinanceOrder binanceOrder, double aiScore = 0, string aiPrediction = "")
     {
         _logger.LogInformation("Opening trade for {Symbol} - OrderId: {OrderId}", binanceOrder.symbol, binanceOrder.orderId);
+        var runtime = GetRuntimeSettings();
         var entryTrendScore = TradeHelper.CalculateTrendScore(symbolCandle, _config.UseWeightedTrendScore);
         var openPrice = TradeHelper.CalculateAvragePrice(binanceOrder);
         Order myOrder = new Order
@@ -208,8 +244,8 @@ namespace MarginCoin.Service
             OpenDate = DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss"),
             OpenPrice = openPrice,
             LowPrice = openPrice,
-            TakeProfit = openPrice * (1 - (_config.TakeProfitPercentage / 100)),
-            StopLose = openPrice * (1 - (_config.StopLossPercentage / 100)),
+            TakeProfit = openPrice * (1 - (runtime.TakeProfitPercentage / 100)),
+            StopLose = openPrice * (1 - (runtime.StopLossPercentage / 100)),
             ClosePrice = 0,
             HighPrice = openPrice,
             Volume = symbolSpot.v,
@@ -269,13 +305,14 @@ namespace MarginCoin.Service
 
     public void UpdateBuyOrderDb(Order dbOrder, BinanceOrder binanceOrder)
     {
+        var runtime = GetRuntimeSettings();
         var orderPrice = TradeHelper.CalculateAvragePrice(binanceOrder);
 
         dbOrder.Status = binanceOrder.status;
         dbOrder.OpenPrice = orderPrice;
         dbOrder.LowPrice = orderPrice;
-        dbOrder.TakeProfit = orderPrice * (1 - (_config.TakeProfitPercentage / 100));
-        dbOrder.StopLose = orderPrice * (1 - (_config.StopLossPercentage / 100));
+        dbOrder.TakeProfit = orderPrice * (1 - (runtime.TakeProfitPercentage / 100));
+        dbOrder.StopLose = orderPrice * (1 - (runtime.StopLossPercentage / 100));
         dbOrder.QuantityBuy = Helper.ToDouble(binanceOrder.executedQty);
 
         _appDbContext.Order.Update(dbOrder);
@@ -335,19 +372,20 @@ namespace MarginCoin.Service
 
     public async Task BuyLimit(MarketStream symbolSpot, List<Candle> symbolCandleList, double aiScore = 0, string aiPrediction = "")
     {
+        var runtime = GetRuntimeSettings();
         // Check available USDC balance before placing order
         var availableBalance = GetAvailableUSDCBalance();
-        if (availableBalance < _config.QuoteOrderQty)
+        if (availableBalance < runtime.QuoteOrderQty)
         {
             _logger.LogWarning("Insufficient USDC balance for {Symbol}. Required: {Required} USDC, Available: {Available} USDC. Skipping trade.",
-                symbolSpot.s, _config.QuoteOrderQty, availableBalance);
+                symbolSpot.s, runtime.QuoteOrderQty, availableBalance);
             _tradingState.OnHold.Remove(symbolSpot.s);
             return;
         }
 
         var (nbrDecimalPrice, nbrDecimalQty) = GetOrderParameters(symbolSpot);
         var price = Math.Round(symbolSpot.c * (1 + _config.OrderOffset / 100), nbrDecimalPrice);
-        var qty = Math.Round(_config.QuoteOrderQty / price, nbrDecimalQty);
+        var qty = Math.Round(runtime.QuoteOrderQty / price, nbrDecimalQty);
 
         var myBinanceOrder = _binanceService.BuyLimit(symbolSpot.s, qty, price, MyEnum.TimeInForce.GTC);
         if (myBinanceOrder == null)
@@ -390,17 +428,18 @@ namespace MarginCoin.Service
 
     public async Task BuyMarket(MarketStream symbolSpot, List<Candle> symbolCandleList, double aiScore = 0, string aiPrediction = "")
     {
+        var runtime = GetRuntimeSettings();
         // Check available USDC balance before placing order
         var availableBalance = GetAvailableUSDCBalance();
-        if (availableBalance < _config.QuoteOrderQty)
+        if (availableBalance < runtime.QuoteOrderQty)
         {
             _logger.LogWarning("Insufficient USDC balance for {Symbol}. Required: {Required} USDC, Available: {Available} USDC. Skipping trade.",
-                symbolSpot.s, _config.QuoteOrderQty, availableBalance);
+                symbolSpot.s, runtime.QuoteOrderQty, availableBalance);
             _tradingState.OnHold.Remove(symbolSpot.s);
             return;
         }
 
-        BinanceOrder myBinanceOrder = _binanceService.BuyMarket(symbolSpot.s, _config.QuoteOrderQty);
+        BinanceOrder myBinanceOrder = _binanceService.BuyMarket(symbolSpot.s, runtime.QuoteOrderQty);
 
         if (myBinanceOrder == null)
         {

@@ -1,6 +1,9 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using MarginCoin.Class;
 using MarginCoin.Model;
+using Microsoft.Extensions.Logging;
 
 namespace MarginCoin.Service
 {
@@ -30,14 +33,20 @@ namespace MarginCoin.Service
 
         // Methods
         void ClearCandleMatrix();
+        void CleanupOldData(int maxSymbols = 50, int maxCandlesPerSymbol = 500);
+        void CleanupStaleOnHold(HashSet<string> activeSymbols);
     }
 
     public class TradingStateService : ITradingState
     {
         private readonly object _candleLock = new object();
+        private DateTime _lastCleanup = DateTime.UtcNow;
+        private readonly TimeSpan _cleanupInterval = TimeSpan.FromMinutes(15);
+        private readonly ILogger<TradingStateService> _logger;
 
-        public TradingStateService()
+        public TradingStateService(ILogger<TradingStateService> logger)
         {
+            _logger = logger;
             SymbolWeTrade = new List<Symbol>();
             SymbolBaseList = new List<Symbol>();
             CandleMatrix = new List<List<Candle>>();
@@ -69,6 +78,82 @@ namespace MarginCoin.Service
             lock (_candleLock)
             {
                 CandleMatrix.Clear();
+            }
+        }
+
+        public void CleanupOldData(int maxSymbols = 50, int maxCandlesPerSymbol = 500)
+        {
+            // Only cleanup every 15 minutes to avoid overhead
+            if (DateTime.UtcNow - _lastCleanup < _cleanupInterval)
+            {
+                return;
+            }
+
+            lock (_candleLock)
+            {
+                var candleMatrixRemoved = 0;
+                var candlesPerSymbolRemoved = 0;
+                var marketDataRemoved = 0;
+                var marketStreamRemoved = 0;
+
+                // Limit CandleMatrix size - keep only recent symbols
+                if (CandleMatrix.Count > maxSymbols)
+                {
+                    candleMatrixRemoved = CandleMatrix.Count - maxSymbols;
+                    CandleMatrix.RemoveRange(0, candleMatrixRemoved);
+                }
+
+                // Limit candles per symbol - keep only recent candles
+                foreach (var candles in CandleMatrix)
+                {
+                    if (candles.Count > maxCandlesPerSymbol)
+                    {
+                        var toRemove = candles.Count - maxCandlesPerSymbol;
+                        candles.RemoveRange(0, toRemove);
+                        candlesPerSymbolRemoved += toRemove;
+                    }
+                }
+
+                // Clean old AllMarketData - keep only last 1000 entries
+                if (AllMarketData.Count > 1000)
+                {
+                    marketDataRemoved = AllMarketData.Count - 500;
+                    AllMarketData.RemoveRange(0, marketDataRemoved);
+                }
+
+                // Clean old MarketStreamOnSpot
+                if (MarketStreamOnSpot.Count > 500)
+                {
+                    marketStreamRemoved = MarketStreamOnSpot.Count - 300;
+                    MarketStreamOnSpot.RemoveRange(0, marketStreamRemoved);
+                }
+
+                _lastCleanup = DateTime.UtcNow;
+
+                _logger.LogInformation(
+                    "Memory cleanup completed. CandleMatrix: {CandleMatrixCount} symbols ({Removed1} removed), " +
+                    "Total candles removed: {Removed2}, AllMarketData: {MarketDataCount} ({Removed3} removed), " +
+                    "MarketStreamOnSpot: {StreamCount} ({Removed4} removed), OnHold: {OnHoldCount}",
+                    CandleMatrix.Count, candleMatrixRemoved,
+                    candlesPerSymbolRemoved, AllMarketData.Count, marketDataRemoved,
+                    MarketStreamOnSpot.Count, marketStreamRemoved, OnHold.Count);
+            }
+        }
+
+        public void CleanupStaleOnHold(HashSet<string> activeSymbols)
+        {
+            var staleKeys = OnHold.Keys.Where(k => !activeSymbols.Contains(k)).ToList();
+
+            if (staleKeys.Count > 0)
+            {
+                foreach (var key in staleKeys)
+                {
+                    OnHold.Remove(key);
+                }
+
+                _logger.LogInformation(
+                    "Cleaned {Count} stale OnHold entries: {Symbols}. Active symbols: {ActiveCount}",
+                    staleKeys.Count, string.Join(", ", staleKeys), activeSymbols.Count);
             }
         }
     }

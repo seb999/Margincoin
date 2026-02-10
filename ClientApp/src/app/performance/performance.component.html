@@ -1,0 +1,129 @@
+<div class="max-w-6xl mx-auto p-4 space-y-4">
+  <div class="flex items-center justify-between">
+    <div>
+      <h1 class="text-lg font-semibold text-[#EAECEF]">Trading Performance</h1>
+      <p class="text-xs text-[#848E9C] mt-1">Track your capital gains and losses across all executed trades.</p>
+    </div>
+    <button class="px-3 py-1.5 text-xs font-semibold text-[#0B0E11] bg-[#FCD535] hover:bg-[#F0B90B] rounded transition-colors" (click)="loadPerformance()">
+      Refresh
+    </button>
+  </div>
+
+  <div *ngIf="error" class="px-3 py-2 text-sm text-[#F6465D] bg-[#2B1215] border border-[#5E3A3A] rounded">
+    {{error}}
+  </div>
+
+  <div *ngIf="loading" class="text-center py-8 text-[#848E9C]">
+    Loading performance data...
+  </div>
+
+  <div *ngIf="!loading && performance" class="space-y-4">
+    <!-- Summary Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <!-- Net Profit/Loss Card -->
+      <div class="bg-[#181A20] border border-[#2B3139] rounded p-4">
+        <div class="text-xs uppercase tracking-wider text-[#848E9C] mb-2">Net Profit/Loss</div>
+        <div class="text-2xl font-bold" [ngClass]="performance.netProfit >= 0 ? 'text-[#0ECB81]' : 'text-[#F6465D]'">
+          {{ performance.netProfit >= 0 ? '+' : '' }}{{ performance.netProfit | number:'1.2-2' }} USDC
+        </div>
+        <div class="text-xs text-[#848E9C] mt-1">
+          Total: {{ performance.totalTrades }} trades
+        </div>
+      </div>
+
+      <!-- Total Gains Card -->
+      <div class="bg-[#181A20] border border-[#2B3139] rounded p-4">
+        <div class="text-xs uppercase tracking-wider text-[#848E9C] mb-2">Total Gains</div>
+        <div class="text-2xl font-bold text-[#0ECB81]">
+          +{{ performance.totalGains | number:'1.2-2' }} USDC
+        </div>
+        <div class="text-xs text-[#848E9C] mt-1">
+          {{ performance.winningTrades }} winning trades
+        </div>
+      </div>
+
+      <!-- Total Losses Card -->
+      <div class="bg-[#181A20] border border-[#2B3139] rounded p-4">
+        <div class="text-xs uppercase tracking-wider text-[#848E9C] mb-2">Total Losses</div>
+        <div class="text-2xl font-bold text-[#F6465D]">
+          {{ performance.totalLosses | number:'1.2-2' }} USDC
+        </div>
+        <div class="text-xs text-[#848E9C] mt-1">
+          {{ performance.losingTrades }} losing trades
+        </div>
+      </div>
+    </div>
+
+    <!-- Detailed Metrics -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <!-- Win Rate & Averages -->
+      <div class="bg-[#181A20] border border-[#2B3139] rounded p-4 space-y-3">
+        <h3 class="text-xs uppercase tracking-wider text-[#848E9C]">Performance Metrics</h3>
+
+        <div class="space-y-2">
+          <div class="flex justify-between items-center">
+            <span class="text-sm text-[#848E9C]">Win Rate</span>
+            <div class="flex items-center gap-2">
+              <div class="h-2 w-32 bg-[#0B0E11] rounded-full overflow-hidden">
+                <div class="h-full bg-[#0ECB81] rounded-full" [style.width.%]="getWinRate()"></div>
+              </div>
+              <span class="text-sm font-semibold text-[#EAECEF] w-12 text-right">{{ getWinRate() | number:'1.1-1' }}%</span>
+            </div>
+          </div>
+
+          <div class="flex justify-between items-center">
+            <span class="text-sm text-[#848E9C]">Average Win</span>
+            <span class="text-sm font-semibold text-[#0ECB81]">+{{ getAverageWin() | number:'1.2-2' }} USDC</span>
+          </div>
+
+          <div class="flex justify-between items-center">
+            <span class="text-sm text-[#848E9C]">Average Loss</span>
+            <span class="text-sm font-semibold text-[#F6465D]">{{ getAverageLoss() | number:'1.2-2' }} USDC</span>
+          </div>
+
+          <div class="flex justify-between items-center pt-2 border-t border-[#2B3139]">
+            <span class="text-sm text-[#848E9C]">Profit Factor</span>
+            <span class="text-sm font-semibold" [ngClass]="getProfitFactor() >= 1 ? 'text-[#0ECB81]' : 'text-[#F6465D]'">
+              {{ getProfitFactor() | number:'1.2-2' }}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Best & Worst Trades -->
+      <div class="bg-[#181A20] border border-[#2B3139] rounded p-4 space-y-3">
+        <h3 class="text-xs uppercase tracking-wider text-[#848E9C]">Trade Extremes</h3>
+
+        <div class="space-y-2">
+          <div class="p-3 bg-[#0E2419] border border-[#2B4A3D] rounded">
+            <div class="text-xs text-[#848E9C] mb-1">Best Trade</div>
+            <div class="text-xl font-bold text-[#0ECB81]">
+              +{{ performance.bestTrade | number:'1.2-2' }} USDC
+            </div>
+          </div>
+
+          <div class="p-3 bg-[#2B1215] border border-[#5E3A3A] rounded">
+            <div class="text-xs text-[#848E9C] mb-1">Worst Trade</div>
+            <div class="text-xl font-bold text-[#F6465D]">
+              {{ performance.worstTrade | number:'1.2-2' }} USDC
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Trade Performance Chart -->
+    <div *ngIf="performance.trades && performance.trades.length > 0" class="bg-[#181A20] border border-[#2B3139] rounded p-4">
+      <highcharts-chart
+        [Highcharts]="Highcharts"
+        [options]="chartOptions"
+        style="width: 100%; height: 400px; display: block;">
+      </highcharts-chart>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="performance.totalTrades === 0" class="text-center py-8 text-[#848E9C] bg-[#181A20] border border-[#2B3139] rounded">
+      <p>No trades executed yet. Start trading to see your performance metrics.</p>
+    </div>
+  </div>
+</div>

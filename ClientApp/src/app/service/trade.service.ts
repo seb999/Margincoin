@@ -187,6 +187,25 @@ export class TradeService {
     }, {});
   }
 
+  async getSurgeScoresForBalances(): Promise<{ [symbol: string]: number }> {
+    const httpSetting: HttpSettings = {
+      method: 'GET',
+      url: location.origin + '/api/Action/SurgeScores',
+    };
+    const data = await this.httpService.xhr<TrendScore[]>(httpSetting);
+    return (data || []).reduce((acc, curr) => {
+      const base = (curr.symbol || '').toUpperCase();
+      const pair = (curr.pair || '').toUpperCase();
+      if (base) acc[base] = curr.score;
+      if (pair) acc[pair] = curr.score;
+      if (pair.endsWith('USDC') || pair.endsWith('USDT')) {
+        const noQuote = pair.replace('USDC', '').replace('USDT', '');
+        acc[noQuote] = curr.score;
+      }
+      return acc;
+    }, {});
+  }
+
   async getAiSignalsForBalances(): Promise<{ [symbol: string]: AiPrediction }> {
     const httpSetting: HttpSettings = {
       method: 'GET',

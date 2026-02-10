@@ -1,15 +1,15 @@
 <header class="sticky top-0 z-50">
-  <nav class="bg-gray-900 border-b border-gray-700 shadow-lg">
+  <nav class="bg-[#181A20] border-b border-[#2B3139] shadow-lg">
     <div class="w-full px-6">
       <div class="flex items-center justify-between h-14">
         <!-- Brand -->
-        <a class="text-xl font-bold text-white hover:text-blue-400 transition-colors" [routerLink]="['/']">
+        <a class="text-xl font-bold text-[#FCD535] hover:text-[#F0B90B] transition-colors" [routerLink]="['/']">
           MarginCoin
         </a>
 
         <!-- Mobile menu button -->
         <button
-          class="md:hidden p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          class="md:hidden p-2 rounded-md text-[#848E9C] hover:text-[#EAECEF] hover:bg-[#2B3139] focus:outline-none focus:ring-2 focus:ring-[#FCD535]"
           type="button"
           aria-label="Toggle navigation"
           [attr.aria-expanded]="isExpanded"
@@ -23,28 +23,22 @@
         <!-- Desktop navigation -->
         <div class="hidden md:flex items-center space-x-1">
           <a
-            class="px-4 py-2 rounded-md text-sm font-medium text-gray-300 hover:text-white hover:bg-gray-800 transition-colors"
+            class="px-4 py-2 rounded text-sm font-medium text-[#848E9C] hover:text-[#EAECEF] hover:bg-[#2B3139] transition-colors"
             [routerLink]="['/']"
-            routerLinkActive="bg-gray-800 text-white"
+            routerLinkActive="bg-[#2B3139] text-[#EAECEF]"
             [routerLinkActiveOptions]="{ exact: true }">
-            <i class="fa-solid fa-chart-line mr-2"></i>Market
+            <i class="fa-solid fa-chart-candlestick mr-2"></i>Trade
           </a>
           <a
-            class="px-4 py-2 rounded-md text-sm font-medium text-gray-300 hover:text-white hover:bg-gray-800 transition-colors"
-            [routerLink]="['/wallet']"
-            routerLinkActive="bg-gray-800 text-white">
-            <i class="fa-solid fa-wallet mr-2"></i>Wallet
+            class="px-4 py-2 rounded text-sm font-medium text-[#848E9C] hover:text-[#EAECEF] hover:bg-[#2B3139] transition-colors"
+            [routerLink]="['/performance']"
+            routerLinkActive="bg-[#2B3139] text-[#EAECEF]">
+            <i class="fa-solid fa-chart-pie mr-2"></i>Performance
           </a>
           <a
-            class="px-4 py-2 rounded-md text-sm font-medium text-gray-300 hover:text-white hover:bg-gray-800 transition-colors"
-            [routerLink]="['/ai-analytics']"
-            routerLinkActive="bg-gray-800 text-white">
-            <i class="fa-solid fa-brain mr-2"></i>AI Analytics
-          </a>
-          <a
-            class="px-4 py-2 rounded-md text-sm font-medium text-gray-300 hover:text-white hover:bg-gray-800 transition-colors"
+            class="px-4 py-2 rounded text-sm font-medium text-[#848E9C] hover:text-[#EAECEF] hover:bg-[#2B3139] transition-colors"
             [routerLink]="['/settings']"
-            routerLinkActive="bg-gray-800 text-white">
+            routerLinkActive="bg-[#2B3139] text-[#EAECEF]">
             <i class="fa-solid fa-gear mr-2"></i>Settings
           </a>
         </div>
@@ -56,31 +50,24 @@
         [ngClass]="isExpanded ? 'max-h-48 pb-4' : 'max-h-0'">
         <div class="flex flex-col space-y-1 pt-2">
           <a
-            class="px-4 py-2 rounded-md text-sm font-medium text-gray-300 hover:text-white hover:bg-gray-800 transition-colors"
+            class="px-4 py-2 rounded text-sm font-medium text-[#848E9C] hover:text-[#EAECEF] hover:bg-[#2B3139] transition-colors"
             [routerLink]="['/']"
-            routerLinkActive="bg-gray-800 text-white"
+            routerLinkActive="bg-[#2B3139] text-[#EAECEF]"
             [routerLinkActiveOptions]="{ exact: true }"
             (click)="collapse()">
-            <i class="fa-solid fa-chart-line mr-2"></i>Market
+            <i class="fa-solid fa-chart-candlestick mr-2"></i>Trade
           </a>
           <a
-            class="px-4 py-2 rounded-md text-sm font-medium text-gray-300 hover:text-white hover:bg-gray-800 transition-colors"
-            [routerLink]="['/wallet']"
-            routerLinkActive="bg-gray-800 text-white"
+            class="px-4 py-2 rounded text-sm font-medium text-[#848E9C] hover:text-[#EAECEF] hover:bg-[#2B3139] transition-colors"
+            [routerLink]="['/performance']"
+            routerLinkActive="bg-[#2B3139] text-[#EAECEF]"
             (click)="collapse()">
-            <i class="fa-solid fa-wallet mr-2"></i>Wallet
+            <i class="fa-solid fa-chart-pie mr-2"></i>Performance
           </a>
           <a
-            class="px-4 py-2 rounded-md text-sm font-medium text-gray-300 hover:text-white hover:bg-gray-800 transition-colors"
-            [routerLink]="['/ai-analytics']"
-            routerLinkActive="bg-gray-800 text-white"
-            (click)="collapse()">
-            <i class="fa-solid fa-brain mr-2"></i>AI Analytics
-          </a>
-          <a
-            class="px-4 py-2 rounded-md text-sm font-medium text-gray-300 hover:text-white hover:bg-gray-800 transition-colors"
+            class="px-4 py-2 rounded text-sm font-medium text-[#848E9C] hover:text-[#EAECEF] hover:bg-[#2B3139] transition-colors"
             [routerLink]="['/settings']"
-            routerLinkActive="bg-gray-800 text-white"
+            routerLinkActive="bg-[#2B3139] text-[#EAECEF]"
             (click)="collapse()">
             <i class="fa-solid fa-gear mr-2"></i>Settings
           </a>

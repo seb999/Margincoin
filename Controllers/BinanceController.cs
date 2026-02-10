@@ -7,6 +7,8 @@ using System.Text.Json;
 using Microsoft.Extensions.Logging;
 using MarginCoin.Service;
 using System.Linq;
+using MarginCoin.Configuration;
+using Microsoft.Extensions.Options;
 
 namespace MarginCoin.Controllers
 {
@@ -19,15 +21,18 @@ namespace MarginCoin.Controllers
         private readonly ILogger _logger;
         private readonly ITradingState _tradingState;
         private readonly ISymbolService _symbolService;
+        private readonly TradingConfiguration _tradingConfig;
 
         public BinanceController(IHubContext<SignalRHub> hub,
             ILogger<BinanceController> logger,
             IBinanceService binanceService,
             ITradingState tradingState,
-            ISymbolService symbolService)
+            ISymbolService symbolService,
+            IOptions<TradingConfiguration> tradingConfig)
         {
             _hub = hub;
             _binanceService = binanceService;
+            _tradingConfig = tradingConfig.Value;
             _logger = logger;
             _tradingState = tradingState;
             _symbolService = symbolService;
@@ -47,7 +52,7 @@ namespace MarginCoin.Controllers
             // Ensure SymbolWeTrade is populated
             if (_tradingState.SymbolWeTrade.Count == 0)
             {
-                _tradingState.SymbolWeTrade = _symbolService.GetTradingSymbols();
+                _tradingState.SymbolWeTrade = _symbolService.GetTopSymbols(_tradingConfig.NumberOfSymbols);
             }
 
             var symbolWeTrade = _tradingState.SymbolWeTrade;

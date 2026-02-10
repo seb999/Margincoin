@@ -40,6 +40,7 @@ namespace MarginCoin
             // Singleton - same instance during lifetime (state & long-running services)
             services.AddSingleton<ITradingState, TradingStateService>();
             services.AddSingleton<LSTMPredictionService>();
+            services.AddSingleton<OpenAIPredictionService>();
             services.AddSingleton<IMLService>(sp => sp.GetRequiredService<LSTMPredictionService>());
             services.AddSingleton<IWatchDog, WatchDog>();
             services.AddSingleton<IWebSocket, WebSocket>();
@@ -49,6 +50,7 @@ namespace MarginCoin
             services.AddScoped<IOrderService, OrderService>();
             services.AddScoped<ISymbolService, SymbolService>();
             services.AddScoped<ITradingSettingsService, TradingSettingsService>();
+            services.AddScoped<ICandleDataService, CandleDataService>();
 
             services.AddSignalR();
 
@@ -126,7 +128,8 @@ namespace MarginCoin
                 var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
                 db.Database.EnsureCreated();
                 var settingsService = scope.ServiceProvider.GetRequiredService<ITradingSettingsService>();
-                settingsService.ApplyOverridesAsync().GetAwaiter().GetResult();
+                // Pre-load runtime settings to ensure database table exists
+                settingsService.GetRuntimeSettingsAsync().GetAwaiter().GetResult();
             }
         }
 

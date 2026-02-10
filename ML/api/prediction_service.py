@@ -8,6 +8,7 @@ from pathlib import Path
 import logging
 import sys
 from typing import List, Dict, Optional
+import os
 
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel, Field, ConfigDict
@@ -18,6 +19,11 @@ if not hasattr(np, "_ARRAY_API"):
     np._ARRAY_API = None
 
 import torch
+from openai import OpenAI
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv(Path(__file__).parent.parent / '.env')
 
 # Add parent directory to path
 sys.path.append(str(Path(__file__).parent.parent))
@@ -33,6 +39,10 @@ logger = logging.getLogger(__name__)
 model = None
 preprocessor = None
 device = None
+
+# OpenAI client
+openai_client = None
+openai_model = None
 
 
 class CandleData(BaseModel):
@@ -71,11 +81,43 @@ class PredictionResponse(BaseModel):
     attention_summary: Optional[Dict[str, float]] = None  # Which timeframes were most important
 
 
+class OpenAIIndicatorRequest(BaseModel):
+    """Request format for OpenAI-based analysis"""
+    symbol: str
+    indicators: Dict[str, float] = Field(..., description="Technical indicators: rsi, macd, macd_signal, macd_hist, ema50, close, volume, stoch_k, stoch_d")
+    previous_indicators: Optional[Dict[str, float]] = Field(None, description="Previous candle indicators for trend analysis")
+
+
+class OpenAIAnalysisResponse(BaseModel):
+    """Response format for OpenAI analysis"""
+    symbol: str
+    signal: str  # "BUY", "SELL", or "HOLD"
+    confidence: float  # 0.0 to 1.0
+    trading_score: int  # -10 to +10 score
+    reasoning: str  # LLM explanation
+    risk_level: str  # "LOW", "MEDIUM", "HIGH"
+    key_factors: List[str]  # Important factors in the decision
+
+
 async def load_model():
     """Load model and preprocessor on startup"""
-    global model, preprocessor, device
+    global model, preprocessor, device, openai_client, openai_model
 
     logger.info("Loading model and preprocessor...")
+
+    # Initialize OpenAI client
+    try:
+        api_key = os.getenv('OPENAI_API_KEY')
+        openai_model = os.getenv('OPENAI_MODEL', 'gpt-4')
+        base_url = os.getenv('OPENAI_BASE_URL', 'https://api.openai.com/v1')
+
+        if api_key:
+            openai_client = OpenAI(api_key=api_key, base_url=base_url)
+            logger.info(f"OpenAI client initialized with model: {openai_model}")
+        else:
+            logger.warning("No OPENAI_API_KEY found in environment, OpenAI features disabled")
+    except Exception as e:
+        logger.warning(f"Failed to initialize OpenAI client: {e}")
 
     try:
         # Set device
@@ -319,6 +361,112 @@ async def predict(request: PredictionRequest):
         raise HTTPException(status_code=500, detail=f"Prediction failed: {str(e)}")
 
 
+@app.post("/predict/openai", response_model=OpenAIAnalysisResponse)
+async def predict_with_openai(request: OpenAIIndicatorRequest):
+    """
+    Analyze technical indicators using OpenAI GPT model
+
+    Args:
+        request: OpenAIIndicatorRequest with symbol and technical indicators
+
+    Returns:
+        OpenAIAnalysisResponse with trading signal, score, and reasoning
+    """
+    if openai_client is None:
+        raise HTTPException(status_code=503, detail="OpenAI client not initialized")
+
+    try:
+        # Prepare the indicators summary
+        ind = request.indicators
+        prev = request.previous_indicators or {}
+
+        # Build context for GPT
+        context = f"""Analyze the following technical indicators for {request.symbol} and provide a trading recommendation.
+
+Current Indicators:
+- Price: ${ind.get('close', 0):.2f}
+- RSI: {ind.get('rsi', 50):.2f} (Relative Strength Index)
+- MACD: {ind.get('macd', 0):.4f}
+- MACD Signal: {ind.get('macd_signal', 0):.4f}
+- MACD Histogram: {ind.get('macd_hist', 0):.4f}
+- EMA 50: ${ind.get('ema50', 0):.2f}
+- Volume: {ind.get('volume', 0):.0f}
+- Stochastic K: {ind.get('stoch_k', 50):.2f}
+- Stochastic D: {ind.get('stoch_d', 50):.2f}
+"""
+
+        if prev:
+            context += f"""
+Previous Candle (for trend analysis):
+- Price: ${prev.get('close', 0):.2f}
+- RSI: {prev.get('rsi', 50):.2f}
+- MACD Histogram: {prev.get('macd_hist', 0):.4f}
+"""
+
+        context += """
+Please analyze these indicators and provide:
+1. A clear trading signal: BUY, SELL, or HOLD
+2. A confidence level (0.0 to 1.0)
+3. A trading score from -10 (strong sell) to +10 (strong buy)
+4. Risk level: LOW, MEDIUM, or HIGH
+5. Key factors influencing your decision (list 3-5 points)
+6. Brief reasoning for your recommendation
+
+Respond in JSON format:
+{
+  "signal": "BUY/SELL/HOLD",
+  "confidence": 0.75,
+  "trading_score": 7,
+  "risk_level": "MEDIUM",
+  "key_factors": ["factor1", "factor2", "factor3"],
+  "reasoning": "Your analysis here"
+}
+"""
+
+        # Call OpenAI API
+        response = openai_client.chat.completions.create(
+            model=openai_model,
+            messages=[
+                {"role": "system", "content": "You are an expert cryptocurrency trading analyst. Provide objective, data-driven analysis based on technical indicators. Always respond in valid JSON format."},
+                {"role": "user", "content": context}
+            ],
+            temperature=0.3,  # Lower temperature for more consistent analysis
+            max_tokens=500
+        )
+
+        # Parse response
+        import json
+        result_text = response.choices[0].message.content.strip()
+
+        # Remove markdown code blocks if present
+        if result_text.startswith("```"):
+            result_text = result_text.split("```")[1]
+            if result_text.startswith("json"):
+                result_text = result_text[4:]
+            result_text = result_text.strip()
+
+        result = json.loads(result_text)
+
+        # Validate and return
+        return OpenAIAnalysisResponse(
+            symbol=request.symbol,
+            signal=result.get('signal', 'HOLD').upper(),
+            confidence=float(result.get('confidence', 0.5)),
+            trading_score=int(result.get('trading_score', 0)),
+            reasoning=result.get('reasoning', 'No reasoning provided'),
+            risk_level=result.get('risk_level', 'MEDIUM').upper(),
+            key_factors=result.get('key_factors', [])
+        )
+
+    except json.JSONDecodeError as e:
+        logger.error(f"Failed to parse OpenAI response: {e}")
+        logger.error(f"Response was: {result_text}")
+        raise HTTPException(status_code=500, detail=f"Failed to parse AI response: {str(e)}")
+    except Exception as e:
+        logger.error(f"OpenAI prediction error: {e}", exc_info=True)
+        raise HTTPException(status_code=500, detail=f"OpenAI prediction failed: {str(e)}")
+
+
 @app.get("/model/info")
 async def model_info():
     """Get model information"""
@@ -332,7 +480,8 @@ async def model_info():
         "lookback": preprocessor.lookback,
         "forward_bars": preprocessor.forward_bars,
         "threshold": preprocessor.threshold,
-        "device": str(device)
+        "device": str(device),
+        "openai_enabled": openai_client is not None
     }
 
 

@@ -8,6 +8,7 @@ namespace MarginCoin.Service
     {
         Dictionary<string, MarketDataWebSocket> SymbolWebSockets { get; }
         MarketDataWebSocket ws1 { get; set; }
+        List<MarketDataWebSocket> KlineWebSockets { get; }
 
         void AddSymbolWebSocket(string symbolName, MarketDataWebSocket webSocket);
         MarketDataWebSocket GetSymbolWebSocket(string symbolName);
@@ -20,6 +21,7 @@ namespace MarginCoin.Service
     {
         public Dictionary<string, MarketDataWebSocket> SymbolWebSockets { get; } = new Dictionary<string, MarketDataWebSocket>();
         public MarketDataWebSocket ws1 { get; set; }
+        public List<MarketDataWebSocket> KlineWebSockets { get; } = new List<MarketDataWebSocket>();
 
         public WebSocket()
         {

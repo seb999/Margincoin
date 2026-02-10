@@ -5,7 +5,7 @@ import { HttpSettings, HttpService } from '../service/http.service';
 import { SignalRService } from '../service/signalR.service';
 import { ServerMsg } from '../class/serverMsg';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { NgbDateStruct, NgbPopover } from '@ng-bootstrap/ng-bootstrap';
+import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 import { OrderDetailHelper } from './../orderDetail/orderDetail.helper';
 import { BackEndMessage } from '../class/enum';
 
@@ -55,8 +55,6 @@ export class WalletComponent implements OnDestroy {
 
   model: NgbDateStruct;
 
-  @ViewChild('p1') orderPopOver?: NgbPopover;
-
   private ohlc = [] as any;
   public pendingOrderList: Order[];
   public myAccount: BinanceAccount;
@@ -82,6 +80,7 @@ export class WalletComponent implements OnDestroy {
   public popupQty: number;
   public popupQuoteQty: number;
   public balance: number;
+  public portfolioSurgeScores: { [symbol: string]: number } = {};
   public portfolioTrendScores: { [symbol: string]: number } = {};
   public portfolioAiSignals: { [symbol: string]: AiPrediction } = {};
   public isCollapsed = true;
@@ -94,7 +93,6 @@ export class WalletComponent implements OnDestroy {
   public websocketStatus: any = null;
   public lastCandleUpdate: any = null;
   public showOnlyRunning: boolean = false;
-  public orderPopoverVisible: boolean = false;
   public currentOrderDetails: BinanceOrder | null = null;
   public currentOrderBuyType: string | null = null;
   public currentOrderSellType: string | null = null;
@@ -103,6 +101,7 @@ export class WalletComponent implements OnDestroy {
   public currentOrderAIPrediction: string | null = null;
   public aiServiceHealthy: boolean = true;
   public activeSidePanel: 'chart' | 'portfolio' = 'portfolio';
+  public portfolioSurgeScoreFilter: number | null = null;
   private lastStreamAt: number = Date.now();
   private streamWatchdog: any;
   private readonly streamStaleThresholdMs = 30000;
@@ -115,6 +114,17 @@ export class WalletComponent implements OnDestroy {
       return this.orderList.filter(order => order.isClosed === 0 || !order.isClosed);
     }
     return this.orderList;
+  }
+
+  get filteredPortfolioBalances() {
+    if (!this.myAccount?.balances) return [];
+    if (this.portfolioSurgeScoreFilter === null) return this.myAccount.balances;
+
+    return this.myAccount.balances.filter(asset => {
+      const surgeScore = this.getSurgeScoreKey(asset.asset);
+      if (surgeScore === undefined) return false;
+      return surgeScore >= this.portfolioSurgeScoreFilter!;
+    });
   }
 
   constructor(
@@ -161,8 +171,7 @@ export class WalletComponent implements OnDestroy {
       }
 
       if (this.serverMsg.msgName == BackEndMessage.newPendingOrder) {
-        let binanceOrder = this.serverMsg.order;
-        this.showOrderNotification(binanceOrder);
+        // Order notification removed - use modal from datagrid instead
       }
 
       if (this.serverMsg.msgName == BackEndMessage.refreshUI) {
@@ -174,8 +183,7 @@ export class WalletComponent implements OnDestroy {
       if (this.serverMsg.msgName == BackEndMessage.sellOrderFilled
         || this.serverMsg.msgName == BackEndMessage.buyOrderFilled) {
         this.orderList = await this.tradeService.getAllOrder(this.model.day + "-" + this.model.month + "-" + this.model.year);
-        let binanceOrder = this.serverMsg.order;
-        this.showOrderNotification(binanceOrder);
+        // Order notification removed - use modal from datagrid instead
         this.calculateProfit();
       }
 
@@ -232,6 +240,7 @@ export class WalletComponent implements OnDestroy {
     this.interval = await this.tradeService.getInterval();
     this.myAccount = await this.tradeService.binanceAccount();
     this.symbolPrice = await this.tradeService.getSymbolPrice();
+    this.portfolioSurgeScores = await this.tradeService.getSurgeScoresForBalances();
     this.portfolioTrendScores = await this.tradeService.getTrendScoresForBalances();
     await this.loadAiSignals();
     this.orderList = await this.tradeService.getAllOrder(this.model.day + "-" + this.model.month + "-" + this.model.year);
@@ -243,6 +252,7 @@ export class WalletComponent implements OnDestroy {
   async refreshUI() {
     this.myAccount = await this.tradeService.binanceAccount();
     this.logList = await this.tradeService.getLog();
+    this.portfolioSurgeScores = await this.tradeService.getSurgeScoresForBalances();
     this.portfolioTrendScores = await this.tradeService.getTrendScoresForBalances();
     await this.loadAiSignals();
   }
@@ -353,51 +363,33 @@ export class WalletComponent implements OnDestroy {
     return prediction === 'up' ? 'text-emerald-400' : (prediction === 'down' ? 'text-red-400' : 'text-amber-400');
   }
 
-  openPopOver(popover: NgbPopover | undefined, order: BinanceOrder, decisionType?: string) {
-    if (!popover) return;
-    const enrichedOrder = { ...order, type: decisionType ?? order.type };
-    popover.open({ order: enrichedOrder });
-  }
+  async openOrderDetailsModal(orderDetailTemplate, orderId: string, symbol: string) {
+    this.currentOrderDetails = null;
+    this.currentOrderBuyType = null;
+    this.currentOrderSellType = null;
+    this.currentOrderTrendScore = null;
+    this.currentOrderAIScore = null;
+    this.currentOrderAIPrediction = null;
 
-  closePopOver(popover: NgbPopover | undefined) {
-    if (popover?.isOpen()) popover.close();
-  }
+    const orderIdNum = parseFloat(orderId);
+    if (orderId && orderIdNum > 0) {
+      const orderDetails = await this.tradeService.getOrderStatus(symbol, orderIdNum);
+      if (orderDetails) {
+        this.currentOrderDetails = orderDetails;
+        const decisionType = this.findOrderReason(orderDetails);
+        this.setDecisionTypes(decisionType, orderDetails.side);
+        this.currentOrderTrendScore = this.findOrderTrendScore(orderDetails.symbol, orderDetails.orderId);
+        const aiData = this.findOrderAIData(orderDetails.symbol, orderDetails.orderId);
+        this.currentOrderAIScore = aiData.score;
+        this.currentOrderAIPrediction = aiData.prediction;
 
-  async showOrderNotification(binanceOrder: BinanceOrder) {
-    if (!binanceOrder) return;
-
-    // refresh orders to ensure we can fetch entry trend score for this order
-    this.orderList = await this.tradeService.getAllOrder(this.model.day + "-" + this.model.month + "-" + this.model.year);
-
-    this.currentOrderDetails = binanceOrder;
-    this.orderPopoverVisible = true;
-    const decisionType = this.findOrderReason(binanceOrder);
-    this.setDecisionTypes(decisionType, binanceOrder.side);
-    this.currentOrderTrendScore = this.findOrderTrendScore(binanceOrder.symbol, binanceOrder.orderId);
-    const aiData = this.findOrderAIData(binanceOrder.symbol, binanceOrder.orderId);
-    this.currentOrderAIScore = aiData.score;
-    this.currentOrderAIPrediction = aiData.prediction;
-
-    // Maintain legacy popover notification when present
-    if (this.orderPopOver) {
-      if (this.orderPopOver.isOpen()) {
-        this.closePopOver(this.orderPopOver);
+        this.modalService.open(orderDetailTemplate, {
+          ariaLabelledBy: 'order-detail-modal',
+          size: 'md',
+          centered: true
+        });
       }
-      this.openPopOver(this.orderPopOver, binanceOrder, decisionType);
     }
-
-    // Auto-close after 15 seconds
-    setTimeout(() => {
-      this.orderPopoverVisible = false;
-      this.currentOrderDetails = null;
-      this.currentOrderBuyType = null;
-      this.currentOrderSellType = null;
-      this.currentOrderTrendScore = null;
-      this.currentOrderAIScore = null;
-      this.currentOrderAIPrediction = null;
-      this.closePopOver(this.orderPopOver);
-      this.refreshUI();
-    }, 15000);
   }
 
   today() {
@@ -415,6 +407,14 @@ export class WalletComponent implements OnDestroy {
 
   toggleTradeFilter() {
     this.showOnlyRunning = !this.showOnlyRunning;
+  }
+
+  toggleSurgeScoreFilter(threshold: number) {
+    if (this.portfolioSurgeScoreFilter === threshold) {
+      this.portfolioSurgeScoreFilter = null;
+    } else {
+      this.portfolioSurgeScoreFilter = threshold;
+    }
   }
 
   async changeTradeServer() {
@@ -506,32 +506,7 @@ export class WalletComponent implements OnDestroy {
     await this.refreshUI();
   }
 
-  async binanceOrder(orderId: string, symbol: string) {
-    const orderIdNum = parseFloat(orderId);
-    if (orderId && orderIdNum > 0) {
-      const orderDetails = await this.tradeService.getOrderStatus(symbol, orderIdNum);
-      if (orderDetails) {
-        this.currentOrderDetails = orderDetails;
-        const decisionType = this.findOrderReason(orderDetails);
-        this.setDecisionTypes(decisionType, orderDetails.side);
-        this.currentOrderTrendScore = this.findOrderTrendScore(orderDetails.symbol, orderDetails.orderId);
-        const aiData = this.findOrderAIData(orderDetails.symbol, orderDetails.orderId);
-        this.currentOrderAIScore = aiData.score;
-        this.currentOrderAIPrediction = aiData.prediction;
-        this.orderPopoverVisible = true;
-
-        // Auto-close after 15 seconds
-        setTimeout(() => {
-          this.orderPopoverVisible = false;
-          this.currentOrderBuyType = null;
-          this.currentOrderSellType = null;
-          this.currentOrderTrendScore = null;
-          this.currentOrderAIScore = null;
-          this.currentOrderAIPrediction = null;
-        }, 15000);
-      }
-    }
-  }
+  // Removed - replaced with openOrderDetailsModal
 
   async cancelSymbolOrder(symbol): Promise<any> {
     this.tradeService.cancelSymbolOrder(symbol);
@@ -609,11 +584,24 @@ export class WalletComponent implements OnDestroy {
     return this.portfolioTrendScores[upper];
   }
 
+  getSurgeScoreKey(symbol: string): number | undefined {
+    if (!this.portfolioSurgeScores) return undefined;
+    const upper = (symbol || '').toUpperCase();
+    return this.portfolioSurgeScores[upper];
+  }
+
   getTrendScoreBadgeClass(trendScore: number | undefined): string {
     if (trendScore === undefined || trendScore === null) return 'bg-gray-500/20 text-gray-300';
     // Red background if trend score is below the minimum entry threshold (3)
     if (trendScore < 3) return 'bg-red-500/20 text-red-300';
     // Green background if trend score meets or exceeds the minimum entry threshold
+    return 'bg-emerald-500/20 text-emerald-300';
+  }
+
+  getSurgeScoreBadgeClass(score: number | undefined): string {
+    if (score === undefined || score === null) return 'bg-gray-500/20 text-gray-300';
+    if (score < 0.5) return 'bg-red-500/20 text-red-300';
+    if (score < 2) return 'bg-amber-500/20 text-amber-300';
     return 'bg-emerald-500/20 text-emerald-300';
   }
 

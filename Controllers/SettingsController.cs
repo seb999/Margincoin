@@ -19,13 +19,58 @@ namespace MarginCoin.Controllers
             _logger = logger;
         }
 
-        [HttpGet]
-        public async Task<ActionResult<TradingConfiguration>> Get()
+        /// <summary>
+        /// Get static configuration from appsettings.json
+        /// </summary>
+        [HttpGet("static")]
+        public ActionResult<TradingConfiguration> GetStatic()
         {
             try
             {
-                var config = await _settingsService.GetAsync();
+                var config = _settingsService.GetStaticConfig();
                 return Ok(config);
+            }
+            catch (System.Exception ex)
+            {
+                _logger.LogError(ex, "Failed to load static settings");
+                return StatusCode(500, "Failed to load static settings");
+            }
+        }
+
+        /// <summary>
+        /// Get runtime settings from database
+        /// </summary>
+        [HttpGet("runtime")]
+        public async Task<ActionResult<RuntimeTradingSettings>> GetRuntime()
+        {
+            try
+            {
+                var settings = await _settingsService.GetRuntimeSettingsAsync();
+                return Ok(settings);
+            }
+            catch (System.Exception ex)
+            {
+                _logger.LogError(ex, "Failed to load runtime settings");
+                return StatusCode(500, "Failed to load runtime settings");
+            }
+        }
+
+        /// <summary>
+        /// Get combined settings (static + runtime) for backward compatibility
+        /// </summary>
+        [HttpGet]
+        public async Task<ActionResult<object>> Get()
+        {
+            try
+            {
+                var staticConfig = _settingsService.GetStaticConfig();
+                var runtime = await _settingsService.GetRuntimeSettingsAsync();
+
+                return Ok(new
+                {
+                    Static = staticConfig,
+                    Runtime = runtime
+                });
             }
             catch (System.Exception ex)
             {
@@ -34,20 +79,23 @@ namespace MarginCoin.Controllers
             }
         }
 
-        [HttpPut]
-        public async Task<ActionResult<TradingConfiguration>> Update([FromBody] TradingSettingsDto dto)
+        /// <summary>
+        /// Update runtime settings only
+        /// </summary>
+        [HttpPut("runtime")]
+        public async Task<ActionResult<RuntimeTradingSettings>> UpdateRuntime([FromBody] RuntimeTradingSettingsDto dto)
         {
             if (dto == null) return BadRequest("No settings provided");
             try
             {
-                var updated = await _settingsService.UpdateAsync(dto);
-                _logger.LogInformation("Settings updated via API");
+                var updated = await _settingsService.UpdateRuntimeSettingsAsync(dto);
+                _logger.LogInformation("Runtime settings updated via API");
                 return Ok(updated);
             }
             catch (System.Exception ex)
             {
-                _logger.LogError(ex, "Failed to update trading settings");
-                return StatusCode(500, "Failed to update settings");
+                _logger.LogError(ex, "Failed to update runtime settings");
+                return StatusCode(500, "Failed to update runtime settings");
             }
         }
     }

@@ -10,7 +10,9 @@ using System.Threading.Tasks;
 using MarginCoin.Class;
 using MarginCoin.MLClass;
 using MarginCoin.Misc;
+using MarginCoin.Configuration;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using static MarginCoin.Service.MLService;
 
 namespace MarginCoin.Service
@@ -29,6 +31,8 @@ namespace MarginCoin.Service
         private readonly ConcurrentDictionary<string, (MLPrediction prediction, DateTime timestamp)> _predictionCache;
         private readonly ConcurrentDictionary<string, MLPrediction> _predictionStore;
         private readonly TimeSpan _cacheExpiry = TimeSpan.FromSeconds(30);
+        private readonly bool _mlOptional;
+        private readonly bool _enableMlPredictions;
 
         public List<MLPrediction> MLPredList
         {
@@ -49,7 +53,10 @@ namespace MarginCoin.Service
             }
         }
 
-        public LSTMPredictionService(ILogger<LSTMPredictionService> logger, IHttpClientFactory httpClientFactory)
+        public LSTMPredictionService(
+            ILogger<LSTMPredictionService> logger,
+            IHttpClientFactory httpClientFactory,
+            IOptions<TradingConfiguration> tradingOptions)
         {
             _logger = logger;
             _httpClient = httpClientFactory.CreateClient();
@@ -58,6 +65,9 @@ namespace MarginCoin.Service
             _apiBaseUrl = Environment.GetEnvironmentVariable("ML_API_URL") ?? "http://localhost:8000";
             _predictionCache = new ConcurrentDictionary<string, (MLPrediction, DateTime)>();
             _predictionStore = new ConcurrentDictionary<string, MLPrediction>();
+            var envOptional = string.Equals(Environment.GetEnvironmentVariable("ML_OPTIONAL"), "true", StringComparison.OrdinalIgnoreCase);
+            _mlOptional = envOptional;
+            _enableMlPredictions = tradingOptions?.Value?.EnableMLPredictions ?? true;
 
             _logger.LogInformation($"LSTM Prediction Service initialized with API: {_apiBaseUrl}");
         }
@@ -67,6 +77,12 @@ namespace MarginCoin.Service
         /// </summary>
         public async Task<bool> IsHealthyAsync()
         {
+            if (!_enableMlPredictions)
+            {
+                _logger.LogDebug("ML health check skipped: EnableMLPredictions=false");
+                return false;
+            }
+
             try
             {
                 var response = await _httpClient.GetAsync($"{_apiBaseUrl}/health");
@@ -87,6 +103,12 @@ namespace MarginCoin.Service
         /// <returns>ML prediction with confidence scores</returns>
         public async Task<MLPrediction> PredictAsync(string symbol, List<Candle> candles)
         {
+            if (!_enableMlPredictions)
+            {
+                _logger.LogDebug("ML prediction skipped for {Symbol}: EnableMLPredictions=false", symbol);
+                return CreateFallbackPrediction(symbol);
+            }
+
             // Check cache first
             if (_predictionCache.TryGetValue(symbol, out var cached))
             {
@@ -136,6 +158,11 @@ namespace MarginCoin.Service
                 if (!response.IsSuccessStatusCode)
                 {
                     var error = await response.Content.ReadAsStringAsync();
+                    if (_mlOptional)
+                    {
+                        _logger.LogWarning("ML API error for {Symbol}: {Status} - {Error}. ML_OPTIONAL=true so returning fallback.", symbol, response.StatusCode, error);
+                        return CreateFallbackPrediction(symbol);
+                    }
                     _logger.LogError($"ML API error for {symbol}: {response.StatusCode} - {error}");
                     return CreateFallbackPrediction(symbol);
                 }
@@ -183,11 +210,21 @@ namespace MarginCoin.Service
             }
             catch (TaskCanceledException)
             {
+                if (_mlOptional)
+                {
+                    _logger.LogWarning("ML API timeout for {Symbol}. ML_OPTIONAL=true so returning fallback.", symbol);
+                    return CreateFallbackPrediction(symbol);
+                }
                 _logger.LogWarning($"ML API timeout for {symbol}");
                 return CreateFallbackPrediction(symbol);
             }
             catch (Exception ex)
             {
+                if (_mlOptional)
+                {
+                    _logger.LogWarning(ex, "ML API unavailable for {Symbol}. ML_OPTIONAL=true so returning fallback.", symbol);
+                    return CreateFallbackPrediction(symbol);
+                }
                 _logger.LogError(ex, $"Error getting prediction for {symbol}");
                 return CreateFallbackPrediction(symbol);
             }
@@ -249,8 +286,39 @@ namespace MarginCoin.Service
         // Methods to maintain interface compatibility
         public void InitML(TimeElapseDelegate dddd) { }
         public void StopML() { }
-        public void UpdateML() { }
+
+        public void UpdateML()
+        {
+            // Cleanup expired cache entries to prevent memory leak
+            CleanupExpiredCache();
+        }
+
         public void CleanImageFolder() { }
+
+        /// <summary>
+        /// Remove expired entries from prediction cache to prevent memory leak
+        /// </summary>
+        private void CleanupExpiredCache()
+        {
+            var now = DateTime.UtcNow;
+            var keysToRemove = _predictionCache
+                .Where(kvp => now - kvp.Value.timestamp > _cacheExpiry)
+                .Select(kvp => kvp.Key)
+                .ToList();
+
+            foreach (var key in keysToRemove)
+            {
+                _predictionCache.TryRemove(key, out _);
+            }
+
+            if (keysToRemove.Count > 0)
+            {
+                _logger.LogInformation(
+                    "ML prediction cache cleanup: Removed {Removed} expired entries. " +
+                    "Current cache size: {CurrentSize}, Cache expiry: {ExpiryMinutes} minutes",
+                    keysToRemove.Count, _predictionCache.Count, _cacheExpiry.TotalMinutes);
+            }
+        }
     }
 
     #region DTOs for API Communication

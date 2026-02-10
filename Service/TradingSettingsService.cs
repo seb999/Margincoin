@@ -13,31 +13,50 @@ namespace MarginCoin.Service
 {
     public interface ITradingSettingsService
     {
-        Task<TradingConfiguration> GetAsync();
-        Task<TradingConfiguration> UpdateAsync(TradingSettingsDto dto);
-        Task ApplyOverridesAsync();
+        /// <summary>
+        /// Get static configuration from appsettings.json (read-only)
+        /// </summary>
+        TradingConfiguration GetStaticConfig();
+
+        /// <summary>
+        /// Get runtime settings from database (can be modified at runtime)
+        /// </summary>
+        Task<RuntimeTradingSettings> GetRuntimeSettingsAsync();
+
+        /// <summary>
+        /// Update runtime settings in database
+        /// </summary>
+        Task<RuntimeTradingSettings> UpdateRuntimeSettingsAsync(RuntimeTradingSettingsDto dto);
     }
 
-    public class TradingSettingsDto
+    public class RuntimeTradingSettingsDto
     {
-        public string Interval { get; set; }
         public int? MaxOpenTrades { get; set; }
-        public int? NumberOfSymbols { get; set; }
         public double? QuoteOrderQty { get; set; }
         public double? StopLossPercentage { get; set; }
         public double? TakeProfitPercentage { get; set; }
-        public double? OrderOffset { get; set; }
-        public double? MinPercentageUp { get; set; }
-        public double? MinRSI { get; set; }
-        public double? MaxRSI { get; set; }
         public int? TimeBasedKillMinutes { get; set; }
+        public bool? EnableAggressiveReplacement { get; set; }
+        public double? SurgeScoreThreshold { get; set; }
+        public double? ReplacementScoreGap { get; set; }
+        public int? ReplacementCooldownSeconds { get; set; }
+        public int? MaxReplacementsPerHour { get; set; }
+        public int? MaxCandidateDepth { get; set; }
+        public double? WeakTrendStopLossPercentage { get; set; }
+        public bool? EnableDynamicStopLoss { get; set; }
+        public double? TrailingStopPercentage { get; set; }
+        public bool? EnableMLPredictions { get; set; }
+        public bool? EnableOpenAISignals { get; set; }
     }
 
     public class TradingSettingsService : ITradingSettingsService
     {
         private readonly ApplicationDbContext _dbContext;
-        private readonly TradingConfiguration _config;
+        private readonly TradingConfiguration _staticConfig;
         private readonly ILogger<TradingSettingsService> _logger;
+        private RuntimeTradingSettings _runtimeCache;
+        private DateTime _lastCacheUpdate = DateTime.MinValue;
+        private readonly TimeSpan _cacheExpiration = TimeSpan.FromSeconds(5);
 
         public TradingSettingsService(
             ApplicationDbContext dbContext,
@@ -45,167 +64,217 @@ namespace MarginCoin.Service
             ILogger<TradingSettingsService> logger)
         {
             _dbContext = dbContext;
-            _config = config.Value;
+            _staticConfig = config.Value;
             _logger = logger;
         }
 
-        public async Task ApplyOverridesAsync()
+        public TradingConfiguration GetStaticConfig()
         {
-            try
-            {
-                await EnsureTableAsync();
-                await SeedIfEmptyAsync();
-                var overrides = await _dbContext.Settings.AsNoTracking().ToListAsync();
-                ApplyToConfig(overrides);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogWarning(ex, "Failed to apply settings overrides; using defaults");
-            }
+            return _staticConfig;
         }
 
-        public async Task<TradingConfiguration> GetAsync()
+        public async Task<RuntimeTradingSettings> GetRuntimeSettingsAsync()
         {
+            // Return cached version if still valid
+            if (_runtimeCache != null && DateTime.UtcNow - _lastCacheUpdate < _cacheExpiration)
+            {
+                return _runtimeCache;
+            }
+
             await EnsureTableAsync();
-            await SeedIfEmptyAsync();
-            await ApplyOverridesAsync();
-            return _config;
+            await SeedDefaultsIfEmptyAsync();
+
+            var settings = await _dbContext.RuntimeSettings.AsNoTracking().ToListAsync();
+            var runtime = new RuntimeTradingSettings();
+
+            foreach (var setting in settings)
+            {
+                ApplySettingToRuntime(runtime, setting);
+            }
+
+            _runtimeCache = runtime;
+            _lastCacheUpdate = DateTime.UtcNow;
+
+            return runtime;
         }
 
-        public async Task<TradingConfiguration> UpdateAsync(TradingSettingsDto dto)
+        public async Task<RuntimeTradingSettings> UpdateRuntimeSettingsAsync(RuntimeTradingSettingsDto dto)
         {
             await EnsureTableAsync();
-            await SeedIfEmptyAsync();
+            await SeedDefaultsIfEmptyAsync();
 
             var updates = new Dictionary<string, string>();
 
-            if (!string.IsNullOrWhiteSpace(dto.Interval)) updates["Interval"] = dto.Interval;
-            if (dto.MaxOpenTrades.HasValue) updates["MaxOpenTrades"] = dto.MaxOpenTrades.Value.ToString(CultureInfo.InvariantCulture);
-            if (dto.NumberOfSymbols.HasValue) updates["NumberOfSymbols"] = dto.NumberOfSymbols.Value.ToString(CultureInfo.InvariantCulture);
-            if (dto.QuoteOrderQty.HasValue) updates["QuoteOrderQty"] = dto.QuoteOrderQty.Value.ToString(CultureInfo.InvariantCulture);
-            if (dto.StopLossPercentage.HasValue) updates["StopLossPercentage"] = dto.StopLossPercentage.Value.ToString(CultureInfo.InvariantCulture);
-            if (dto.TakeProfitPercentage.HasValue) updates["TakeProfitPercentage"] = dto.TakeProfitPercentage.Value.ToString(CultureInfo.InvariantCulture);
-            if (dto.OrderOffset.HasValue) updates["OrderOffset"] = dto.OrderOffset.Value.ToString(CultureInfo.InvariantCulture);
-            if (dto.MinPercentageUp.HasValue) updates["MinPercentageUp"] = dto.MinPercentageUp.Value.ToString(CultureInfo.InvariantCulture);
-            if (dto.MinRSI.HasValue) updates["MinRSI"] = dto.MinRSI.Value.ToString(CultureInfo.InvariantCulture);
-            if (dto.MaxRSI.HasValue) updates["MaxRSI"] = dto.MaxRSI.Value.ToString(CultureInfo.InvariantCulture);
-            if (dto.TimeBasedKillMinutes.HasValue) updates["TimeBasedKillMinutes"] = dto.TimeBasedKillMinutes.Value.ToString(CultureInfo.InvariantCulture);
+            if (dto.MaxOpenTrades.HasValue)
+                updates[nameof(RuntimeTradingSettings.MaxOpenTrades)] = dto.MaxOpenTrades.Value.ToString(CultureInfo.InvariantCulture);
+            if (dto.QuoteOrderQty.HasValue)
+                updates[nameof(RuntimeTradingSettings.QuoteOrderQty)] = dto.QuoteOrderQty.Value.ToString(CultureInfo.InvariantCulture);
+            if (dto.StopLossPercentage.HasValue)
+                updates[nameof(RuntimeTradingSettings.StopLossPercentage)] = dto.StopLossPercentage.Value.ToString(CultureInfo.InvariantCulture);
+            if (dto.TakeProfitPercentage.HasValue)
+                updates[nameof(RuntimeTradingSettings.TakeProfitPercentage)] = dto.TakeProfitPercentage.Value.ToString(CultureInfo.InvariantCulture);
+            if (dto.TimeBasedKillMinutes.HasValue)
+                updates[nameof(RuntimeTradingSettings.TimeBasedKillMinutes)] = dto.TimeBasedKillMinutes.Value.ToString(CultureInfo.InvariantCulture);
+            if (dto.EnableAggressiveReplacement.HasValue)
+                updates[nameof(RuntimeTradingSettings.EnableAggressiveReplacement)] = dto.EnableAggressiveReplacement.Value.ToString();
+            if (dto.SurgeScoreThreshold.HasValue)
+                updates[nameof(RuntimeTradingSettings.SurgeScoreThreshold)] = dto.SurgeScoreThreshold.Value.ToString(CultureInfo.InvariantCulture);
+            if (dto.ReplacementScoreGap.HasValue)
+                updates[nameof(RuntimeTradingSettings.ReplacementScoreGap)] = dto.ReplacementScoreGap.Value.ToString(CultureInfo.InvariantCulture);
+            if (dto.ReplacementCooldownSeconds.HasValue)
+                updates[nameof(RuntimeTradingSettings.ReplacementCooldownSeconds)] = dto.ReplacementCooldownSeconds.Value.ToString(CultureInfo.InvariantCulture);
+            if (dto.MaxReplacementsPerHour.HasValue)
+                updates[nameof(RuntimeTradingSettings.MaxReplacementsPerHour)] = dto.MaxReplacementsPerHour.Value.ToString(CultureInfo.InvariantCulture);
+            if (dto.MaxCandidateDepth.HasValue)
+                updates[nameof(RuntimeTradingSettings.MaxCandidateDepth)] = dto.MaxCandidateDepth.Value.ToString(CultureInfo.InvariantCulture);
+            if (dto.WeakTrendStopLossPercentage.HasValue)
+                updates[nameof(RuntimeTradingSettings.WeakTrendStopLossPercentage)] = dto.WeakTrendStopLossPercentage.Value.ToString(CultureInfo.InvariantCulture);
+            if (dto.EnableDynamicStopLoss.HasValue)
+                updates[nameof(RuntimeTradingSettings.EnableDynamicStopLoss)] = dto.EnableDynamicStopLoss.Value.ToString();
+            if (dto.TrailingStopPercentage.HasValue)
+                updates[nameof(RuntimeTradingSettings.TrailingStopPercentage)] = dto.TrailingStopPercentage.Value.ToString(CultureInfo.InvariantCulture);
+            if (dto.EnableMLPredictions.HasValue)
+                updates[nameof(RuntimeTradingSettings.EnableMLPredictions)] = dto.EnableMLPredictions.Value.ToString();
+            if (dto.EnableOpenAISignals.HasValue)
+                updates[nameof(RuntimeTradingSettings.EnableOpenAISignals)] = dto.EnableOpenAISignals.Value.ToString();
 
             foreach (var kv in updates)
             {
-                var existing = await _dbContext.Settings.FirstOrDefaultAsync(s => s.Key == kv.Key);
+                var existing = await _dbContext.RuntimeSettings.FirstOrDefaultAsync(s => s.Key == kv.Key);
                 if (existing == null)
                 {
-                    _dbContext.Settings.Add(new Setting { Key = kv.Key, Value = kv.Value });
+                    _dbContext.RuntimeSettings.Add(new RuntimeSetting { Key = kv.Key, Value = kv.Value });
                 }
                 else
                 {
                     existing.Value = kv.Value;
-                    _dbContext.Settings.Update(existing);
+                    _dbContext.RuntimeSettings.Update(existing);
                 }
             }
 
             await _dbContext.SaveChangesAsync();
+            _logger.LogInformation("Runtime trading settings updated: {Keys}", string.Join(", ", updates.Keys));
 
-            ApplyToConfig(updates.Select(u => new Setting { Key = u.Key, Value = u.Value }));
-            _logger.LogInformation("Trading settings updated at runtime");
-            return _config;
+            // Invalidate cache
+            _runtimeCache = null;
+
+            return await GetRuntimeSettingsAsync();
         }
 
         private async Task EnsureTableAsync()
         {
             try
             {
-                await _dbContext.Database.ExecuteSqlRawAsync("CREATE TABLE IF NOT EXISTS Settings (Key TEXT PRIMARY KEY, Value TEXT)");
+                await _dbContext.Database.ExecuteSqlRawAsync(
+                    "CREATE TABLE IF NOT EXISTS RuntimeSettings (Key TEXT PRIMARY KEY, Value TEXT)");
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Failed to ensure Settings table exists");
+                _logger.LogError(ex, "Failed to ensure RuntimeSettings table exists");
             }
         }
 
-        private void ApplyToConfig(IEnumerable<Setting> overrides)
-        {
-            foreach (var ov in overrides)
-            {
-                try
-                {
-                    switch (ov.Key)
-                    {
-                        case nameof(TradingConfiguration.Interval):
-                            _config.Interval = ov.Value;
-                            break;
-                        case nameof(TradingConfiguration.MaxOpenTrades):
-                            _config.MaxOpenTrades = int.Parse(ov.Value);
-                            break;
-                        case nameof(TradingConfiguration.NumberOfSymbols):
-                            _config.NumberOfSymbols = int.Parse(ov.Value);
-                            break;
-                        case nameof(TradingConfiguration.QuoteOrderQty):
-                            _config.QuoteOrderQty = double.Parse(ov.Value, CultureInfo.InvariantCulture);
-                            break;
-                        case nameof(TradingConfiguration.StopLossPercentage):
-                            _config.StopLossPercentage = double.Parse(ov.Value, CultureInfo.InvariantCulture);
-                            break;
-                        case nameof(TradingConfiguration.TakeProfitPercentage):
-                            _config.TakeProfitPercentage = double.Parse(ov.Value, CultureInfo.InvariantCulture);
-                            break;
-                        case nameof(TradingConfiguration.OrderOffset):
-                            _config.OrderOffset = double.Parse(ov.Value, CultureInfo.InvariantCulture);
-                            break;
-                        case nameof(TradingConfiguration.MinPercentageUp):
-                            _config.MinPercentageUp = double.Parse(ov.Value, CultureInfo.InvariantCulture);
-                            break;
-                        case nameof(TradingConfiguration.MinRSI):
-                            _config.MinRSI = double.Parse(ov.Value, CultureInfo.InvariantCulture);
-                            break;
-                        case nameof(TradingConfiguration.MaxRSI):
-                            _config.MaxRSI = double.Parse(ov.Value, CultureInfo.InvariantCulture);
-                            break;
-                        case nameof(TradingConfiguration.TimeBasedKillMinutes):
-                            _config.TimeBasedKillMinutes = int.Parse(ov.Value);
-                            break;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    _logger.LogWarning(ex, "Failed to apply setting {Key} with value {Value}", ov.Key, ov.Value);
-                }
-            }
-        }
-
-        private async Task SeedIfEmptyAsync()
+        private void ApplySettingToRuntime(RuntimeTradingSettings runtime, RuntimeSetting setting)
         {
             try
             {
-                if (!await _dbContext.Settings.AnyAsync())
+                switch (setting.Key)
                 {
-                    var defaults = new Dictionary<string, string>
-                    {
-                        { nameof(TradingConfiguration.Interval), _config.Interval },
-                        { nameof(TradingConfiguration.MaxOpenTrades), _config.MaxOpenTrades.ToString() },
-                        { nameof(TradingConfiguration.NumberOfSymbols), _config.NumberOfSymbols.ToString() },
-                        { nameof(TradingConfiguration.QuoteOrderQty), _config.QuoteOrderQty.ToString(CultureInfo.InvariantCulture) },
-                        { nameof(TradingConfiguration.StopLossPercentage), _config.StopLossPercentage.ToString(CultureInfo.InvariantCulture) },
-                        { nameof(TradingConfiguration.TakeProfitPercentage), _config.TakeProfitPercentage.ToString(CultureInfo.InvariantCulture) },
-                        { nameof(TradingConfiguration.OrderOffset), _config.OrderOffset.ToString(CultureInfo.InvariantCulture) },
-                        { nameof(TradingConfiguration.MinPercentageUp), _config.MinPercentageUp.ToString(CultureInfo.InvariantCulture) },
-                        { nameof(TradingConfiguration.MinRSI), _config.MinRSI.ToString(CultureInfo.InvariantCulture) },
-                        { nameof(TradingConfiguration.MaxRSI), _config.MaxRSI.ToString(CultureInfo.InvariantCulture) },
-                        { nameof(TradingConfiguration.TimeBasedKillMinutes), _config.TimeBasedKillMinutes.ToString() },
-                    };
-
-                    foreach (var kv in defaults)
-                    {
-                        _dbContext.Settings.Add(new Setting { Key = kv.Key, Value = kv.Value });
-                    }
-
-                    await _dbContext.SaveChangesAsync();
+                    case nameof(RuntimeTradingSettings.MaxOpenTrades):
+                        runtime.MaxOpenTrades = int.Parse(setting.Value, CultureInfo.InvariantCulture);
+                        break;
+                    case nameof(RuntimeTradingSettings.QuoteOrderQty):
+                        runtime.QuoteOrderQty = double.Parse(setting.Value, CultureInfo.InvariantCulture);
+                        break;
+                    case nameof(RuntimeTradingSettings.StopLossPercentage):
+                        runtime.StopLossPercentage = double.Parse(setting.Value, CultureInfo.InvariantCulture);
+                        break;
+                    case nameof(RuntimeTradingSettings.TakeProfitPercentage):
+                        runtime.TakeProfitPercentage = double.Parse(setting.Value, CultureInfo.InvariantCulture);
+                        break;
+                    case nameof(RuntimeTradingSettings.TimeBasedKillMinutes):
+                        runtime.TimeBasedKillMinutes = int.Parse(setting.Value, CultureInfo.InvariantCulture);
+                        break;
+                    case nameof(RuntimeTradingSettings.EnableAggressiveReplacement):
+                        runtime.EnableAggressiveReplacement = bool.Parse(setting.Value);
+                        break;
+                    case nameof(RuntimeTradingSettings.SurgeScoreThreshold):
+                        runtime.SurgeScoreThreshold = double.Parse(setting.Value, CultureInfo.InvariantCulture);
+                        break;
+                    case nameof(RuntimeTradingSettings.ReplacementScoreGap):
+                        runtime.ReplacementScoreGap = double.Parse(setting.Value, CultureInfo.InvariantCulture);
+                        break;
+                    case nameof(RuntimeTradingSettings.ReplacementCooldownSeconds):
+                        runtime.ReplacementCooldownSeconds = int.Parse(setting.Value, CultureInfo.InvariantCulture);
+                        break;
+                    case nameof(RuntimeTradingSettings.MaxReplacementsPerHour):
+                        runtime.MaxReplacementsPerHour = int.Parse(setting.Value, CultureInfo.InvariantCulture);
+                        break;
+                    case nameof(RuntimeTradingSettings.MaxCandidateDepth):
+                        runtime.MaxCandidateDepth = int.Parse(setting.Value, CultureInfo.InvariantCulture);
+                        break;
+                    case nameof(RuntimeTradingSettings.WeakTrendStopLossPercentage):
+                        runtime.WeakTrendStopLossPercentage = double.Parse(setting.Value, CultureInfo.InvariantCulture);
+                        break;
+                    case nameof(RuntimeTradingSettings.EnableDynamicStopLoss):
+                        runtime.EnableDynamicStopLoss = bool.Parse(setting.Value);
+                        break;
+                    case nameof(RuntimeTradingSettings.TrailingStopPercentage):
+                        runtime.TrailingStopPercentage = double.Parse(setting.Value, CultureInfo.InvariantCulture);
+                        break;
+                    case nameof(RuntimeTradingSettings.EnableMLPredictions):
+                        runtime.EnableMLPredictions = bool.Parse(setting.Value);
+                        break;
+                    case nameof(RuntimeTradingSettings.EnableOpenAISignals):
+                        runtime.EnableOpenAISignals = bool.Parse(setting.Value);
+                        break;
                 }
             }
             catch (Exception ex)
             {
-                _logger.LogWarning(ex, "Failed to seed default settings");
+                _logger.LogWarning(ex, "Failed to apply runtime setting {Key} with value {Value}", setting.Key, setting.Value);
+            }
+        }
+
+        private async Task SeedDefaultsIfEmptyAsync()
+        {
+            try
+            {
+                if (!await _dbContext.RuntimeSettings.AnyAsync())
+                {
+                    var defaults = new RuntimeTradingSettings();
+                    var seedData = new Dictionary<string, string>
+                    {
+                        { nameof(RuntimeTradingSettings.MaxOpenTrades), defaults.MaxOpenTrades.ToString(CultureInfo.InvariantCulture) },
+                        { nameof(RuntimeTradingSettings.QuoteOrderQty), defaults.QuoteOrderQty.ToString(CultureInfo.InvariantCulture) },
+                        { nameof(RuntimeTradingSettings.StopLossPercentage), defaults.StopLossPercentage.ToString(CultureInfo.InvariantCulture) },
+                        { nameof(RuntimeTradingSettings.TakeProfitPercentage), defaults.TakeProfitPercentage.ToString(CultureInfo.InvariantCulture) },
+                        { nameof(RuntimeTradingSettings.TimeBasedKillMinutes), defaults.TimeBasedKillMinutes.ToString(CultureInfo.InvariantCulture) },
+                        { nameof(RuntimeTradingSettings.EnableAggressiveReplacement), defaults.EnableAggressiveReplacement.ToString() },
+                        { nameof(RuntimeTradingSettings.SurgeScoreThreshold), defaults.SurgeScoreThreshold.ToString(CultureInfo.InvariantCulture) },
+                        { nameof(RuntimeTradingSettings.ReplacementScoreGap), defaults.ReplacementScoreGap.ToString(CultureInfo.InvariantCulture) },
+                        { nameof(RuntimeTradingSettings.ReplacementCooldownSeconds), defaults.ReplacementCooldownSeconds.ToString(CultureInfo.InvariantCulture) },
+                        { nameof(RuntimeTradingSettings.MaxReplacementsPerHour), defaults.MaxReplacementsPerHour.ToString(CultureInfo.InvariantCulture) },
+                        { nameof(RuntimeTradingSettings.MaxCandidateDepth), defaults.MaxCandidateDepth.ToString(CultureInfo.InvariantCulture) },
+                        { nameof(RuntimeTradingSettings.WeakTrendStopLossPercentage), defaults.WeakTrendStopLossPercentage.ToString(CultureInfo.InvariantCulture) },
+                        { nameof(RuntimeTradingSettings.EnableDynamicStopLoss), defaults.EnableDynamicStopLoss.ToString() },
+                        { nameof(RuntimeTradingSettings.TrailingStopPercentage), defaults.TrailingStopPercentage.ToString(CultureInfo.InvariantCulture) },
+                        { nameof(RuntimeTradingSettings.EnableMLPredictions), defaults.EnableMLPredictions.ToString() },
+                        { nameof(RuntimeTradingSettings.EnableOpenAISignals), defaults.EnableOpenAISignals.ToString() }
+                    };
+
+                    foreach (var kv in seedData)
+                    {
+                        _dbContext.RuntimeSettings.Add(new RuntimeSetting { Key = kv.Key, Value = kv.Value });
+                    }
+
+                    await _dbContext.SaveChangesAsync();
+                    _logger.LogInformation("Seeded default runtime settings");
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogWarning(ex, "Failed to seed default runtime settings");
             }
         }
     }

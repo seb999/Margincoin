@@ -6,7 +6,6 @@ import { RouterModule } from '@angular/router';
 
 import { AppComponent } from './app.component';
 import { NavMenuComponent } from './nav-menu/nav-menu.component';
-import { MarketComponent } from './market/market.component';
 import { WalletComponent } from './wallet/wallet.component';
 import { OrderDetailComponent } from './orderDetail/orderDetail';
 
@@ -18,18 +17,17 @@ import { AppSetting } from './app.settings';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { NgbModule, NgbPopover, NgbCollapseModule } from '@ng-bootstrap/ng-bootstrap';
 import { SettingsComponent } from './settings/settings.component';
-import { AIAnalyticsComponent } from './ai-analytics/ai-analytics.component';
+import { PerformanceComponent } from './performance/performance.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     NavMenuComponent,
-    MarketComponent,
     WalletComponent,
     TradingboardComponent,
     OrderDetailComponent,
     SettingsComponent,
-    AIAnalyticsComponent
+    PerformanceComponent
   ],
   imports: [
     MatSlideToggleModule,
@@ -40,12 +38,13 @@ import { AIAnalyticsComponent } from './ai-analytics/ai-analytics.component';
     FormsModule,
     HighchartsChartModule,
     RouterModule.forRoot([
-    { path: '', component: MarketComponent, pathMatch: 'full' },
+    { path: '', component: WalletComponent, pathMatch: 'full' },
+    { path: 'trade', component: WalletComponent },
+    { path: 'market', redirectTo: '', pathMatch: 'full' },
     { path: 'tradingboard/:symbol', component: TradingboardComponent },
-    { path: 'wallet', component: WalletComponent },
     { path: 'orderDetail/:id', component: OrderDetailComponent },
     { path: 'settings', component: SettingsComponent },
-    { path: 'ai-analytics', component: AIAnalyticsComponent },
+    { path: 'performance', component: PerformanceComponent },
 ])
   ],
   providers: [TradingboardHelper, OrderDetailHelper,  AppSetting ],
