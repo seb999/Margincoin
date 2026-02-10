@@ -18,6 +18,7 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { NgbModule, NgbPopover, NgbCollapseModule } from '@ng-bootstrap/ng-bootstrap';
 import { SettingsComponent } from './settings/settings.component';
 import { PerformanceComponent } from './performance/performance.component';
+import { AgGridModule } from 'ag-grid-angular';
 
 @NgModule({
   declarations: [
@@ -37,6 +38,7 @@ import { PerformanceComponent } from './performance/performance.component';
     HttpClientModule,
     FormsModule,
     HighchartsChartModule,
+    AgGridModule,
     RouterModule.forRoot([
     { path: '', component: WalletComponent, pathMatch: 'full' },
     { path: 'trade', component: WalletComponent },

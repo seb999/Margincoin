@@ -3,6 +3,9 @@
 @tailwind components;
 @tailwind utilities;
 
+@import "ag-grid-community/styles/ag-grid.css";
+@import "ag-grid-community/styles/ag-theme-quartz.css";
+
 /* Angular Material theme */
 @import "@angular/material/prebuilt-themes/indigo-pink.css";
 

@@ -1,4 +1,4 @@
-import { Component, OnDestroy, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Component, OnDestroy, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { NumericLiteral } from 'typescript';
 import { Order } from '../class/order';
 import { HttpSettings, HttpService } from '../service/http.service';
@@ -24,6 +24,7 @@ import { BinanceOrder } from '../class/binanceOrder';
 import { BinanceAccount } from '../class/binanceAccount';
 import { TradeService } from '../service/trade.service';
 import { AiPrediction } from '../class/aiPrediction';
+import { ColDef, RowStyle } from 'ag-grid-community';
 
 
 HC_HIGHSTOCK(Highcharts);
@@ -49,6 +50,7 @@ export class WalletComponent implements OnDestroy {
   chartOptions: Highcharts.Options;
   // @ViewChild("chart", { static: false }) chart: any;
   @ViewChild('chart') componentRef;
+  @ViewChild('orderDetailTemplate') orderDetailTemplate: TemplateRef<any>;
   chartRef;
   updateFlag;
 
@@ -107,6 +109,37 @@ export class WalletComponent implements OnDestroy {
   private readonly streamStaleThresholdMs = 30000;
   private aiHealthTimer: any;
   private readonly aiHealthIntervalMs = 30000;
+  public tradeColumnDefs: ColDef[] = [];
+  public defaultTradeColDef: ColDef = {
+    resizable: true,
+    sortable: true,
+    filter: true,
+    flex: 1,
+    minWidth: 100,
+  };
+  public tradeRowStyle = (params: any): RowStyle => {
+    const order = params.data as Order;
+    if (!order) return {};
+
+    const isClosed = Number(order.isClosed) === 1;
+    const notFilled = order.status !== 'FILLED';
+
+    let borderColor = '#0ECB81';
+    let backgroundColor = 'rgba(14,203,129,0.05)';
+
+    if (notFilled) {
+      borderColor = '#F6465D';
+      backgroundColor = 'rgba(246,70,93,0.05)';
+    } else if (!isClosed) {
+      borderColor = '#FCD535';
+      backgroundColor = 'rgba(252,213,53,0.05)';
+    }
+
+    return {
+      borderLeft: `3px solid ${borderColor}`,
+      backgroundColor,
+    };
+  };
 
   get filteredOrderList(): Order[] {
     if (!this.orderList) return [];
@@ -136,6 +169,7 @@ export class WalletComponent implements OnDestroy {
     private appSetting: AppSetting,
   ) {
     this.intervalList = this.appSetting.intervalList;
+    this.tradeColumnDefs = this.createTradeColumnDefs();
   }
 
   async ngOnInit() {
@@ -428,19 +462,19 @@ export class WalletComponent implements OnDestroy {
   }
 
   calculateProfit() {
-    this.totalProfit = 0;
-    if (this.orderList?.length > 0) {
-      for (let i = 0; i < this.orderList.length; i++) {
-        this.totalProfit += this.orderList[i].profit;
-      }
-    }
+    const orders = this.orderList || [];
+    this.totalProfit = orders.reduce((sum, order) => {
+      const profit = Number(order?.profit) || 0;
+      return sum + profit;
+    }, 0);
 
-    this.totalBestProfit = 0;
-    if (this.orderList?.length > 0) {
-      this.totalBestProfit = this.orderList.map(a => (a.highPrice - a.openPrice) * a.quantityBuy).reduce(function (a, b) {
-        if (a != 0) return a + b;
-      });
-    }
+    this.totalBestProfit = orders.reduce((sum, order) => {
+      const high = Number(order?.highPrice) || 0;
+      const open = Number(order?.openPrice) || 0;
+      const qty = Number(order?.quantityBuy) || 0;
+      if (high === 0 || open === 0 || qty === 0) return sum;
+      return sum + (high - open) * qty;
+    }, 0);
   }
 
   calculateBalance() {
@@ -654,6 +688,221 @@ export class WalletComponent implements OnDestroy {
     if (direction === 'down' && pred?.downProbability != null) return pred.downProbability;
     if (direction === 'sideways' && pred?.sidewaysProbability != null) return pred.sidewaysProbability;
     return null;
+  }
+
+  private createTradeColumnDefs(): ColDef[] {
+    return [
+      {
+        headerName: 'Symbol',
+        colId: 'symbol',
+        valueGetter: params => this.formatSymbol(params.data),
+        width: 130,
+        cellClass: 'font-semibold text-[#EAECEF]',
+      },
+      {
+        headerName: 'Amount',
+        colId: 'amount',
+        valueGetter: params => this.formatAmount(params.data),
+        cellClass: 'justify-end font-mono text-sm text-[#EAECEF]',
+        width: 150,
+      },
+      {
+        headerName: 'Entry',
+        colId: 'entry',
+        cellRenderer: params => this.renderPriceCell(params, 'entry'),
+        cellClass: 'justify-end',
+        width: 130,
+        sortable: false,
+        filter: false,
+      },
+      {
+        headerName: 'Exit',
+        colId: 'exit',
+        cellRenderer: params => this.renderPriceCell(params, 'exit'),
+        cellClass: 'justify-end',
+        width: 130,
+        sortable: false,
+        filter: false,
+      },
+      {
+        headerName: 'ROI',
+        colId: 'roi',
+        valueGetter: params => this.formatRoi(params.data),
+        cellStyle: params => ({
+          color: this.getProfitColor(this.calculateRoi(params.data)),
+          justifyContent: 'flex-end',
+          fontFamily: 'monospace',
+          fontWeight: '600'
+        }),
+        width: 120,
+      },
+      {
+        headerName: 'P&L',
+        colId: 'pl',
+        valueGetter: params => this.formatProfit(params.data),
+        cellStyle: params => ({
+          color: this.getProfitColor(this.calculateProfitValue(params.data)),
+          justifyContent: 'flex-end',
+          fontFamily: 'monospace',
+          fontWeight: '600'
+        }),
+        width: 120,
+      },
+      {
+        headerName: 'Best',
+        colId: 'best',
+        valueGetter: params => this.formatBest(params.data),
+        cellStyle: params => ({
+          color: this.getProfitColor(this.calculateBest(params.data)),
+          justifyContent: 'flex-end',
+          fontFamily: 'monospace'
+        }),
+        width: 120,
+      },
+      { headerName: 'Opened', colId: 'opened', valueGetter: params => params.data?.openDate || '-', width: 150 },
+      { headerName: 'Closed', colId: 'closed', valueGetter: params => params.data?.closeDate || '-', width: 150 },
+      { headerName: 'Type', colId: 'type', valueGetter: params => (params.data?.isClosed ? (params.data?.type || '-') : '-'), width: 110 },
+      {
+        headerName: 'RSI',
+        colId: 'rsi',
+        valueGetter: params => params.data?.rsi != null ? Number(params.data.rsi).toFixed(0) : '--',
+        cellClass: 'justify-end text-xs text-gray-400 font-mono',
+        width: 90
+      },
+      {
+        headerName: 'Status',
+        colId: 'status',
+        cellRenderer: params => this.renderStatusCell(params),
+        width: 130,
+        sortable: false,
+        filter: false,
+      },
+      {
+        headerName: '',
+        colId: 'actions',
+        cellRenderer: params => this.renderActionsCell(params),
+        width: 120,
+        sortable: false,
+        filter: false,
+      },
+    ];
+  }
+
+  private formatSymbol(order: Order): string {
+    if (!order?.symbol) return '';
+    return `${order.symbol.replace('USDC', '')}/USDC`;
+  }
+
+  private formatAmount(order: Order): string {
+    if (!order) return '';
+    const buy = order.quantityBuy && order.openPrice ? order.quantityBuy * order.openPrice : 0;
+    const sell = order.quantitySell && order.closePrice ? order.quantitySell * order.closePrice : 0;
+    if (order.isClosed) {
+      return `${buy.toFixed(0)} / ${sell.toFixed(0)}`;
+    }
+    return buy ? buy.toFixed(0) : '-';
+  }
+
+  private formatRoi(order: Order): string {
+    const roi = this.calculateRoi(order);
+    if (roi === null) return '--';
+    const prefix = roi > 0 ? '+' : '';
+    return `${prefix}${roi.toFixed(2)}%`;
+  }
+
+  private calculateRoi(order: Order): number | null {
+    if (!order || !order.openPrice || !order.closePrice) return null;
+    if (order.closePrice === 0 || order.openPrice === 0) return null;
+    return ((order.closePrice - order.openPrice) / order.openPrice) * 100;
+  }
+
+  private calculateProfitValue(order: Order): number | null {
+    if (!order || !order.openPrice || !order.closePrice || !order.quantityBuy) return null;
+    if (order.closePrice === 0) return null;
+    return (order.closePrice - order.openPrice) * order.quantityBuy;
+  }
+
+  private formatProfit(order: Order): string {
+    const value = this.calculateProfitValue(order);
+    if (value === null) return '--';
+    const prefix = value > 0 ? '+' : '';
+    return `${prefix}${value.toFixed(2)}`;
+  }
+
+  private calculateBest(order: Order): number | null {
+    if (!order || !order.highPrice || !order.openPrice || !order.quantityBuy) return null;
+    if (order.highPrice === 0) return null;
+    return (order.highPrice - order.openPrice) * order.quantityBuy;
+  }
+
+  private formatBest(order: Order): string {
+    const value = this.calculateBest(order);
+    if (value === null) return '--';
+    const prefix = value > 0 ? '+' : '';
+    return `${prefix}${value.toFixed(2)}`;
+  }
+
+  private getProfitColor(value: number | null): string {
+    if (value === null) return '#848E9C';
+    if (value > 0) return '#0ECB81';
+    if (value < 0) return '#F6465D';
+    return '#EAECEF';
+  }
+
+  private renderPriceCell(params: any, side: 'entry' | 'exit'): HTMLElement {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'text-[#FCD535] hover:text-[#F0B90B] font-mono text-sm hover:underline';
+    const price = side === 'entry' ? params.data?.openPrice : params.data?.closePrice;
+    const orderId = side === 'entry' ? params.data?.buyOrderId : params.data?.sellOrderId;
+    btn.textContent = price ? Number(price).toFixed(5) : '--';
+    btn.title = side === 'entry' ? 'View entry order details' : 'View exit order details';
+    btn.addEventListener('click', () => {
+      if (orderId && params.data?.symbol && this.orderDetailTemplate) {
+        this.openOrderDetailsModal(this.orderDetailTemplate, orderId, params.data.symbol);
+      }
+    });
+    return btn;
+  }
+
+  private renderStatusCell(params: any): HTMLElement {
+    const wrapper = document.createElement('span');
+    const status = params.data?.status || '-';
+    const isFilled = status === 'FILLED';
+    wrapper.className = 'inline-flex items-center gap-1 px-2 py-1 text-xs font-medium rounded-full';
+    wrapper.style.color = isFilled ? '#86efac' : '#fcd34d';
+    wrapper.style.backgroundColor = isFilled ? 'rgba(34,197,94,0.12)' : 'rgba(251,191,36,0.12)';
+    const dot = document.createElement('span');
+    dot.className = 'w-1.5 h-1.5 rounded-full';
+    dot.style.backgroundColor = isFilled ? '#34d399' : '#f59e0b';
+    wrapper.appendChild(dot);
+    const text = document.createElement('span');
+    text.textContent = status;
+    wrapper.appendChild(text);
+    return wrapper;
+  }
+
+  private renderActionsCell(params: any): HTMLElement {
+    const wrapper = document.createElement('div');
+    wrapper.className = 'flex items-center justify-center gap-2';
+
+    if (!params.data?.isClosed) {
+      const closeBtn = document.createElement('button');
+      closeBtn.className = 'p-1.5 text-red-200 bg-red-500/20 hover:bg-red-500/30 rounded-lg transition-all shadow-sm shadow-red-500/20';
+      closeBtn.title = 'Close trade';
+      closeBtn.innerHTML = '<i class="far fa-trash-alt text-xs"></i>';
+      closeBtn.addEventListener('click', () => this.closeTrade(params.data?.id, params.data?.closePrice || params.data?.openPrice));
+      wrapper.appendChild(closeBtn);
+    }
+
+    const chartBtn = document.createElement('button');
+    chartBtn.className = 'p-1.5 text-amber-100 bg-amber-500/20 hover:bg-amber-500/30 rounded-lg transition-all shadow-sm shadow-amber-500/20';
+    chartBtn.title = 'View chart for this trade';
+    chartBtn.innerHTML = '<i class="fa-solid fa-chart-line text-xs"></i>';
+    chartBtn.addEventListener('click', () => this.showChart(params.data?.symbol, params.data?.id));
+    wrapper.appendChild(chartBtn);
+
+    return wrapper;
   }
 
   /////////////////////////////////////////////////////////////

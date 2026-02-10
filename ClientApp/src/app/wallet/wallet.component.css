@@ -25,6 +25,30 @@
   width: 100%;
 }
 
+.custom-ag-theme.ag-theme-quartz-dark {
+  --ag-background-color: #0B0E11;
+  --ag-foreground-color: #EAECEF;
+  --ag-header-background-color: #0B0E11;
+  --ag-header-foreground-color: #848E9C;
+  --ag-border-color: #2B3139;
+  --ag-row-border-color: #2B3139;
+  --ag-odd-row-background-color: #111827;
+  --ag-even-row-background-color: #0F131C;
+  --ag-selected-row-background-color: #1F2933;
+  --ag-font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.custom-ag-theme .ag-header-cell-label {
+  font-weight: 700;
+  font-size: 11px;
+  letter-spacing: 0.05em;
+}
+
+.custom-ag-theme .ag-cell {
+  display: flex;
+  align-items: center;
+}
+
 
 
   /* .my-custom-scrollbar {

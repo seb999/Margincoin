@@ -194,148 +194,31 @@
           </button>
         </div>
       </div>
-      <div class="overflow-x-auto">
-        <table class="w-full text-sm">
-          <thead>
-            <tr class="bg-[#0B0E11]">
-              <th class="px-3 py-2 text-left text-xs font-semibold text-[#848E9C] uppercase tracking-wider">Symbol</th>
-              <th class="px-3 py-2 text-right text-xs font-semibold text-[#848E9C] uppercase tracking-wider">Amount</th>
-              <th class="px-3 py-2 text-right text-xs font-semibold text-[#848E9C] uppercase tracking-wider">Entry</th>
-              <th class="px-3 py-2 text-right text-xs font-semibold text-[#848E9C] uppercase tracking-wider">Exit</th>
-              <th class="px-3 py-2 text-right text-xs font-semibold text-[#848E9C] uppercase tracking-wider">ROI</th>
-              <th class="px-3 py-2 text-right text-xs font-semibold text-[#848E9C] uppercase tracking-wider">P&L</th>
-              <th class="px-3 py-2 text-right text-xs font-semibold text-[#848E9C] uppercase tracking-wider hidden lg:table-cell">Best</th>
-              <th class="px-3 py-2 text-left text-xs font-semibold text-[#848E9C] uppercase tracking-wider hidden xl:table-cell">Opened</th>
-              <th class="px-3 py-2 text-left text-xs font-semibold text-[#848E9C] uppercase tracking-wider hidden xl:table-cell">Closed</th>
-              <th class="px-3 py-2 text-center text-xs font-semibold text-[#848E9C] uppercase tracking-wider hidden lg:table-cell">Type</th>
-              <th class="px-3 py-2 text-right text-xs font-semibold text-[#848E9C] uppercase tracking-wider hidden lg:table-cell">RSI</th>
-              <th class="px-3 py-2 text-center text-xs font-semibold text-[#848E9C] uppercase tracking-wider">Status</th>
-              <th class="px-3 py-2 w-16"></th>
-            </tr>
-          </thead>
-          <tbody class="divide-y divide-[#2B3139]">
-            <tr *ngFor="let order of filteredOrderList"
-                class="group hover:bg-[#2B3139]/30 transition-all duration-150"
-                [style.border-left]="
-                  order.status !== 'FILLED' ? '3px solid #F6465D' :
-                  (!order.isClosed || order.isClosed === 0) ? '3px solid #FCD535' :
-                  '3px solid #0ECB81'"
-                [ngClass]="{
-                  'bg-[#F6465D]/5': order.status !== 'FILLED',
-                  'bg-[#FCD535]/5': order.status === 'FILLED' && (!order.isClosed || order.isClosed === 0),
-                  'bg-[#0ECB81]/5': order.isClosed === 1 || order.isClosed == 1
-                }">
-              <td class="px-3 py-2">
-                <span class="font-semibold text-[#EAECEF] text-sm">{{order.symbol.replace('USDC', '')}}</span>
-                <span class="text-[#848E9C] text-xs">/USDC</span>
-              </td>
-              <td class="px-3 py-2 text-right text-[#EAECEF] font-mono text-sm">
-                <span *ngIf="!order.isClosed" class="text-[#FCD535]">{{(order.quantityBuy*order.openPrice).toFixed(0)}}</span>
-                <span *ngIf="order.isClosed">{{(order.quantityBuy*order.openPrice).toFixed(0)}}<span class="text-[#848E9C]">/</span>{{(order.quantitySell*order.closePrice).toFixed(0)}}</span>
-              </td>
-              <td class="px-3 py-2 text-right">
-                <button type="button" class="text-[#FCD535] hover:text-[#F0B90B] font-mono text-sm hover:underline"
-                  (click)="openOrderDetailsModal(orderDetailTemplate, order.buyOrderId, order.symbol)"
-                  title="View entry order details">
-                  {{order.openPrice.toFixed(5)}}
-                </button>
-              </td>
-              <td class="px-3 py-2 text-right">
-                <button type="button" class="text-[#FCD535] hover:text-[#F0B90B] font-mono text-sm hover:underline"
-                  (click)="openOrderDetailsModal(orderDetailTemplate, order.sellOrderId, order.symbol)"
-                  title="View exit order details">
-                  {{order.closePrice.toFixed(5)}}
-                </button>
-              </td>
-              <td class="px-3 py-2 text-right font-mono text-sm font-semibold">
-                <span *ngIf="order.closePrice==0" class="text-[#848E9C]">--</span>
-                <span *ngIf="(order.closePrice - order.openPrice) >=0 && order.closePrice!=0" class="text-[#0ECB81]">
-                  +{{(((order.closePrice - order.openPrice) / (order.openPrice))*100).toFixed(2)}}%
-                </span>
-                <span *ngIf="(order.closePrice - order.openPrice) < 0 && order.closePrice!=0" class="text-[#F6465D]">
-                  {{(((order.closePrice - order.openPrice) / (order.openPrice))*100).toFixed(2)}}%
-                </span>
-              </td>
-              <td class="px-3 py-2 text-right font-mono text-sm font-semibold">
-                <span *ngIf="order.closePrice==0" class="text-[#848E9C]">--</span>
-                <span *ngIf="((order.closePrice - order.openPrice)*order.quantityBuy) >=0 && order.closePrice!=0" class="text-[#0ECB81]">
-                  +{{((order.closePrice - order.openPrice)*order.quantityBuy).toFixed(2)}}
-                </span>
-                <span *ngIf="((order.closePrice - order.openPrice)*order.quantityBuy) < 0 && order.closePrice!=0" class="text-[#F6465D]">
-                  {{((order.closePrice - order.openPrice)*order.quantityBuy).toFixed(2)}}
-                </span>
-              </td>
-              <td class="px-3 py-2 text-right font-mono text-sm hidden lg:table-cell">
-                <span *ngIf="order.highPrice==0" class="text-[#848E9C]">--</span>
-                <span *ngIf="((order.highPrice - order.openPrice)*order.quantityBuy) < 0 && order.highPrice!=0" class="text-[#F6465D]">
-                  {{((order.highPrice - order.openPrice)*order.quantityBuy).toFixed(2)}}
-                </span>
-                <span *ngIf="((order.highPrice - order.openPrice)*order.quantityBuy) >=0 && order.highPrice!=0" class="text-[#0ECB81]/70">
-                  +{{((order.highPrice - order.openPrice)*order.quantityBuy).toFixed(2)}}
-                </span>
-              </td>
-              <td class="px-3 py-2 text-xs text-[#848E9C] hidden xl:table-cell">{{order.openDate}}</td>
-              <td class="px-3 py-2 text-xs text-[#848E9C] hidden xl:table-cell">{{order.closeDate || '-'}}</td>
-              <td class="px-3 py-2 text-center hidden lg:table-cell">
-                <span class="px-2 py-0.5 text-xs text-[#EAECEF] bg-[#2B3139] rounded">
-                  <ng-container *ngIf="order.isClosed || order.isClosed === 1; else noType">
-                    {{order.type || '-'}}
-                  </ng-container>
-                  <ng-template #noType>-</ng-template>
-                </span>
-              </td>
-              <td class="px-3 py-2 text-right text-xs text-gray-400 font-mono hidden lg:table-cell">{{order.rsi.toFixed(0)}}</td>
-              <td class="px-3 py-2 text-center">
-                <span class="inline-flex items-center gap-1 px-2 py-1 text-xs font-medium rounded-full"
-                  [ngClass]="order.status === 'FILLED' ? 'text-emerald-300 bg-emerald-500/10' : 'text-amber-300 bg-amber-500/10'">
-                  <span class="w-1.5 h-1.5 rounded-full" [ngClass]="order.status === 'FILLED' ? 'bg-emerald-400' : 'bg-amber-400'"></span>
-                  {{order.status}}
-                </span>
-              </td>
-              <td class="px-3 py-2">
-                <div class="flex items-center justify-center gap-2">
-                  <button *ngIf="!order.isClosed"
-                    class="p-1.5 text-red-200 bg-red-500/20 hover:bg-red-500/30 rounded-lg transition-all shadow-sm shadow-red-500/20"
-                    (click)="closeTrade(order.id, order.closePrice);"
-                    title="Close trade"
-                    aria-label="Close trade">
-                    <i class="far fa-trash-alt text-xs"></i>
-                  </button>
-                  <button class="p-1.5 text-amber-100 bg-amber-500/20 hover:bg-amber-500/30 rounded-lg transition-all shadow-sm shadow-amber-500/20"
-                    (click)="showChart(order.symbol, order.id);"
-                    title="View chart for this trade"
-                    aria-label="View chart">
-                    <i class="fa-solid fa-chart-line text-xs"></i>
-                  </button>
-                </div>
-              </td>
-            </tr>
-            <!-- Empty State -->
-            <tr *ngIf="!filteredOrderList?.length">
-              <td colspan="13" class="px-2 py-12 text-center">
-                <div class="flex flex-col items-center gap-2 text-gray-500">
-                  <i class="fa-solid fa-inbox text-3xl opacity-50"></i>
-                  <p class="text-sm font-medium">{{showOnlyRunning ? 'No active trades' : 'No orders for this date'}}</p>
-                  <p class="text-xs text-gray-600">{{showOnlyRunning ? 'All positions are closed' : 'Try selecting a different date'}}</p>
-                </div>
-              </td>
-            </tr>
-          </tbody>
-          <!-- Totals Row -->
-          <tfoot *ngIf="filteredOrderList?.length">
-            <tr class="bg-gray-900/70 border-t border-gray-700">
-              <td class="px-3 py-3" colspan="4"></td>
-              <td class="px-3 py-3 text-right text-xs font-semibold text-gray-400 uppercase">Total P&L</td>
-              <td class="px-3 py-3 text-right font-mono text-base font-bold" [ngClass]="(totalProfit ?? 0) >= 0 ? 'text-emerald-400' : 'text-red-400'">
-                <span *ngIf="(totalProfit ?? 0) >= 0">+</span>{{(totalProfit ?? 0).toFixed(2)}}
-              </td>
-              <td class="px-3 py-3 text-right font-mono text-sm hidden lg:table-cell" [ngClass]="(totalBestProfit ?? 0) >= 0 ? 'text-emerald-400/70' : 'text-red-400/70'">
-                <span *ngIf="(totalBestProfit ?? 0) >= 0">+</span>{{(totalBestProfit ?? 0).toFixed(2)}}
-              </td>
-              <td colspan="6"></td>
-            </tr>
-          </tfoot>
-        </table>
+      <div class="ag-theme-quartz-dark custom-ag-theme w-full" style="height: 620px;">
+        <ag-grid-angular
+          class="w-full h-full"
+          [columnDefs]="tradeColumnDefs"
+          [defaultColDef]="defaultTradeColDef"
+          [rowData]="filteredOrderList"
+          [rowHeight]="48"
+          [headerHeight]="42"
+          [animateRows]="true"
+          [getRowStyle]="tradeRowStyle">
+        </ag-grid-angular>
+      </div>
+      <div *ngIf="filteredOrderList?.length" class="px-3 py-3 bg-[#0B0E11] border-t border-[#2B3139] flex justify-end gap-6 text-sm">
+        <div class="flex items-center gap-2">
+          <span class="text-xs font-semibold text-gray-400 uppercase tracking-wide">Total P&L</span>
+          <span class="font-mono text-base font-bold" [ngClass]="(totalProfit ?? 0) >= 0 ? 'text-emerald-400' : 'text-red-400'">
+            <span *ngIf="(totalProfit ?? 0) >= 0">+</span>{{(totalProfit ?? 0).toFixed(2)}}
+          </span>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="text-xs font-semibold text-gray-400 uppercase tracking-wide">Total Best</span>
+          <span class="font-mono text-sm font-semibold" [ngClass]="(totalBestProfit ?? 0) >= 0 ? 'text-emerald-400/70' : 'text-red-400/70'">
+            <span *ngIf="(totalBestProfit ?? 0) >= 0">+</span>{{(totalBestProfit ?? 0).toFixed(2)}}
+          </span>
+        </div>
       </div>
     </div>
   </div>
